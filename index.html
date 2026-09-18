@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>乐理基础练习题 - 音程概念与记谱法</title>
+  
+
+<style>
+:root {
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --success-color: #10b981;
+  --success-bg: #ecfdf5;
+  --success-border: #a7f3d0;
+  --error-color: #ef4444;
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --radius-lg: 16px;
+  --radius-md: 10px;
+  --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px 10px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 40px);
+}
+
+/* Persistent Header */
+.app-header {
+  margin-bottom: 16px;
+}
+
+.header-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.header-right-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.history-toggle-btn {
+  background: #e0e7ff;
+  color: var(--primary-color);
+  border: none;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.history-toggle-btn:hover {
+  background: #c7d2fe;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #818cf8, var(--primary-color));
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lesson-tag {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  background-color: #e0e7ff;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.question-counter {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Card Container */
+.card-container {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: 28px 24px;
+  border: 1px solid var(--border-color);
+  flex-grow: 1;
+}
+
+/* Start Screen */
+.start-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.start-header .subtitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 6px;
+}
+
+.start-header .main-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.start-info {
+  background-color: #f8fafc;
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.start-info p {
+  margin-bottom: 8px;
+}
+
+.start-info p:last-child {
+  margin-bottom: 0;
+}
+
+/* Question Types Badge */
+.type-badge-wrapper {
+  margin-bottom: 12px;
+}
+
+.type-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #475569;
+  background-color: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+}
+
+.type-badge.multiple { background-color: #fef3c7; color: #d97706; }
+.type-badge.single { background-color: #e0e7ff; color: #4338ca; }
+.type-badge.boolean { background-color: #f3e8ff; color: #6b21a8; }
+
+.question-prompt {
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text-main);
+  margin-bottom: 20px;
+}
+
+/* Options */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: #f8fafc;
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.option-btn:hover:not(.disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.option-btn.selected {
+  border-color: var(--primary-color);
+  background-color: #e0e7ff;
+  color: var(--primary-hover);
+}
+
+.option-btn.correct {
+  background: var(--success-bg);
+  border-color: var(--success-color);
+  color: #065f46;
+}
+
+.option-btn.wrong {
+  background: var(--error-bg);
+  border-color: var(--error-color);
+  color: #991b1b;
+}
+
+.indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: transparent;
+  transition: all 0.2s ease;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+.option-btn.selected .indicator {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.option-btn.correct .indicator {
+  border-color: var(--success-color);
+  background-color: var(--success-color);
+  color: white;
+}
+
+.option-btn.wrong .indicator {
+  border-color: var(--error-color);
+  background-color: var(--error-color);
+  color: white;
+}
+
+/* Feedback Box */
+.feedback-box {
+  margin-bottom: 20px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  animation: fadeIn 0.3s ease;
+}
+
+.feedback-box.correct-bg {
+  background-color: var(--success-bg);
+  border: 1px solid var(--success-border);
+}
+
+.feedback-box.wrong-bg {
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border);
+}
+
+.feedback-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.feedback-box.correct-bg .feedback-header { color: #065f46; }
+.feedback-box.wrong-bg .feedback-header { color: #991b1b; }
+
+.explanation-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+/* Card Actions Grid (Prev / Confirm / Next) */
+.card-actions-grid {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.card-actions-grid .secondary-btn {
+  flex: 1;
+}
+
+.card-actions-grid .primary-btn {
+  flex: 2;
+}
+
+/* Result Screen */
+.result-title {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.result-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.detail-list-wrapper {
+  margin-bottom: 24px;
+}
+
+.detail-list-wrapper h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-main);
+}
+
+.detail-list {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  background-color: #fafafa;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.85rem;
+}
+
+.detail-item:last-child {
+  border-bottom: none;
+}
+
+.detail-item-top {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.detail-item-wrong-choices {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  color: var(--error-color);
+  background: #fef2f2;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.result-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+
+.modal-card {
+  background: white;
+  width: 100%;
+  max-width: 480px;
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.modal-tip {
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.history-list {
+  max-height: 280px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-card-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background-color: #f8fafc;
+}
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 4px;
+}
+
+.history-card-meta {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.secondary-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #f1f5f9;
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.secondary-btn:hover:not(:disabled) {
+  background-color: #e2e8f0;
+}
+
+.secondary-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.primary-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+}
+
+.primary-btn:disabled {
+  background-color: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Persistent Footer */
+.app-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+</head>
+<body>
+
+  <main class="app-container">
+    <!-- Persistent Header -->
+    <header class="app-header">
+      <div class="header-top-bar">
+        <span class="header-title-left">MUSIC THEORY · INTERVAL</span>
+        <div class="header-right-group">
+          <span class="header-title-right">LESSON 01</span>
+          <button class="history-toggle-btn" id="historyToggleBtn">历史记录</button>
+        </div>
+      </div>
+      <div class="progress-bar-container" id="progressBarContainer">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="header-meta hidden" id="headerMeta">
+        <span class="lesson-tag" id="lessonTag">乐理练习 1</span>
+        <span class="question-counter" id="questionCounter">1 / 15</span>
+      </div>
+    </header>
+
+    <!-- 1. Start Screen / Home -->
+    <section class="card-container" id="startScreen">
+      <div class="start-header">
+        <p class="subtitle">音程理论基础 · 第一课</p>
+        <h1 class="main-title">度数、音数、旋律音程与和声音程</h1>
+      </div>
+      <div class="start-info">
+        <p>• 本测试共包含 <strong>15 个题目</strong>，中途退出后需要重新开始。</p>
+        <p>• 答题过程将记录您的总用时、尝试次数及选择历史。</p>
+        <p>• 全部完成后，可复制测验结果发送给老师获取本课评价。</p>
+      </div>
+      <button class="primary-btn start-btn" id="startPracticeBtn">开始练习</button>
+    </section>
+
+    <!-- 2. Question Card -->
+    <section class="card-container hidden" id="questionCard">
+      <div class="type-badge-wrapper">
+        <span class="type-badge" id="typeBadge">判断题</span>
+      </div>
+      
+      <h2 class="question-prompt" id="questionPrompt">题目载入中...</h2>
+
+      <!-- Options Grid -->
+      <div class="options-grid" id="optionsGrid"></div>
+
+      <!-- Feedback / Explanation Box -->
+      <div class="feedback-box hidden" id="feedbackBox">
+        <div class="feedback-header">
+          <span class="feedback-status-icon" id="feedbackIcon">✓</span>
+          <span class="feedback-title" id="feedbackTitle">回答正确</span>
+        </div>
+        <p class="explanation-text" id="explanationText"></p>
+      </div>
+
+      <!-- Navigation & Action Buttons Inside Card -->
+      <div class="card-actions-grid">
+        <button class="secondary-btn" id="prevBtn" disabled>上一题</button>
+        <button class="primary-btn" id="confirmBtn" disabled>确认</button>
+        <button class="primary-btn hidden" id="nextBtn">下一题</button>
+      </div>
+    </section>
+
+    <!-- 3. Result Screen -->
+    <section class="card-container hidden" id="resultScreen">
+      <h2 class="result-title">🎉 测验完成</h2>
+      
+      <div class="result-stats-grid">
+        <div class="stat-card">
+          <span class="stat-value" id="resAccuracy">100%</span>
+          <span class="stat-label">综合正确率</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="resTotalTime">00:00</span>
+          <span class="stat-label">答题总时长</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="resTotalAttempts">15次</span>
+          <span class="stat-label">总尝试次数</span>
+        </div>
+      </div>
+
+      <div class="detail-list-wrapper">
+        <h3>逐题答题记录（含错误尝试）</h3>
+        <div class="detail-list" id="detailList"></div>
+      </div>
+
+      <div class="result-actions">
+        <button class="primary-btn copy-btn" id="copyResultBtn">复制结果</button>
+        <button class="secondary-btn" id="restartBtn">重新练习</button>
+      </div>
+    </section>
+
+    <!-- 4. History Modal / Panel -->
+    <div class="modal-overlay hidden" id="historyModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2>会话历史练习记录</h2>
+          <button class="close-btn" id="closeHistoryBtn">✕</button>
+        </div>
+        <p class="modal-tip">💡 只要不关闭/刷新页面，您本次会话中的所有练习记录都会自动保存在这里。</p>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- Persistent Global Footer -->
+    <footer class="app-footer">
+      ©Sheen · Music Theory
+    </footer>
+  </main>
+
+  
+  
+
+<script>
+const practiceData = {
+  "lessonId": "music-theory-practice-01",
+  "lessonTitle": "音程理论基础练习 1",
+  "questions": [
+    {
+      "id": "q01",
+      "type": "boolean",
+      "prompt": "1. 变音记号（如升号、降号）会直接改变音程的度数。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["错误"],
+      "explanation": "音程的度数只取决于音符在谱表上的“位置/字母距离”（数线和间的数量），与升降记号无关。升降记号改变的是音数，而不是度数。"
+    },
+    {
+      "id": "q02",
+      "type": "boolean",
+      "prompt": "2. 音程的度数最多为八度。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["错误"],
+      "explanation": "常见的音程度数的确是 1~8 度，但八度并不是两个音理论上的最远距离，超过八度的音程称为复音程（如九度、十度等）。"
+    },
+    {
+      "id": "q03",
+      "type": "boolean",
+      "prompt": "3. E 和 F 之间的音数是 1。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["错误"],
+      "explanation": "音数 1 表示距离是一个全音，但 E 和 F 之间是自然半音，所以 E 和 F 的音数是 0.5。"
+    },
+    {
+      "id": "q04",
+      "type": "boolean",
+      "prompt": "4. 即使音数不同的两组音，度数也有可能相同。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["正确"],
+      "explanation": "比如 C-E（大三度，音数 2）和 C-Eb（小三度，音数 1.5），两者的音数不同，但都是三度音程。"
+    },
+    {
+      "id": "q05",
+      "type": "boolean",
+      "prompt": "5. 高音谱表第一线和第二线的音为三度关系。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["正确"],
+      "explanation": "第一线（E）到第二线（G），包含“第一线、第一间、第二线”共三个位置，数出来是三度。"
+    },
+    {
+      "id": "q06",
+      "type": "boolean",
+      "prompt": "6. F B之间的音数为3。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["正确"],
+      "explanation": "F 到 B 包含 F-G(1) + G-A(1) + A-B(1)，一共是 3 个全音，音数为 3（即增四度/减五度的音数）。"
+    },
+    {
+      "id": "q07",
+      "type": "boolean",
+      "prompt": "7. 如果两个音程的音数相同，那么度数也一定相同。",
+      "options": [
+        { "id": "opt_true", "label": "正确", "value": "正确" },
+        { "id": "opt_false", "label": "错误", "value": "错误" }
+      ],
+      "correctAnswer": ["错误"],
+      "explanation": "音数相同但度数可以不同。比如 C-F#（增四度，度数为 4，音数为 3）和 C-Gb（减五度，度数为 5，音数为 3），它们的音数都是 3，但度数一个是四度，一个是五度。"
+    },
+    {
+      "id": "q08",
+      "type": "single-choice",
+      "prompt": "8. 下列音程中，属于“一度”的是哪一个？",
+      "options": [
+        { "id": "opt_a", "label": "A. A-Bb", "value": "A" },
+        { "id": "opt_b", "label": "B. B-C", "value": "B" },
+        { "id": "opt_c", "label": "C. A-A#", "value": "C" },
+        { "id": "opt_d", "label": "D. G-A", "value": "D" }
+      ],
+      "correctAnswer": ["C"],
+      "explanation": "度数看的是字母本身的距离。A 到 A# 的音符字母都是 A（同名音），包含的位置数量为 1，所以是一度音程（增一度）。其余选项字母都发生了改变，属于二度。"
+    },
+    {
+      "id": "q09",
+      "type": "single-choice",
+      "prompt": "9. 在五线谱中，一个“四度”音程的两个音在视觉位置上呈现什么规律？",
+      "options": [
+        { "id": "opt_a", "label": "A. 一个在线上，一个在间里", "value": "A" },
+        { "id": "opt_b", "label": "B. 都在线上", "value": "B" },
+        { "id": "opt_c", "label": "C. 都在间里", "value": "C" },
+        { "id": "opt_d", "label": "D. 无法确定规律", "value": "D" }
+      ],
+      "correctAnswer": ["A"],
+      "explanation": "奇数度数（一度、三度、五度、七度）的两个音视觉上要么“都在线上”，要么“都在间里”；偶数度数（二度、四度、六度、八度）必定是“一个在线上，一个在间里”。"
+    },
+    {
+      "id": "q10",
+      "type": "single-choice",
+      "prompt": "10. C-A 这对上行六度的音数是多少？",
+      "options": [
+        { "id": "opt_a", "label": "A. 4.5", "value": "A" },
+        { "id": "opt_b", "label": "B. 5.5", "value": "B" },
+        { "id": "opt_c", "label": "C. 6", "value": "C" },
+        { "id": "opt_d", "label": "D. 9", "value": "D" },
+        { "id": "opt_e", "label": "E. 10", "value": "E" }
+      ],
+      "correctAnswer": ["A"],
+      "explanation": "C-A 是大六度。推算全半音：C-D(1) + D-E(1) + E-F(0.5) + F-G(1) + G-A(1) = 4.5。"
+    },
+    {
+      "id": "q11",
+      "type": "single-choice",
+      "prompt": "11. 如果在钢琴上先弹奏 G，再弹奏G左边最近的D，这个音程是什么？",
+      "options": [
+        { "id": "opt_a", "label": "A. 上行四度", "value": "A" },
+        { "id": "opt_b", "label": "B. 下行四度", "value": "B" },
+        { "id": "opt_c", "label": "C. 上行五度", "value": "C" },
+        { "id": "opt_d", "label": "D. 下行五度", "value": "D" },
+        { "id": "opt_e", "label": "E. 和声四度", "value": "E" },
+        { "id": "opt_f", "label": "F. 和声五度", "value": "F" }
+      ],
+      "correctAnswer": ["B"],
+      "explanation": "先弹 G，再弹其“左边”的音，说明音高是在往低走，属于下行；从 G 往下数到 D（G-F-E-D）正好包含四个音，所以是下行四度。"
+    },
+    {
+      "id": "q12",
+      "type": "multiple-choice",
+      "prompt": "12. 在音程中，音高相对较低的音被称为什么？（多选）",
+      "options": [
+        { "id": "opt_a", "label": "A. 根音", "value": "A" },
+        { "id": "opt_b", "label": "B. 冠音", "value": "B" },
+        { "id": "opt_c", "label": "C. 低音", "value": "C" },
+        { "id": "opt_d", "label": "D. 高音", "value": "D" }
+      ],
+      "correctAnswer": ["A", "C"],
+      "explanation": "在音程中，下方（较低）的音称为“根音”或“低音”；上方（较高）的音称为“冠音”或“高音”。"
+    },
+    {
+      "id": "q13",
+      "type": "multiple-choice",
+      "prompt": "13. 如果将 C-E 中的 E 加上一个降号变成 Eb，该音程会发生什么变化？（多选）",
+      "options": [
+        { "id": "opt_a", "label": "A. 度数减少", "value": "A" },
+        { "id": "opt_b", "label": "B. 度数增加", "value": "B" },
+        { "id": "opt_c", "label": "C. 度数不变", "value": "C" },
+        { "id": "opt_d", "label": "D. 音数增加", "value": "D" },
+        { "id": "opt_e", "label": "E. 音数减少", "value": "E" },
+        { "id": "opt_f", "label": "F. 音数不变", "value": "F" }
+      ],
+      "correctAnswer": ["C", "E"],
+      "explanation": "字母依然是 C 和 E，所以度数保持“三度”不变；E 降半音后距离 C 更近了，因此音数由原来的 2（C-E）减少到了 1.5（C-Eb）。"
+    },
+    {
+      "id": "q14",
+      "type": "multiple-choice",
+      "prompt": "14. 关于“二度和声音程”，下列哪些描述是正确的？（多选）",
+      "options": [
+        { "id": "opt_a", "label": "A. 必须是相同乐器同时发声", "value": "A" },
+        { "id": "opt_b", "label": "B. 符头的书写位置需要稍微错开", "value": "B" },
+        { "id": "opt_c", "label": "C. 具有进行的方向性", "value": "C" },
+        { "id": "opt_d", "label": "D. 同时按下 C 和 Db 可以得到“二度和声音程”", "value": "D" }
+      ],
+      "correctAnswer": ["B", "D"],
+      "explanation": "和声音程是指两个音同时发声。因为二度的两个音位置太近，符头在五线谱上必须紧贴错开记写（B 正确）；同时按下 C 和 Db 即为同时发声的二度（D 正确）。和声音程不需要指定相同乐器，也不像先后发声的旋律音程那样具有明确的前后进行方向性。"
+    },
+    {
+      "id": "q15",
+      "type": "multiple-choice",
+      "prompt": "15. 关于“和声音程”的记谱，下列说法正确的是：（多选）",
+      "options": [
+        { "id": "opt_a", "label": "A. 低音必须记在高音的右侧", "value": "A" },
+        { "id": "opt_b", "label": "B. 同谱表的二度需要左右错开排列", "value": "B" },
+        { "id": "opt_c", "label": "C. 两个音必须共享同一根符干", "value": "C" },
+        { "id": "opt_d", "label": "D. 可以同时被两件乐器演奏出来", "value": "D" },
+        { "id": "opt_e", "label": "E. 一个人一般不能发出和声音程", "value": "E" }
+      ],
+      "correctAnswer": ["B", "D", "E"],
+      "explanation": "同谱表二度和声音程在五线谱记谱法中，符头为了避免重叠，需要左右错开记写。（B 正确，A 错误）；和声音程是两个音同时发声，完全可以由两件乐器或多人合奏（D 正确）；一个人单声部（如人声）一般无法同时唱出两个音（E 正确）；多声部记谱时两个音可以有各自独立的符干，不一定要共享（C 错误）。"
+    }
+  ]
+};
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let questions = practiceData.questions;
+  let currentQuestionIndex = 0;
+  let selectedValues = [];
+
+  // Tracking Stats
+  let overallStartTime = 0;
+  let overallEndTime = 0;
+  let questionStartTime = 0;
+  let totalAttempts = 0;
+  
+  // Array of question stats:
+  // { attempts: 0, timeSpent: 0, isSolved: false, wrongChoices: [ ["A"], ["B", "C"] ] }
+  let questionStats = [];
+
+  // Session Practice History (In-memory, lasts as long as page is not closed)
+  let sessionHistory = [];
+
+  // DOM Elements
+  const progressBar = document.getElementById("progressBar");
+  const headerMeta = document.getElementById("headerMeta");
+  const lessonTag = document.getElementById("lessonTag");
+  const questionCounter = document.getElementById("questionCounter");
+  const historyToggleBtn = document.getElementById("historyToggleBtn");
+  
+  const startScreen = document.getElementById("startScreen");
+  const startPracticeBtn = document.getElementById("startPracticeBtn");
+  
+  const questionCard = document.getElementById("questionCard");
+  const typeBadge = document.getElementById("typeBadge");
+  const questionPrompt = document.getElementById("questionPrompt");
+  const optionsGrid = document.getElementById("optionsGrid");
+  const feedbackBox = document.getElementById("feedbackBox");
+  const feedbackIcon = document.getElementById("feedbackIcon");
+  const feedbackTitle = document.getElementById("feedbackTitle");
+  const explanationText = document.getElementById("explanationText");
+  
+  const prevBtn = document.getElementById("prevBtn");
+  const confirmBtn = document.getElementById("confirmBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  const resultScreen = document.getElementById("resultScreen");
+  const resAccuracy = document.getElementById("resAccuracy");
+  const resTotalTime = document.getElementById("resTotalTime");
+  const resTotalAttempts = document.getElementById("resTotalAttempts");
+  const detailList = document.getElementById("detailList");
+  const copyResultBtn = document.getElementById("copyResultBtn");
+  const restartBtn = document.getElementById("restartBtn");
+
+  const historyModal = document.getElementById("historyModal");
+  const historyList = document.getElementById("historyList");
+  const closeHistoryBtn = document.getElementById("closeHistoryBtn");
+
+  // History Toggle Modal
+  historyToggleBtn.addEventListener("click", () => {
+    renderHistoryModal();
+    historyModal.classList.remove("hidden");
+  });
+
+  closeHistoryBtn.addEventListener("click", () => {
+    historyModal.classList.add("hidden");
+  });
+
+  // Start Practice
+  startPracticeBtn.addEventListener("click", () => {
+    startScreen.classList.add("hidden");
+    questionCard.classList.remove("hidden");
+    headerMeta.classList.remove("hidden");
+
+    overallStartTime = Date.now();
+    currentQuestionIndex = 0;
+    totalAttempts = 0;
+    
+    // Initialize stats for each question
+    questionStats = questions.map(() => ({
+      attempts: 0,
+      timeSpent: 0,
+      isSolved: false,
+      wrongChoices: []
+    }));
+
+    renderQuestion();
+  });
+
+  function renderQuestion() {
+    selectedValues = [];
+    questionStartTime = Date.now();
+
+    const currentQ = questions[currentQuestionIndex];
+    const stat = questionStats[currentQuestionIndex];
+
+    // Navigation Buttons State
+    prevBtn.disabled = currentQuestionIndex === 0;
+
+    // Reset View States
+    if (stat.isSolved) {
+      // If already solved, show confirmed state
+      confirmBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
+      
+      feedbackBox.classList.remove("hidden", "wrong-bg");
+      feedbackBox.classList.add("correct-bg");
+      feedbackIcon.textContent = "✓";
+      feedbackTitle.textContent = "回答正确！（已解答）";
+      explanationText.textContent = currentQ.explanation;
+    } else {
+      confirmBtn.classList.remove("hidden");
+      confirmBtn.disabled = true;
+      nextBtn.classList.add("hidden");
+      
+      feedbackBox.classList.add("hidden");
+      feedbackBox.classList.remove("correct-bg", "wrong-bg");
+    }
+
+    // Progress Bar & Header
+    const progressPercent = ((currentQuestionIndex + 1) / questions.length) * 100;
+    progressBar.style.width = `${progressPercent}%`;
+    questionCounter.textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
+
+    // Badge
+    typeBadge.className = "type-badge";
+    if (currentQ.type === "boolean") {
+      typeBadge.textContent = "判断题";
+      typeBadge.classList.add("boolean");
+    } else if (currentQ.type === "single-choice") {
+      typeBadge.textContent = "单选题";
+      typeBadge.classList.add("single");
+    } else if (currentQ.type === "multiple-choice") {
+      typeBadge.textContent = "多选题";
+      typeBadge.classList.add("multiple");
+    }
+
+    questionPrompt.textContent = currentQ.prompt;
+
+    // Render Options
+    optionsGrid.innerHTML = "";
+    currentQ.options.forEach((opt) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.dataset.value = opt.value;
+
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = opt.label;
+      btn.appendChild(labelSpan);
+
+      const indicator = document.createElement("span");
+      indicator.className = "indicator";
+      indicator.textContent = "✓";
+      btn.appendChild(indicator);
+
+      if (stat.isSolved) {
+        btn.classList.add("disabled");
+        if (currentQ.correctAnswer.includes(opt.value)) {
+          btn.classList.add("correct");
+        }
+      } else {
+        btn.addEventListener("click", () => handleOptionClick(opt.value, btn));
+      }
+
+      optionsGrid.appendChild(btn);
+    });
+  }
+
+  function handleOptionClick(value, btnElement) {
+    const currentQ = questions[currentQuestionIndex];
+    const stat = questionStats[currentQuestionIndex];
+
+    if (stat.isSolved) return;
+
+    if (currentQ.type === "multiple-choice") {
+      if (selectedValues.includes(value)) {
+        selectedValues = selectedValues.filter((val) => val !== value);
+        btnElement.classList.remove("selected");
+      } else {
+        selectedValues.push(value);
+        btnElement.classList.add("selected");
+      }
+    } else {
+      selectedValues = [value];
+      const allBtns = optionsGrid.querySelectorAll(".option-btn");
+      allBtns.forEach((b) => b.classList.remove("selected"));
+      btnElement.classList.add("selected");
+    }
+
+    confirmBtn.disabled = selectedValues.length === 0;
+  }
+
+  // Previous Question Button
+  prevBtn.addEventListener("click", () => {
+    if (currentQuestionIndex > 0) {
+      // Accumulate time spent before leaving
+      const timeSpentNow = Math.round((Date.now() - questionStartTime) / 1000);
+      questionStats[currentQuestionIndex].timeSpent += timeSpentNow;
+
+      currentQuestionIndex--;
+      renderQuestion();
+    }
+  });
+
+  // Confirm Button Clicked
+  confirmBtn.addEventListener("click", () => {
+    if (selectedValues.length === 0) return;
+
+    const currentQ = questions[currentQuestionIndex];
+    const stat = questionStats[currentQuestionIndex];
+
+    stat.attempts += 1;
+    totalAttempts += 1;
+
+    const isCorrect = checkArraysEqual(selectedValues, currentQ.correctAnswer);
+
+    feedbackBox.classList.remove("hidden");
+
+    if (isCorrect) {
+      stat.isSolved = true;
+      const timeForThisQ = Math.round((Date.now() - questionStartTime) / 1000);
+      stat.timeSpent += timeForThisQ;
+
+      // Disable Options & Highlight Correct
+      const allBtns = optionsGrid.querySelectorAll(".option-btn");
+      allBtns.forEach((btn) => {
+        btn.classList.add("disabled");
+        if (selectedValues.includes(btn.dataset.value)) {
+          btn.classList.add("correct");
+        }
+      });
+
+      feedbackBox.classList.remove("wrong-bg");
+      feedbackBox.classList.add("correct-bg");
+      feedbackIcon.textContent = "✓";
+      feedbackTitle.textContent = "回答正确！";
+      explanationText.textContent = currentQ.explanation;
+
+      confirmBtn.classList.add("hidden");
+      nextBtn.classList.remove("hidden");
+    } else {
+      // Log wrong choice
+      stat.wrongChoices.push([...selectedValues]);
+
+      feedbackBox.classList.remove("correct-bg");
+      feedbackBox.classList.add("wrong-bg");
+      feedbackIcon.textContent = "✕";
+      feedbackTitle.textContent = "回答错误，请再试一次！";
+      explanationText.textContent = `错选解析：已尝试 [${selectedValues.join(", ")}]，仔细思考后重新选择提交。`;
+
+      selectedValues = [];
+      confirmBtn.disabled = true;
+      const allBtns = optionsGrid.querySelectorAll(".option-btn");
+      allBtns.forEach((btn) => btn.classList.remove("selected"));
+    }
+  });
+
+  // Next Question Button
+  nextBtn.addEventListener("click", () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      renderQuestion();
+    } else {
+      overallEndTime = Date.now();
+      showResults();
+    }
+  });
+
+  function showResults() {
+    questionCard.classList.add("hidden");
+    headerMeta.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+
+    const totalSeconds = Math.round((overallEndTime - overallStartTime) / 1000);
+    const accuracyPercent = ((questions.length / totalAttempts) * 100).toFixed(1);
+
+    resAccuracy.textContent = `${accuracyPercent}%`;
+    resTotalTime.textContent = formatTime(totalSeconds);
+    resTotalAttempts.textContent = `${totalAttempts}次`;
+
+    // Render Detail List
+    detailList.innerHTML = "";
+    questionStats.forEach((stat, idx) => {
+      const item = document.createElement("div");
+      item.className = "detail-item";
+
+      let wrongText = "";
+      if (stat.wrongChoices.length > 0) {
+        const formattedWrong = stat.wrongChoices.map(c => `[${c.join(",")}]`).join(", ");
+        wrongText = `<div class="detail-item-wrong-choices">❌ 错误尝试：${formattedWrong}</div>`;
+      } else {
+        wrongText = `<div class="detail-item-wrong-choices" style="color: #10b981; background: #ecfdf5;">✓ 一次通过</div>`;
+      }
+
+      item.innerHTML = `
+        <div class="detail-item-top">
+          <span>第 ${idx + 1} 题</span>
+          <span>尝试 ${stat.attempts} 次 | 用时 ${stat.timeSpent} 秒</span>
+        </div>
+        ${wrongText}
+      `;
+      detailList.appendChild(item);
+    });
+
+    // Save Record to Session History
+    const record = {
+      timestamp: new Date().toLocaleTimeString(),
+      accuracy: accuracyPercent,
+      totalTime: formatTime(totalSeconds),
+      totalAttempts: totalAttempts,
+      stats: JSON.parse(JSON.stringify(questionStats))
+    };
+    sessionHistory.unshift(record);
+  }
+
+  function renderHistoryModal() {
+    if (sessionHistory.length === 0) {
+      historyList.innerHTML = `<p style="text-align: center; color: #94a3b8; padding: 20px;">暂无历史记录，完成一次练习后会自动保存在这里。</p>`;
+      return;
+    }
+
+    historyList.innerHTML = "";
+    sessionHistory.forEach((rec, idx) => {
+      const item = document.createElement("div");
+      item.className = "history-card-item";
+      item.innerHTML = `
+        <div class="history-card-header">
+          <span>记录 #${sessionHistory.length - idx} (${rec.timestamp})</span>
+          <span>正确率: ${rec.accuracy}%</span>
+        </div>
+        <div class="history-card-meta">
+          用时: ${rec.totalTime} | 总尝试: ${rec.totalAttempts} 次
+        </div>
+      `;
+      historyList.appendChild(item);
+    });
+  }
+
+  // Copy Results Action
+  copyResultBtn.addEventListener("click", () => {
+    const totalSeconds = Math.round((overallEndTime - overallStartTime) / 1000);
+    const accuracyPercent = ((questions.length / totalAttempts) * 100).toFixed(1);
+
+    let detailText = "";
+    questionStats.forEach((stat, idx) => {
+      let wrongLog = stat.wrongChoices.length > 0 
+        ? `（错误尝试：${stat.wrongChoices.map(c => c.join(",")).join(" | ")}）`
+        : "（一次正确）";
+      detailText += `第 ${String(idx + 1).padStart(2, "0")} 题：尝试 ${stat.attempts} 次 | 用时 ${stat.timeSpent} 秒 ${wrongLog}\n`;
+    });
+
+    const reportText = `【练习结果报告】
+课程：MUSIC THEORY · INTERVAL (LESSON 01)
+主题：度数、音数、旋律音程与和声音程
+----------------------------------------
+总答题用时：${formatTime(totalSeconds)}
+综合正确率：${accuracyPercent}% (正确${questions.length}次 / 尝试${totalAttempts}次)
+
+【逐题答题与错选明细】
+${detailText}----------------------------------------
+©Sheen · Music Theory`;
+
+    navigator.clipboard.writeText(reportText).then(() => {
+      alert("答题结果已成功复制到剪贴板，包含错误尝试记录！");
+    }).catch(() => {
+      alert("复制失败，请手动截图发送。");
+    });
+  });
+
+  restartBtn.addEventListener("click", () => {
+    resultScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+    progressBar.style.width = "0%";
+  });
+
+  function checkArraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) return false;
+    const sorted1 = [...arr1].sort();
+    const sorted2 = [...arr2].sort();
+    return sorted1.every((val, index) => val === sorted2[index]);
+  }
+
+  function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, "0")}分${String(secs).padStart(2, "0")}秒`;
+  }
+});
+
+</script>
+</body>
+</html>
