@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ear Training · 第六课</title>
+  <style>
+    :root {
+      --primary: #1c1c1e;
+      --primary-hover: #000000;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+      --bg: #f2f2f7;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-secondary: #6e6e73;
+      --text-muted: #8e8e93;
+      --text-tertiary: #aeaeb2;
+      --border: #d1d1d6;
+      --surface-secondary: #f2f2f7;
+      --blue-soft: #e5e5ea;
+      --green-soft: rgba(52, 199, 89, 0.12);
+      --orange-soft: rgba(255, 159, 10, 0.12);
+      --red-soft: rgba(255, 59, 48, 0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, select, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .top-header {
+      width: 100%; max-width: 480px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-muted); padding: 8px 2px 18px; text-transform: uppercase;
+    }
+    .main-wrapper { width: 100%; max-width: 480px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+    .card {
+      background: var(--card-bg); border-radius: 18px; padding: 24px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.025), 0 8px 24px rgba(0,0,0,0.035);
+      border: 1px solid rgba(209,209,214,0.65);
+    }
+    .header-section { margin-bottom: 18px; }
+    .sub-title-top { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; margin-bottom: 6px; }
+    .main-title { font-size: 30px; font-weight: 600; color: var(--text-main); line-height: 1.18; letter-spacing: 0.01em; margin-bottom: 7px; }
+    .main-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+    .settings-details { background: var(--surface-secondary); border-radius: 13px; margin-bottom: 18px; overflow: hidden; border: 1px solid rgba(209,209,214,0.8); }
+    .settings-summary {
+      padding: 12px 15px; font-size: 13px; font-weight: 500; color: var(--text-main);
+      cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;
+      letter-spacing: 0.01em; list-style: none;
+    }
+    .settings-summary::-webkit-details-marker { display: none; }
+    .settings-summary::after { content: "⌄"; font-size: 15px; line-height: 1; color: var(--text-muted); transition: transform 0.2s ease; }
+    .settings-details[open] .settings-summary::after { transform: rotate(180deg); }
+    .collapsed-content { padding: 0 15px 15px; }
+    .rule-box-inner {
+      background: var(--orange-soft); border: 1px solid rgba(255,159,10,0.25);
+      border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #8a5a00; margin-bottom: 13px; line-height: 1.55;
+    }
+    .rule-box-inner strong { font-weight: 600; }
+    .register-line {
+      font-size: 12px; color: var(--text-secondary); background: var(--blue-soft);
+      border-radius: 9px; padding: 9px 11px; margin-bottom: 13px; text-align: center; letter-spacing: 0.01em;
+    }
+    .register-line strong { color: var(--text-main); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { font-size: 11px; color: var(--text-secondary); font-weight: 500; display: block; margin-bottom: 5px; letter-spacing: 0.01em; }
+    select { width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 9px; background: #fff; font-size: 13px; color: var(--text-main); outline: none; appearance: auto; }
+    select:focus { border-color: #8e8e93; }
+    
+    .target-card { background: var(--surface-secondary); border: 1px solid rgba(209,209,214,0.8); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 17px; }
+    .target-pair-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .target-half-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); text-align: center; }
+    .target-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+    .target-note { font-size: 26px; font-weight: 600; color: var(--text-main); line-height: 1.08; letter-spacing: -0.02em; margin: 5px 0 3px; font-variant-numeric: tabular-nums; }
+    .target-freq { font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .interval-text { font-size: 12px; color: var(--text-secondary); margin-bottom: 13px; font-weight: 500; letter-spacing: 0.01em; }
+    
+    .btn {
+      width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease, transform 0.08s ease, opacity 0.18s ease;
+      display: flex; justify-content: center; align-items: center; gap: 6px; min-height: 46px;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.985); }
+    .btn-tone { background: #e5e5ea; color: var(--text-main); }
+    .btn-tone:hover:not(:disabled) { background: #dcdce1; }
+    .btn-tone.playing { background: var(--warning); color: white; }
+    
+    .headphone-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin: 12px 0; cursor: pointer; font-weight: 400; }
+    .headphone-toggle input { width: 15px; height: 15px; accent-color: #1c1c1e; margin: 0; }
+
+    /* 双音采集区域样式 */
+    .dual-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 17px 0 10px; }
+    .status-box-dual { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: 15px; padding: 15px 12px; }
+    .pitch-val { font-size: 20px; font-weight: 600; margin: 5px 0; color: var(--text-main); font-variant-numeric: tabular-nums; }
+    .mic-capture-btn { background: var(--text-main); color: white; margin-top: 8px; font-size: 12px; padding: 8px; min-height: 36px; }
+    .mic-capture-btn:hover:not(:disabled) { background: #000000; }
+    .mic-capture-btn.active { background: var(--danger); }
+    .mic-capture-btn.locked { background: var(--success); cursor: default; }
+
+    /* 实时音高偏差滑块显示区 */
+    .status-box-global { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: 15px; padding: 14px 16px; margin-bottom: 14px; }
+    .meter-bar { height: 8px; background: #e5e5ea; border-radius: 999px; position: relative; margin: 12px 0 8px; overflow: hidden; }
+    .meter-pointer { width: 5px; height: 100%; background: #8e8e93; position: absolute; left: 50%; transform: translateX(-50%); transition: left 0.08s ease-out, background-color 0.15s ease; border-radius: 999px; z-index: 2; }
+    .meter-target-zone { position: absolute; top: 0; height: 100%; background: rgba(52,199,89,0.24); left: 50%; transform: translateX(-50%); border-radius: 999px; }
+
+    .progress-text { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 10px; font-weight: 400; }
+    .btn-next { background: #e5e5ea; color: #aeaeb2; cursor: not-allowed; margin-bottom: 10px; }
+    .btn-next.unlocked { background: var(--success); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(52,199,89,0.16); }
+    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-restart { background: var(--surface-secondary); color: var(--text-secondary); }
+    .btn-restart:hover:not(:disabled) { background: #e5e5ea; }
+    .btn-finish { background: var(--surface-secondary); color: var(--text-tertiary); cursor: not-allowed; }
+    .btn-finish.unlocked { background: var(--red-soft); color: var(--danger); cursor: pointer; }
+    
+    .report-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 14px; font-size: 11px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; }
+    .report-table th, .report-table td { border: none; border-bottom: 1px solid #e5e5ea; padding: 8px 3px; text-align: center; }
+    .report-table th { background: var(--surface-secondary); color: var(--text-secondary); font-weight: 500; }
+    .report-table tr:last-child td { border-bottom: none; }
+    .report-table td { color: var(--text-main); font-variant-numeric: tabular-nums; }
+    .hidden { display: none; }
+    .footer-bar { text-align: center; font-size: 11px; color: var(--text-tertiary); padding: 17px 0 8px; font-weight: 400; letter-spacing: 0.04em; }
+    @media (max-width: 380px) {
+      body { padding-left: 12px; padding-right: 12px; }
+      .card { padding: 20px 17px; border-radius: 16px; }
+      .main-title { font-size: 28px; }
+      .config-grid { gap: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <span>EAR TRAINING · 2ND</span>
+    <span>LESSON 06</span>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="card" id="practiceCard">
+
+      <div class="header-section">
+        <div class="sub-title-top">自然音程听觉训练 · 第六课</div>
+        <h1 class="main-title">二度和声音程模唱</h1>
+        <p class="main-desc">听到合在一起的两个音后，分别模唱出低音与高音。</p>
+      </div>
+
+      <!-- 需求1：默认折叠状态 (移除了 open 属性) -->
+      <details class="settings-details">
+        <summary class="settings-summary">练习规则与参数设置</summary>
+        <div class="collapsed-content">
+          <div class="rule-box-inner">
+            <strong>练习规则：</strong><br>
+            1. 先选择<strong>练习模式</strong>（大二度、小二度或随机混合）。系统将在你的音区内随机生成一个和声音程（钢琴音色双音同时发声）。<br>
+            2. 点击"播放示范音"聆听双音，然后分别点击对应的采集按钮，对准麦克风模唱出<strong>低音</strong>与<strong>高音</strong>。<br>
+            3. 本课判定两个音的音名：分别点击低音和高音的采集按钮锁定演唱音高，<strong>任意八度均可</strong>。保持音准稳定 <strong>0.2 秒</strong>以上即锁定通过。<br>
+            4. 连续 <strong>正确完成 10 题</strong>才可解锁"结束练习"按钮。<br>
+            5. 建议佩戴耳机；若未勾选"已佩戴耳机"，播放示范音时麦克风会自动暂停。
+          </div>
+          <div class="register-line" id="registerLine">当前练习音区：<strong>--</strong></div>
+          <div class="config-grid">
+            <div>
+              <label>最低音</label>
+              <select id="minNoteSelect" onchange="onConfigChange()"></select>
+            </div>
+            <div>
+              <label>最高音</label>
+              <select id="maxNoteSelect" onchange="onConfigChange()"></select>
+            </div>
+            <div>
+              <label>练习模式</label>
+              <select id="exerciseSelect" onchange="onConfigChange()">
+                <option value="random" selected>随机混合</option>
+                <option value="maj2">大二度 (全音)</option>
+                <option value="min2">小二度 (半音)</option>
+              </select>
+            </div>
+            <div>
+              <label>容错阈值</label>
+              <select id="toleranceSelect" onchange="updateToleranceZone()">
+                <option value="5">±5 音分</option>
+                <option value="20" selected>±20 音分</option>
+                <option value="50">±50 音分</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="target-card">
+        <div class="target-label" style="margin-bottom: 8px;">示范音 (你听到的)</div>
+        <div class="target-pair-dual">
+          <div class="target-half-box">
+            <div class="target-label">低音 (Lower)</div>
+            <div class="target-note" id="refLowNoteName">--</div>
+            <div class="target-freq" id="refLowFreqText">-- Hz</div>
+          </div>
+          <div class="target-half-box">
+            <div class="target-label">高音 (Higher)</div>
+            <div class="target-note" id="refHighNoteName">--</div>
+            <div class="target-freq" id="refHighFreqText">-- Hz</div>
+          </div>
+        </div>
+        <div class="interval-text" id="intervalText">--</div>
+        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音</button>
+      </div>
+
+      <label class="headphone-toggle">
+        <input type="checkbox" id="headphoneCheckbox" onchange="handleHeadphoneToggle()">
+        <span>已佩戴耳机</span>
+      </label>
+
+      <!-- 双音独立采集按钮区域 -->
+      <div class="dual-status-grid">
+        <div class="status-box-dual">
+          <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">低音捕获</div>
+          <div class="pitch-val" id="lowPitchText">--</div>
+          <div id="lowStatusText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">等待采集</div>
+          <button class="btn mic-capture-btn" id="lowMicBtn" onclick="toggleCaptureMic('low')">采集低音</button>
+        </div>
+        <div class="status-box-dual">
+          <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;">高音捕获</div>
+          <div class="pitch-val" id="highPitchText">--</div>
+          <div id="highStatusText" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">等待采集</div>
+          <button class="btn mic-capture-btn" id="highMicBtn" onclick="toggleCaptureMic('high')">采集高音</button>
+        </div>
+      </div>
+
+      <!-- 需求3：恢复音高检测滑块与实时偏差显示 (放在进度条上方) -->
+      <div class="status-box-global">
+        <div style="font-size: 11px; color: var(--text-muted);">实时音高捕获与偏差指示</div>
+        <div id="centsDevText" style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 3px;">请点击上方按钮开始采集...</div>
+        <div class="meter-bar">
+          <div class="meter-target-zone" id="targetZone"></div>
+          <div class="meter-pointer" id="pointer"></div>
+        </div>
+        <div id="holdingProgress" style="font-size: 11px; color: var(--text-muted);">保持音准稳定 0.2 秒锁定</div>
+      </div>
+
+      <div class="progress-text">练习结束进度：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
+
+      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">双音模唱正确，进入下一题</button>
+
+      <div class="action-row">
+        <button class="btn btn-restart" onclick="restartPractice()">重新开始</button>
+        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">结束练习并生成报告</button>
+      </div>
+
+    </div>
+
+    <div class="card hidden" id="reportCard">
+      <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">二度和声模唱报告 Summary</h2>
+      <p style="font-size: 13px; color: var(--text-muted);">连续达标题数：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>音程类型</th>
+            <th>标准低音</th>
+            <th>标准高音</th>
+            <th>演唱低音</th>
+            <th>演唱高音</th>
+            <th>耗时</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+      <button class="btn mic-btn" style="margin-top: 16px; background: var(--text-main); color: #fff;" onclick="copyReport()">复制练习报告</button>
+      <button class="btn btn-tone" style="margin-top: 8px;" onclick="restartPractice()">重新开始练习</button>
+    </div>
+  </main>
+
+  <footer class="footer-bar">©Sheen · Ear Training</footer>
+
+<script>
+  const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+  const EXERCISES = {
+    random: { name: "随机混合" },
+    maj2:   { name: "大二度", semitones: 2 },
+    min2:   { name: "小二度", semitones: 1 }
+  };
+
+  const LETTER_SEQ = ["C", "D", "E", "F", "G", "A", "B"];
+  const LETTER_NATURAL_PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+
+  const REF_SPELLING = [
+    { letter: "C", acc: 0 }, { letter: "C", acc: 1 }, { letter: "D", acc: 0 },
+    { letter: "E", acc: -1 }, { letter: "E", acc: 0 }, { letter: "F", acc: 0 },
+    { letter: "F", acc: 1 }, { letter: "G", acc: 0 }, { letter: "G", acc: 1 },
+    { letter: "A", acc: 0 }, { letter: "B", acc: -1 }, { letter: "B", acc: 0 }
+  ];
+
+  function accSuffix(acc) {
+    if (acc === 1) return "#";
+    if (acc === -1) return "b";
+    if (acc === 2) return "##";
+    if (acc === -2) return "bb";
+    return "";
+  }
+
+  function spellTarget(refLetter, refPitchClass, semitones) {
+    const refIdx = LETTER_SEQ.indexOf(refLetter);
+    const targetLetter = LETTER_SEQ[(refIdx + 1) % 7];
+    const targetNatural = LETTER_NATURAL_PC[targetLetter];
+    const desiredPc = ((refPitchClass + semitones) % 12 + 12) % 12;
+    let acc = desiredPc - targetNatural;
+    while (acc > 6) acc -= 12;
+    while (acc < -6) acc += 12;
+    return { letter: targetLetter, acc, name: targetLetter + accSuffix(acc) };
+  }
+
+  function isAwkwardSpelling(letter, acc) {
+    if (Math.abs(acc) >= 2) return true;
+    if (acc === 1 && (letter === "E" || letter === "B")) return true;
+    if (acc === -1 && (letter === "C" || letter === "F")) return true;
+    return false;
+  }
+
+  function spellWithOctave(letter, acc, midi) {
+    return `${letter}${accSuffix(acc)}${Math.floor(midi / 12) - 1}`;
+  }
+
+  let audioCtx = null;
+  let analyser = null;
+  let mediaStream = null;
+  let animationId = null;
+  
+  // 钢琴音色节点存储
+  let pianoNodesLow = [];
+  let pianoNodesHigh = [];
+  let isTonePlaying = false;
+
+  let isListening = false;
+  let activeCaptureTarget = null; // 'low' 或 'high'
+  
+  let currentLowMidi = 60;
+  let currentHighMidi = 62;
+  let currentIntervalName = "大二度";
+  let currentLowSpell = "C4";
+  let currentHighSpell = "D4";
+  let currentLowClass = 0;
+  let currentHighClass = 2;
+  
+  let lowCaptured = false;
+  let highCaptured = false;
+  let lowStableStartTime = null;
+  let highStableStartTime = null;
+
+  let questionStartTime = 0;
+  let practiceStartTime = 0;
+  let consecutivePassCount = 0;
+  let questionHistory = [];
+  let pitchBuffer = [];
+  let micPausedForTone = false;
+
+  function midiToNoteName(midi) {
+    return `${NOTE_NAMES[((midi % 12) + 12) % 12]}${Math.floor(midi / 12) - 1}`;
+  }
+  function midiToFreq(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+
+  function populateNoteSelects() {
+    const minSel = document.getElementById('minNoteSelect');
+    const maxSel = document.getElementById('maxNoteSelect');
+    for (let m = 36; m <= 84; m++) {
+      const opt = document.createElement('option');
+      opt.value = m;
+      opt.textContent = `${midiToNoteName(m)} (${midiToFreq(m).toFixed(1)}Hz)`;
+      minSel.appendChild(opt.cloneNode(true));
+      maxSel.appendChild(opt);
+    }
+    minSel.value = 48;
+    maxSel.value = 72;
+  }
+
+  function updateRegisterLine() {
+    const minMidi = parseInt(document.getElementById('minNoteSelect').value);
+    const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
+    const modeKey = document.getElementById('exerciseSelect').value;
+    const modeName = EXERCISES[modeKey].name;
+    document.getElementById('registerLine').innerHTML =
+      `当前练习音区：<strong>${midiToNoteName(minMidi)} – ${midiToNoteName(maxMidi)}</strong> · ${modeName}`;
+  }
+
+  function onConfigChange() {
+    const minMidi = parseInt(document.getElementById('minNoteSelect').value);
+    const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
+    if (minMidi >= maxMidi) {
+      document.getElementById('maxNoteSelect').value = Math.min(84, minMidi + 12);
+    }
+    updateRegisterLine();
+    restartPractice();
+  }
+
+  function toggleTargetTone() {
+    if (isTonePlaying) stopTargetTone(true);
+    else startTargetTone();
+  }
+
+  // 需求2：用合成钢琴音色（多泛音 + 自然衰减包络）替代纯正弦波，消除低音区纠缠感
+  function playPianoNote(freq, timeOffset = 0) {
+    if (!audioCtx) return [];
+    
+    // 钢琴模拟泛音比例与权重（基频、2倍频、3倍频、4倍频等）
+    const harmonics = [
+      { mult: 1, gain: 0.6 },
+      { mult: 2, gain: 0.3 },
+      { mult: 3, gain: 0.15 },
+      { mult: 4, gain: 0.08 },
+      { mult: 5, gain: 0.04 }
+    ];
+
+    let nodes = [];
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(0.35, audioCtx.currentTime + timeOffset);
+    // 模拟自然钢琴音符的弹奏衰减（持续约 2.5 秒柔和余音）
+    masterGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + timeOffset + 2.5);
+    masterGain.connect(audioCtx.destination);
+    nodes.push(masterGain);
+
+    harmonics.forEach(h => {
+      if (freq * h.mult > 20000) return; // 超出听觉上限则跳过
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      
+      osc.type = h.mult === 1 ? 'sine' : 'triangle'; // 丰富音色质感
+      osc.frequency.setValueAtTime(freq * h.mult, audioCtx.currentTime + timeOffset);
+      
+      gain.gain.setValueAtTime(h.gain, audioCtx.currentTime + timeOffset);
+      
+      osc.connect(gain);
+      gain.connect(masterGain);
+      
+      osc.start(audioCtx.currentTime + timeOffset);
+      nodes.push(osc);
+    });
+
+    return nodes;
+  }
+
+  function startTargetTone() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isListening) {
+      micPausedForTone = true;
+      stopMic();
+    }
+
+    stopTargetTone(false);
+
+    const freqLow = midiToFreq(currentLowMidi);
+    const freqHigh = midiToFreq(currentHighMidi);
+
+    // 双音同时触发钢琴音色
+    pianoNodesLow = playPianoNote(freqLow);
+    pianoNodesHigh = playPianoNote(freqHigh);
+    isTonePlaying = true;
+
+    const toneBtn = document.getElementById('toneBtn');
+    toneBtn.textContent = "停止播放示范音";
+    toneBtn.classList.add('playing');
+
+    // 自动在 2.5 秒后恢复按钮状态
+    setTimeout(() => {
+      if (isTonePlaying) {
+        stopTargetTone(false);
+      }
+    }, 2600);
+  }
+
+  function stopTargetTone(autoResumeMic = false) {
+    if (isTonePlaying) {
+      try {
+        [...pianoNodesLow, ...pianoNodesHigh].forEach(node => {
+          if (node.stop) node.stop();
+          if (node.disconnect) node.disconnect();
+        });
+      } catch(e) {}
+    }
+    pianoNodesLow = [];
+    pianoNodesHigh = [];
+    isTonePlaying = false;
+    const toneBtn = document.getElementById('toneBtn');
+    toneBtn.textContent = "播放示范音";
+    toneBtn.classList.remove('playing');
+    if (micPausedForTone) {
+      micPausedForTone = false;
+      if (autoResumeMic && (!lowCaptured || !highCaptured)) startMic(activeCaptureTarget);
+    }
+  }
+
+  function handleHeadphoneToggle() {
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isListening && isTonePlaying) stopTargetTone();
+  }
+
+  async function toggleCaptureMic(targetType) {
+    if (activeCaptureTarget === targetType) {
+      stopMic();
+      return;
+    }
+    if (!lowCaptured && targetType === 'low' || !highCaptured && targetType === 'high') {
+      await startMic(targetType);
+    }
+  }
+
+  async function startMic(targetType) {
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isTonePlaying) stopTargetTone();
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+      if (!mediaStream) {
+        try { mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } }); }
+        catch(e) { mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+      }
+      const source = audioCtx.createMediaStreamSource(mediaStream);
+      const hpFilter = audioCtx.createBiquadFilter();
+      hpFilter.type = "highpass";
+      hpFilter.frequency.setValueAtTime(60, audioCtx.currentTime);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      source.connect(hpFilter);
+      hpFilter.connect(analyser);
+      
+      isListening = true;
+      activeCaptureTarget = targetType;
+      
+      updateCaptureButtonUI();
+      if (practiceStartTime === 0) practiceStartTime = Date.now();
+      processAudio();
+    } catch (err) {
+      alert("无法获取麦克风权限，请确保浏览器允许使用麦克风: " + err.message);
+    }
+  }
+
+  function stopMic() {
+    isListening = false;
+    activeCaptureTarget = null;
+    if (animationId) cancelAnimationFrame(animationId);
+    updateCaptureButtonUI();
+    resetStatusDisplay();
+  }
+
+  function updateCaptureButtonUI() {
+    const lowBtn = document.getElementById('lowMicBtn');
+    const highBtn = document.getElementById('highMicBtn');
+
+    if (lowCaptured) {
+      lowBtn.textContent = "✓ 低音已锁定";
+      lowBtn.className = "btn mic-capture-btn locked";
+      lowBtn.disabled = true;
+    } else if (activeCaptureTarget === 'low') {
+      lowBtn.textContent = "正在采集低音...";
+      lowBtn.className = "btn mic-capture-btn active";
+      lowBtn.disabled = false;
+    } else {
+      lowBtn.textContent = "采集低音";
+      lowBtn.className = "btn mic-capture-btn";
+      lowBtn.disabled = false;
+    }
+
+    if (highCaptured) {
+      highBtn.textContent = "✓ 高音已锁定";
+      highBtn.className = "btn mic-capture-btn locked";
+      highBtn.disabled = true;
+    } else if (activeCaptureTarget === 'high') {
+      highBtn.textContent = "正在采集高音...";
+      highBtn.className = "btn mic-capture-btn active";
+      highBtn.disabled = false;
+    } else {
+      highBtn.textContent = "采集高音";
+      highBtn.className = "btn mic-capture-btn";
+      highBtn.disabled = false;
+    }
+  }
+
+  // 需求3：实时音高检测与滑块偏差同步计算
+  function processAudio() {
+    if (!isListening || !activeCaptureTarget) return;
+    const buffer = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(buffer);
+    const rawPitch = autoCorrelate(buffer, audioCtx.sampleRate);
+
+    if (rawPitch !== -1) {
+      const PITCH_SMOOTH_WINDOW = 8;
+      pitchBuffer.push(rawPitch);
+      if (pitchBuffer.length > PITCH_SMOOTH_WINDOW) pitchBuffer.shift();
+      const smoothPitch = pitchBuffer.reduce((a, b) => a + b) / pitchBuffer.length;
+
+      const detectedMidiFloat = 69 + 12 * Math.log2(smoothPitch / 440);
+      const detectedClass = ((Math.round(detectedMidiFloat) % 12) + 12) % 12;
+      const noteStr = midiToNoteName(Math.round(detectedMidiFloat));
+
+      const targetClass = activeCaptureTarget === 'low' ? currentLowClass : currentHighClass;
+      const targetSpell = activeCaptureTarget === 'low' ? currentLowSpell : currentHighSpell;
+
+      let nearestTargetMidi = targetClass + Math.floor(detectedMidiFloat / 12) * 12;
+      let midiDiff = nearestTargetMidi - detectedMidiFloat;
+      if (midiDiff > 6) nearestTargetMidi -= 12;
+      else if (midiDiff < -6) nearestTargetMidi += 12;
+      const centsError = (detectedMidiFloat - nearestTargetMidi) * 100;
+
+      // 更新全局滑块和偏差UI
+      updateStatusUI(noteStr, smoothPitch, centsError, detectedClass, targetClass, targetSpell);
+
+      if (activeCaptureTarget === 'low') {
+        document.getElementById('lowPitchText').textContent = `${noteStr} (${smoothPitch.toFixed(1)}Hz)`;
+        const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+
+        if (detectedClass === currentLowClass && Math.abs(centsError) <= tolerance) {
+          if (!lowStableStartTime) {
+            lowStableStartTime = Date.now();
+          } else {
+            let hold = (Date.now() - lowStableStartTime) / 1000;
+            document.getElementById('lowStatusText').textContent = `保持中: ${hold.toFixed(1)}s / 0.2s`;
+            document.getElementById('lowStatusText').style.color = '#10b981';
+            if (hold >= 0.2) {
+              lowCaptured = true;
+              stopMic();
+              checkAllPassed();
+            }
+          }
+        } else {
+          lowStableStartTime = null;
+          document.getElementById('lowStatusText').textContent = detectedClass !== currentLowClass ? "音名不符" : "音准微调中";
+          document.getElementById('lowStatusText').style.color = '#ff3b30';
+        }
+      } else if (activeCaptureTarget === 'high') {
+        document.getElementById('highPitchText').textContent = `${noteStr} (${smoothPitch.toFixed(1)}Hz)`;
+        const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+
+        if (detectedClass === currentHighClass && Math.abs(centsError) <= tolerance) {
+          if (!highStableStartTime) {
+            highStableStartTime = Date.now();
+          } else {
+            let hold = (Date.now() - highStableStartTime) / 1000;
+            document.getElementById('highStatusText').textContent = `保持中: ${hold.toFixed(1)}s / 0.2s`;
+            document.getElementById('highStatusText').style.color = '#10b981';
+            if (hold >= 0.2) {
+              highCaptured = true;
+              stopMic();
+              checkAllPassed();
+            }
+          }
+        } else {
+          highStableStartTime = null;
+          document.getElementById('highStatusText').textContent = detectedClass !== currentHighClass ? "音名不符" : "音准微调中";
+          document.getElementById('highStatusText').style.color = '#ff3b30';
+        }
+      }
+    } else {
+      pitchBuffer = [];
+      if (activeCaptureTarget === 'low') lowStableStartTime = null;
+      if (activeCaptureTarget === 'high') highStableStartTime = null;
+    }
+
+    if (isListening) {
+      animationId = requestAnimationFrame(processAudio);
+    }
+  }
+
+  function updateStatusUI(noteStr, freq, cents, detectedClass, targetClass, targetSpell) {
+    const centsText = document.getElementById('centsDevText');
+    const pointer = document.getElementById('pointer');
+    const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+    const pos = 50 + (Math.max(-50, Math.min(50, cents)) / 50) * 50;
+    pointer.style.left = `${pos}%`;
+    const absCents = Math.abs(cents);
+
+    if (detectedClass === targetClass && absCents <= tolerance) {
+      centsText.textContent = `音名正确 (${cents > 0 ? '+' : ''}${cents.toFixed(1)} Cents)`;
+      centsText.style.color = "#10b981";
+      pointer.style.background = "#10b981";
+    } else if (detectedClass !== targetClass) {
+      centsText.textContent = `音名不符（应为 ${targetSpell}）`;
+      centsText.style.color = "#ff3b30";
+      pointer.style.background = "#ff3b30";
+    } else {
+      centsText.textContent = `${cents > 0 ? '偏高' : '偏低'} (${cents.toFixed(1)} Cents)`;
+      centsText.style.color = "#f59e0b";
+      pointer.style.background = "#f59e0b";
+    }
+  }
+
+  function updateToleranceZone() {
+    const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+    document.getElementById('targetZone').style.width = `${(tolerance / 50) * 100}%`;
+  }
+
+  function resetStatusDisplay() {
+    const centsText = document.getElementById('centsDevText');
+    centsText.textContent = "请点击上方按钮开始采集...";
+    centsText.style.color = "#64748b";
+    document.getElementById('pointer').style.left = "50%";
+    document.getElementById('pointer').style.background = "#94a3b8";
+    document.getElementById('holdingProgress').textContent = "保持音准稳定 0.2 秒锁定";
+    document.getElementById('holdingProgress').style.color = "#64748b";
+  }
+
+  function checkAllPassed() {
+    updateCaptureButtonUI();
+    if (lowCaptured && highCaptured) {
+      if (isTonePlaying) stopTargetTone();
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = false;
+      nextBtn.classList.add('unlocked');
+      nextBtn.textContent = "✓ 双音模唱正确！点击进入下一题";
+      
+      consecutivePassCount++;
+      document.getElementById('passCountText').textContent = consecutivePassCount;
+      const duration = ((Date.now() - questionStartTime) / 1000).toFixed(1);
+      
+      questionHistory.push({
+        id: questionHistory.length + 1,
+        type: currentIntervalName,
+        lowTarget: currentLowSpell,
+        highTarget: currentHighSpell,
+        lowCapturedText: document.getElementById('lowPitchText').textContent,
+        highCapturedText: document.getElementById('highPitchText').textContent,
+        time: duration
+      });
+
+      if (consecutivePassCount >= 10) {
+        const finishBtn = document.getElementById('finishBtn');
+        finishBtn.disabled = false;
+        finishBtn.classList.add('unlocked');
+      }
+    }
+  }
+
+  function generateQuestion() {
+    stopTargetTone();
+    let minMidi = parseInt(document.getElementById('minNoteSelect').value);
+    let maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
+    if (minMidi >= maxMidi) maxMidi = Math.min(84, minMidi + 12);
+
+    let modeKey = document.getElementById('exerciseSelect').value;
+    let semitones = 2;
+    if (modeKey === "random") {
+      semitones = Math.random() < 0.5 ? 2 : 1;
+    } else if (modeKey === "min2") {
+      semitones = 1;
+    } else {
+      semitones = 2;
+    }
+
+    currentIntervalName = semitones === 2 ? "大二度" : "小二度";
+
+    let lowMidi, highMidi, lowSpell, highSpell;
+    let attempts = 0;
+    do {
+      lowMidi = Math.floor(Math.random() * (maxMidi - minMidi + 1 - semitones)) + minMidi;
+      highMidi = lowMidi + semitones;
+      const lowPc = ((lowMidi % 12) + 12) % 12;
+      const refSp = REF_SPELLING[lowPc];
+      const targetSp = spellTarget(refSp.letter, lowPc, semitones);
+      lowSpell = spellWithOctave(refSp.letter, refSp.acc, lowMidi);
+      highSpell = spellWithOctave(targetSp.letter, targetSp.acc, highMidi);
+      attempts++;
+    } while (isAwkwardSpelling(spellTarget(REF_SPELLING[((lowMidi%12)+12)%12].letter, ((lowMidi%12)+12)%12, semitones).letter, spellTarget(REF_SPELLING[((lowMidi%12)+12)%12].letter, ((lowMidi%12)+12)%12, semitones).acc) && attempts < 30);
+
+    currentLowMidi = lowMidi;
+    currentHighMidi = highMidi;
+    currentLowClass = ((lowMidi % 12) + 12) % 12;
+    currentHighClass = ((highMidi % 12) + 12) % 12;
+    currentLowSpell = lowSpell;
+    currentHighSpell = highSpell;
+
+    document.getElementById('refLowNoteName').textContent = lowSpell;
+    document.getElementById('refLowFreqText').textContent = `${midiToFreq(lowMidi).toFixed(1)} Hz`;
+    document.getElementById('refHighNoteName').textContent = highSpell;
+    document.getElementById('refHighFreqText').textContent = `${midiToFreq(highMidi).toFixed(1)} Hz`;
+    document.getElementById('intervalText').textContent = `${currentIntervalName} · 任意八度均可`;
+
+    lowCaptured = false;
+    highCaptured = false;
+    lowStableStartTime = null;
+    highStableStartTime = null;
+    questionStartTime = Date.now();
+    pitchBuffer = [];
+
+    document.getElementById('lowPitchText').textContent = "--";
+    document.getElementById('lowStatusText').textContent = "等待采集";
+    document.getElementById('lowStatusText').style.color = "var(--text-muted)";
+    document.getElementById('highPitchText').textContent = "--";
+    document.getElementById('highStatusText').textContent = "等待采集";
+    document.getElementById('highStatusText').style.color = "var(--text-muted)";
+
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.disabled = true;
+    nextBtn.classList.remove('unlocked');
+    nextBtn.textContent = "双音模唱正确，进入下一题";
+    updateCaptureButtonUI();
+    resetStatusDisplay();
+  }
+
+  function nextQuestion() {
+    if (!lowCaptured || !highCaptured) return;
+    generateQuestion();
+    startTargetTone();
+  }
+
+  function restartPractice() {
+    consecutivePassCount = 0;
+    questionHistory = [];
+    practiceStartTime = 0;
+    document.getElementById('passCountText').textContent = "0";
+    const finishBtn = document.getElementById('finishBtn');
+    finishBtn.disabled = true;
+    finishBtn.classList.remove('unlocked');
+    document.getElementById('reportCard').classList.add('hidden');
+    document.getElementById('practiceCard').classList.remove('hidden');
+    stopMic();
+    stopTargetTone();
+    generateQuestion();
+  }
+
+  function autoCorrelate(buf, sampleRate) {
+    let SIZE = buf.length;
+    let rms = 0;
+    for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+    rms = Math.sqrt(rms / SIZE);
+    if (rms < 0.008) return -1;
+    let r1 = 0, r2 = SIZE - 1, thres = 0.2;
+    for (let i = 0; i < SIZE / 2; i++) { if (Math.abs(buf[i]) < thres) { r1 = i; break; } }
+    for (let i = 1; i < SIZE / 2; i++) { if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; } }
+    buf = buf.slice(r1, r2);
+    SIZE = buf.length;
+    let c = new Array(SIZE).fill(0);
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE - i; j++) { c[i] = c[i] + buf[j] * buf[j + i]; }
+    }
+    let d = 0;
+    while (c[d] > c[d + 1]) d++;
+    let maxval = -1, maxpos = -1;
+    for (let i = d; i < SIZE; i++) { if (c[i] > maxval) { maxval = c[i]; maxpos = i; } }
+    let T0 = maxpos;
+    if (T0 <= 0) return -1;
+    let x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+    let a = (x1 + x3 - 2 * x2) / 2;
+    let b = (x3 - x1) / 2;
+    if (a) T0 = T0 - b / (2 * a);
+    return sampleRate / T0;
+  }
+
+  function finishPractice() {
+    if (consecutivePassCount < 10) return;
+    stopMic();
+    stopTargetTone();
+    document.getElementById('practiceCard').classList.add('hidden');
+    document.getElementById('reportCard').classList.remove('hidden');
+    const totalTime = ((Date.now() - practiceStartTime) / 1000).toFixed(0);
+    document.getElementById('totalTimeText').textContent = totalTime;
+    const tbody = document.getElementById('reportTableBody');
+    tbody.innerHTML = '';
+    questionHistory.slice(-10).forEach((q, idx) => {
+      tbody.innerHTML += `<tr>
+        <td>${idx + 1}</td>
+        <td>${q.type}</td>
+        <td>${q.lowTarget}</td>
+        <td>${q.highTarget}</td>
+        <td>${q.lowCapturedText}</td>
+        <td>${q.highCapturedText}</td>
+        <td>${q.time}s</td>
+      </tr>`;
+    });
+  }
+
+  function copyReport() {
+    const totalTime = document.getElementById('totalTimeText').textContent;
+    const minMidi = parseInt(document.getElementById('minNoteSelect').value);
+    const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
+    const modeName = EXERCISES[document.getElementById('exerciseSelect').value].name;
+    let text = `【第六课 二度和声音程模唱 练习报告】
+练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)} | 练习模式：${modeName}
+连续通过：10 题 | 总耗时：${totalTime} 秒
+----------------------------------
+`;
+    questionHistory.slice(-10).forEach((q, i) => {
+      text += `第${i+1}题: [${q.type}] 标准低(${q.lowTarget})/高(${q.highTarget}) | 演唱低[${q.lowCapturedText}] 高[${q.highCapturedText}] | 耗时[${q.time}s]
+`;
+    });
+    navigator.clipboard.writeText(text).then(() => {
+      alert("练习报告已成功复制到剪贴板，快发送给老师检查吧！");
+    }).catch(() => {
+      alert("复制失败，请截图成绩表发送给老师。");
+    });
+  }
+
+  window.onload = () => {
+    populateNoteSelects();
+    updateRegisterLine();
+    updateToleranceZone();
+    generateQuestion();
+  };
+</script>
+
+</body>
+</html>

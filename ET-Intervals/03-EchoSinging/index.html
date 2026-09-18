@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ear Training · 第三课</title>
+  <style>
+    :root {
+      /* Apple-like neutral palette */
+      --primary: #1c1c1e;
+      --primary-hover: #000000;
+
+      --success: #34c759;
+      --success-hover: #30b94f;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+
+      --bg: #f2f2f7;
+      --card-bg: #ffffff;
+
+      --text-main: #1c1c1e;
+      --text-secondary: #6e6e73;
+      --text-muted: #8e8e93;
+      --text-tertiary: #aeaeb2;
+
+      --border: #d1d1d6;
+      --surface-secondary: #f2f2f7;
+      --surface-tertiary: #e5e5ea;
+
+      --blue-soft: #e5e5ea;
+      --green-soft: rgba(52, 199, 89, 0.12);
+      --orange-soft: rgba(255, 159, 10, 0.12);
+      --red-soft: rgba(255, 59, 48, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        "SF Pro Text",
+        "Helvetica Neue",
+        Arial,
+        sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding:
+        env(safe-area-inset-top, 12px)
+        env(safe-area-inset-right, 16px)
+        env(safe-area-inset-bottom, 16px)
+        env(safe-area-inset-left, 16px);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .top-header {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      padding: 8px 2px 18px;
+      text-transform: uppercase;
+    }
+
+    .main-wrapper {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.025),
+        0 8px 24px rgba(0, 0, 0, 0.035);
+      border: 1px solid rgba(209, 209, 214, 0.65);
+    }
+
+    .header-section {
+      margin-bottom: 18px;
+    }
+
+    .sub-title-top {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+    }
+
+    .main-title {
+      font-size: 30px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.18;
+      letter-spacing: 0.01em;
+      margin-bottom: 7px;
+    }
+
+    .main-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      letter-spacing: 0;
+    }
+
+    /* Settings */
+    .settings-details {
+      background: var(--surface-secondary);
+      border-radius: 13px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(209, 209, 214, 0.8);
+    }
+
+    .settings-summary {
+      padding: 12px 15px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 0.01em;
+      list-style: none;
+    }
+
+    .settings-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .settings-summary::after {
+      content: "⌄";
+      font-size: 15px;
+      line-height: 1;
+      color: var(--text-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .settings-details[open] .settings-summary::after {
+      transform: rotate(180deg);
+    }
+
+    .collapsed-content {
+      padding: 0 15px 15px;
+    }
+
+    .rule-box-inner {
+      background: var(--orange-soft);
+      border: 1px solid rgba(255, 159, 10, 0.25);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #8a5a00;
+      margin-bottom: 13px;
+      line-height: 1.55;
+    }
+
+    .rule-box-inner strong {
+      font-weight: 600;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      display: block;
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+
+    select {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fff;
+      font-size: 13px;
+      color: var(--text-main);
+      outline: none;
+      appearance: auto;
+    }
+
+    select:focus {
+      border-color: #8e8e93;
+    }
+
+    /* Target */
+    .target-card {
+      background: var(--surface-secondary);
+      border: 1px solid rgba(209, 209, 214, 0.8);
+      border-radius: 15px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 17px;
+    }
+
+    .target-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .target-note {
+      font-size: 44px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin: 5px 0 3px;
+    }
+
+    .target-freq {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 13px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      padding: 13px;
+      border: none;
+      border-radius: 11px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0;
+      cursor: pointer;
+      transition:
+        background-color 0.18s ease,
+        color 0.18s ease,
+        transform 0.08s ease,
+        opacity 0.18s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      min-height: 46px;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.985);
+    }
+
+    .btn-tone {
+      background: #e5e5ea;
+      color: var(--text-main);
+    }
+
+    .btn-tone:hover:not(:disabled) {
+      background: #dcdce1;
+    }
+
+    .btn-tone.playing {
+      background: var(--warning);
+      color: white;
+    }
+
+    .mic-btn {
+      background: var(--text-main);
+      color: white;
+      margin-top: 12px;
+    }
+
+    .mic-btn:hover:not(:disabled) {
+      background: #000000;
+    }
+
+    .mic-btn.active {
+      background: var(--danger);
+    }
+
+    .headphone-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin: 12px 0;
+      cursor: pointer;
+      font-weight: 400;
+    }
+
+    .headphone-toggle input {
+      width: 15px;
+      height: 15px;
+      accent-color: #1c1c1e;
+      margin: 0;
+    }
+
+    /* Real-time status */
+    .status-box {
+      text-align: center;
+      background: #fff;
+      border: 1px solid rgba(209, 209, 214, 0.9);
+      border-radius: 15px;
+      padding: 17px 16px;
+      margin: 17px 0;
+    }
+
+    .pitch-val {
+      font-size: 26px;
+      font-weight: 600;
+      margin: 7px 0;
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.01em;
+    }
+
+    .meter-bar {
+      height: 8px;
+      background: #e5e5ea;
+      border-radius: 999px;
+      position: relative;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .meter-pointer {
+      width: 5px;
+      height: 100%;
+      background: #8e8e93;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      transition:
+        left 0.08s ease-out,
+        background-color 0.15s ease;
+      border-radius: 999px;
+      z-index: 2;
+    }
+
+    .meter-target-zone {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      background: rgba(52, 199, 89, 0.24);
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 999px;
+    }
+
+    .progress-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .btn-next {
+      background: #e5e5ea;
+      color: #aeaeb2;
+      cursor: not-allowed;
+      margin-bottom: 10px;
+    }
+
+    .btn-next.unlocked {
+      background: var(--success);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.16);
+    }
+
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-restart {
+      background: var(--surface-secondary);
+      color: var(--text-secondary);
+    }
+
+    .btn-restart:hover:not(:disabled) {
+      background: #e5e5ea;
+    }
+
+    .btn-finish {
+      background: var(--surface-secondary);
+      color: var(--text-tertiary);
+      cursor: not-allowed;
+    }
+
+    .btn-finish.unlocked {
+      background: var(--red-soft);
+      color: var(--danger);
+      cursor: pointer;
+    }
+
+    /* Report */
+    .report-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 14px;
+      font-size: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .report-table th,
+    .report-table td {
+      border: none;
+      border-bottom: 1px solid #e5e5ea;
+      padding: 9px 4px;
+      text-align: center;
+    }
+
+    .report-table th {
+      background: var(--surface-secondary);
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .report-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .report-table td {
+      color: var(--text-main);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer-bar {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      padding: 17px 0 8px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 380px) {
+      body {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .card {
+        padding: 20px 17px;
+        border-radius: 16px;
+      }
+
+      .main-title {
+        font-size: 28px;
+      }
+
+      .target-note {
+        font-size: 40px;
+      }
+
+      .config-grid {
+        gap: 9px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-header">
+    <span>EAR TRAINING · INTERVAL</span>
+    <span>LESSON 03</span>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="card" id="practiceCard">
+      
+      <div class="header-section">
+        <div class="sub-title-top">自然音程听觉训练 · 第三课</div>
+        <h1 class="main-title">模唱</h1>
+        <p class="main-desc">听辨示范音高，然后用自己的声音对着麦克风准确唱出，训练声带对音高的控制与听觉记忆能力。</p>
+      </div>
+
+      <!-- 整合后的折叠区域 -->
+      <details class="settings-details">
+        <summary class="settings-summary">练习规则与参数设置</summary>
+        <div class="collapsed-content">
+          <div class="rule-box-inner">
+            <strong>练习规则：</strong><br>
+            1. 建议使用 <strong>统一元音</strong> 模唱，保持稳定发声 <strong>0.2 秒</strong> 以上即可通过检测。<br>
+            2. 连续 <strong>正确完成 10 题</strong>才可解锁“结束练习”按钮。<br>
+            3. 建议佩戴耳机以获得更好的检测效果；若未勾选“已佩戴耳机”，示范音与麦克风监听会自动互斥切换——播放示范音时麦克风自动暂停，停止播放后自动恢复监听，无需手动操作。
+          </div>
+          <div class="config-grid">
+            <div>
+              <label>容错阈值</label>
+              <select id="toleranceSelect" onchange="updateToleranceZone()">
+                <option value="5">±5 音分</option>
+                <option value="20" selected>±20 音分</option>
+                <option value="50">±50 音分</option>
+              </select>
+            </div>
+            <div>
+              <label>滤波平滑度</label>
+              <select id="filterWindowSelect">
+                <option value="3">轻度</option>
+                <option value="5" selected>中度</option>
+                <option value="10">重度</option>
+              </select>
+            </div>
+            <div>
+              <label>最低音</label>
+              <select id="minNoteSelect"></select>
+            </div>
+            <div>
+              <label>最高音</label>
+              <select id="maxNoteSelect"></select>
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <div class="target-card">
+        <div class="target-label">示范音高 (Target Pitch)</div>
+        <div class="target-note" id="targetNoteName">--</div>
+        <div class="target-freq" id="targetFreqText">-- Hz</div>
+        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音高</button>
+      </div>
+
+      <label class="headphone-toggle">
+        <input type="checkbox" id="headphoneCheckbox" onchange="handleHeadphoneToggle()">
+        <span>已佩戴耳机</span>
+      </label>
+
+      <button class="btn mic-btn" id="micBtn" onclick="toggleMic()">开启麦克风</button>
+
+      <div class="status-box">
+        <div style="font-size: 12px; color: var(--text-muted);">实时捕获演唱音高</div>
+        <div class="pitch-val" id="currentPitchText">--</div>
+        <div id="centsDevText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">等待发声...</div>
+        
+        <div class="meter-bar">
+          <div class="meter-target-zone" id="targetZone"></div>
+          <div class="meter-pointer" id="pointer"></div>
+        </div>
+        
+        <div id="holdingProgress" style="font-size: 12px; color: var(--text-muted);">保持音准稳定 0.2 秒通过</div>
+      </div>
+
+      <div class="progress-text">练习结束进度：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
+      
+      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">模唱正确，进入下一题</button>
+
+      <div class="action-row">
+        <button class="btn btn-restart" onclick="restartPractice()">重新开始</button>
+        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">结束练习并生成报告</button>
+      </div>
+
+    </div>
+
+    <div class="card hidden" id="reportCard">
+      <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">模唱练习报告 Summary</h2>
+      <p style="font-size: 13px; color: var(--text-muted);">连续达标题数：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
+      
+      <table class="report-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>示范音</th>
+            <th>实际演唱</th>
+            <th>偏差</th>
+            <th>耗时</th>
+          </tr>
+        </thead>
+        <tbody id="reportTableBody"></tbody>
+      </table>
+
+      <button class="btn mic-btn" style="margin-top: 16px;" onclick="copyReport()">复制练习报告</button>
+      <button class="btn btn-tone" style="margin-top: 8px;" onclick="restartPractice()">重新开始练习</button>
+    </div>
+  </main>
+
+  <footer class="footer-bar">
+    ©Sheen · Ear Training
+  </footer>
+
+<script>
+  const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  
+  let audioCtx = null;
+  let analyser = null;
+  let mediaStream = null;
+  let animationId = null;
+
+  let targetOsc = null;
+  let targetGain = null;
+  let isTonePlaying = false;
+
+  let isListening = false;
+  let currentTargetMidi = 60;
+  let previousMidiClass = -1; // 用于记录上一次的音名（0~11）
+  
+  let inRangeStartTime = null;
+  let isPassedCurrentQuestion = false;
+
+  let questionStartTime = 0;
+  let practiceStartTime = 0;
+  let consecutivePassCount = 0;
+  let questionHistory = [];
+
+  let pitchBuffer = [];
+  let micPausedForTone = false; // 未戴耳机时，播放示范音期间临时暂停麦克风监听用的标记
+
+  function initNoteOptions() {
+    const minSelect = document.getElementById('minNoteSelect');
+    const maxSelect = document.getElementById('maxNoteSelect');
+    minSelect.innerHTML = ''; maxSelect.innerHTML = '';
+
+    // 最低支持到 C2 (MIDI 36) 到 C6 (MIDI 84)
+    for (let midi = 36; midi <= 84; midi++) {
+      const name = midiToNoteName(midi);
+      minSelect.add(new Option(name, midi));
+      maxSelect.add(new Option(name, midi));
+    }
+    minSelect.value = "48"; // 默认 C3
+    maxSelect.value = "72"; // 默认 C5
+  }
+
+  function midiToNoteName(midi) {
+    return `${NOTE_NAMES[midi % 12]}${Math.floor(midi / 12) - 1}`;
+  }
+  function midiToFreq(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+
+  function toggleTargetTone() {
+    if (isTonePlaying) {
+      stopTargetTone(true); // 手动停止示范音时，自动恢复麦克风监听
+    } else {
+      startTargetTone();
+    }
+  }
+
+  function startTargetTone() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isListening) {
+      // 未戴耳机时不再弹窗拦截，而是自动暂停麦克风；播放结束/手动停止后会自动恢复监听
+      micPausedForTone = true;
+      stopMic();
+    }
+
+    if (targetOsc) {
+      try { targetOsc.stop(); targetOsc.disconnect(); } catch(e){}
+    }
+
+    const freq = midiToFreq(currentTargetMidi);
+    targetOsc = audioCtx.createOscillator();
+    targetGain = audioCtx.createGain();
+
+    targetOsc.type = "sine";
+    targetOsc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+    targetGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    targetGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 0.05);
+
+    targetOsc.connect(targetGain);
+    targetGain.connect(audioCtx.destination);
+
+    targetOsc.start();
+    isTonePlaying = true;
+
+    const toneBtn = document.getElementById('toneBtn');
+    toneBtn.textContent = "停止播放示范音";
+    toneBtn.classList.add('playing');
+  }
+
+  function stopTargetTone(autoResumeMic = false) {
+    if (targetOsc && isTonePlaying) {
+      try {
+        targetGain.gain.setValueAtTime(targetGain.gain.value, audioCtx.currentTime);
+        targetGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
+        targetOsc.stop(audioCtx.currentTime + 0.03);
+      } catch(e) {}
+    }
+    isTonePlaying = false;
+    const toneBtn = document.getElementById('toneBtn');
+    toneBtn.textContent = "播放示范音高";
+    toneBtn.classList.remove('playing');
+
+    // 如果麦克风是被示范音自动暂停的，这里负责把它自动恢复
+    if (micPausedForTone) {
+      micPausedForTone = false;
+      if (autoResumeMic && !isPassedCurrentQuestion) startMic();
+    }
+  }
+
+  function handleHeadphoneToggle() {
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isListening && isTonePlaying) {
+      stopTargetTone();
+    }
+  }
+
+  async function toggleMic() {
+    if (isListening) {
+      stopMic();
+    } else {
+      startMic();
+    }
+  }
+
+  async function startMic() {
+    if (isPassedCurrentQuestion) return;
+
+    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
+    if (!isHeadphone && isTonePlaying) {
+      stopTargetTone();
+    }
+
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+      if (!mediaStream) {
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true } });
+        } catch(e) {
+          mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+      }
+      
+      const source = audioCtx.createMediaStreamSource(mediaStream);
+      
+      const hpFilter = audioCtx.createBiquadFilter();
+      hpFilter.type = "highpass";
+      hpFilter.frequency.setValueAtTime(60, audioCtx.currentTime); // 适配 C2 低频，切除 60Hz 以下底噪
+
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+
+      source.connect(hpFilter);
+      hpFilter.connect(analyser);
+
+      isListening = true;
+      const micBtn = document.getElementById('micBtn');
+      micBtn.textContent = "关闭麦克风";
+      micBtn.classList.add('active');
+
+      if (practiceStartTime === 0) practiceStartTime = Date.now();
+
+      processAudio();
+    } catch (err) {
+      alert("无法获取麦克风权限，请确保浏览器允许使用麦克风: " + err.message);
+    }
+  }
+
+  function stopMic() {
+    isListening = false;
+    const micBtn = document.getElementById('micBtn');
+    micBtn.textContent = "开启麦克风";
+    micBtn.classList.remove('active');
+
+    if (animationId) cancelAnimationFrame(animationId);
+  }
+
+  function processAudio() {
+    if (!isListening) return;
+
+    const buffer = new Float32Array(analyser.fftSize);
+    analyser.getFloatTimeDomainData(buffer);
+
+    const rawPitch = autoCorrelate(buffer, audioCtx.sampleRate);
+
+    if (rawPitch !== -1) {
+      const windowSize = parseInt(document.getElementById('filterWindowSelect').value);
+      pitchBuffer.push(rawPitch);
+      if (pitchBuffer.length > windowSize) pitchBuffer.shift();
+      const smoothPitch = pitchBuffer.reduce((a, b) => a + b) / pitchBuffer.length;
+
+      const detectedMidiFloat = 69 + 12 * Math.log2(smoothPitch / 440);
+      let centsError = ((detectedMidiFloat - currentTargetMidi) % 12);
+      if (centsError > 6) centsError -= 12;
+      if (centsError < -6) centsError += 12;
+      centsError *= 100;
+
+      const currentNoteStr = midiToNoteName(Math.round(detectedMidiFloat));
+
+      updateStatusUI(currentNoteStr, smoothPitch, centsError);
+      checkPassCondition(currentNoteStr, smoothPitch, centsError);
+    } else {
+      pitchBuffer = [];
+      inRangeStartTime = null;
+      if (!isPassedCurrentQuestion) resetStatusDisplay();
+    }
+
+    if (isListening && !isPassedCurrentQuestion) {
+      animationId = requestAnimationFrame(processAudio);
+    }
+  }
+
+  function checkPassCondition(noteStr, freq, centsError) {
+    const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+
+    if (Math.abs(centsError) <= tolerance) {
+      if (!inRangeStartTime) {
+        inRangeStartTime = Date.now();
+      } else {
+        const holdTime = (Date.now() - inRangeStartTime) / 1000;
+        document.getElementById('holdingProgress').textContent = `音准达标！保持中: ${holdTime.toFixed(1)}s / 0.2s`;
+        document.getElementById('holdingProgress').style.color = '#10b981';
+
+        // 调整判定阈值为 0.2 秒
+        if (holdTime >= 0.2) {
+          isPassedCurrentQuestion = true;
+          if (isTonePlaying) stopTargetTone();
+
+          const nextBtn = document.getElementById('nextBtn');
+          nextBtn.disabled = false;
+          nextBtn.classList.add('unlocked');
+          nextBtn.textContent = "✓ 模唱正确！点击进入下一题";
+
+          document.getElementById('holdingProgress').textContent = "🎉 音准达标！请点击进入下一题";
+
+          consecutivePassCount++;
+          document.getElementById('passCountText').textContent = consecutivePassCount;
+
+          const duration = ((Date.now() - questionStartTime) / 1000).toFixed(1);
+          questionHistory.push({
+            id: questionHistory.length + 1,
+            targetNote: midiToNoteName(currentTargetMidi),
+            actualNote: `${noteStr} (${freq.toFixed(1)}Hz)`,
+            cents: centsError.toFixed(1),
+            time: duration
+          });
+
+          if (consecutivePassCount >= 10) {
+            const finishBtn = document.getElementById('finishBtn');
+            finishBtn.disabled = false;
+            finishBtn.classList.add('unlocked');
+          }
+        }
+      }
+    } else {
+      inRangeStartTime = null;
+      document.getElementById('holdingProgress').textContent = "保持音准稳定 0.2 秒通过";
+      document.getElementById('holdingProgress').style.color = '#64748b';
+    }
+  }
+
+  function generateQuestion() {
+    stopTargetTone();
+
+    const minMidi = parseInt(document.getElementById('minNoteSelect').value);
+    const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
+    const actualMin = Math.min(minMidi, maxMidi);
+    const actualMax = Math.max(minMidi, maxMidi);
+
+    let nextMidi;
+    let nextNoteClass;
+
+    // 算法防止连续接相同的音名（比如 C3 后出现 C4）
+    do {
+      nextMidi = Math.floor(Math.random() * (actualMax - actualMin + 1)) + actualMin;
+      nextNoteClass = nextMidi % 12; // 取模获取音名类型（C/D/E等）
+    } while (nextNoteClass === previousMidiClass && (actualMax - actualMin >= 12)); 
+    // 当选择范围大于或等于一八度时，严格禁止相同音名连续出现
+
+    currentTargetMidi = nextMidi;
+    previousMidiClass = nextNoteClass;
+
+    const targetFreq = midiToFreq(currentTargetMidi);
+
+    document.getElementById('targetNoteName').textContent = midiToNoteName(currentTargetMidi);
+    document.getElementById('targetFreqText').textContent = `${targetFreq.toFixed(1)} Hz`;
+
+    isPassedCurrentQuestion = false;
+    inRangeStartTime = null;
+    questionStartTime = Date.now();
+    pitchBuffer = [];
+
+    const nextBtn = document.getElementById('nextBtn');
+    nextBtn.disabled = true;
+    nextBtn.classList.remove('unlocked');
+    nextBtn.textContent = "模唱正确，进入下一题";
+
+    resetStatusDisplay();
+  }
+
+  function nextQuestion() {
+    if (!isPassedCurrentQuestion) return;
+    
+    generateQuestion();
+    startTargetTone();
+
+    if (micPausedForTone) return; // 示范音接管了麦克风，等学生停止播放后会自动恢复监听
+
+    if (!isListening) {
+      startMic();
+    } else {
+      processAudio();
+    }
+  }
+
+  function restartPractice() {
+    consecutivePassCount = 0;
+    questionHistory = [];
+    practiceStartTime = 0;
+    previousMidiClass = -1;
+    
+    document.getElementById('passCountText').textContent = "0";
+    
+    const finishBtn = document.getElementById('finishBtn');
+    finishBtn.disabled = true;
+    finishBtn.classList.remove('unlocked');
+    
+    document.getElementById('reportCard').classList.add('hidden');
+    document.getElementById('practiceCard').classList.remove('hidden');
+
+    stopMic();
+    stopTargetTone();
+    generateQuestion();
+  }
+
+  function autoCorrelate(buf, sampleRate) {
+    let SIZE = buf.length;
+    let rms = 0;
+    for (let i = 0; i < SIZE; i++) {
+      rms += buf[i] * buf[i];
+    }
+    rms = Math.sqrt(rms / SIZE);
+
+    if (rms < 0.008) return -1;
+
+    let r1 = 0, r2 = SIZE - 1, thres = 0.2;
+    for (let i = 0; i < SIZE / 2; i++) {
+      if (Math.abs(buf[i]) < thres) { r1 = i; break; }
+    }
+    for (let i = 1; i < SIZE / 2; i++) {
+      if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; }
+    }
+    buf = buf.slice(r1, r2); 
+    SIZE = buf.length;
+
+    let c = new Array(SIZE).fill(0);
+    for (let i = 0; i < SIZE; i++) {
+      for (let j = 0; j < SIZE - i; j++) {
+        c[i] = c[i] + buf[j] * buf[j + i];
+      }
+    }
+
+    let d = 0; 
+    while (c[d] > c[d + 1]) d++;
+    
+    let maxval = -1, maxpos = -1;
+    for (let i = d; i < SIZE; i++) {
+      if (c[i] > maxval) { 
+        maxval = c[i]; 
+        maxpos = i; 
+      }
+    }
+    
+    let T0 = maxpos;
+    if (T0 <= 0) return -1;
+
+    let x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+    let a = (x1 + x3 - 2 * x2) / 2;
+    let b = (x3 - x1) / 2;
+    if (a) T0 = T0 - b / (2 * a);
+
+    return sampleRate / T0;
+  }
+
+  function updateStatusUI(noteStr, freq, cents) {
+    document.getElementById('currentPitchText').textContent = `${noteStr} (${freq.toFixed(1)} Hz)`;
+    const centsText = document.getElementById('centsDevText');
+    const pointer = document.getElementById('pointer');
+    const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+
+    const pos = 50 + (Math.max(-50, Math.min(50, cents)) / 50) * 50;
+    pointer.style.left = `${pos}%`;
+
+    if (Math.abs(cents) <= tolerance) {
+      centsText.textContent = `音准达标 (${cents > 0 ? '+' : ''}${cents.toFixed(1)} Cents)`;
+      centsText.style.color = "#10b981";
+      pointer.style.background = "#10b981";
+    } else {
+      centsText.textContent = `${cents > 0 ? '偏高' : '偏低'} (${cents.toFixed(1)} Cents)`;
+      centsText.style.color = "#f59e0b";
+      pointer.style.background = "#f59e0b";
+    }
+  }
+
+  function updateToleranceZone() {
+    const tolerance = parseInt(document.getElementById('toleranceSelect').value);
+    document.getElementById('targetZone').style.width = `${(tolerance / 50) * 100}%`;
+  }
+
+  function resetStatusDisplay() {
+    document.getElementById('currentPitchText').textContent = "--";
+    document.getElementById('centsDevText').textContent = "等待发声...";
+    document.getElementById('centsDevText').style.color = "#64748b";
+    document.getElementById('pointer').style.left = "50%";
+    document.getElementById('pointer').style.background = "#94a3b8";
+    document.getElementById('holdingProgress').textContent = "保持音准稳定 0.2 秒通过";
+    document.getElementById('holdingProgress').style.color = "#64748b";
+  }
+
+  function finishPractice() {
+    if (consecutivePassCount < 10) return;
+
+    stopMic();
+    stopTargetTone();
+
+    document.getElementById('practiceCard').classList.add('hidden');
+    document.getElementById('reportCard').classList.remove('hidden');
+
+    const totalTime = ((Date.now() - practiceStartTime) / 1000).toFixed(0);
+    document.getElementById('totalTimeText').textContent = totalTime;
+
+    const tbody = document.getElementById('reportTableBody');
+    tbody.innerHTML = '';
+    questionHistory.slice(-10).forEach((q, idx) => {
+      tbody.innerHTML += `<tr>
+        <td>${idx + 1}</td>
+        <td>${q.targetNote}</td>
+        <td>${q.actualNote}</td>
+        <td>${q.cents > 0 ? '+' : ''}${q.cents}</td>
+        <td>${q.time}s</td>
+      </tr>`;
+    });
+  }
+
+  function copyReport() {
+    const totalTime = document.getElementById('totalTimeText').textContent;
+    let text = `【自然音程听觉训练 · 第三课 模唱练习报告】
+连续通过：10 题 | 总耗时：${totalTime} 秒
+----------------------------------
+`;
+    questionHistory.slice(-10).forEach((q, i) => {
+      text += `第${i+1}题: 示范[${q.targetNote}] | 演唱[${q.actualNote}] | 偏差[${q.cents}cents] | 耗时[${q.time}s]
+`;
+    });
+    navigator.clipboard.writeText(text).then(() => {
+      alert("练习报告已成功复制到剪贴板，现在就发送给老师吧！");
+    }).catch(() => {
+      alert("复制失败了，可能是浏览器没有开放剪贴板权限。你可以截图上方的成绩表发给老师，或检查浏览器权限设置后重试。");
+    });
+  }
+
+  window.onload = () => {
+    initNoteOptions();
+    updateToleranceZone();
+    generateQuestion();
+  };
+</script>
+
+</body>
+</html>
