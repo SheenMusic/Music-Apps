@@ -762,12 +762,11 @@
     const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
     const exName = EXERCISES[document.getElementById('exerciseSelect').value].name;
     let text = `【第九课 三度旋律音程构唱 练习报告】
-练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)} | 练习模式：${exName}
-连续通过：10 题 | 总耗时：${totalTime} 秒
+练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)} | 练习模式：${exName} | 总耗时：${totalTime} 秒
 ----------------------------------
 `;
     questionHistory.slice(-10).forEach((q, i) => {
-      text += `第${i+1}题: 示范[${q.refNote}] → 指定[${q.targetNote}](${q.interval}) | 演唱[${q.actualNote}] | 偏差[${q.cents}cents] | 耗时[${q.time}s]
+      text += `${i+1}: ${q.refNote} → ${q.targetNote}(${q.interval}) | ${q.actualNote} | ${q.cents}ct | ${q.time}s
 `;
     });
     navigator.clipboard.writeText(text).then(() => {
