@@ -457,6 +457,46 @@
     body.lang-en .social-en-ja,
     body.lang-ja .social-en-ja { display: inline-grid; }
 
+
+    .footer-language {
+      position: relative;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .footer-language summary {
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      padding: 4px 0;
+    }
+    .footer-language summary::-webkit-details-marker { display: none; }
+    .footer-language summary::after {
+      content: " +";
+      opacity: .65;
+    }
+    .footer-language[open] summary::after { content: " −"; }
+    .footer-language-options {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .footer-language-options button {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 10px;
+      padding: 5px 9px;
+      cursor: pointer;
+    }
+    .footer-language-options button.is-active {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,.35);
+    }
+
     @media (max-width: 840px) {
       .shell { width: min(calc(100% - 28px), var(--max)); }
       .topbar-inner { height: 64px; }
@@ -552,14 +592,10 @@
             <a href="#work" data-i18n="navWorks">Works</a>
             <a href="#scores" data-i18n="navScores">Scores</a>
             <a href="#courses" data-i18n="navCourses">Courses</a>
+            <a href="./articles/" data-i18n="navArticles">Articles</a>
             <a href="#cv" data-i18n="navCV">CV</a>
             <a href="#contact" data-i18n="navContact">Contact</a>
           </nav>
-          <div class="lang-switch" aria-label="Language switcher">
-            <button type="button" data-switch="zh">中</button>
-            <button type="button" data-switch="en">EN</button>
-            <button type="button" data-switch="ja">日</button>
-          </div>
         </div>
       </div>
     </header>
@@ -694,10 +730,6 @@
                   <span class="social-letter">♪</span>
                 </a>
               </div>
-
-              <div class="contact-text contact-zh douyin-handle">
-                <span>抖音 · SheenYang</span>
-              </div>
             </div>
           </div>
         </div>
@@ -707,7 +739,14 @@
     <footer>
       <div class="shell footer-inner">
         <span>© <span id="year"></span> Sheen Yang</span>
-        <span data-i18n="footerText">音乐 · 乐谱 · 学习</span>
+        <details class="footer-language">
+          <summary data-i18n="languageLabel">语言</summary>
+          <div class="footer-language-options" aria-label="Language switcher">
+            <button type="button" data-switch="zh">中文</button>
+            <button type="button" data-switch="en">English</button>
+            <button type="button" data-switch="ja">日本語</button>
+          </div>
+        </details>
       </div>
     </footer>
   </div>
@@ -721,8 +760,10 @@
         navWorks: "作品",
         navScores: "乐谱",
         navCourses: "课程",
+        navArticles: "文章",
         navCV: "履历",
         navContact: "联系",
+        languageLabel: "语言",
         identity: "音乐教育 · 作曲编曲 · 乐谱制作 · 演唱",
         heroEyebrow: "音乐教育 · 作曲编曲 · 乐谱制作 · 演唱",
         heroCopy: "从音乐教育到乐谱制作、作曲与编曲，这里整理了我的工作、作品和课程。",
@@ -747,7 +788,6 @@
         cvValue: "职业经历与精选项目——即将完善。",
         contactTitle: "联系",
         contactNote: "工作合作、课程咨询或乐谱相关项目，可以通过这里与我联系。",
-        footerText: "音乐 · 乐谱 · 学习"
       },
       en: {
         gateTitle: "Music, creation<br>& learning.",
@@ -756,8 +796,10 @@
         navWorks: "Works",
         navScores: "Scores",
         navCourses: "Courses",
+        navArticles: "Articles",
         navCV: "CV",
         navContact: "Contact",
+        languageLabel: "Language",
         identity: "Music Education · Score Transcription · Composition & Arrangement · Vocal",
         heroEyebrow: "Music Education · Score Transcription · Composition & Arrangement · Vocal",
         heroCopy: "A home for my work in music education, score transcription, composition and arrangement.",
@@ -782,7 +824,6 @@
         cvValue: "Professional background and selected experience — coming soon.",
         contactTitle: "Contact",
         contactNote: "For collaborations, lessons, score work or other music-related projects, feel free to get in touch.",
-        footerText: "Music · Scores · Learning"
       },
       ja: {
         gateTitle: "音楽・創作・学び",
@@ -791,8 +832,10 @@
         navWorks: "Works",
         navScores: "楽譜",
         navCourses: "Courses",
+        navArticles: "記事",
         navCV: "経歴",
         navContact: "Contact",
+        languageLabel: "言語",
         identity: "音楽教育 · 採譜&楽譜制作 · 作曲 · ボーカル",
         heroEyebrow: "音楽教育 · 採譜&楽譜制作 · 作曲 · ボーカル",
         heroCopy: "音楽教育、楽譜制作、作曲・編曲を中心に、これまでの仕事や作品、教材をまとめています。",
@@ -817,7 +860,6 @@
         cvValue: "経歴・主な実績 — 準備中。",
         contactTitle: "お問い合わせ",
         contactNote: "制作のご依頼、レッスン、楽譜制作など、音楽に関するご相談はこちらからご連絡ください。",
-        footerText: "音楽 · 楽譜 · 学び"
       }
     };
     const gate = document.getElementById("languageGate");
@@ -849,7 +891,7 @@
     });
 
     switchButtons.forEach(btn => {
-      btn.addEventListener("click", () => applyLanguage(btn.dataset.switch));
+      btn.addEventListener("click", () => { applyLanguage(btn.dataset.switch); const d = btn.closest("details"); if (d) d.removeAttribute("open"); });
     });
 
     const savedLang = localStorage.getItem("sheen-lang");
