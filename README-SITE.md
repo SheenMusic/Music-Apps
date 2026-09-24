@@ -52,3 +52,9 @@ JSON rules:
 
 Upload/commit these files to the repository root. Preserve the existing `ET-Intervals/` directory.
 GitHub Pages will publish after the commit finishes deploying.
+
+## Deployment workflow
+
+This repository includes `.github/workflows/pages.yml` for a plain static-site deployment to GitHub Pages.
+It runs automatically on every push to `main` and can also be run manually from Actions.
+The repository's Pages source should remain set to **GitHub Actions** when using this workflow.
