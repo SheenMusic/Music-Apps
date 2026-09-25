@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>乐理 - 音程01</title>
+  <title>乐理 - 音程02</title>
   
 
 <style>
@@ -676,7 +676,7 @@ body {
       <div class="header-top-bar">
         <span class="header-title-left">MUSIC THEORY · INTERVAL</span>
         <div class="header-right-group">
-          <span class="header-title-right">LESSON 01</span>
+          <span class="header-title-right">LESSON 02</span>
           <button class="history-toggle-btn" id="historyToggleBtn">历史记录</button>
         </div>
       </div>
@@ -684,7 +684,7 @@ body {
         <div class="progress-bar" id="progressBar"></div>
       </div>
       <div class="header-meta hidden" id="headerMeta">
-        <span class="lesson-tag" id="lessonTag">音程01</span>
+        <span class="lesson-tag" id="lessonTag">音程02</span>
         <span class="question-counter" id="questionCounter">1 / 15</span>
       </div>
     </header>
@@ -692,11 +692,11 @@ body {
     <!-- 1. Start Screen / Home -->
     <section class="card-container" id="startScreen">
       <div class="start-header">
-        <p class="subtitle">音程理论基础 · 第一课</p>
-        <h1 class="main-title">度数、音数、旋律音程与和声音程</h1>
+        <p class="subtitle">音程理论基础 · 第二课</p>
+        <h1 class="main-title">音程的性质与自然音程</h1>
       </div>
       <div class="start-info">
-        <p>• 本测试共包含 <strong>15 个题目</strong>，刷新或关闭页面后，本次练习进度将不会保留。</p>
+        <p>• 本测试共包含 <strong>20 个题目</strong>，刷新或关闭页面后，本次练习进度将不会保留。</p>
         <p>• 答题过程将记录您的总用时、尝试次数及选择历史。</p>
         <p>• 全部完成后，可复制测验结果发送给老师获取本课评价。</p>
       </div>
@@ -796,195 +796,566 @@ body {
 
 <script>
 const practiceData = {
-  "lessonId": "music-theory-practice-01",
-  "lessonTitle": "音程理论基础练习 1",
+  "lessonId": "music-theory-practice-02",
+  "lessonTitle": "音程理论基础练习 2",
   "questions": [
     {
       "id": "q01",
       "type": "boolean",
-      "prompt": "1. 变音记号（如升号、降号）会直接改变音程的度数。",
+      "prompt": "1. 二度、三度、六度、七度不能通过增加或减少音数来变成纯音程。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["错误"],
-      "explanation": "音程的度数只取决于音符在谱表上的“位置/字母距离”（数线和间的数量），与升降记号无关。升降记号改变的是音数，而不是度数。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "二度、三度、六度、七度属于“大 / 小音程”体系，不使用“纯”作为基本性质。改变音数可以使它们成为大、小、增、减音程，但不会变成纯音程。"
     },
     {
       "id": "q02",
       "type": "boolean",
-      "prompt": "2. 音程的度数最多为八度。",
+      "prompt": "2. 一度、四度、五度、八度不能通过增加或减少音数来变成增减音程。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["错误"],
-      "explanation": "常见的音程度数的确是 1~8 度，但八度并不是两个音理论上的最远距离，超过八度的音程称为复音程（如九度、十度等）。"
+      "correctAnswer": [
+        "错误"
+      ],
+      "explanation": "一度、四度、五度、八度虽然不使用“大 / 小”性质，但可以产生增、减音程。例如纯五度增加一个半音可以成为增五度，减少一个半音可以成为减五度。"
     },
     {
       "id": "q03",
       "type": "boolean",
-      "prompt": "3. E 和 F 之间的音数是 1。",
+      "prompt": "3. 增一度比纯一度宽一个半音。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["错误"],
-      "explanation": "音数 1 表示距离是一个全音，但 E 和 F 之间是自然半音，所以 E 和 F 的音数是 0.5。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "纯一度的音数为 0；在保持“一度”这个度数不变的情况下，将上方音升高一个半音，就得到增一度。因此增一度比纯一度宽一个半音。"
     },
     {
       "id": "q04",
       "type": "boolean",
-      "prompt": "4. 即使音数不同的两组音，度数也有可能相同。",
+      "prompt": "4. 大六度比纯五度多一个半音。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["正确"],
-      "explanation": "比如 C-E（大三度，音数 2）和 C-Eb（小三度，音数 1.5），两者的音数不同，但都是三度音程。"
+      "correctAnswer": [
+        "错误"
+      ],
+      "explanation": "纯五度的音数为 3.5，大六度的音数为 4.5，两者相差 1 个音数，也就是两个半音，而不是一个半音。"
     },
     {
       "id": "q05",
       "type": "boolean",
-      "prompt": "5. 高音谱表第一线和第二线的音为三度关系。",
+      "prompt": "5. 小写字母 m 表示小音程。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["正确"],
-      "explanation": "第一线（E）到第二线（G），包含“第一线、第一间、第二线”共三个位置，数出来是三度。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "音程性质的英文缩写中，M 表示 Major（大），而小写 m 表示 minor（小）。例如 M3 是大三度，m3 是小三度。"
     },
     {
       "id": "q06",
       "type": "boolean",
-      "prompt": "6. F B之间的音数为3。",
+      "prompt": "6. 任何度数的音程都可以通过增加或减少半音，产生对应的“增音程”或“减音程”。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["正确"],
-      "explanation": "F 到 B 包含 F-G(1) + G-A(1) + A-B(1)，一共是 3 个全音，音数为 3（即增四度/减五度的音数）。"
+      "correctAnswer": [
+        "错误"
+      ],
+      "explanation": "增、减性质原则上可以通过改变音数产生，但教材规定减一度是例外。纯一度的音数已经为 0，没有比它更窄的一度，因此本课程体系中不存在减一度。"
     },
     {
       "id": "q07",
       "type": "boolean",
-      "prompt": "7. 如果两个音程的音数相同，那么度数也一定相同。",
+      "prompt": "7. C 和 F♯ 是一对三全音。",
       "options": [
-        { "id": "opt_true", "label": "正确", "value": "正确" },
-        { "id": "opt_false", "label": "错误", "value": "错误" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["错误"],
-      "explanation": "音数相同但度数可以不同。比如 C-F#（增四度，度数为 4，音数为 3）和 C-Gb（减五度，度数为 5，音数为 3），它们的音数都是 3，但度数一个是四度，一个是五度。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "C–F♯ 是增四度，音数为 3，也就是三个全音，因此属于三全音（Tritone）。三全音可以记作增四度或减五度。"
     },
     {
       "id": "q08",
-      "type": "single-choice",
-      "prompt": "8. 下列音程中，属于“一度”的是哪一个？",
+      "type": "boolean",
+      "prompt": "8. 自然音程里不能出现变化音。",
       "options": [
-        { "id": "opt_a", "label": "A. A-Bb", "value": "A" },
-        { "id": "opt_b", "label": "B. B-C", "value": "B" },
-        { "id": "opt_c", "label": "C. A-A#", "value": "C" },
-        { "id": "opt_d", "label": "D. G-A", "value": "D" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["C"],
-      "explanation": "度数看的是字母本身的距离。A 到 A# 的音符字母都是 A（同名音），包含的位置数量为 1，所以是一度音程（增一度）。其余选项字母都发生了改变，属于二度。"
+      "correctAnswer": [
+        "错误"
+      ],
+      "explanation": "自然音程并不是按照“有没有升降号”来判断的。所有大、小、纯音程以及增四度、减五度都属于自然音程。例如 C–E♭ 虽然出现降号，但它是小三度，因此仍然属于自然音程。"
     },
     {
       "id": "q09",
-      "type": "single-choice",
-      "prompt": "9. 在五线谱中，一个“四度”音程的两个音在视觉位置上呈现什么规律？",
+      "type": "boolean",
+      "prompt": "9. M1 是一个错误的音程名称。",
       "options": [
-        { "id": "opt_a", "label": "A. 一个在线上，一个在间里", "value": "A" },
-        { "id": "opt_b", "label": "B. 都在线上", "value": "B" },
-        { "id": "opt_c", "label": "C. 都在间里", "value": "C" },
-        { "id": "opt_d", "label": "D. 无法确定规律", "value": "D" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["A"],
-      "explanation": "奇数度数（一度、三度、五度、七度）的两个音视觉上要么“都在线上”，要么“都在间里”；偶数度数（二度、四度、六度、八度）必定是“一个在线上，一个在间里”。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "一度属于纯音程体系，不使用“大 / 小”作为基本性质，因此 M1（大一度）是错误的音程名称。正确的基本一度是 P1（纯一度）。"
     },
     {
       "id": "q10",
-      "type": "single-choice",
-      "prompt": "10. C-A 这对上行六度的音数是多少？",
+      "type": "boolean",
+      "prompt": "10. 纯八度的低音到高音相距 6 个全音。",
       "options": [
-        { "id": "opt_a", "label": "A. 4.5", "value": "A" },
-        { "id": "opt_b", "label": "B. 5.5", "value": "B" },
-        { "id": "opt_c", "label": "C. 6", "value": "C" },
-        { "id": "opt_d", "label": "D. 9", "value": "D" },
-        { "id": "opt_e", "label": "E. 10", "value": "E" }
+        {
+          "id": "opt_true",
+          "label": "正确",
+          "value": "正确"
+        },
+        {
+          "id": "opt_false",
+          "label": "错误",
+          "value": "错误"
+        }
       ],
-      "correctAnswer": ["A"],
-      "explanation": "C-A 是大六度。推算全半音：C-D(1) + D-E(1) + E-F(0.5) + F-G(1) + G-A(1) = 4.5。"
+      "correctAnswer": [
+        "正确"
+      ],
+      "explanation": "纯八度的音数为 6。因为 1 个音数等于 1 个全音，所以纯八度的低音到高音相距 6 个全音，也就是 12 个半音。"
     },
     {
       "id": "q11",
       "type": "single-choice",
-      "prompt": "11. 如果在钢琴上先弹奏 G，再弹奏G左边最近的D，这个音程是什么？",
+      "prompt": "11. d3 对应的音程是：",
       "options": [
-        { "id": "opt_a", "label": "A. 上行四度", "value": "A" },
-        { "id": "opt_b", "label": "B. 下行四度", "value": "B" },
-        { "id": "opt_c", "label": "C. 上行五度", "value": "C" },
-        { "id": "opt_d", "label": "D. 下行五度", "value": "D" },
-        { "id": "opt_e", "label": "E. 和声四度", "value": "E" },
-        { "id": "opt_f", "label": "F. 和声五度", "value": "F" }
+        {
+          "id": "opt_a",
+          "label": "A. 大三度",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 小三度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 增三度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 减三度",
+          "value": "D"
+        }
       ],
-      "correctAnswer": ["B"],
-      "explanation": "先弹 G，再弹其“左边”的音，说明音高是在往低走，属于下行；从 G 往下数到 D（G-F-E-D）正好包含四个音，所以是下行四度。"
+      "correctAnswer": [
+        "D"
+      ],
+      "explanation": "d 是 diminished（减）的缩写，数字 3 表示三度，因此 d3 表示减三度。"
     },
     {
       "id": "q12",
-      "type": "multiple-choice",
-      "prompt": "12. 在音程中，音高相对较低的音被称为什么？",
+      "type": "single-choice",
+      "prompt": "12. 下面哪一个音程是不存在的？",
       "options": [
-        { "id": "opt_a", "label": "A. 根音", "value": "A" },
-        { "id": "opt_b", "label": "B. 冠音", "value": "B" },
-        { "id": "opt_c", "label": "C. 低音", "value": "C" },
-        { "id": "opt_d", "label": "D. 高音", "value": "D" }
+        {
+          "id": "opt_a",
+          "label": "A. 减一度",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 小六度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 纯四度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 增八度",
+          "value": "D"
+        }
       ],
-      "correctAnswer": ["A", "C"],
-      "explanation": "在音程中，下方（较低）的音称为“根音”或“低音”；上方（较高）的音称为“冠音”或“高音”。"
+      "correctAnswer": [
+        "A"
+      ],
+      "explanation": "按照本课程的理论体系，纯一度的音数为 0，已经没有更窄的一度，因此不存在减一度。小六度、纯四度和增八度都可以成立。"
     },
     {
       "id": "q13",
-      "type": "multiple-choice",
-      "prompt": "13. 如果将 C-E 中的 E 加上一个降号变成 Eb，该音程会发生什么变化？",
+      "type": "single-choice",
+      "prompt": "13. 关于 C–E♭ 这个音程，下列说法正确的是：",
       "options": [
-        { "id": "opt_a", "label": "A. 度数减少", "value": "A" },
-        { "id": "opt_b", "label": "B. 度数增加", "value": "B" },
-        { "id": "opt_c", "label": "C. 度数不变", "value": "C" },
-        { "id": "opt_d", "label": "D. 音数增加", "value": "D" },
-        { "id": "opt_e", "label": "E. 音数减少", "value": "E" },
-        { "id": "opt_f", "label": "F. 音数不变", "value": "F" }
+        {
+          "id": "opt_a",
+          "label": "A. 音数为 3",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 属于自然音程",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 属于变化音程",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 大三度",
+          "value": "D"
+        }
       ],
-      "correctAnswer": ["C", "E"],
-      "explanation": "字母依然是 C 和 E，所以度数保持“三度”不变；E 降半音后距离 C 更近了，因此音数由原来的 2（C-E）减少到了 1.5（C-Eb）。"
+      "correctAnswer": [
+        "B"
+      ],
+      "explanation": "C–E♭ 是三度，音数为 1.5，因此是小三度（m3）。所有小音程都属于自然音程，所以即使 E♭ 是变化音，C–E♭ 仍然属于自然音程。"
     },
     {
       "id": "q14",
-      "type": "multiple-choice",
-      "prompt": "14. 关于“二度和声音程”，下列哪些描述是正确的？",
+      "type": "single-choice",
+      "prompt": "14. 下面哪个音程是自然音程？",
       "options": [
-        { "id": "opt_a", "label": "A. 必须是相同乐器同时发声", "value": "A" },
-        { "id": "opt_b", "label": "B. 符头的书写位置需要稍微错开", "value": "B" },
-        { "id": "opt_c", "label": "C. 具有进行的方向性", "value": "C" },
-        { "id": "opt_d", "label": "D. 同时按下 C 和 Db 可以得到“二度和声音程”", "value": "D" }
+        {
+          "id": "opt_a",
+          "label": "A. 减五度",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 增五度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 减四度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 增一度",
+          "value": "D"
+        }
       ],
-      "correctAnswer": ["B", "D"],
-      "explanation": "和声音程是指两个音同时发声。因为二度的两个音位置太近，符头在五线谱上必须紧贴错开记写（B 正确）；同时按下 C 和 Db 即为同时发声的二度（D 正确）。和声音程不需要指定相同乐器，也不像先后发声的旋律音程那样具有明确的前后进行方向性。"
+      "correctAnswer": [
+        "A"
+      ],
+      "explanation": "自然音程包括所有大、小、纯音程，以及增四度和减五度。因此四个选项中只有减五度属于自然音程。减五度与增四度的音数都是 3，二者都属于三全音。"
     },
     {
       "id": "q15",
-      "type": "multiple-choice",
-      "prompt": "15. 关于“和声音程”的记谱，下列说法正确的是：",
+      "type": "single-choice",
+      "prompt": "15. F 上行到 B 的具体音程关系为：",
       "options": [
-        { "id": "opt_a", "label": "A. 低音必须记在高音的右侧", "value": "A" },
-        { "id": "opt_b", "label": "B. 同谱表的二度需要左右错开排列", "value": "B" },
-        { "id": "opt_c", "label": "C. 两个音必须共享同一根符干", "value": "C" },
-        { "id": "opt_d", "label": "D. 可以同时被两件乐器演奏出来", "value": "D" },
-        { "id": "opt_e", "label": "E. 普通单声部人声一般不能同时唱出和声音程", "value": "E" }
+        {
+          "id": "opt_a",
+          "label": "A. 三全音",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 减五度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 增四度",
+          "value": "C"
+        }
       ],
-      "correctAnswer": ["B", "D", "E"],
-      "explanation": "同谱表二度和声音程在五线谱记谱法中，符头为了避免重叠，需要左右错开记写。（B 正确，A 错误）；和声音程是两个音同时发声，完全可以由两件乐器或多人合奏（D 正确）；普通单声部人声一般无法同时唱出两个音（E 正确）；多声部记谱时两个音可以有各自独立的符干，不一定要共享（C 错误）。"
+      "correctAnswer": [
+        "C"
+      ],
+      "explanation": "从 F 上行到 B，按音名计算 F–G–A–B，共四度；实际音数为 3。纯四度的音数为 2.5，比纯四度宽一个半音，因此 F–B 是增四度（A4）。它同时也是三全音，但题目要求的是具体的“音程关系”，所以应选择增四度。"
+    },
+    {
+      "id": "q16",
+      "type": "multiple-choice",
+      "prompt": "16. 下面说法正确的有：",
+      "options": [
+        {
+          "id": "opt_a",
+          "label": "A. 三全音是自然音程中唯一的增减音程",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 所有增减音程都不属于自然音程",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 纯八度增加半音得到增八度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 所有的大小音程都属于自然音程",
+          "value": "D"
+        }
+      ],
+      "correctAnswer": [
+        "A",
+        "C",
+        "D"
+      ],
+      "explanation": "A 正确：自然音程中的增、减音程只有增四度和减五度这一对，它们都是三全音。B 错误：增四度和减五度属于自然音程。C 正确：纯八度增加一个半音，在八度度数保持不变的情况下得到增八度。D 正确：所有大音程和小音程都属于自然音程。"
+    },
+    {
+      "id": "q17",
+      "type": "multiple-choice",
+      "prompt": "17. 下面哪些音程属于自然音程？",
+      "options": [
+        {
+          "id": "opt_a",
+          "label": "A. 大音程",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 小音程",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 纯音程",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 三全音",
+          "value": "D"
+        }
+      ],
+      "correctAnswer": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "explanation": "自然音程包括所有大音程、小音程、纯音程，以及增四度和减五度。三全音正是增四度和减五度的统称，因此四项都属于自然音程。"
+    },
+    {
+      "id": "q18",
+      "type": "multiple-choice",
+      "prompt": "18. 音数为 3 的音程有：",
+      "options": [
+        {
+          "id": "opt_a",
+          "label": "A. 三全音",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 大四度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 增四度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 小五度",
+          "value": "D"
+        },
+        {
+          "id": "opt_e",
+          "label": "E. 减五度",
+          "value": "E"
+        }
+      ],
+      "correctAnswer": [
+        "A",
+        "C",
+        "E"
+      ],
+      "explanation": "音数为 3 就是三个全音，因此称为三全音。增四度和减五度的音数都为 3，所以 A、C、E 正确。大四度和小五度本身就不符合本课的音程性质命名规则：四度、五度属于纯音程体系，不使用“大 / 小”性质。"
+    },
+    {
+      "id": "q19",
+      "type": "multiple-choice",
+      "prompt": "19. 不存在的音程名称有哪些？",
+      "options": [
+        {
+          "id": "opt_a",
+          "label": "A. 减一度",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 纯五度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 大四度",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 减八度",
+          "value": "D"
+        },
+        {
+          "id": "opt_e",
+          "label": "E. 增二度",
+          "value": "E"
+        },
+        {
+          "id": "opt_f",
+          "label": "F. 纯七度",
+          "value": "F"
+        },
+        {
+          "id": "opt_g",
+          "label": "G. 小四度",
+          "value": "G"
+        },
+        {
+          "id": "opt_h",
+          "label": "H. 大三度",
+          "value": "H"
+        }
+      ],
+      "correctAnswer": [
+        "A",
+        "C",
+        "F",
+        "G"
+      ],
+      "explanation": "A 减一度不存在：按照教材体系，纯一度的音数已经为 0，不能再缩小。C 大四度不存在：四度属于纯音程体系，不使用“大 / 小”。F 纯七度不存在：七度属于“大 / 小”体系，不使用“纯”。G 小四度不存在：四度属于纯音程体系，不使用“大 / 小”。其余选项均可成立。"
+    },
+    {
+      "id": "q20",
+      "type": "multiple-choice",
+      "prompt": "20. 关于 C–F 这对双音，说法正确的有：",
+      "options": [
+        {
+          "id": "opt_a",
+          "label": "A. 上行时为纯四度",
+          "value": "A"
+        },
+        {
+          "id": "opt_b",
+          "label": "B. 下行时为纯五度",
+          "value": "B"
+        },
+        {
+          "id": "opt_c",
+          "label": "C. 音数为 2.5",
+          "value": "C"
+        },
+        {
+          "id": "opt_d",
+          "label": "D. 属于自然音程",
+          "value": "D"
+        },
+        {
+          "id": "opt_e",
+          "label": "E. 上行增加一个半音就一定会变成减五度",
+          "value": "E"
+        }
+      ],
+      "correctAnswer": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "explanation": "C–F 上行按音名计算为四度，音数为 2.5，因此是纯四度（P4），A、C 正确；反过来从 C 向下到 F，按下行方向计算为纯五度，因此 B 正确。纯四度属于自然音程，所以 D 正确。E 错误：C–F 上行增加一个半音，在“四度”这个度数保持不变的情况下，应得到 C–F♯，也就是增四度 A4，而不是减五度。虽然增四度和减五度的音数都为 3，但二者的度数不同，不能只根据音数互相替换名称。"
     }
   ]
 };
@@ -1425,8 +1796,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const reportText = `【练习结果报告】
-MUSIC THEORY · INTERVAL · LESSON 01
-度数、音数、旋律音程与和声音程
+MUSIC THEORY · INTERVAL · LESSON 02
+音程的性质与自然音程
 
 用时：${formatTime(totalSeconds)}
 作答准确率：${accuracyPercent}%（${questions.length} / ${totalAttempts}）
