@@ -265,6 +265,17 @@ body {
 .question-nav-btn.attempted { background: var(--error-bg); border-color: var(--error-border); color: #991b1b; }
 .question-nav-btn.solved { background: var(--success-bg); border-color: var(--success-border); color: #047857; }
 .question-nav-btn.current { background: var(--primary-color); border-color: var(--primary-color); color: white; }
+.question-nav-btn.needs-review {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  color: #991b1b;
+}
+.question-nav-btn.needs-review.current {
+  background: var(--error-bg);
+  border-color: #ef4444;
+  color: #991b1b;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.16);
+}
 
 @media (max-width: 420px) {
   .question-nav { grid-template-columns: repeat(5, 1fr); }
@@ -664,7 +675,8 @@ body {
 
 .staff-question {
   margin: -4px 0 20px;
-  padding: 10px 10px 6px;
+  min-height: 150px;
+  padding: 0;
   border: 1px solid var(--border-color);
   border-radius: 12px;
   background: #fff;
@@ -673,9 +685,14 @@ body {
 .staff-question svg {
   display: block;
   width: 100%;
-  max-width: 520px;
   height: auto;
   margin: 0 auto;
+}
+.staff-load-note {
+  padding: 52px 18px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
 }
 
 </style>
@@ -807,6 +824,7 @@ body {
   
   
 
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
 <script>
 const practiceData = {
   "lessonId": "music-theory-practice-04",
@@ -1590,14 +1608,28 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.className = "question-nav-btn";
       btn.textContent = String(idx + 1).padStart(2, "0");
       btn.setAttribute("aria-label", `跳转到第 ${idx + 1} 题`);
-      if (stat.isSolved) btn.classList.add("solved");
-      else if (stat.attempts > 0) btn.classList.add("attempted");
+      if (stat.isSolved && stat.attempts === 1) {
+        btn.classList.add("solved");
+      } else if (stat.attempts > 1) {
+        btn.classList.add("needs-review");
+      } else if (stat.attempts > 0) {
+        btn.classList.add("attempted");
+      }
       if (idx === currentQuestionIndex) btn.classList.add("current");
       btn.addEventListener("click", () => goToQuestion(idx));
       questionNav.appendChild(btn);
     });
   }
 
+
+  function practiceVF() {
+    return window.Vex && window.Vex.Flow ? window.Vex.Flow : window.VexFlow;
+  }
+
+  function parsePracticeNote(note) {
+    const m = note.toLowerCase().match(/^([a-g])(s|b)?(\d)$/);
+    return m ? { letter: m[1], acc: m[2] || "", oct: m[3] } : null;
+  }
 
   function renderStaffQuestion(staffData) {
     if (!staffData || !Array.isArray(staffData.notes)) {
@@ -1606,82 +1638,51 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Treble staff: bottom line E4 = step 0; each diatonic step moves 7 px upward.
-    const noteSteps = {
-      C4: -2, D4: -1, E4: 0, F4: 1, G4: 2, A4: 3, B4: 4,
-      C5: 5, D5: 6, E5: 7, F5: 8, G5: 9, A5: 10, B5: 11, C6: 12
-    };
-    const bottomLineY = 116;
-    const stepPx = 7;
-    const yFor = (note) => bottomLineY - (noteSteps[note] ?? 0) * stepPx;
-    const xs = [172, 286];
-    const staffLeft = 92;
-    const staffRight = 352;
-    const lines = [116, 102, 88, 74, 60];
-
-    let svg = `<svg viewBox="0 0 410 160" role="img" aria-label="高音谱表音程谱例">`;
-
-    // Staff.
-    lines.forEach(y => {
-      svg += `<line x1="${staffLeft}" y1="${y}" x2="${staffRight}" y2="${y}" stroke="#334155" stroke-width="1.35"/>`;
-    });
-
-    // Conventional-looking treble clef drawn as SVG paths rather than relying on a music glyph font.
-    // Enlarged so the clef spans slightly beyond the five-line staff, as in standard engraving.
-    svg += `
-      <g transform="translate(112 31) scale(1.02)" fill="none" stroke="#1e293b" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M24 94
-                 C7 87, 4 67, 15 54
-                 C24 43, 42 43, 48 55
-                 C54 67, 46 79, 34 81
-                 C22 83, 13 75, 15 65
-                 C17 55, 28 50, 37 54
-                 C46 58, 49 69, 44 78
-                 C39 87, 28 91, 20 87" />
-        <path d="M31 112
-                 C37 94, 35 75, 30 58
-                 C25 41, 24 25, 31 12
-                 C36 3, 44 2, 47 9
-                 C51 18, 42 30, 34 38
-                 C24 48, 17 58, 16 70" />
-        <path d="M31 111 C27 121, 19 126, 13 121 C8 116, 11 109, 17 109 C23 109, 28 114, 31 120" />
-      </g>`;
-
-    staffData.notes.forEach((note, idx) => {
-      const x = xs[idx] ?? (172 + idx * 114);
-      const step = noteSteps[note] ?? 0;
-      const y = yFor(note);
-
-      // Ledger lines below/above the staff, every line-position (2 diatonic steps).
-      if (step <= -2) {
-        for (let ledgerStep = -2; ledgerStep >= step; ledgerStep -= 2) {
-          const ly = bottomLineY - ledgerStep * stepPx;
-          svg += `<line x1="${x-18}" y1="${ly}" x2="${x+18}" y2="${ly}" stroke="#334155" stroke-width="1.35"/>`;
-        }
-      }
-      if (step >= 10) {
-        for (let ledgerStep = 10; ledgerStep <= step; ledgerStep += 2) {
-          const ly = bottomLineY - ledgerStep * stepPx;
-          svg += `<line x1="${x-18}" y1="${ly}" x2="${x+18}" y2="${ly}" stroke="#334155" stroke-width="1.35"/>`;
-        }
-      }
-
-      // Filled notehead.
-      svg += `<ellipse cx="${x}" cy="${y}" rx="9.5" ry="6.6" transform="rotate(-18 ${x} ${y})" fill="#1e293b"/>`;
-
-      // Standard stem convention requested:
-      // notes above the middle line (B4, step 4) stem down; middle line and below stem up.
-      const stemDown = step > 4;
-      if (stemDown) {
-        svg += `<line x1="${x-8}" y1="${y}" x2="${x-8}" y2="${y+42}" stroke="#1e293b" stroke-width="2.2"/>`;
-      } else {
-        svg += `<line x1="${x+8}" y1="${y}" x2="${x+8}" y2="${y-42}" stroke="#1e293b" stroke-width="2.2"/>`;
-      }
-    });
-
-    svg += `</svg>`;
-    staffQuestion.innerHTML = svg;
+    staffQuestion.innerHTML = "";
     staffQuestion.classList.remove("hidden");
+
+    const VF = practiceVF();
+    if (!VF) {
+      staffQuestion.innerHTML =
+        '<div class="staff-load-note">五线谱组件未载入，请检查网络连接后刷新页面。</div>';
+      return;
+    }
+
+    try {
+      const width = Math.max(300, Math.min(520, staffQuestion.clientWidth || 430));
+      const renderer = new VF.Renderer(staffQuestion, VF.Renderer.Backends.SVG);
+      renderer.resize(width, 150);
+
+      const context = renderer.getContext();
+      const stave = new VF.Stave(12, 34, width - 24);
+      stave.addClef("treble").setContext(context).draw();
+
+      const notes = staffData.notes.map((noteName) => {
+        const parsed = parsePracticeNote(noteName);
+        if (!parsed) throw new Error(`Unsupported note: ${noteName}`);
+
+        const note = new VF.StaveNote({
+          clef: "treble",
+          keys: [`${parsed.letter}/${parsed.oct}`],
+          duration: "q",
+          auto_stem: true
+        });
+
+        if (parsed.acc) {
+          note.addModifier(new VF.Accidental(parsed.acc === "s" ? "#" : "b"), 0);
+        }
+        return note;
+      });
+
+      // Same engraving engine and overall layout logic as Lesson 01.
+      // VexFlow automatically applies conventional stem direction:
+      // notes above the middle line stem down; notes below it stem up.
+      VF.Formatter.FormatAndDraw(context, stave, notes, { auto_beam: false });
+    } catch (error) {
+      console.error("Staff rendering failed:", error);
+      staffQuestion.innerHTML =
+        '<div class="staff-load-note">谱例暂时无法显示，请刷新页面后重试。</div>';
+    }
   }
 
   function renderQuestion() {
@@ -1855,6 +1856,7 @@ document.addEventListener("DOMContentLoaded", () => {
       nextBtn.classList.remove("hidden");
       const solvedCountAfterSubmit = questionStats.filter((s) => s.isSolved).length;
       nextBtn.textContent = solvedCountAfterSubmit === questions.length ? "结束练习" : "下一题";
+      renderQuestionNav();
     } else {
       // Log wrong choice
       stat.wrongChoices.push([...selectedValues]);
@@ -1863,6 +1865,7 @@ document.addEventListener("DOMContentLoaded", () => {
       feedbackBox.classList.add("wrong-bg");
       feedbackIcon.textContent = "✕";
       feedbackTitle.textContent = "回答错误，请再试一次！";
+      renderQuestionNav();
       explanationText.textContent = `错选解析：已尝试 [${selectedValues.join(", ")}]，仔细思考后重新选择提交。`;
 
       selectedValues = [];
