@@ -85,12 +85,35 @@ body.lesson-active .lesson-board .intro-stage{height:100%}
 body.lesson-active .lesson-board .board-role-wrap{height:100%}
 .lesson-footer-zone button,.lesson-footer-zone .primary,.lesson-footer-zone .ghost{touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
 .lesson-footer-zone{touch-action:manipulation}
+
+/* Responsive lesson frame */
+.lesson-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
+.lesson-top .brand{min-width:0;white-space:nowrap}
+.lesson-meta{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0;white-space:nowrap}
+.lesson-meta .lesson-count{font-size:12px;font-weight:750;color:var(--muted);letter-spacing:.04em}
+.lesson-meta .lesson-id{font-size:12px;font-weight:800;letter-spacing:.08em}
+#lessonStep{display:none!important}
+.lesson-body{scroll-behavior:smooth;overscroll-behavior:contain}
+.board{overflow:hidden}
+.board svg{max-width:100%;height:auto}
+@media(max-width:520px){
+  .lesson-top{gap:8px}
+  .lesson-top .brand{font-size:clamp(10px,3vw,13px);letter-spacing:.04em}
+  .lesson-meta{gap:6px}
+  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:clamp(9px,2.7vw,12px)}
+}
+@media(max-width:360px){
+  .lesson-top .brand{font-size:9px;letter-spacing:.02em}
+  .lesson-meta{gap:4px}
+  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:9px;letter-spacing:0}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="topbar"><span>MUSIC THEORY · INTERVAL</span><span class="lesson-badge">LESSON 01</span></div>
+  <div class="topbar"><span>MUSIC THEORY · INTERVAL</span><span class="lesson-count" id="headerLessonCount">1 / 14</span><span class="lesson-badge">LESSON 01</span></div>
   <div class="progress-wrap"><div class="progress" id="progress"></div></div>
   </header>
 <main>
@@ -137,9 +160,9 @@ function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);i
 function semitoneCount(a,b){const p=semitonePath(a,b);return Math.max(0,p.length-1)}
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
-function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=Math.max(300,el.clientWidth||430),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
+function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
 function drawPolyphonicSecond(el){el.innerHTML='';const VF=vf();if(!VF)return;try{const w=Math.max(260,el.clientWidth||300),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const upper=new VF.StaveNote({clef:'treble',keys:['d/4'],duration:'q',stem_direction:VF.Stem.UP});const lower=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'q',stem_direction:VF.Stem.DOWN});const v1=new VF.Voice({num_beats:1,beat_value:4}).addTickables([upper]);const v2=new VF.Voice({num_beats:1,beat_value:4}).addTickables([lower]);new VF.Formatter().joinVoices([v1,v2]).formatToStave([v1,v2],st);v1.draw(ctx,st);v2.draw(ctx,st)}catch(e){drawStaff(el,['c4','d4'],{harmonic:true})}}
-function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=Math.max(300,el.clientWidth||430),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',12,'normal');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
+function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',12,'normal');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
 function qChoices(id,items,correct,ok,bad){return `<div class="choices" id="${id}">${items.map((x,i)=>`<button class="choice" data-i="${i}">${x}</button>`).join('')}</div><div class="feedback" id="${id}fb"></div>`}
 function bindChoice(id,correct,ok,bad){const key=id;const apply=i=>{const fb=$('#'+id+'fb');document.querySelectorAll('#'+id+' .choice').forEach(x=>{x.classList.remove('correct','wrong');if(+x.dataset.i===i)x.classList.add(i===correct?'correct':'wrong')});if(i!==null&&i!==undefined){fb.className='feedback '+(i===correct?'ok':'bad');fb.textContent=i===correct?ok:bad}};apply(learningState[key]);document.querySelectorAll('#'+id+' .choice').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;learningState[key]=i;apply(i)})}
 let openingSecondRevealed=false;
@@ -167,7 +190,7 @@ function renderNameBoard(){
 function drawUnisonMeasures(el,{accidentals=false}={}){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','f4'],['g4','g4']]:[['f4','f4'],['g4','g4'],['a4','a4']];
     const st=new VF.Stave(8,38,w-16);
@@ -190,7 +213,7 @@ function drawUnisonMeasures(el,{accidentals=false}={}){
 function drawSecondMeasures(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','g4'],['g4','a4']]:[['f4','g4'],['g4','a4'],['a4','b4']];
     const st=new VF.Stave(8,38,w-16);
@@ -211,7 +234,7 @@ function drawSecondMeasures(el){
 function drawIntervalOverview(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
     st.addClef('treble').setContext(ctx).draw();
     const uppers=['f4','g4','a4','b4','c5','d5','e5','f5'];
@@ -220,7 +243,7 @@ function drawIntervalOverview(el){
       const ux=parseNote(u);
       const sn=new VF.StaveNote({clef:'treble',keys:['f/4',ux.letter+'/'+ux.oct],duration:'w'});
       const an=new VF.Annotation(labels[i]).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
-      if(an.setFont)an.setFont('Arial',9,'normal');
+      if(an.setFont)an.setFont('Arial',w<380?7.5:(w<500?8.5:10),'normal');
       sn.addModifier(an,0); return sn;
     });
     const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
@@ -250,7 +273,7 @@ function makeLeader(container,x1,y1,x2,y2){
 function drawMelodicBoard(el,mode='ascending'){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
     let notes;
@@ -301,7 +324,7 @@ function renderMelodicBoard(mode){
 function drawHarmonicBoard(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
     const c5=new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'h',stem_direction:1});
@@ -351,6 +374,29 @@ function magicStart(){
   showStep(0,false);
   requestAnimationFrame(()=>requestAnimationFrame(()=>{const target=document.querySelector('#lessonIntervalWord');if(!target){ghost.remove();return}const t=target.getBoundingClientRect();ghost.style.left=t.left+'px';ghost.style.top=t.top+'px';ghost.style.fontSize=getComputedStyle(target).fontSize;ghost.style.lineHeight=getComputedStyle(target).lineHeight;ghost.style.opacity='0';setTimeout(()=>ghost.remove(),800)}));
 }
+
+function updateHeaderLessonCount(i){
+  const el=document.getElementById('headerLessonCount');
+  if(el) el.textContent=(i+1)+' / '+steps.length;
+}
+function revealNewestLessonText(){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const scroller=body;
+    if(!scroller)return;
+    const paras=scroller.querySelectorAll('.lesson-paragraph,.quiz-block');
+    const last=paras[paras.length-1];
+    if(!last)return;
+    const visibleBottom=scroller.scrollTop+scroller.clientHeight;
+    const targetBottom=last.offsetTop+last.offsetHeight+12;
+    if(targetBottom>visibleBottom){
+      scroller.scrollTo({top:Math.max(0,targetBottom-scroller.clientHeight),behavior:'smooth'});
+    }
+  }));
+}
+function responsiveStaffWidth(el,min=280,max=760){
+  return Math.max(min,Math.min(max,el.clientWidth||430));
+}
+
 const steps=[
 {title:'什么是音程？',render(){renderOpening(false)}},
 {title:'根音与冠音',render(){renderOpening(true)}},
@@ -374,7 +420,7 @@ const steps=[
 function labelNote(n){return n.replace(/s/,'♯').replace(/b/,'♭').replace(/\d/,'').toUpperCase()}
 function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','b4','c5'],black=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];kb.innerHTML=white.map(n=>`<div class="white-key" data-note="${n}">${n.replace('4','').replace('5','').toUpperCase()}</div>`).join('')+black.map(([n,l])=>`<div class="black-key" style="left:${l}%" data-note="${n}">${n[0].toUpperCase()}♯</div>`).join('');kb.querySelectorAll('[data-note]').forEach(k=>k.onclick=()=>{play(k.dataset.note);highlightKeys([k.dataset.note]);$('#kr').textContent=k.dataset.note.replace('s','♯').toUpperCase()})}
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
-function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
+function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();updateHeaderLessonCount(i);revealNewestLessonText();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
 
 $('#startLearning').onclick=magicStart;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
 function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
