@@ -772,6 +772,14 @@ body {
     <!-- 3. Result Screen -->
     <section class="card-container hidden" id="resultScreen">
       <h2 class="result-title">🎉 测验完成</h2>
+
+      <div class="question-nav-wrapper expanded" id="resultQuestionNavWrapper">
+        <button class="question-nav-toggle" id="resultQuestionNavToggle" type="button" aria-expanded="true" aria-controls="resultQuestionNav">
+          <span>题目导航 · 点击题号回看</span>
+          <span class="question-nav-toggle-icon" aria-hidden="true">⌄</span>
+        </button>
+        <nav class="question-nav" id="resultQuestionNav" aria-label="完成后的题目导航"></nav>
+      </div>
       
       <div class="result-stats-grid">
         <div class="stat-card">
@@ -1276,7 +1284,7 @@ const practiceData = {
     {
       "id": "q17",
       "type": "single-choice",
-      "prompt": "17. 将谱例中的原位音程转位后，得到的单音程是：",
+      "prompt": "17. 将谱例中的低音移高八度后，得到的音程是：",
       "options": [
         {
           "id": "opt_a",
@@ -1472,6 +1480,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextBtn = document.getElementById("nextBtn");
 
   const resultScreen = document.getElementById("resultScreen");
+  const resultQuestionNav = document.getElementById("resultQuestionNav");
+  const resultQuestionNavWrapper = document.getElementById("resultQuestionNavWrapper");
+  const resultQuestionNavToggle = document.getElementById("resultQuestionNavToggle");
   const resAccuracy = document.getElementById("resAccuracy");
   const resTotalTime = document.getElementById("resTotalTime");
   const resTotalAttempts = document.getElementById("resTotalAttempts");
@@ -1524,6 +1535,11 @@ document.addEventListener("DOMContentLoaded", () => {
   questionNavToggle.addEventListener("click", () => {
     const isExpanded = questionNavWrapper.classList.toggle("expanded");
     questionNavToggle.setAttribute("aria-expanded", String(isExpanded));
+  });
+
+  resultQuestionNavToggle.addEventListener("click", () => {
+    const isExpanded = resultQuestionNavWrapper.classList.toggle("expanded");
+    resultQuestionNavToggle.setAttribute("aria-expanded", String(isExpanded));
   });
 
   startPracticeBtn.addEventListener("click", () => {
@@ -1582,6 +1598,35 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
+  function renderResultQuestionNav() {
+    resultQuestionNav.innerHTML = "";
+    questionStats.forEach((stat, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "question-nav-btn";
+      btn.textContent = String(idx + 1).padStart(2, "0");
+      btn.setAttribute("aria-label", `回看第 ${idx + 1} 题`);
+
+      if (stat.isSolved && stat.attempts === 1) {
+        btn.classList.add("solved");
+      } else if (stat.attempts > 1) {
+        btn.classList.add("needs-review");
+      } else if (stat.attempts > 0) {
+        btn.classList.add("attempted");
+      }
+
+      btn.addEventListener("click", () => {
+        resultScreen.classList.add("hidden");
+        questionCard.classList.remove("hidden");
+        headerMeta.classList.remove("hidden");
+        currentQuestionIndex = idx;
+        renderQuestion();
+      });
+
+      resultQuestionNav.appendChild(btn);
+    });
+  }
 
   function practiceVF() {
     return window.Vex && window.Vex.Flow ? window.Vex.Flow : window.VexFlow;
@@ -1861,6 +1906,7 @@ document.addEventListener("DOMContentLoaded", () => {
     questionCard.classList.add("hidden");
     headerMeta.classList.add("hidden");
     resultScreen.classList.remove("hidden");
+    renderResultQuestionNav();
 
     const totalSeconds = Math.round((overallEndTime - overallStartTime) / 1000);
     const accuracyPercent = ((questions.length / totalAttempts) * 100).toFixed(1);
