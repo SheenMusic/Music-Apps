@@ -553,7 +553,7 @@ function playOpeningInterval(){
     const p=c.play();
     if(p&&p.catch)p.catch(()=>{});
     window.setTimeout(()=>{
-      try{g.currentTime=0;const q=g.play();if(q&&q.catch)q.catch(()=>{}}catch(e){}
+      try{g.currentTime=0;const q=g.play();if(q&&q.catch)q.catch(()=>{});}catch(e){}
     },500);
   }catch(e){}
 }
