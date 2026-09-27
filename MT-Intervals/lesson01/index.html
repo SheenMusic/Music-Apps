@@ -205,6 +205,12 @@ body.lesson-active header{
 .quiz-options.vertical{display:grid;grid-template-columns:1fr;gap:9px;max-width:220px}
 .quiz-options.vertical .quiz-option{text-align:left;width:100%}
 
+
+/* Home title aligned with Practice naming */
+.home-course-title{text-align:center;margin:2px 0 24px}
+.home-course-index{font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary);margin-bottom:7px}
+.home-course-title h1{margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text);letter-spacing:-.025em}
+
 </style>
 </head>
 <body>
@@ -215,7 +221,7 @@ body.lesson-active header{
   </header>
 <main>
 <section class="card hero" id="home">
-  <h1>音程 · 度</h1>
+  <div class="home-course-title"><div class="home-course-index">音程 1</div><h1>度数、旋律/和声音程、音数</h1></div>
   <div class="home-actions">
     <button class="primary" id="startLearning">开始学习</button>
     <a class="secondary btn-link" href="practice/index.html">课后练习</a>
@@ -531,6 +537,27 @@ function bindToneNumberQuiz(){
   }));
 }
 
+
+const openingAudio={
+  c4:new Audio('audio_pn/C4.mp3'),
+  g4:new Audio('audio_pn/G4.mp3')
+};
+Object.values(openingAudio).forEach(a=>{a.preload='auto';a.load()});
+function preloadOpeningAudio(){
+  Object.values(openingAudio).forEach(a=>{try{a.load()}catch(e){}});
+}
+function playOpeningInterval(){
+  const c=openingAudio.c4,g=openingAudio.g4;
+  try{
+    c.pause();g.pause();c.currentTime=0;g.currentTime=0;
+    const p=c.play();
+    if(p&&p.catch)p.catch(()=>{});
+    window.setTimeout(()=>{
+      try{g.currentTime=0;const q=g.play();if(q&&q.catch)q.catch(()=>{}}catch(e){}
+    },500);
+  }catch(e){}
+}
+
 function clearBoard(){board.innerHTML=''}
 function openingMarkup(showSecond){return `<div class="intro-flow">
   <section class="intro-scene" id="introFirst">
@@ -547,13 +574,9 @@ function renderOpening(showSecond){
   body.innerHTML=`<p class="intro-definition lesson-paragraph" style="margin-top:0"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>${showSecond?`<p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>`:''}`;
 }
 
-function magicStart(){
+function startLesson(){
   openingSecondRevealed=false;
-  const source=document.querySelector('#home h1'); if(!source)return showStep(0);
-  const r=source.getBoundingClientRect(),ghost=document.createElement('div');ghost.className='magic-ghost';ghost.textContent='音程';
-  Object.assign(ghost.style,{left:r.left+'px',top:r.top+'px',fontSize:getComputedStyle(source).fontSize,lineHeight:getComputedStyle(source).lineHeight});document.body.appendChild(ghost);
   showStep(0,false);
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{const target=document.querySelector('#lessonIntervalWord');if(!target){ghost.remove();return}const t=target.getBoundingClientRect();ghost.style.left=t.left+'px';ghost.style.top=t.top+'px';ghost.style.fontSize=getComputedStyle(target).fontSize;ghost.style.lineHeight=getComputedStyle(target).lineHeight;ghost.style.opacity='0';setTimeout(()=>ghost.remove(),800)}));
 }
 
 function updateHeaderLessonCount(i){
@@ -579,8 +602,8 @@ function responsiveStaffWidth(el,min=280,max=760){
 }
 
 const steps=[
-{title:'什么是音程？',render(){renderOpening(false)}},
-{title:'根音与冠音',render(){renderOpening(true)}},
+{title:'什么是音程？',render(){renderOpening(false);preloadOpeningAudio()}},
+{title:'根音与冠音',render(){renderOpening(true);window.setTimeout(playOpeningInterval,120)}},
 {title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
 {title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
 {title:'音名与度数',render(){renderNameBoard();body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过<span class="key-accent">音名</span>来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`}},
@@ -610,7 +633,7 @@ function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();updateHeaderLessonCount(i);revealNewestLessonText();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
 
-$('#startLearning').onclick=magicStart;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
+$('#startLearning').onclick=startLesson;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
 function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
 function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.remove('hidden');$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
 // 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
