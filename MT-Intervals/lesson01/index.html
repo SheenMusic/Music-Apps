@@ -33,7 +33,9 @@ body.lesson-active .step-head{flex:0 0 auto;margin-bottom:8px}
 .board-role-wrap{position:relative}.board-role-wrap .staff{background:#fff}
 .board-note-role{position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translate(-50%,10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}
 .board-note-role.visible{opacity:1;transform:translate(-50%,0)}
-.board-note-role.root{left:calc(32% - 5mm)}.board-note-role.crown{left:60%}
+.board-note-role.root{left:32%}.board-note-role.crown{left:60%}
+.degree-note-names .endpoint{font-size:1.08rem;font-weight:900;color:var(--text)}
+.degree-note-names .middle{font-size:.84rem;font-weight:650;color:#94a3b8}
 
 /* Stable lesson frame v3 */
 body.lesson-active #lesson{padding:20px 24px;margin-bottom:10px}
@@ -51,6 +53,28 @@ body.lesson-active .footer{padding:2px 0 0}
 .lesson-paragraph + .lesson-paragraph{margin-top:1.25em}
 .lesson-paragraph strong{font-weight:900;color:var(--text)}
 @media(max-width:400px){.card{padding:20px 17px}.pattern-cards{grid-template-columns:1fr}.degree-grid{grid-template-columns:repeat(4,1fr)}.summary-list{grid-template-columns:1fr}.direction-grid{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+
+/* Degree sequence boards */
+.degree-sequence-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.degree-sequence-board svg{display:block;width:100%;height:100%}
+.degree-list-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 2px}
+.degree-list-board svg{display:block;width:100%;height:100%}
+
+/* Melodic interval boards */
+.melodic-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.melodic-board svg{display:block;width:100%;height:100%}
+.melodic-board-wrap{position:relative;width:100%;height:100%}
+.melodic-callout{position:absolute;top:8px;transform:translateX(-50%);font-size:15px;font-weight:750;color:var(--accent);letter-spacing:.04em;pointer-events:none}
+.melodic-leader{position:absolute;height:1.5px;background:var(--accent);transform-origin:0 50%;pointer-events:none;opacity:.85}
+
+/* Inline lesson quiz */
+.quiz-block{margin-top:30px;padding-top:24px;border-top:1px solid var(--border)}
+.quiz-kicker{font-family:Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.quiz-question{font-size:20px;line-height:1.85;font-weight:650;margin-bottom:16px}
+.quiz-options{display:flex;gap:12px;flex-wrap:wrap}
+.quiz-option{appearance:none;border:1px solid var(--border);background:#fff;color:var(--ink);border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;transition:.18s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.quiz-option.correct{border-color:#34c759;background:#edf9f0;color:#218739}
+.quiz-option.wrong{border-color:#ff3b30;background:#fff0ef;color:#c92a22}
 
 /* Stable frame fixes v4 */
 body.lesson-active{overflow:hidden;padding-top:10px;padding-bottom:10px}
@@ -119,13 +143,190 @@ function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,
 function qChoices(id,items,correct,ok,bad){return `<div class="choices" id="${id}">${items.map((x,i)=>`<button class="choice" data-i="${i}">${x}</button>`).join('')}</div><div class="feedback" id="${id}fb"></div>`}
 function bindChoice(id,correct,ok,bad){const key=id;const apply=i=>{const fb=$('#'+id+'fb');document.querySelectorAll('#'+id+' .choice').forEach(x=>{x.classList.remove('correct','wrong');if(+x.dataset.i===i)x.classList.add(i===correct?'correct':'wrong')});if(i!==null&&i!==undefined){fb.className='feedback '+(i===correct?'ok':'bad');fb.textContent=i===correct?ok:bad}};apply(learningState[key]);document.querySelectorAll('#'+id+' .choice').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;learningState[key]=i;apply(i)})}
 let openingSecondRevealed=false;
+function alignBoardRoleLabels(){
+  const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
+  if(!wrap||!staff)return;
+  requestAnimationFrame(()=>{
+    const notes=[...staff.querySelectorAll('.vf-stavenote')];
+    if(notes.length<2)return;
+    const wr=wrap.getBoundingClientRect();
+    const set=(label,note)=>{const r=note.getBoundingClientRect();label.style.left=(r.left-wr.left+r.width/2)+'px'};
+    const root=wrap.querySelector('.board-note-role.root'),crown=wrap.querySelector('.board-note-role.crown');
+    if(root)set(root,notes[0]); if(crown)set(crown,notes[notes.length-1]);
+  });
+}
 function renderMainBoard(mode='plain'){
   board.innerHTML=`<div class="intro-stage"><div class="board-role-wrap"><div class="staff" id="mainBoardStaff"></div><span class="board-note-role root ${mode==='roles'?'visible':''}">根音（低音）</span><span class="board-note-role crown ${mode==='roles'?'visible':''}">冠音（高音）</span></div></div>`;
   if(mode==='degree') drawDegreeStaff($('#mainBoardStaff')); else drawStaff($('#mainBoardStaff'),['c4','g4']);
+  if(mode==='roles') alignBoardRoleLabels();
 }
 function renderNameBoard(){
-  board.innerHTML=`<div class="degree-note-names" style="height:100%;display:flex;align-items:center;justify-content:space-around;font-weight:800;color:var(--text);font-size:1.08rem;padding:0 22px"><span>C4</span><span>D4</span><span>E4</span><span>F4</span><span>G4</span></div>`;
+  board.innerHTML=`<div class="degree-note-names" style="height:100%;display:flex;align-items:center;justify-content:space-around;padding:0 22px"><span class="endpoint">C4</span><span class="middle">D4</span><span class="middle">E4</span><span class="middle">F4</span><span class="endpoint">G4</span></div>`;
 }
+
+function drawUnisonMeasures(el,{accidentals=false}={}){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext();
+    const groups=w<380?[['f4','f4'],['g4','g4']]:[['f4','f4'],['g4','g4'],['a4','a4']];
+    const st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const tickables=[];
+    groups.forEach((pair,gi)=>{
+      pair.forEach((n,ni)=>{
+        const x=parseNote(n);
+        const sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'w'});
+        if(accidentals && ni===1)sn.addModifier(new VF.Accidental('#'),0);
+        tickables.push(sn);
+      });
+      if(gi<groups.length-1)tickables.push(new VF.BarNote());
+    });
+    const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function drawSecondMeasures(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext();
+    const groups=w<380?[['f4','g4'],['g4','a4']]:[['f4','g4'],['g4','a4'],['a4','b4']];
+    const st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const tickables=[];
+    groups.forEach((pair,gi)=>{
+      pair.forEach(n=>{
+        const x=parseNote(n);
+        tickables.push(new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'w'}));
+      });
+      if(gi<groups.length-1)tickables.push(new VF.BarNote());
+    });
+    const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function drawIntervalOverview(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const uppers=['f4','g4','a4','b4','c5','d5','e5','f5'];
+    const labels=['uni.','2nd','3rd','4th','5th','6th','7th','oct.'];
+    const notes=uppers.map((u,i)=>{
+      const ux=parseNote(u);
+      const sn=new VF.StaveNote({clef:'treble',keys:['f/4',ux.letter+'/'+ux.oct],duration:'w'});
+      const an=new VF.Annotation(labels[i]).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+      if(an.setFont)an.setFont('Arial',9,'normal');
+      sn.addModifier(an,0); return sn;
+    });
+    const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function renderDegreeSequenceBoard(mode){
+  board.innerHTML='<div class="degree-sequence-board"><div id="degreeSequenceStaff" style="width:100%;height:100%"></div></div>';
+  const el=$('#degreeSequenceStaff');
+  if(mode==='unison')drawUnisonMeasures(el);
+  else if(mode==='altered-unison')drawUnisonMeasures(el,{accidentals:true});
+  else if(mode==='second')drawSecondMeasures(el);
+}
+function renderIntervalOverviewBoard(){
+  board.innerHTML='<div class="degree-list-board"><div id="intervalOverviewStaff" style="width:100%;height:100%"></div></div>';
+  drawIntervalOverview($('#intervalOverviewStaff'));
+}
+
+
+function makeLeader(container,x1,y1,x2,y2){
+  const line=document.createElement('div'); line.className='melodic-leader';
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;
+  line.style.left=x1+'px'; line.style.top=y1+'px'; line.style.width=len+'px'; line.style.transform=`rotate(${ang}deg)`;
+  container.appendChild(line);
+}
+function drawMelodicBoard(el,mode='ascending'){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
+    let notes;
+    if(mode==='ascending'){
+      notes=[
+        new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'h',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'h',stem_direction:-1})
+      ];
+    }else{
+      notes=[
+        new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'q',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'q',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['g/4'],duration:'h',stem_direction:1})
+      ];
+    }
+    const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables(notes);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+    if(mode==='both'){
+      requestAnimationFrame(()=>{
+        const wrap=el.closest('.melodic-board-wrap'); if(!wrap)return;
+        wrap.querySelectorAll('.melodic-callout,.melodic-leader').forEach(n=>n.remove());
+        const svg=el.querySelector('svg'), sr=svg?.getBoundingClientRect(), wr=wrap.getBoundingClientRect();
+        if(!sr)return;
+        const centers=notes.map(n=>{
+          const bb=n.getBoundingBox?.();
+          if(bb)return {x:sr.left-wr.left+bb.getX()+bb.getW()/2,y:sr.top-wr.top+bb.getY()+bb.getH()/2};
+          return {x:wr.width/2,y:wr.height/2};
+        });
+        const upX=(centers[0].x+centers[1].x)/2, downX=(centers[1].x+centers[2].x)/2, labelY=10;
+        [['上行',upX],['下行',downX]].forEach(([t,x])=>{
+          const lab=document.createElement('div'); lab.className='melodic-callout'; lab.textContent=t; lab.style.left=x+'px'; wrap.appendChild(lab);
+        });
+        makeLeader(wrap,centers[0].x,centers[0].y-5,upX,labelY+22);
+        makeLeader(wrap,centers[1].x,centers[1].y-5,upX,labelY+22);
+        makeLeader(wrap,centers[1].x,centers[1].y+3,downX,labelY+22);
+        makeLeader(wrap,centers[2].x,centers[2].y-5,downX,labelY+22);
+      });
+    }
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function renderMelodicBoard(mode){
+  board.innerHTML='<div class="melodic-board-wrap"><div class="melodic-board"><div id="melodicStaff" style="width:100%;height:100%"></div></div></div>';
+  drawMelodicBoard($('#melodicStaff'),mode);
+}
+
+
+function drawHarmonicBoard(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=Math.max(300,el.clientWidth||430), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
+    const c5=new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'h',stem_direction:1});
+    const e4=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h',stem_direction:-1});
+    const d5=new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'h',stem_direction:1});
+    const f4=new VF.StaveNote({clef:'treble',keys:['f/4'],duration:'h',stem_direction:-1});
+    const vu=new VF.Voice({num_beats:4,beat_value:4}).addTickables([c5,d5]);
+    const vl=new VF.Voice({num_beats:4,beat_value:4}).addTickables([e4,f4]);
+    new VF.Formatter().joinVoices([vu,vl]).formatToStave([vu,vl],st,{align_rests:false});
+    vu.draw(ctx,st); vl.draw(ctx,st);
+    const svg=el.querySelector('svg'), ns='http://www.w3.org/2000/svg';
+    const label=(note,s,dx=0)=>{const bb=note.getBoundingBox?.();if(!bb||!svg)return;const t=document.createElementNS(ns,'text');t.setAttribute('x',bb.getX()+bb.getW()/2+dx);t.setAttribute('y','146');t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Arial,sans-serif');t.setAttribute('font-size','11');t.setAttribute('fill','#6e6e73');t.textContent=s;svg.appendChild(t)};
+    label(e4,'6th'); label(d5,'7th'); label(f4,'2nd',5);
+  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+function renderHarmonicBoard(){
+  board.innerHTML='<div class="melodic-board"><div id="harmonicStaff" style="width:100%;height:100%"></div></div>';
+  drawHarmonicBoard($('#harmonicStaff'));
+}
+function bindDegreeQuiz(){
+  const c=$('#quizCorrect'),w=$('#quizWrong'); if(!c||!w)return;
+  c.addEventListener('click',()=>{c.classList.add('correct');w.classList.remove('wrong')});
+  w.addEventListener('click',()=>{w.classList.add('wrong');c.classList.add('correct')});
+}
+
 function clearBoard(){board.innerHTML=''}
 function openingMarkup(showSecond){return `<div class="intro-flow">
   <section class="intro-scene" id="introFirst">
@@ -153,9 +354,18 @@ function magicStart(){
 const steps=[
 {title:'什么是音程？',render(){renderOpening(false)}},
 {title:'根音与冠音',render(){renderOpening(true)}},
-{title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph"><strong>音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p><p class="lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p><p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
-{title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph"><strong>音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p><p class="lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p><p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在谱表上的位置来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
-{title:'音名与度数',render(){renderNameBoard();body.innerHTML=`<p class="lesson-paragraph"><strong>音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p><p class="lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p><p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在谱表上的位置来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过音名来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`}},
+{title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
+{title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在谱表上的位置来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
+{title:'音名与度数',render(){renderNameBoard();body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在谱表上的位置来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过音名来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`}},
+{title:'一度',render(){renderDegreeSequenceBoard('unison');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p>`}},
+{title:'一度与变音记号',render(){renderDegreeSequenceBoard('altered-unison');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p>`}},
+{title:'二度',render(){renderDegreeSequenceBoard('second');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p>`}},
+{title:'一度到八度',render(){renderIntervalOverviewBoard();body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p><p class="lesson-paragraph">两个音的相对位置进一步扩大，就会得到<strong>三度</strong>（3rd）、<strong>四度</strong>（4th）、<strong>五度</strong>（5th）、<strong>六度</strong>（6th）、<strong>七度</strong>（7th）、<strong>八度</strong>（octave）。</p>`}},
+{title:'旋律音程',render(){renderMelodicBoard('ascending');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p>`}},
+{title:'上行旋律音程',render(){renderMelodicBoard('ascending');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p>`}},
+{title:'下行旋律音程',render(){renderMelodicBoard('both');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p>`}},
+{title:'和声音程',render(){renderHarmonicBoard();body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p>`}},
+{title:'Quiz',render(){renderHarmonicBoard();body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p><div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">度数和音符的变音记号无关。</div><div class="quiz-options"><button class="quiz-option" id="quizCorrect" type="button">〇&nbsp; 正确</button><button class="quiz-option" id="quizWrong" type="button">〇&nbsp; 错误</button></div></div>`;bindDegreeQuiz()}},
 {title:'变音记号会改变度数吗？',render(){body.innerHTML=`<p class="lead">先观察 C–E。点击按钮，把 E 降低半音。</p><div class="interaction-hint">互动操作：点击“给 E 加 ♭”，观察谱面和度数是否变化。</div><div class="stage"><div class="staff" id="s4"></div><div class="readout" id="r4">C–E · 三度</div><div class="button-row"><button class="secondary interactive-control" id="flatBtn">给 E 加 ♭</button><button class="audio-btn" id="play4">▶ 播放</button></div></div><p class="lead">为什么 C–E♭ 仍然是三度？</p>${qChoices('q4',['因为 ♭ 不改变音高','因为音名仍然是 E','因为降号在音程中可以忽略','因为所有黑键都属于三度'],1,'正确。度数依据音名 / 谱表位置判断；E♭ 的音名位置仍然是 E。','注意区分“音高发生变化”和“音名位置发生变化”。')}<div class="rule"><strong>规则：</strong>变音记号会改变实际音高，但不改变音名位置，因此不直接改变音程的度数。</div>`;let flat=learningState.flat4;const render=()=>{drawStaff($('#s4'),['c4',flat?'eb4':'e4']);$('#r4').textContent=flat?'C–E♭ · 三度':'C–E · 三度';$('#flatBtn').textContent=flat?'恢复 E':'给 E 加 ♭'};render();$('#flatBtn').onclick=()=>{flat=!flat;learningState.flat4=flat;render()};$('#play4').onclick=()=>playSeq('c4',flat?'eb4':'e4');bindChoice('q4',1,'','')}},
 {title:'一度到八度与谱面规律',render(){body.innerHTML=`<p class="lead">固定 C4 为起点，点击 1–8 度，观察第二个音在五线谱上的位置变化。</p><div class="interaction-hint">互动操作：先点击 1–8 度，再比较下方“奇数度”和“偶数度”两张规律卡。</div><div class="stage"><div class="staff" id="s5"></div><div class="degree-grid">${degreeCN.map((x,i)=>`<button class="degree-btn ${i===learningState.degree5?'active':''}" data-d="${i}">${i+1}</button>`).join('')}</div><div class="readout" id="r5">C4 → C4 · 一度</div><div class="audio-row"><button class="audio-btn" id="play5">▶ 播放音程</button></div></div><div class="pattern-cards"><div class="pattern-card"><h3>奇数度</h3><p class="tiny">两个音同类分布：线—线，或间—间。</p><div class="staff small" id="odd5"></div><div class="example-chips"><button class="example-chip active" id="ll5">E–G · 线—线</button><button class="example-chip" id="ss5">F–A · 间—间</button></div></div><div class="pattern-card"><h3>偶数度</h3><p class="tiny">两个音异类分布：线—间，或间—线。</p><div class="staff small" id="even5"></div><div class="example-chips"><button class="example-chip active" id="ls5">E–A · 线—间</button><button class="example-chip" id="sl5">F–B · 间—线</button></div></div></div>`;let d=learningState.degree5;const rr=()=>{drawStaff($('#s5'),['c4',degreeNotes[d]]);$('#r5').textContent=`C4 → ${degreeNotes[d].replace('s','♯').toUpperCase()} · ${degreeCN[d]}`};rr();document.querySelectorAll('.degree-btn').forEach(b=>b.onclick=()=>{d=+b.dataset.d;learningState.degree5=d;document.querySelectorAll('.degree-btn').forEach(x=>x.classList.toggle('active',x===b));rr()});$('#play5').onclick=()=>playSeq('c4',degreeNotes[d]);const setPair=(staff,notes,a,b)=>{drawStaff($(staff),notes,{harmonic:true});$(a).classList.add('active');$(b).classList.remove('active')};drawStaff($('#odd5'),['e4','g4'],{harmonic:true});drawStaff($('#even5'),['e4','a4'],{harmonic:true});$('#ll5').onclick=()=>setPair('#odd5',['e4','g4'],'#ll5','#ss5');$('#ss5').onclick=()=>setPair('#odd5',['f4','a4'],'#ss5','#ll5');$('#ls5').onclick=()=>setPair('#even5',['e4','a4'],'#ls5','#sl5');$('#sl5').onclick=()=>setPair('#even5',['f4','b4'],'#sl5','#ls5')}},{title:'构建一个音程',render(){body.innerHTML=`<p class="lead">现在反过来操作：根据指定的度数，选择正确的第二个音。</p><div class="interaction-hint">需要你来完成：请选择 E、F、G、A 中的一个音，构建 C 上方的五度。</div><div class="stage"><div class="staff" id="s6"></div><div class="readout">请构建 C 上方的五度</div><div class="choices" id="build6"><button class="choice" data-note="e4">E</button><button class="choice" data-note="f4">F</button><button class="choice" data-note="g4">G</button><button class="choice" data-note="a4">A</button></div><div class="feedback" id="b6fb"></div></div><div class="rule">Learning Check 只用于确认理解，不计入课后练习成绩。</div>`;const applyBuild=n=>{drawStaff($('#s6'),n?['c4',n]:['c4']);document.querySelectorAll('#build6 .choice').forEach(x=>{x.classList.remove('correct','wrong');if(x.dataset.note===n)x.classList.add(n==='g4'?'correct':'wrong')});if(n){const ok=n==='g4';$('#b6fb').className='feedback '+(ok?'ok':'bad');$('#b6fb').textContent=ok?'正确。C–D–E–F–G，共五个音名位置。':'还不是五度。从 C 开始，把起点和终点都算进去再试一次。'}};applyBuild(learningState.build6);document.querySelectorAll('#build6 .choice').forEach(b=>b.onclick=()=>{learningState.build6=b.dataset.note;applyBuild(learningState.build6)})}},
 {title:'旋律音程与和声音程',render(){body.innerHTML=`<p class="lead">两个<strong>先后出现</strong>的音叫旋律音程；两个<strong>同时出现</strong>的音叫和声音程。</p><div class="interaction-hint">互动操作：依次点击上行、下行、同时三个按钮，观察音符位置和标题如何变化。</div><div class="stage"><div class="interval-mode-label" id="mode7">上行旋律音程</div><div class="staff" id="s7"></div><div class="direction-grid"><button class="audio-btn" id="up7">▶ C → G<br><small>上行</small></button><button class="audio-btn" id="down7">▶ G → C<br><small>下行</small></button><button class="audio-btn" id="harm7">▶ C + G<br><small>同时</small></button></div></div><div class="rule"><strong>旋律音程：</strong>先低后高 = 上行；先高后低 = 下行。<br><strong>和声音程：</strong>两个音同时出现。</div><div class="stage"><p class="lead"><strong>二度和声音程的记谱</strong></p><div class="notation-demo"><div><div class="staff small" id="s7b"></div><div class="notation-caption">单声部式写法：符头错开，可共享符干</div></div><div><div class="staff small" id="s7c"></div><div class="notation-caption">多声部写法：两个音可以使用独立符干</div></div></div><p class="tiny">同谱表二度和声音程为了避免符头重叠，需要左右错开；左右位置本身不表示哪个音更高。多声部记谱时，两个音也不一定共享同一根符干。</p></div>`;const show=(type,withSound=true)=>{learningState.mode7=type;if(type==='up'){drawStaff($('#s7'),['c4','g4']);$('#mode7').textContent='上行旋律音程';if(withSound)playSeq('c4','g4')}else if(type==='down'){drawStaff($('#s7'),['g4','c4']);$('#mode7').textContent='下行旋律音程';if(withSound)playSeq('g4','c4')}else{drawStaff($('#s7'),['c4','g4'],{harmonic:true});$('#mode7').textContent='和声音程';if(withSound)playTogether('c4','g4')}};show(learningState.mode7,false);drawStaff($('#s7b'),['c4','d4'],{harmonic:true});drawPolyphonicSecond($('#s7c'));$('#up7').onclick=()=>show('up');$('#down7').onclick=()=>show('down');$('#harm7').onclick=()=>show('harm')}},
@@ -164,7 +374,7 @@ const steps=[
 function labelNote(n){return n.replace(/s/,'♯').replace(/b/,'♭').replace(/\d/,'').toUpperCase()}
 function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','b4','c5'],black=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];kb.innerHTML=white.map(n=>`<div class="white-key" data-note="${n}">${n.replace('4','').replace('5','').toUpperCase()}</div>`).join('')+black.map(([n,l])=>`<div class="black-key" style="left:${l}%" data-note="${n}">${n[0].toUpperCase()}♯</div>`).join('');kb.querySelectorAll('[data-note]').forEach(k=>k.onclick=()=>{play(k.dataset.note);highlightKeys([k.dataset.note]);$('#kr').textContent=k.dataset.note.replace('s','♯').toUpperCase()})}
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
-function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';if(i>=5)clearBoard();steps[i].render();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
+function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
 
 $('#startLearning').onclick=magicStart;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
 function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
