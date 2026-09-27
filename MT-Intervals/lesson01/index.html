@@ -211,6 +211,55 @@ body.lesson-active header{
 .home-course-index{font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary);margin-bottom:7px}
 .home-course-title h1{margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text);letter-spacing:-.025em}
 
+
+/* Mobile landscape lesson mode: left board / right text */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active{padding-top:6px!important;padding-bottom:4px!important}
+  body.lesson-active .app{height:calc(100dvh - 10px)!important}
+  body.lesson-active header{margin-bottom:5px!important}
+  .topbar{font-size:.64rem}
+  .lesson-badge{padding:2px 6px}
+  .lesson-card{
+    display:grid!important;
+    grid-template-columns:minmax(280px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    gap:12px!important;
+    min-height:0!important;
+    padding:10px!important;
+  }
+  .board{
+    grid-column:1!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    align-self:stretch!important;
+  }
+  .lesson-body{
+    grid-column:2!important;
+    grid-row:1!important;
+    min-height:0!important;
+    height:100%!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 2px 2px!important;
+  }
+  .lesson-footer{
+    margin-top:5px!important;
+    padding-bottom:0!important;
+  }
+  .lesson-footer .nav,.nav{margin-top:0!important}
+  footer{font-size:.62rem!important;margin-top:2px!important}
+  .compact-keyboard{height:100px!important;min-width:420px}
+  .compact-keyboard .white-key{height:98px!important}
+  .compact-keyboard .black-key{height:60px!important}
+}
+
+
+/* Only the header count is allowed */
+#lessonStep,.lesson-step,.step-indicator,.page-indicator,.lesson-progress-text,
+.lesson-card .lesson-count,.board .lesson-count{display:none!important}
+#headerLessonCount{display:inline!important}
+
 </style>
 </head>
 <body>
@@ -538,24 +587,28 @@ function bindToneNumberQuiz(){
 }
 
 
-const openingAudio={
-  c4:new Audio('audio_pn/C4.mp3'),
-  g4:new Audio('audio_pn/G4.mp3')
-};
-Object.values(openingAudio).forEach(a=>{a.preload='auto';a.load()});
+
+const lessonAudio=new Audio();
+lessonAudio.preload='auto';
 function preloadOpeningAudio(){
-  Object.values(openingAudio).forEach(a=>{try{a.load()}catch(e){}});
+  lessonAudio.src='audio_pn/C4.mp3';
+  try{lessonAudio.load()}catch(e){}
 }
 function playOpeningInterval(){
-  const c=openingAudio.c4,g=openingAudio.g4;
-  try{
-    c.pause();g.pause();c.currentTime=0;g.currentTime=0;
-    const p=c.play();
-    if(p&&p.catch)p.catch(()=>{});
-    window.setTimeout(()=>{
-      try{g.currentTime=0;const q=g.play();if(q&&q.catch)q.catch(()=>{});}catch(e){}
-    },500);
-  }catch(e){}
+  // One persistent media element: C4 finishes first, then G4 starts.
+  // Later taps do not pause or replace this element.
+  lessonAudio.onended=null;
+  lessonAudio.src='audio_pn/C4.mp3';
+  lessonAudio.currentTime=0;
+  lessonAudio.onended=()=>{
+    lessonAudio.onended=null;
+    lessonAudio.src='audio_pn/G4.mp3';
+    lessonAudio.currentTime=0;
+    const p2=lessonAudio.play();
+    if(p2&&p2.catch)p2.catch(()=>{});
+  };
+  const p=lessonAudio.play();
+  if(p&&p.catch)p.catch(()=>{});
 }
 
 function clearBoard(){board.innerHTML=''}
@@ -603,7 +656,7 @@ function responsiveStaffWidth(el,min=280,max=760){
 
 const steps=[
 {title:'什么是音程？',render(){renderOpening(false);preloadOpeningAudio()}},
-{title:'根音与冠音',render(){renderOpening(true);window.setTimeout(playOpeningInterval,120)}},
+{title:'根音与冠音',render(){renderOpening(true)}},
 {title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
 {title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
 {title:'音名与度数',render(){renderNameBoard();body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过<span class="key-accent">音名</span>来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`}},
