@@ -619,6 +619,34 @@ body:not(.lesson-active) .footer{margin-top:auto;}
  body.lesson-active #lesson{display:grid!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;grid-template-rows:minmax(0,1fr)!important;column-gap:18px!important;}
 }
 
+
+/* Unified primary action color: one resting color, darker only while actively pressed. */
+.primary,
+#nextBtn:not(:disabled){
+  background:var(--primary)!important;
+  color:#fff!important;
+  border-color:var(--primary)!important;
+}
+@media (hover:hover){
+  .primary:hover,
+  #nextBtn:not(:disabled):hover{background:var(--primary)!important}
+}
+.primary:active,
+#nextBtn:not(:disabled):active{
+  background:var(--primary-hover)!important;
+  border-color:var(--primary-hover)!important;
+  transform:translateY(1px);
+}
+
+/* Quiz state language:
+   selected = indigo, correct = green, wrong = red. */
+.quiz-option.selected:not(.correct):not(.wrong){
+  border-color:var(--primary)!important;
+  background:#eef2ff!important;
+  color:#4338ca!important;
+  box-shadow:0 0 0 2px rgba(99,102,241,.10);
+}
+
 </style>
 </head>
 <body>
@@ -1336,7 +1364,7 @@ function l2MultiQuiz(q,correctAnswers){
   options.forEach(btn=>{
     btn.onclick=()=>{
       if(passedQuizzes.has(pageIndex))return;
-      btn.classList.remove('wrong','correct');
+      options.forEach(x=>x.classList.remove('wrong','correct'));
       btn.classList.toggle('selected');
       const selected=options.filter(x=>x.classList.contains('selected')).map(x=>x.dataset.a);
       multiQuizSelections.set(pageIndex,selected);
@@ -1525,8 +1553,8 @@ const steps=[
 {title:'纯音程适用的度数',render(){renderL2QualityMap(1);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p>`;}},
 {title:'大小音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p>`;}}
 ,
-{title:'增减音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong class="key-accent">增/减音程</strong>：理论上，所有度数都可以通过增减音数变成“增/减”的性质。</p>`;}},
-{title:'减一度',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong class="key-accent">增/减音程</strong>：理论上，所有度数都可以通过增减音数变成“增/减”的性质。</p><p class="lesson-paragraph">但因为纯一度的音数为 0，没有比它更窄的音程，所以减一度是<span class="key-accent">不</span>存在的音程。</p>`;}},
+{title:'增减音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong>增/减音程</strong>：理论上，<span class="key-accent">所有</span>度数都可以通过增减音数变成“增/减”的性质。</p>`;}},
+{title:'减一度',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong>增/减音程</strong>：理论上，<span class="key-accent">所有</span>度数都可以通过增减音数变成“增/减”的性质。</p><p class="lesson-paragraph">但因为纯一度的音数为 0，没有比它更窄的音程，所以减一度是<span class="key-accent">不</span>存在的音程。</p>`;}},
 {title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('一度有哪些性质？',['P','A']);}},
 {title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('五度有哪些性质？',['d','P','A']);}}
 
