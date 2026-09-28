@@ -381,6 +381,78 @@ button,a{
   touch-action:manipulation!important;
 }
 
+
+/* ===== Unified lesson layout =====
+   Narrow portrait: board above text.
+   Wide screens and short landscape: board left, text right. */
+
+@media (min-width:760px), (orientation:landscape) and (max-height:500px){
+  body.lesson-active .app{
+    width:min(1440px,100%)!important;
+    max-width:none!important;
+    margin:0 auto!important;
+  }
+  body.lesson-active main{
+    width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lesson{
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:18px!important;
+    padding:16px!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lessonBoard{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:auto!important;
+  }
+  body.lesson-active #lessonBoard>*{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  body.lesson-active #stepBody{
+    grid-column:2!important;
+    grid-row:1!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:6px 12px 12px 4px!important;
+  }
+}
+
+/* Phone landscape gets tighter gutters but the same left-board/right-text model. */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active .app{width:100%!important;padding:0 6px!important}
+  body.lesson-active #lesson{
+    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
+    column-gap:8px!important;
+    padding:8px 10px!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -709,24 +781,34 @@ function drawEnharmonicToneStaff(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
     const w=responsiveStaffWidth(el,220,760);
+    const h=176;
     const r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext();
+    r.resize(w,h); const ctx=r.getContext();
+
     const left=8,right=8,staffW=w-left-right;
-    const st=new VF.Stave(left,40,staffW);
+    const staveY=46;
+    const st=new VF.Stave(left,staveY,staffW);
     st.addClef('treble').setContext(ctx).draw();
 
     const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
-    const clefReserve=Math.min(52,Math.max(38,w*.10));
+    const clefReserve=Math.min(54,Math.max(42,w*.105));
     const musicLeft=left+clefReserve;
-    const musicRight=left+staffW-8;
+    const musicRight=left+staffW-10;
     const mid=(musicLeft+musicRight)/2;
-    const centers=[(musicLeft+mid)/2,(mid+musicRight)/2];
+    const centers=[
+      musicLeft+(mid-musicLeft)/2,
+      mid+(musicRight-mid)/2
+    ];
 
-    // Continuous staff with one central barline.
+    // Exact stave-line vertical bounds: VexFlow line 0..4 are spaced 10 px.
+    const lineTop=staveY+40;
+    const lineBottom=lineTop+40;
+
+    // Measure divider only across the five staff lines.
     const bar=document.createElementNS(ns,'line');
-    bar.setAttribute('x1',mid);bar.setAttribute('x2',mid);
-    bar.setAttribute('y1','40');bar.setAttribute('y2','120');
-    bar.setAttribute('stroke','#111');bar.setAttribute('stroke-width','1');
+    bar.setAttribute('x1',mid); bar.setAttribute('x2',mid);
+    bar.setAttribute('y1',lineTop); bar.setAttribute('y2',lineBottom);
+    bar.setAttribute('stroke','#111'); bar.setAttribute('stroke-width','1');
     svg.appendChild(bar);
 
     const groups=[
@@ -734,17 +816,35 @@ function drawEnharmonicToneStaff(el){
       {upper:'g/4',acc:'b',top:'5th',bottom:'3'}
     ];
 
+    // Render each chord in its own tiny offscreen VexFlow SVG, then translate
+    // the finished glyph group so its visual bounding-box center equals X1/X2.
     groups.forEach((g,i)=>{
+      const holder=document.createElement('div');
+      holder.style.cssText='position:absolute;left:-9999px;top:-9999px;width:150px;height:120px';
+      document.body.appendChild(holder);
+      const rr=new VF.Renderer(holder,VF.Renderer.Backends.SVG);
+      rr.resize(150,120); const cc=rr.getContext();
+      const tempStave=new VF.Stave(0,20,150);
+      tempStave.setContext(cc); // stave itself is intentionally not drawn
       const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
       note.addModifier(new VF.Accidental(g.acc),1);
-      note.setStave(st);
+      const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([note]);
+      new VF.Formatter().joinVoices([voice]).format([voice],110);
+      voice.draw(cc,tempStave);
 
-      // VexFlow 4: position the note through a TickContext, not StaveNote.setX().
-      const tc=new VF.TickContext();
-      tc.addTickable(note);
-      tc.preFormat();
-      tc.setX(centers[i]);
-      note.setContext(ctx).draw();
+      const tempSvg=holder.querySelector('svg');
+      const glyphGroup=document.createElementNS(ns,'g');
+      [...tempSvg.childNodes].forEach(n=>glyphGroup.appendChild(n.cloneNode(true)));
+      svg.appendChild(glyphGroup);
+      document.body.removeChild(holder);
+
+      // Find actual rendered bounds, then align visual center to the measure center.
+      let bb;
+      try{bb=glyphGroup.getBBox()}catch(_){bb={x:0,y:0,width:100,height:100}}
+      const targetY=lineTop-22;
+      const dx=centers[i]-(bb.x+bb.width/2);
+      const dy=targetY-bb.y;
+      glyphGroup.setAttribute('transform',`translate(${dx} ${dy})`);
 
       const add=(txt,y,size=11,weight='700')=>{
         const t=document.createElementNS(ns,'text');
@@ -755,17 +855,17 @@ function drawEnharmonicToneStaff(el){
         t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
       };
       add(g.top,28,w<360?9:11);
-      add(g.bottom,153,w<360?10:12);
+      add(g.bottom,160,w<360?10:12);
     });
 
     const label=document.createElementNS(ns,'text');
-    label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','153');
+    label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','160');
     label.setAttribute('font-family','PingFang SC,Arial,sans-serif');
     label.setAttribute('font-size',w<360?'9':'11');
     label.setAttribute('font-weight','700');label.setAttribute('fill','#6e6e73');
     label.textContent='音数';svg.appendChild(label);
   }catch(e){
-    console.error('Page 21 staff render failed:',e);
+    console.error('Page 21 instructional notation failed:',e);
     el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
   }
 }
@@ -813,43 +913,69 @@ function bindToneNumberQuiz(){
 
 
 
-const AUDIO_ROOT='/audio_pn/';
-const activeLessonAudio=[];
 
-function preloadLessonAudio(){
-  const files=['C4','D4','E4','F4','Fs4','G4','A4','B4','C5','D5','E5','F5'];
-  files.forEach(note=>{
-    const a=new Audio(AUDIO_ROOT+note+'.mp3');
-    a.preload='auto';
-    try{a.load()}catch(e){}
-  });
-}
-function preloadOpeningAudio(){ preloadLessonAudio(); }
+/*
+============================================================
+AUDIO CUE LOG — LESSON 01
+No audio is loaded or played in this build.
+Future recorded-piano assets should be wired to these cues.
 
-function playLessonNote(note,delay=0){
-  window.setTimeout(()=>{
-    const a=new Audio(AUDIO_ROOT+note+'.mp3');
-    a.preload='auto';
-    activeLessonAudio.push(a);
-    const clean=()=>{const i=activeLessonAudio.indexOf(a);if(i>=0)activeLessonAudio.splice(i,1)};
-    a.addEventListener('ended',clean,{once:true});
-    a.addEventListener('error',clean,{once:true});
-    const p=a.play();
-    if(p&&p.catch)p.catch(e=>console.warn(note+' playback failed',e));
-  },delay);
-}
-function playLessonChord(notes,delay=0){
-  notes.forEach(note=>playLessonNote(note,delay));
-}
-function playLessonSequence(events){
-  events.forEach(ev=>{
-    const notes=Array.isArray(ev.notes)?ev.notes:[ev.notes];
-    playLessonChord(notes,ev.delay||0);
-  });
-}
-function playOpeningInterval(){
-  playLessonSequence([{notes:'C4',delay:0},{notes:'G4',delay:500}]);
-}
+Page 01 → Continue
+  C4 → G4
+  onset interval: 0.50 s
+
+Page 04 → Continue
+  C4 → D4 → E4 → F4 → G4
+  onset interval: 0.50 s
+
+Page 05 → Continue
+  F4 → F4
+  onset interval: 0.50 s
+
+Page 06 → Continue
+  F4 → F♯4
+  onset interval: 0.50 s
+
+Page 07 → Continue
+  F4 → G4
+  onset interval: 0.50 s
+
+Page 08 → Continue
+  harmonic intervals, each pair simultaneous:
+  F4+F4 → F4+G4 → F4+A4 → F4+B4
+  → F4+C5 → F4+D5 → F4+E5 → F4+F5
+  onset interval between pairs: 0.50 s
+
+Page 10 → Continue
+  C5 → D5
+  onset interval: 0.50 s
+
+Page 11 → Continue
+  C5 → D5 → G4
+  onset interval: 0.25 s
+
+Page 12 → Continue
+  E4+C5 (simultaneous)
+  → D5 after 0.25 s
+  → F4+G4 (simultaneous) after another 0.25 s
+
+Page 15 → Continue
+  C4 → D4
+  onset interval: 0.50 s
+
+Page 16 → Continue
+  E4 → F4
+  onset interval: 0.50 s
+
+Page 17 → Continue
+  C4 → F4
+  onset interval: 0.50 s
+
+Page 18 → Continue
+  C4 → F♯4
+  onset interval: 0.50 s
+============================================================
+*/
 
 function clearBoard(){board.innerHTML=''}
 function openingMarkup(showSecond){return `<div class="intro-flow">
@@ -895,7 +1021,7 @@ function responsiveStaffWidth(el,min=280,max=760){
 }
 
 const steps=[
-{title:'什么是音程？',render(){renderOpening(false);preloadOpeningAudio()}},
+{title:'什么是音程？',render(){renderOpening(false)}},
 {title:'根音与冠音',render(){renderOpening(true)}},
 {title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
 {title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
@@ -946,58 +1072,11 @@ function showStep(i,doScroll=true){
 }
 
 
-function playAudioForContinue(pageNumber){
-  switch(pageNumber){
-    case 1:
-      playLessonSequence([{notes:'C4',delay:0},{notes:'G4',delay:500}]); break;
-    case 4:
-      playLessonSequence([
-        {notes:'C4',delay:0},{notes:'D4',delay:500},{notes:'E4',delay:1000},
-        {notes:'F4',delay:1500},{notes:'G4',delay:2000}
-      ]); break;
-    case 5:
-      playLessonSequence([{notes:'F4',delay:0},{notes:'F4',delay:500}]); break;
-    case 6:
-      playLessonSequence([{notes:'F4',delay:0},{notes:'Fs4',delay:500}]); break;
-    case 7:
-      playLessonSequence([{notes:'F4',delay:0},{notes:'G4',delay:500}]); break;
-    case 8:
-      playLessonSequence([
-        {notes:['F4','F4'],delay:0},
-        {notes:['F4','G4'],delay:500},
-        {notes:['F4','A4'],delay:1000},
-        {notes:['F4','B4'],delay:1500},
-        {notes:['F4','C5'],delay:2000},
-        {notes:['F4','D5'],delay:2500},
-        {notes:['F4','E5'],delay:3000},
-        {notes:['F4','F5'],delay:3500}
-      ]); break;
-    case 10:
-      playLessonSequence([{notes:'C5',delay:0},{notes:'D5',delay:500}]); break;
-    case 11:
-      playLessonSequence([{notes:'C5',delay:0},{notes:'D5',delay:250},{notes:'G4',delay:500}]); break;
-    case 12:
-      playLessonSequence([
-        {notes:['E4','C5'],delay:0},
-        {notes:'D5',delay:250},
-        {notes:['F4','G4'],delay:500}
-      ]); break;
-    case 15:
-      playLessonSequence([{notes:'C4',delay:0},{notes:'D4',delay:500}]); break;
-    case 16:
-      playLessonSequence([{notes:'E4',delay:0},{notes:'F4',delay:500}]); break;
-    case 17:
-      playLessonSequence([{notes:'C4',delay:0},{notes:'F4',delay:500}]); break;
-    case 18:
-      playLessonSequence([{notes:'C4',delay:0},{notes:'Fs4',delay:500}]); break;
-  }
-}
+
 
 $('#startLearning').onclick=startLesson;
 $('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};
 $('#nextBtn').onclick=()=>{
-  const pageNumber=current+1;
-  playAudioForContinue(pageNumber);
   if(current<steps.length-1)showStep(current+1);
   else showSummary();
 };
