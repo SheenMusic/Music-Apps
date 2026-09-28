@@ -521,6 +521,17 @@ button,a{
 .lesson-audio-btn:active{transform:scale(.94)}
 .lesson-audio-btn.playing{background:#eef6ff}
 
+
+/* Keep the speaker control circular even when the blackboard becomes a wide-screen flex/grid item. */
+#lessonBoard > .lesson-audio-btn{
+  position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
+  min-height:34px!important;max-height:34px!important;
+  flex:0 0 34px!important;align-self:auto!important;
+  aspect-ratio:1/1!important;border-radius:50%!important;
+}
+
 </style>
 </head>
 <body>
@@ -1028,7 +1039,9 @@ function bindToneNumberQuiz(){
    Audio is created on demand; the lesson does not preload every MP3.
 */
 const LESSON_AUDIO={
+  1:{file:'assets/audio/01_C4&G4.mp3'},
   2:{file:'assets/audio/01_C4&G4.mp3'},
+  3:{file:'assets/audio/01_C4&G4.mp3'},
   4:{file:'assets/audio/02_C4&D4&E4&F4&G4.mp3'},
   5:{file:'assets/audio/02_C4&D4&E4&F4&G4.mp3'},
   6:{file:'assets/audio/03_F4&F4.mp3'},
@@ -1036,14 +1049,19 @@ const LESSON_AUDIO={
   8:{file:'assets/audio/05_F4&G4.mp3'},
   9:{file:'assets/audio/06_1-8.mp3'},
   10:{file:'assets/audio/07_C5&D5.mp3'},
+  11:{file:'assets/audio/07_C5&D5.mp3'},
   12:{file:'assets/audio/08_C5&D5&G4.mp3'},
   13:{file:'assets/audio/09_2lines.mp3'},
+  14:{file:'assets/audio/09_2lines.mp3'},
+  15:null,
   16:{file:'assets/audio/10_C4&D4.mp3',auto:true},
   17:{file:'assets/audio/11_E4&F4.mp3',auto:true},
   18:{file:'assets/audio/12_C4&F4.mp3',auto:true},
   19:{file:'assets/audio/13_C4&Fs4.mp3',auto:true},
+  20:{file:'assets/audio/13_C4&Fs4.mp3'},
   21:{file:'assets/audio/13_C4&Fs4.mp3'},
-  22:{file:'assets/audio/14_E4&C5.mp3',auto:true}
+  22:{file:'assets/audio/14_E4&C5.mp3',auto:true},
+  23:{file:'assets/audio/14_E4&C5.mp3'}
 };
 
 let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
@@ -1081,8 +1099,17 @@ function installLessonAudio(pageNumber){
   btn.type='button';btn.className='lesson-audio-btn';btn.setAttribute('aria-label','播放谱例');btn.title='播放谱例';
   btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zm0-8.5v2.06A7 7 0 0 1 20 12a7 7 0 0 1-3.5 6.44v2.06A9 9 0 0 0 22 12a9 9 0 0 0-5.5-8.5z"/></svg>';
   boardEl.appendChild(btn);
-  boardEl.onclick=e=>{e.preventDefault();playLessonAudio(pageNumber)};
-  btn.onclick=e=>{e.preventDefault();e.stopPropagation();playLessonAudio(pageNumber)};
+  boardEl.dataset.audioPage=String(pageNumber);
+  boardEl.onclick=e=>{
+    e.preventDefault();
+    if(Number(boardEl.dataset.audioPage)!==current+1)return;
+    playLessonAudio(pageNumber);
+  };
+  btn.onclick=e=>{
+    e.preventDefault();e.stopPropagation();
+    if(Number(boardEl.dataset.audioPage)!==current+1)return;
+    playLessonAudio(pageNumber);
+  };
 }
 function refreshLessonAudioForPage(pageIndex){
   const pageNumber=pageIndex+1,token=++audioNavigationToken;
@@ -1094,7 +1121,12 @@ function refreshLessonAudioForPage(pageIndex){
   });
 }
 
-function clearBoard(){board.onclick=null;board.innerHTML=''}
+function clearBoard(){
+  stopLessonAudio();
+  board.onclick=null;
+  board.removeAttribute('data-audio-page');
+  board.innerHTML='';
+}
 function openingMarkup(showSecond){return `<div class="intro-flow">
   <section class="intro-scene" id="introFirst">
     <p class="intro-definition lesson-paragraph"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>
