@@ -557,6 +557,21 @@ button,a{
   flex:none!important;
 }
 
+/* Audio button: override the wide-screen rule that stretches all direct board children. */
+body.lesson-active #lessonBoard > .lesson-audio-btn{
+  position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:0 0 32px!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+  display:grid!important;place-items:center!important;
+  z-index:20!important;
+}
+
 </style>
 </head>
 <body>
@@ -593,19 +608,7 @@ button,a{
 <div class="lesson-footer-zone" id="lessonFooterZone"><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></div>
 <div class="footer" id="siteFooter">©Sheen · Music Theory</div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js">
-let lessonResizeTimer=0;
-function redrawCurrentLesson(){
-  if(document.body.classList.contains('lesson-active')&&current>=0&&steps[current]){
-    steps[current].render();updateHeaderLessonCount(current);
-  }
-}
-function scheduleLessonRedraw(){clearTimeout(lessonResizeTimer);lessonResizeTimer=setTimeout(redrawCurrentLesson,120)}
-window.addEventListener('resize',scheduleLessonRedraw,{passive:true});
-window.addEventListener('orientationchange',()=>setTimeout(scheduleLessonRedraw,180),{passive:true});
-if(window.visualViewport)window.visualViewport.addEventListener('resize',scheduleLessonRedraw,{passive:true});
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
 <script>
 const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepBody'),board=$('#lessonBoard');
 let current=0, audioCtx=null;
@@ -617,17 +620,11 @@ function ac(){if(!audioCtx||audioCtx.state==='closed') audioCtx=new (window.Audi
 function wakeAudio(){const c=ac();if(c.state==='suspended')c.resume().catch(()=>{});return c}
 function synth(note,d=.72,when=0){const c=wakeAudio(),t=c.currentTime+when,f=noteFreq[note]||noteFreq[note.replace('eb','ds').replace('gb','fs')]||440;const master=c.createGain();master.gain.setValueAtTime(.0001,t);master.gain.exponentialRampToValueAtTime(.20,t+.006);master.gain.exponentialRampToValueAtTime(.065,t+.09);master.gain.exponentialRampToValueAtTime(.0001,t+d);master.connect(c.destination);[[1,'triangle',1],[2,'sine',.13],[3,'sine',.045]].forEach(([m,type,level])=>{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f*m,t);g.gain.value=level;o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.03)})}
 function play(note,d=.72,delay=0){wakeAudio();synth(note,d,delay)}
-function playSeq(a,b){wakeAudio();synth(a,.58,0);synth(b,.58,.64)}
-function playTogether(a,b){wakeAudio();synth(a,.82,0);synth(b,.82,0)}
 function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);if(ia<0||ib<0)return [];if(ia>ib)[ia,ib]=[ib,ia];return chromatic.slice(ia,ib+1)}
-function semitoneCount(a,b){const p=semitonePath(a,b);return Math.max(0,p.length-1)}
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
 function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
-function drawPolyphonicSecond(el){el.innerHTML='';const VF=vf();if(!VF)return;try{const w=Math.max(260,el.clientWidth||300),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const upper=new VF.StaveNote({clef:'treble',keys:['d/4'],duration:'q',stem_direction:VF.Stem.UP});const lower=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'q',stem_direction:VF.Stem.DOWN});const v1=new VF.Voice({num_beats:1,beat_value:4}).addTickables([upper]);const v2=new VF.Voice({num_beats:1,beat_value:4}).addTickables([lower]);new VF.Formatter().joinVoices([v1,v2]).formatToStave([v1,v2],st);v1.draw(ctx,st);v2.draw(ctx,st)}catch(e){drawStaff(el,['c4','d4'],{harmonic:true})}}
 function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',12,'normal');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
-function qChoices(id,items,correct,ok,bad){return `<div class="choices" id="${id}">${items.map((x,i)=>`<button class="choice" data-i="${i}">${x}</button>`).join('')}</div><div class="feedback" id="${id}fb"></div>`}
-function bindChoice(id,correct,ok,bad){const key=id;const apply=i=>{const fb=$('#'+id+'fb');document.querySelectorAll('#'+id+' .choice').forEach(x=>{x.classList.remove('correct','wrong');if(+x.dataset.i===i)x.classList.add(i===correct?'correct':'wrong')});if(i!==null&&i!==undefined){fb.className='feedback '+(i===correct?'ok':'bad');fb.textContent=i===correct?ok:bad}};apply(learningState[key]);document.querySelectorAll('#'+id+' .choice').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;learningState[key]=i;apply(i)})}
 let openingSecondRevealed=false;
 function alignBoardRoleLabels(){
   const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
@@ -881,10 +878,6 @@ function drawToneCountStaff(el){
       t.setAttribute('font-weight','700');t.setAttribute('fill','#6e6e73');t.textContent='音数';svg.appendChild(t);
     }
   }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
-}
-function renderToneCountBoard(){
-  board.innerHTML='<div class="tone-count-board"><div id="toneCountStaff" style="width:100%;height:100%"></div></div>';
-  drawToneCountStaff($('#toneCountStaff'));
 }
 
 
@@ -1164,15 +1157,6 @@ function clearBoard(){
   board.removeAttribute('data-audio-page');
   board.innerHTML='';
 }
-function openingMarkup(showSecond){return `<div class="intro-flow">
-  <section class="intro-scene" id="introFirst">
-    <p class="intro-definition lesson-paragraph"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>
-    <div class="intro-stage"><div class="intro-staff-wrap" id="roleStaffWrap"><div class="staff" id="s1"></div><span class="note-role root ${showSecond?'visible':''}">根音（低音）</span><span class="note-role crown ${showSecond?'visible':''}">冠音（高音）</span></div></div>
-    <div class="intro-second ${showSecond?'visible':''}" id="introSecond">
-      <p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>
-    </div>
-  </section>
-</div>`}
 function renderOpening(showSecond){
   openingSecondRevealed=showSecond;
   renderMainBoard(showSecond?'roles':'plain');
@@ -1231,8 +1215,6 @@ const steps=[
 {title:'Quiz · 音数',render(){renderCompactKeyboard(['E4','C5']);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的音数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-tone-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-tone-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-tone-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-tone-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-tone-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindToneNumberQuiz()}},
 {title:'Quiz · 度数',render(){renderCompactKeyboard(['E4','C5']);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的度数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-degree-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-degree-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-degree-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-degree-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-degree-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindChoiceQuiz('6','data-degree-answer')}}
 ];
-function labelNote(n){return n.replace(/s/,'♯').replace(/b/,'♭').replace(/\d/,'').toUpperCase()}
-function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','b4','c5'],black=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];kb.innerHTML=white.map(n=>`<div class="white-key" data-note="${n}">${n.replace('4','').replace('5','').toUpperCase()}</div>`).join('')+black.map(([n,l])=>`<div class="black-key" style="left:${l}%" data-note="${n}">${n[0].toUpperCase()}♯</div>`).join('');kb.querySelectorAll('[data-note]').forEach(k=>k.onclick=()=>{play(k.dataset.note);highlightKeys([k.dataset.note]);$('#kr').textContent=k.dataset.note.replace('s','♯').toUpperCase()})}
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){
   const previous=current;
