@@ -506,6 +506,21 @@ button,a{
 
 
 #nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important}
+
+/* Lesson example audio */
+#lessonBoard{position:relative}
+.lesson-audio-btn{
+  position:absolute;top:10px;right:10px;z-index:20;
+  width:34px;height:34px;border:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.9);color:#007aff;
+  box-shadow:0 1px 5px rgba(0,0,0,.10);
+  cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent
+}
+.lesson-audio-btn svg{width:18px;height:18px;pointer-events:none}
+.lesson-audio-btn:active{transform:scale(.94)}
+.lesson-audio-btn.playing{background:#eef6ff}
+
 </style>
 </head>
 <body>
@@ -1007,70 +1022,79 @@ function bindToneNumberQuiz(){
 
 
 
-/*
-============================================================
-AUDIO CUE LOG — LESSON 01
-No audio is loaded or played in this build.
-Future recorded-piano assets should be wired to these cues.
 
-Page 01 → Continue
-  C4 → G4
-  onset interval: 0.50 s
-
-Page 04 → Continue
-  C4 → D4 → E4 → F4 → G4
-  onset interval: 0.50 s
-
-Page 05 → Continue
-  F4 → F4
-  onset interval: 0.50 s
-
-Page 06 → Continue
-  F4 → F♯4
-  onset interval: 0.50 s
-
-Page 07 → Continue
-  F4 → G4
-  onset interval: 0.50 s
-
-Page 08 → Continue
-  harmonic intervals, each pair simultaneous:
-  F4+F4 → F4+G4 → F4+A4 → F4+B4
-  → F4+C5 → F4+D5 → F4+E5 → F4+F5
-  onset interval between pairs: 0.50 s
-
-Page 10 → Continue
-  C5 → D5
-  onset interval: 0.50 s
-
-Page 11 → Continue
-  C5 → D5 → G4
-  onset interval: 0.25 s
-
-Page 12 → Continue
-  E4+C5 (simultaneous)
-  → D5 after 0.25 s
-  → F4+G4 (simultaneous) after another 0.25 s
-
-Page 15 → Continue
-  C4 → D4
-  onset interval: 0.50 s
-
-Page 16 → Continue
-  E4 → F4
-  onset interval: 0.50 s
-
-Page 17 → Continue
-  C4 → F4
-  onset interval: 0.50 s
-
-Page 18 → Continue
-  C4 → F♯4
-  onset interval: 0.50 s
-============================================================
+/* ===== Lesson example audio =====
+   Human-facing page numbers (1-based).
+   Audio is created on demand; the lesson does not preload every MP3.
 */
+const LESSON_AUDIO={
+  2:{file:'assets/audio/01_C4&G4.mp3'},
+  4:{file:'assets/audio/02_C4&D4&E4&F4&G4.mp3'},
+  5:{file:'assets/audio/02_C4&D4&E4&F4&G4.mp3'},
+  6:{file:'assets/audio/03_F4&F4.mp3'},
+  7:{file:'assets/audio/04_F4&Fs4.mp3'},
+  8:{file:'assets/audio/05_F4&G4.mp3'},
+  9:{file:'assets/audio/06_1-8.mp3'},
+  10:{file:'assets/audio/07_C5&D5.mp3'},
+  12:{file:'assets/audio/08_C5&D5&G4.mp3'},
+  13:{file:'assets/audio/09_2lines.mp3'},
+  16:{file:'assets/audio/10_C4&D4.mp3',auto:true},
+  17:{file:'assets/audio/11_E4&F4.mp3',auto:true},
+  18:{file:'assets/audio/12_C4&F4.mp3',auto:true},
+  19:{file:'assets/audio/13_C4&Fs4.mp3',auto:true},
+  21:{file:'assets/audio/13_C4&Fs4.mp3'},
+  22:{file:'assets/audio/14_E4&C5.mp3',auto:true}
+};
 
-function clearBoard(){board.innerHTML=''}
+let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
+
+function stopLessonAudio(){
+  if(lessonAudio){
+    try{lessonAudio.pause();lessonAudio.currentTime=0}catch(_){}
+  }
+  lessonAudio=null;lessonAudioPage=null;
+  document.querySelector('.lesson-audio-btn')?.classList.remove('playing');
+}
+function playLessonAudio(pageNumber){
+  const spec=LESSON_AUDIO[pageNumber]; if(!spec)return;
+  if(!lessonAudio||lessonAudioPage!==pageNumber){
+    stopLessonAudio();
+    lessonAudio=new Audio(spec.file);
+    lessonAudio.preload='metadata';
+    lessonAudioPage=pageNumber;
+    lessonAudio.addEventListener('ended',()=>document.querySelector('.lesson-audio-btn')?.classList.remove('playing'));
+  }else{
+    try{lessonAudio.pause();lessonAudio.currentTime=0}catch(_){}
+  }
+  const btn=document.querySelector('.lesson-audio-btn');
+  btn?.classList.add('playing');
+  const p=lessonAudio.play();
+  if(p&&typeof p.catch==='function')p.catch(err=>{
+    btn?.classList.remove('playing');
+    console.warn('Lesson audio playback failed or was blocked:',spec.file,err);
+  });
+}
+function installLessonAudio(pageNumber){
+  const boardEl=document.getElementById('lessonBoard'),spec=LESSON_AUDIO[pageNumber];
+  if(!boardEl||!spec)return;
+  const btn=document.createElement('button');
+  btn.type='button';btn.className='lesson-audio-btn';btn.setAttribute('aria-label','播放谱例');btn.title='播放谱例';
+  btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zm0-8.5v2.06A7 7 0 0 1 20 12a7 7 0 0 1-3.5 6.44v2.06A9 9 0 0 0 22 12a9 9 0 0 0-5.5-8.5z"/></svg>';
+  boardEl.appendChild(btn);
+  boardEl.onclick=e=>{e.preventDefault();playLessonAudio(pageNumber)};
+  btn.onclick=e=>{e.preventDefault();e.stopPropagation();playLessonAudio(pageNumber)};
+}
+function refreshLessonAudioForPage(pageIndex){
+  const pageNumber=pageIndex+1,token=++audioNavigationToken;
+  stopLessonAudio();
+  requestAnimationFrame(()=>{
+    if(token!==audioNavigationToken||current!==pageIndex)return;
+    installLessonAudio(pageNumber);
+    if(LESSON_AUDIO[pageNumber]?.auto)playLessonAudio(pageNumber);
+  });
+}
+
+function clearBoard(){board.onclick=null;board.innerHTML=''}
 function openingMarkup(showSecond){return `<div class="intro-flow">
   <section class="intro-scene" id="introFirst">
     <p class="intro-definition lesson-paragraph"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>
@@ -1155,6 +1179,7 @@ function showStep(i,doScroll=true){
   $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
   setQuizContinueEnabled(![13,21,22].includes(i) || passedQuizzes.has(i));
   steps[i].render();
+  refreshLessonAudioForPage(i);
   updateHeaderLessonCount(i);
   revealNewestLessonText();
   if(doScroll){
