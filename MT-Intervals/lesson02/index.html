@@ -859,6 +859,7 @@ function renderHarmonicBoard(){
 // Going back and revisiting a passed quiz will not lock Continue again.
 const passedQuizzes=new Set();
 const quizAnswers=new Map();
+const multiQuizSelections=new Map();
 
 function setQuizContinueEnabled(enabled){
   const btn=$('#nextBtn'); if(!btn)return;
@@ -1311,6 +1312,83 @@ function l2QuizHistory(q,ans,pageIndex){
  return `<div class="quiz-block quiz-history"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option ${saved==='M'?(saved===ans?'correct':'wrong'):''}" disabled>大（M）</button><button class="quiz-option ${saved==='m'?(saved===ans?'correct':'wrong'):''}" disabled>小（m）</button></div><div class="feedback ${saved?(saved===ans?'ok':'bad'):''}">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
 }
 
+
+function l2MultiQuiz(q,correctAnswers){
+  const pageIndex=current;
+  const saved=new Set(multiQuizSelections.get(pageIndex)||[]);
+  const allOptions=['d','m','P','M','A'];
+  const labels={d:'减',m:'小',P:'纯',M:'大',A:'增'};
+  const passed=passedQuizzes.has(pageIndex);
+
+  body.innerHTML=`<div class="quiz-block l2-multi-quiz">
+    <div class="quiz-kicker">QUIZ</div>
+    <div class="quiz-question">${q}（<span class="key-accent">多选</span>）</div>
+    <div class="quiz-options vertical">
+      ${allOptions.map(v=>`<button class="quiz-option ${saved.has(v)?'selected':''} ${passed&&saved.has(v)?'correct':''}" data-a="${v}">${labels[v]}</button>`).join('')}
+    </div>
+    <div class="feedback ${passed?'ok':''}">${passed?'正确':''}</div>
+  </div>`;
+
+  const block=body.querySelector('.l2-multi-quiz');
+  const options=[...block.querySelectorAll('.quiz-option')];
+  const feedback=block.querySelector('.feedback');
+
+  options.forEach(btn=>{
+    btn.onclick=()=>{
+      if(passedQuizzes.has(pageIndex))return;
+      btn.classList.remove('wrong','correct');
+      btn.classList.toggle('selected');
+      const selected=options.filter(x=>x.classList.contains('selected')).map(x=>x.dataset.a);
+      multiQuizSelections.set(pageIndex,selected);
+      feedback.textContent='';
+      feedback.className='feedback';
+    };
+  });
+
+  setQuizContinueEnabled(true);
+}
+
+function confirmL2MultiQuiz(){
+  const pageIndex=current;
+  const correctSets={
+    21:new Set(['P','A']),      // Page 22
+    22:new Set(['d','P','A'])   // Page 23
+  };
+  const correct=correctSets[pageIndex];
+  if(!correct)return false;
+
+  const block=body.querySelector('.l2-multi-quiz');
+  if(!block)return false;
+  const options=[...block.querySelectorAll('.quiz-option')];
+  const feedback=block.querySelector('.feedback');
+  const selected=new Set(options.filter(x=>x.classList.contains('selected')).map(x=>x.dataset.a));
+
+  if(selected.size===0){
+    feedback.textContent='请先选择答案';
+    feedback.className='feedback bad';
+    return true;
+  }
+
+  const ok=selected.size===correct.size && [...correct].every(v=>selected.has(v));
+  options.forEach(btn=>{
+    btn.classList.remove('correct','wrong');
+    if(btn.classList.contains('selected')) btn.classList.add(ok?'correct':'wrong');
+  });
+
+  if(ok){
+    passedQuizzes.add(pageIndex);
+    multiQuizSelections.set(pageIndex,[...selected]);
+    feedback.textContent='正确';
+    feedback.className='feedback ok';
+    const next=$('#nextBtn');
+    next.textContent=pageIndex===steps.length-1?'完成学习':'继续 →';
+  }else{
+    feedback.textContent='答案不完全正确，请重新选择';
+    feedback.className='feedback bad';
+  }
+  return true;
+}
+
 function l2QuizAppend(q,ans){
  const pageIndex=current;
  const saved=quizAnswers.get(pageIndex);
@@ -1446,6 +1524,11 @@ const steps=[
 {title:'五种基本性质',render(){renderL2QualityMap(0);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p>`;}},
 {title:'纯音程适用的度数',render(){renderL2QualityMap(1);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p>`;}},
 {title:'大小音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p>`;}}
+,
+{title:'增减音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong class="key-accent">增/减音程</strong>：理论上，所有度数都可以通过增减音数变成“增/减”的性质。</p>`;}},
+{title:'减一度',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong class="key-accent">增/减音程</strong>：理论上，所有度数都可以通过增减音数变成“增/减”的性质。</p><p class="lesson-paragraph">但因为纯一度的音数为 0，没有比它更窄的音程，所以减一度是<span class="key-accent">不</span>存在的音程。</p>`;}},
+{title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('一度有哪些性质？',['P','A']);}},
+{title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('五度有哪些性质？',['d','P','A']);}}
 
 ];
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
@@ -1460,9 +1543,14 @@ function showStep(i,doScroll=true){
   lesson.classList.remove('opening');
   $('#progress').style.width=((i+1)/steps.length*100)+'%';
   $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
-  $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
-  setQuizContinueEnabled(![3,4,7,8].includes(i) || passedQuizzes.has(i));
+  const isMultiQuiz=[21,22].includes(i);
+  $('#nextBtn').textContent=isMultiQuiz&&!passedQuizzes.has(i)?'确认':(i===steps.length-1?'完成学习':'继续 →');
+  setQuizContinueEnabled(isMultiQuiz || ![3,4,7,8].includes(i) || passedQuizzes.has(i));
   steps[i].render();
+  if(isMultiQuiz){
+    setQuizContinueEnabled(true);
+    $('#nextBtn').textContent=passedQuizzes.has(i)?(i===steps.length-1?'完成学习':'继续 →'):'确认';
+  }
   refreshLessonAudioForPage(i);
   updateHeaderLessonCount(i);
   revealNewestLessonText();
@@ -1484,6 +1572,10 @@ $('#nextBtn').onclick=e=>{
   if(btn.disabled || btn.getAttribute('aria-disabled')==='true'){
     e?.preventDefault();
     e?.stopPropagation();
+    return;
+  }
+  if([21,22].includes(current) && !passedQuizzes.has(current)){
+    confirmL2MultiQuiz();
     return;
   }
   if(current<steps.length-1)showStep(current+1);
