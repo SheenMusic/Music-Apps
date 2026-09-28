@@ -532,6 +532,31 @@ button,a{
   aspect-ratio:1/1!important;border-radius:50%!important;
 }
 
+
+/* Final audio control geometry: never participate in wide-screen flex/grid sizing. */
+#lessonBoard{position:relative!important}
+#lessonBoard .lesson-audio-btn{
+  position:absolute!important;
+  inset:auto 10px auto auto!important;
+  top:10px!important;
+  box-sizing:border-box!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:none!important;flex-grow:0!important;flex-shrink:0!important;flex-basis:32px!important;
+  align-self:auto!important;justify-self:auto!important;
+  aspect-ratio:1!important;border-radius:999px!important;
+  display:grid!important;place-items:center!important;
+  line-height:1!important;
+  transform:none;
+}
+#lessonBoard .lesson-audio-btn svg{
+  display:block!important;width:17px!important;height:17px!important;
+  min-width:17px!important;max-width:17px!important;
+  flex:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -1113,16 +1138,28 @@ function installLessonAudio(pageNumber){
 }
 function refreshLessonAudioForPage(pageIndex){
   const pageNumber=pageIndex+1,token=++audioNavigationToken;
-  stopLessonAudio();
+  const nextSpec=LESSON_AUDIO[pageNumber];
+  const currentFile=lessonAudio?.getAttribute('src') || null;
+  const sameFile=!!(nextSpec?.file && currentFile===nextSpec.file);
+
+  // Only stop playback when the destination page uses a different audio file,
+  // or explicitly has no audio (page 15). Shared-audio page groups continue
+  // playing seamlessly across page changes.
+  if(!sameFile) stopLessonAudio();
+
   requestAnimationFrame(()=>{
     if(token!==audioNavigationToken||current!==pageIndex)return;
     installLessonAudio(pageNumber);
-    if(LESSON_AUDIO[pageNumber]?.auto)playLessonAudio(pageNumber);
+
+    // Auto-play only when entering a genuinely new audio file.
+    // Moving inside a shared-audio group must not restart an existing recording.
+    if(nextSpec?.auto && !sameFile) playLessonAudio(pageNumber);
   });
 }
 
 function clearBoard(){
-  stopLessonAudio();
+  // Blackboard UI is rebuilt every page, but audio lifetime is controlled
+  // separately by refreshLessonAudioForPage so shared recordings can continue.
   board.onclick=null;
   board.removeAttribute('data-audio-page');
   board.innerHTML='';
