@@ -505,7 +505,7 @@ button,a{
 }
 
 
-#nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important}
+#nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important;pointer-events:none!important}
 
 /* Lesson example audio */
 #lessonBoard{position:relative}
@@ -583,6 +583,7 @@ body:not(.lesson-active) #headerLessonCount{display:none!important}
 /* Lesson 02: two-measure interval-quality board */
 .lesson02-second-board{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
 .lesson02-second-board svg{display:block;width:100%;height:100%;max-width:100%}
+
 
 </style>
 </head>
@@ -823,6 +824,7 @@ function renderHarmonicBoard(){
 // Quiz completion persists while the learner remains in this lesson session.
 // Going back and revisiting a passed quiz will not lock Continue again.
 const passedQuizzes=new Set();
+const quizAnswers=new Map();
 
 function setQuizContinueEnabled(enabled){
   const btn=$('#nextBtn'); if(!btn)return;
@@ -1072,9 +1074,9 @@ function bindToneNumberQuiz(){
 */
 const LESSON_AUDIO={
   1:{file:'assets/audio/01.mp3'},2:{file:'assets/audio/01.mp3'},3:{file:'assets/audio/01.mp3'},
-  4:{file:'assets/audio/q1.mp3'},5:{file:'assets/audio/q2.mp3'},
+  4:{file:'assets/audio/q1.mp3',auto:true},5:{file:'assets/audio/q2.mp3',auto:true},
   6:{file:'assets/audio/02.mp3'},7:{file:'assets/audio/02.mp3'},
-  8:{file:'assets/audio/q3.mp3'},9:{file:'assets/audio/q4.mp3'}
+  8:{file:'assets/audio/q3.mp3',auto:true},9:{file:'assets/audio/q4.mp3',auto:true}
 };
 
 let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
@@ -1263,11 +1265,32 @@ function renderLesson02SecondBoard(useQuality=false){
 
 
 function renderL2Keyboard(active=[]){
- const W=['c4','d4','e4','f4','g4','a4','b4','c5'], labs=['C4','D4','E4','F4','G4','A4','B4','C5'];
- const B=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];
- const on=n=>active.includes(n)||(n==='gs4'&&active.includes('ab4'));
- board.innerHTML=`<div class="compact-keyboard-scroll"><div class="compact-keyboard">${W.map((n,i)=>`<div class="white-key ${on(n)?'active':''}"><span class="key-label">${labs[i]}</span></div>`).join('')}${B.map(([n,l])=>`<div class="black-key ${on(n)?'active':''}" style="left:${l}%"></div>`).join('')}</div></div>`;
+  // Reuse Lesson 01's exact two-octave C4–C6 keyboard renderer and styling.
+  renderCompactKeyboard(active);
 }
+
+function l2QuizHistory(q,ans,pageIndex){
+ const saved=quizAnswers.get(pageIndex);
+ return `<div class="quiz-block quiz-history"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option ${saved==='M'?(saved===ans?'correct':'wrong'):''}" disabled>大（M）</button><button class="quiz-option ${saved==='m'?(saved===ans?'correct':'wrong'):''}" disabled>小（m）</button></div><div class="feedback ${saved?(saved===ans?'ok':'bad'):''}">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
+}
+
+function l2QuizAppend(q,ans){
+ const saved=quizAnswers.get(current);
+ const wrap=document.createElement('div');
+ wrap.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option ${saved==='M'?(saved===ans?'correct':'wrong'):''}" data-a="M">大（M）</button><button class="quiz-option ${saved==='m'?(saved===ans?'correct':'wrong'):''}" data-a="m">小（m）</button></div><div class="feedback ${saved?(saved===ans?'ok':'bad'):''}" id="l2fb">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
+ body.appendChild(wrap.firstElementChild);
+ document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=()=>{
+   if(passedQuizzes.has(current))return;
+   const ok=b.dataset.a===ans;
+   quizAnswers.set(current,b.dataset.a);
+   document.querySelectorAll('.quiz-option').forEach(x=>x.classList.remove('correct','wrong'));
+   b.classList.add(ok?'correct':'wrong');
+   const f=document.getElementById('l2fb'); f.textContent=ok?'正确':'再想一想'; f.className='feedback '+(ok?'ok':'bad');
+   if(ok){passedQuizzes.add(current);setQuizContinueEnabled(true)}else setQuizContinueEnabled(false);
+ });
+ setQuizContinueEnabled(passedQuizzes.has(current));
+}
+
 function l2Quiz(q,ans){
  body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option" data-a="M">大（M）</button><button class="quiz-option" data-a="m">小（m）</button></div><div class="feedback" id="l2fb"></div></div>`;
  document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=()=>{
@@ -1310,12 +1333,12 @@ const steps=[
   renderLesson02SecondBoard(true);
   body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>`;
 }},
-{title:'Quiz',render(){renderL2Keyboard(['f4','g4']);l2Quiz('F 和 G 这个二度的性质是','M')}},
-{title:'Quiz',render(){renderL2Keyboard(['b4','c5']);l2Quiz('B 和 C 这个二度的性质是','m')}},
+{title:'Quiz',render(){renderL2Keyboard(['F4','G4']);body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>`;l2QuizAppend('F 和 G 这个二度的性质是','M')}},
+{title:'Quiz',render(){renderL2Keyboard(['B4','C5']);body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>${l2QuizHistory('F 和 G 这个二度的性质是','M',3)}`;l2QuizAppend('B 和 C 这个二度的性质是','m')}},
 {title:'三度的性质',render(){renderL2ThirdBoard(false);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p>`}},
 {title:'大三度与小三度',render(){renderL2ThirdBoard(true);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`}},
-{title:'Quiz',render(){renderL2Keyboard(['d4','f4']);l2Quiz('D 和 F 这个三度的性质是','m')}},
-{title:'Quiz',render(){renderL2Keyboard(['ab4','c5']);l2Quiz('A♭ 和 C 这个三度的性质是','M')}}
+{title:'Quiz',render(){renderL2Keyboard(['D4','F4']);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`;l2QuizAppend('D 和 F 这个三度的性质是','m')}},
+{title:'Quiz',render(){renderL2Keyboard(['G#4','C5']);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>${l2QuizHistory('D 和 F 这个三度的性质是','m',7)}`;l2QuizAppend('A♭ 和 C 这个三度的性质是','M')}}
 
 ];
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
@@ -1349,7 +1372,13 @@ function showStep(i,doScroll=true){
 
 $('#startLearning').onclick=startLesson;
 $('#prevBtn').onclick=()=>{if(current===0)goHome();else showStep(current-1)};
-$('#nextBtn').onclick=()=>{
+$('#nextBtn').onclick=e=>{
+  const btn=$('#nextBtn');
+  if(btn.disabled || btn.getAttribute('aria-disabled')==='true'){
+    e?.preventDefault();
+    e?.stopPropagation();
+    return;
+  }
   if(current<steps.length-1)showStep(current+1);
   else showSummary();
 };
