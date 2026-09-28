@@ -1,69 +1,1394 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>乐理 · 音程 02｜互动学习</title>
 <style>
-:root{--primary:#6366f1;--primary-hover:#4f46e5;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#10b981;--success-bg:#ecfdf5;--error:#ef4444;--error-bg:#fef2f2;--orange:#f97316;--radius:16px;--shadow:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.01)}
-*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;display:flex;justify-content:center;min-height:100vh;padding:20px 10px}.app{width:100%;max-width:520px;display:flex;flex-direction:column;min-height:calc(100vh - 40px)}header{margin-bottom:16px}.topbar{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}.lesson-badge{background:#eef2ff;color:var(--primary);padding:4px 9px;border-radius:999px}.progress-wrap{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:10px}.progress{height:100%;width:0;background:linear-gradient(90deg,#818cf8,var(--primary));transition:width .3s;border-radius:999px}.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem}.card{background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;margin-bottom:14px}.hidden{display:none!important}.kicker{font-size:.76rem;color:var(--primary);font-weight:800;letter-spacing:.09em;margin-bottom:8px}h1{font-size:1.55rem;line-height:1.35;margin-bottom:8px}h2{font-size:1.25rem;line-height:1.4;margin-bottom:10px}h3{font-size:.95rem}.subtitle{color:var(--muted);line-height:1.65;font-size:.92rem}.lead{font-size:.95rem;line-height:1.75;color:#475569}.lead strong{color:var(--text)}.hero{padding:28px 24px}.hero-rule{height:1px;background:var(--border);margin:20px 0}.home-actions{display:grid;gap:10px;margin-top:22px}button,.btn-link{font:inherit}.primary,.secondary,.ghost,.choice,.chip{border:0;border-radius:10px;cursor:pointer;transition:.15s;text-decoration:none;text-align:center}.primary{background:var(--primary);color:#fff;font-weight:750;padding:13px 16px}.secondary{background:#eef2ff;color:var(--primary);font-weight:750;padding:12px 16px}.ghost{background:#fff;color:var(--muted);border:1px solid var(--border);font-weight:650;padding:11px 15px}.step-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}.step-no{font-size:.76rem;font-weight:800;color:var(--primary);letter-spacing:.08em}.step-count{font-size:.76rem;color:var(--muted)}.stage{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0}.staff{width:100%;min-height:145px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}.staff.small{min-height:125px}.interaction-hint{margin:12px 0 8px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:10px;color:#9a3412;font-size:.82rem;font-weight:750}.interaction-hint:before{content:"● ";color:var(--orange)}.audio-row,.button-row,.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.audio-btn,.chip{flex:1;min-width:80px;background:#eef2ff;color:var(--primary);border:1px solid #c7d2fe;border-radius:9px;padding:10px 7px;font-weight:700;cursor:pointer}.audio-btn.active,.chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}.readout{text-align:center;margin-top:10px;font-weight:800;line-height:1.55}.subread{text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px}.term-box,.rule{margin-top:14px;padding:13px 14px;border-radius:10px;font-size:.9rem;line-height:1.65}.term-box{border-left:3px solid var(--primary);background:#f5f3ff}.rule{background:#f8fafc;border:1px solid var(--border)}.rule strong,.term-box strong{color:var(--primary)}.choices{display:grid;gap:8px;margin-top:12px}.choice{background:#fff;border:1px solid var(--border);padding:11px 13px;text-align:left;color:var(--text)}.choice.correct{border-color:#6ee7b7;background:var(--success-bg);color:#047857}.choice.wrong{border-color:#fecaca;background:var(--error-bg);color:#b91c1c}.feedback{min-height:24px;margin-top:9px;font-size:.85rem;font-weight:650}.feedback.ok{color:#047857}.feedback.bad{color:#b91c1c}.pattern-cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}.pattern-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.relation{display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0;font-weight:850}.relation span{background:#eef2ff;color:#4338ca;padding:7px 10px;border-radius:8px}.relation .arrow{background:none;color:var(--muted);padding:0}.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px}.scale button{padding:9px 3px;border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:8px;font-weight:750;cursor:pointer}.scale button.active{background:var(--primary);color:#fff}.formula{display:grid;gap:8px;margin-top:12px}.formula-row{display:grid;grid-template-columns:34px 1fr;gap:9px;align-items:start}.formula-n{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#eef2ff;color:var(--primary);font-weight:850}.formula-text{font-size:.88rem;line-height:1.55;padding-top:4px}.note-strip{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:12px}.note-strip button{border:1px solid var(--border);background:#fff;padding:10px 2px;border-radius:8px;font-weight:800;color:#475569;cursor:pointer}.note-strip button.hot{background:#fff7ed;border-color:#fb923c;color:#c2410c}.note-strip button.selected{background:var(--primary);color:#fff;border-color:var(--primary)}.map{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}.map button{border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:9px;padding:9px 4px;font-weight:750;cursor:pointer}.map button.active{background:var(--primary);color:#fff}.nav{display:flex;gap:10px;margin-top:16px}.nav>*{flex:1}.summary-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.summary-item{background:#f8fafc;border:1px solid var(--border);border-radius:9px;padding:10px;font-size:.84rem}.summary-item:before{content:"✓";color:var(--success);font-weight:900;margin-right:6px}.footer{margin-top:auto;text-align:center;color:#94a3b8;font-size:.75rem;padding:14px 0 2px}.tiny{font-size:.76rem;color:var(--muted);line-height:1.55;margin-top:10px}.big-term{text-align:center;font-size:1.25rem;font-weight:850;color:var(--primary);margin:12px 0}.legal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.legal-grid button{padding:10px 4px;border:1px solid var(--border);background:#fff;border-radius:8px;font-weight:750;cursor:pointer}.legal-grid button.good{background:var(--success-bg);border-color:#6ee7b7;color:#047857}.legal-grid button.bad{background:var(--error-bg);border-color:#fecaca;color:#b91c1c}@media(max-width:400px){.card{padding:20px 17px}.summary-list{grid-template-columns:1fr}.map{grid-template-columns:repeat(3,1fr)}}
-</style></head><body><div class="app">
-<header><div class="topbar"><span>MUSIC THEORY · INTERVAL</span><span class="lesson-badge">LESSON 02</span></div><div class="progress-wrap"><div class="progress" id="progress"></div></div><div class="meta"><span id="sectionLabel">互动学习</span><span id="stepMeta">课程首页</span></div></header>
+:root{--primary:#6366f1;--primary-hover:#4f46e5;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#10b981;--success-bg:#ecfdf5;--error:#ef4444;--error-bg:#fef2f2;--radius-lg:16px;--radius-md:10px;--shadow:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.01)}
+*{box-sizing:border-box;margin:0;padding:0} body{background:var(--bg);color:var(--text);font-family:"PingFang SC","PingFangSC-Thin","苹方-简",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-weight:300;display:flex;justify-content:center;min-height:100vh;padding:20px 10px}.app{width:100%;max-width:520px;display:flex;flex-direction:column;min-height:calc(100vh - 40px)}
+header{margin-bottom:16px}.topbar{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}.lesson-badge{background:#eef2ff;color:var(--primary);padding:4px 9px;border-radius:999px}.progress-wrap{height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:10px}.progress{height:100%;width:0;background:linear-gradient(90deg,#818cf8,var(--primary));transition:width .3s;border-radius:999px}.meta{display:none}.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin-bottom:14px}.hidden{display:none!important}.kicker{font-size:.76rem;color:var(--primary);font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}h1{font-size:1.55rem;line-height:1.35;margin-bottom:8px}h2{font-size:1.25rem;line-height:1.4;margin-bottom:10px}.subtitle{color:var(--muted);line-height:1.65;font-size:.92rem}.lead{font-size:1.05rem;line-height:1.75;color:#475569}.lead strong{color:var(--text)}
+.hero{padding:28px 24px}.hero-rule{height:1px;background:var(--border);margin:20px 0}.home-actions{display:grid;gap:10px;margin-top:22px}button,.btn-link{font:inherit}.primary,.secondary,.ghost,.choice,.degree-btn{border:0;border-radius:10px;cursor:pointer;transition:.15s;text-decoration:none;text-align:center}.primary{background:var(--primary);color:#fff;font-weight:750;padding:13px 16px}.primary:hover{background:var(--primary-hover)}.secondary{background:#eef2ff;color:var(--primary);font-weight:750;padding:12px 16px}.ghost{background:#fff;color:var(--muted);border:1px solid var(--border);font-weight:650;padding:11px 15px}.secondary:hover,.ghost:hover{filter:brightness(.98)}
+.step-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}.step-no{font-size:.76rem;font-weight:800;color:var(--primary);letter-spacing:.08em}.step-count{font-size:.76rem;color:var(--muted)}.stage{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0}.staff{width:100%;min-height:145px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}.staff.small{min-height:125px}.audio-row,.button-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.audio-btn{flex:1;min-width:105px;background:#eef2ff;color:var(--primary);border:0;border-radius:9px;padding:10px;font-weight:700;cursor:pointer}.interaction-hint{margin:12px 0 8px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:10px;color:#9a3412;font-size:.82rem;font-weight:750}.interaction-hint::before{content:"● ";color:#f97316}.interactive-control{box-shadow:0 0 0 2px rgba(249,115,22,.12);border-color:#fb923c!important}.pattern-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.pattern-card h3{font-size:.94rem;margin-bottom:4px}.pattern-card .tiny{margin-top:4px}.pattern-cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}.example-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.example-chip{flex:1;min-width:72px;border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:8px;padding:8px 6px;font-weight:750;cursor:pointer}.example-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}.term-box{margin-top:14px;padding:13px 14px;border-left:3px solid var(--primary);background:#f5f3ff;border-radius:0 10px 10px 0;font-size:.9rem;line-height:1.65}.rule{margin-top:14px;padding:13px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:10px;font-size:.9rem;line-height:1.65}.rule strong{color:var(--primary)}
+.choices{display:grid;gap:8px;margin-top:12px}.choice{background:#fff;border:1px solid var(--border);padding:11px 13px;text-align:left;color:var(--text)}.choice:hover{border-color:#a5b4fc}.choice.correct{border-color:#6ee7b7;background:var(--success-bg);color:#047857}.choice.wrong{border-color:#fecaca;background:var(--error-bg);color:#b91c1c}.feedback{min-height:24px;margin-top:9px;font-size:.85rem;font-weight:650}.feedback.ok{color:#047857}.feedback.bad{color:#b91c1c}.degree-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px}.degree-btn{background:#fff;border:1px solid var(--border);padding:9px 2px;font-weight:700;color:var(--muted)}.degree-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}.readout{text-align:center;margin-top:10px;font-weight:800}.readout-sub{text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px}
+.keyboard-wrap{overflow-x:auto;padding-bottom:4px}.keyboard{position:relative;height:148px;min-width:455px;margin:6px auto 0;display:flex}.white-key{position:relative;flex:1;background:#fff;border:1px solid #94a3b8;border-radius:0 0 6px 6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;font-size:.75rem;font-weight:700;color:#475569;cursor:pointer}.white-key.on{background:#e0e7ff;color:#4338ca}.black-key{position:absolute;z-index:2;width:7.4%;height:88px;background:#1e293b;border-radius:0 0 5px 5px;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;font-size:.65rem;cursor:pointer;transform:translateX(-50%)}.black-key.on{background:#6366f1}.compare{width:100%;border-collapse:collapse;margin-top:12px;font-size:.85rem}.compare th,.compare td{border-bottom:1px solid var(--border);padding:9px;text-align:center}.compare th:first-child,.compare td:first-child{text-align:left;color:var(--muted)}
+.nav{display:flex;gap:10px;margin-top:16px}.nav>*{flex:1}.summary-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.summary-item{background:#f8fafc;border:1px solid var(--border);border-radius:9px;padding:10px;font-size:.84rem}.summary-item:before{content:"✓";color:var(--success);font-weight:900;margin-right:6px}.footer{margin-top:auto;text-align:center;color:#94a3b8;font-size:.75rem;padding:14px 0 2px}.tiny{font-size:.76rem;color:var(--muted);line-height:1.55;margin-top:10px}.note-pills{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:10px}.pill{font-size:.74rem;background:#eef2ff;color:#4f46e5;padding:5px 8px;border-radius:999px}.build-area{position:relative}.build-hint{text-align:center;font-size:.82rem;color:var(--muted);margin-top:8px}.direction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.interval-mode-label{text-align:center;font-weight:800;color:var(--primary);font-size:1rem;margin:2px 0 10px;min-height:24px}.notation-demo{display:grid;grid-template-columns:1fr;gap:14px;align-items:start}.notation-caption{text-align:center;font-size:.76rem;color:var(--muted);margin-top:6px}.voice-labels{display:flex;justify-content:center;gap:18px;margin-top:4px;font-size:.72rem;color:var(--muted)}.direction-grid button{padding:10px 5px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status{display:inline-block;font-size:.72rem;font-weight:800;padding:4px 8px;border-radius:999px;background:#ecfdf5;color:#047857;margin-top:8px}
+/* Lesson 01 opening sequence */
+.intro-flow{position:relative}.intro-scene{padding:4px 0 28px}.intro-definition{font-size:1.12rem;line-height:2.08;color:#475569;margin:2px 0 18px}.intro-definition strong{color:var(--text);font-weight:900}.intro-role-text strong{font-weight:900;color:var(--text)}.key-accent{color:var(--primary);font-weight:900}.intro-stage{background:transparent;border:0;padding:0;margin:10px 0 0}.intro-staff-wrap{position:relative}.intro-staff-wrap .staff{background:#fff}.note-role{position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}.note-role.visible{opacity:1;transform:translateY(0)}.note-role.root{left:calc(32% - 5mm);transform:translate(-50%,10px)}.note-role.crown{left:60%;transform:translate(-50%,10px)}.note-role.root.visible,.note-role.crown.visible{transform:translate(-50%,0)}.intro-second{padding-top:26px;opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}.intro-second.visible{opacity:1;transform:translateY(0)}.intro-role-text{font-size:1.08rem;line-height:2.08;color:#475569;margin-top:20px}.magic-ghost{position:fixed;z-index:9999;margin:0;pointer-events:none;font-weight:800;color:var(--text);transition:all .72s cubic-bezier(.22,.8,.2,1),opacity .2s ease .56s;transform-origin:left top}.step-head{justify-content:flex-end;margin-bottom:12px}.step-head>div:first-child{display:none}.lesson.opening .step-head{display:flex}.lesson.opening #stepBody{padding-top:2px}.lesson{padding-bottom:88px}.lesson .nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:50;width:min(500px,calc(100% - 20px));margin:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:rgba(248,250,252,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);border-radius:14px 14px 0 0}.degree-explain{font-size:1.08rem;line-height:2.08;color:#475569;margin:2px 0 18px}.degree-explain strong{font-weight:900;color:var(--text)}.degree-note-names{display:flex;justify-content:center;gap:clamp(10px,4vw,26px);align-items:center;min-height:145px;font-size:1.12rem;font-weight:800;letter-spacing:.02em;color:var(--text)}
+/* Fixed lesson workspace: header / blackboard / scrollable text / controls */
+body.lesson-active{height:100dvh;overflow:hidden;padding-bottom:10px}
+body.lesson-active .app{height:calc(100dvh - 20px);min-height:0}
+body.lesson-active header{flex:0 0 auto;margin-bottom:10px}
+body.lesson-active main{flex:1;min-height:0;display:flex;flex-direction:column}
+body.lesson-active #lesson{flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:0;margin-bottom:8px;overflow:hidden}
+body.lesson-active #lesson.hidden{display:none!important}
+.lesson-board{flex:0 0 auto;position:relative;min-height:0}
+.lesson-board:empty{display:none}
+.lesson-board .intro-stage{margin:0}
+.lesson-board .staff{min-height:145px}
+.lesson-content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 2px 18px;scroll-behavior:smooth}
+body.lesson-active .lesson .nav{position:static;left:auto;bottom:auto;transform:none;flex:0 0 auto;width:auto;margin:8px 0 0;padding:10px 0 0;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-top:1px solid var(--border);border-radius:0}
+body.lesson-active .footer{flex:0 0 auto;margin-top:0;padding:4px 0 0}
+body.lesson-active .step-head{flex:0 0 auto;margin-bottom:8px}
+.board-role-wrap{position:relative}.board-role-wrap .staff{background:#fff}
+.board-note-role{position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translate(-50%,10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}
+.board-note-role.visible{opacity:1;transform:translate(-50%,0)}
+.board-note-role.root{left:32%}.board-note-role.crown{left:60%}
+.degree-note-names .endpoint{font-size:1.08rem;font-weight:900;color:var(--text)}
+.degree-note-names .middle{font-size:.84rem;font-weight:650;color:#94a3b8}
+
+/* Stable lesson frame v3 */
+body.lesson-active #lesson{padding:20px 24px;margin-bottom:10px}
+body.lesson-active .lesson-board{height:178px;min-height:178px;max-height:178px;flex:0 0 178px;overflow:hidden;margin:0}
+body.lesson-active .lesson-board:empty{display:block}
+body.lesson-active .lesson-board .staff{height:176px;min-height:176px}
+body.lesson-active .lesson-content{padding:16px 2px 12px;overscroll-behavior:contain}
+.lesson-footer-zone{display:none}
+body.lesson-active .lesson-footer-zone{display:block;flex:0 0 auto}
+.lesson-footer-zone .nav{display:flex;gap:10px;margin:0 0 6px}
+.lesson-footer-zone .nav>*{flex:1}
+body.lesson-active #lesson .nav{display:none}
+body.lesson-active .footer{padding:2px 0 0}
+.lesson-paragraph{font-size:1.12rem;line-height:2.08;color:#475569;margin:0}
+.lesson-paragraph + .lesson-paragraph{margin-top:1.25em}
+.lesson-paragraph strong{font-weight:900;color:var(--text)}
+@media(max-width:400px){.card{padding:20px 17px}.pattern-cards{grid-template-columns:1fr}.degree-grid{grid-template-columns:repeat(4,1fr)}.summary-list{grid-template-columns:1fr}.direction-grid{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+
+/* Degree sequence boards */
+.degree-sequence-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.degree-sequence-board svg{display:block;width:100%;height:100%}
+.degree-list-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 2px}
+.degree-list-board svg{display:block;width:100%;height:100%}
+
+/* Melodic interval boards */
+.melodic-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.melodic-board svg{display:block;width:100%;height:100%}
+.melodic-board-wrap{position:relative;width:100%;height:100%}
+.melodic-callout{position:absolute;top:8px;transform:translateX(-50%);font-size:15px;font-weight:750;color:var(--accent);letter-spacing:.04em;pointer-events:none}
+.melodic-leader{position:absolute;height:1.5px;background:var(--accent);transform-origin:0 50%;pointer-events:none;opacity:.85}
+
+/* Inline lesson quiz */
+.quiz-block{margin-top:30px;padding-top:24px;border-top:1px solid var(--border)}
+.quiz-kicker{font-family:Arial,sans-serif;font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.quiz-question{font-size:20px;line-height:1.85;font-weight:650;margin-bottom:16px}
+.quiz-options{display:flex;gap:12px;flex-wrap:wrap}
+.quiz-option{appearance:none;border:1px solid var(--border);background:#fff;color:var(--ink);border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;transition:.18s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.quiz-option.correct{border-color:#34c759;background:#edf9f0;color:#218739}
+.quiz-option.wrong{border-color:#ff3b30;background:#fff0ef;color:#c92a22}
+
+/* Stable frame fixes v4 */
+body.lesson-active{overflow:hidden;padding-top:10px;padding-bottom:10px}
+body.lesson-active header{display:block!important;visibility:visible!important;opacity:1!important;position:relative;z-index:20}
+body.lesson-active .lesson-board{border:1px solid var(--border);border-radius:12px;background:#fff}
+body.lesson-active .lesson-board .staff{border:0;border-radius:11px}
+body.lesson-active .lesson-board .intro-stage{height:100%}
+body.lesson-active .lesson-board .board-role-wrap{height:100%}
+.lesson-footer-zone button,.lesson-footer-zone .primary,.lesson-footer-zone .ghost{touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.lesson-footer-zone{touch-action:manipulation}
+
+/* Responsive lesson frame */
+.lesson-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
+.lesson-top .brand{min-width:0;white-space:nowrap}
+.lesson-meta{display:flex;align-items:center;justify-content:flex-end;gap:.5ch;min-width:0;white-space:nowrap}
+.lesson-meta .lesson-count{font-size:12px;font-weight:750;color:var(--muted);letter-spacing:.04em}
+.lesson-meta .lesson-id{font-size:12px;font-weight:800;letter-spacing:.08em}
+#lessonStep{display:none!important}
+.lesson-body{scroll-behavior:smooth;overscroll-behavior:contain}
+.board{overflow:hidden}
+.board svg{max-width:100%;height:auto}
+@media(max-width:520px){
+  .lesson-top{gap:8px}
+  .lesson-top .brand{font-size:clamp(10px,3vw,13px);letter-spacing:.04em}
+  .lesson-meta{gap:.5ch}
+  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:clamp(9px,2.7vw,12px)}
+}
+@media(max-width:360px){
+  .lesson-top .brand{font-size:9px;letter-spacing:.02em}
+  .lesson-meta{gap:.5ch}
+  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:9px;letter-spacing:0}
+}
+
+
+/* iPhone safe-area protection */
+body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.lesson-shell,.lesson-view{max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.lesson-footer{padding-bottom:max(0px,env(safe-area-inset-bottom))}
+
+
+#lessonStep,.lesson-step,.step-indicator,.page-indicator,.lesson-progress-text{display:none!important}
+#headerLessonCount{display:inline!important}
+
+
+/* Compact two-octave keyboard for pages 15–18 */
+.compact-keyboard-scroll{width:100%;height:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;display:flex;align-items:center}
+.compact-keyboard{position:relative;height:132px;min-width:420px;margin:auto;display:flex;padding:0 8px;box-sizing:border-box}
+.compact-keyboard .white-key{position:relative;width:29px;min-width:29px;height:128px;border:1px solid #cfd2d7;border-radius:0 0 5px 5px;background:#fff;box-sizing:border-box}
+.compact-keyboard .white-key.active{background:#fff0e8;border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--accent)}
+.compact-keyboard .black-key{position:absolute;top:0;width:18px;height:78px;background:#222;border-radius:0 0 4px 4px;z-index:3;transform:translateX(-50%)}
+.compact-keyboard .black-key.active{background:#c98763;box-shadow:inset 0 -3px 0 rgba(0,0,0,.16)}
+.compact-keyboard .key-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font:700 10px Arial,sans-serif;color:#6e6e73}
+.compact-keyboard .white-key.active .key-label{color:var(--accent)}
+.tone-count-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.tone-count-board svg{display:block;width:100%;height:100%}
+
+
+/* === Authoritative iOS header / safe-area fix ===
+   Keep this block last: earlier lesson-active rules used padding-top:10px,
+   which overrode body{padding-top:env(safe-area-inset-top)} by specificity. */
+html{height:100%;background:var(--bg)}
+body{
+  min-height:100dvh;
+  padding-left:max(10px,env(safe-area-inset-left));
+  padding-right:max(10px,env(safe-area-inset-right));
+}
+body.lesson-active{
+  height:100dvh;
+  min-height:100dvh;
+  overflow:hidden;
+  padding-top:max(10px,env(safe-area-inset-top))!important;
+  padding-bottom:max(10px,env(safe-area-inset-bottom))!important;
+}
+body.lesson-active .app{
+  height:calc(100dvh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom)))!important;
+  min-height:0;
+}
+body.lesson-active header{
+  position:relative!important;
+  top:auto!important;
+  flex:0 0 auto;
+  z-index:100;
+  margin-bottom:10px;
+  transform:none!important;
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-width:0;
+}
+.topbar-brand{
+  min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.topbar-right{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.5ch;
+  flex:0 0 auto;
+  white-space:nowrap;
+}
+.topbar-right .lesson-count{
+  display:inline!important;
+  font-size:inherit;
+}
+@media(max-width:390px){
+  .topbar{font-size:clamp(.58rem,2.7vw,.76rem);letter-spacing:.2px}
+  .lesson-badge{padding:3px 6px}
+}
+@media(max-width:330px){
+  .topbar{font-size:.56rem}
+  .topbar-brand{letter-spacing:0}
+  .lesson-badge{padding:2px 5px}
+}
+
+
+/* Final lesson-space cleanup */
+.lesson-progress,.step-indicator,#lessonStep,.lesson-step,.page-indicator,.lesson-progress-text{display:none!important}
+.lesson-main{padding-top:0!important}
+.board{margin-top:0!important}
+
+
+.quiz-options.vertical{display:grid;grid-template-columns:1fr;gap:9px;max-width:220px}
+.quiz-options.vertical .quiz-option{text-align:left;width:100%}
+
+
+/* Home title aligned with Practice naming */
+.home-course-title{text-align:center;margin:2px 0 24px}
+.home-course-index{font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary);margin-bottom:7px}
+.home-course-title h1{margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text);letter-spacing:-.025em}
+
+
+/* Mobile landscape lesson mode: left board / right text */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active{padding-top:6px!important;padding-bottom:4px!important}
+  body.lesson-active .app{height:calc(100dvh - 10px)!important}
+  body.lesson-active header{margin-bottom:5px!important}
+  .topbar{font-size:.64rem}
+  .lesson-badge{padding:2px 6px}
+  .lesson-card{
+    display:grid!important;
+    grid-template-columns:minmax(280px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    gap:12px!important;
+    min-height:0!important;
+    padding:10px!important;
+  }
+  .board{
+    grid-column:1!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    align-self:stretch!important;
+  }
+  .lesson-body{
+    grid-column:2!important;
+    grid-row:1!important;
+    min-height:0!important;
+    height:100%!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 2px 2px!important;
+  }
+  .lesson-footer{
+    margin-top:5px!important;
+    padding-bottom:0!important;
+  }
+  .lesson-footer .nav,.nav{margin-top:0!important}
+  footer{font-size:.62rem!important;margin-top:2px!important}
+  .compact-keyboard{height:100px!important;min-width:420px}
+  .compact-keyboard .white-key{height:98px!important}
+  .compact-keyboard .black-key{height:60px!important}
+}
+
+
+/* Only the header count is allowed */
+#lessonStep,.lesson-step,.step-indicator,.page-indicator,.lesson-progress-text,
+.lesson-card .lesson-count,.board .lesson-count{display:none!important}
+#headerLessonCount{display:inline!important}
+
+
+/* ===== CLEAN BUILD: authoritative lesson layout ===== */
+
+/* There is exactly one page count: #headerLessonCount in the global header. */
+.step-head,#stepCount,#lessonStep,.lesson-step,.step-indicator,.page-indicator,
+.lesson-progress-text,.lesson-card .lesson-count,.board .lesson-count{
+  display:none!important;
+}
+#headerLessonCount{display:inline!important}
+
+/* Reclaim the old step-header space. */
+body.lesson-active #lesson{
+  padding-top:14px!important;
+}
+body.lesson-active #lessonBoard{
+  margin-top:0!important;
+}
+
+/* Phone landscape: actual DOM is #lesson > #lessonBoard + #stepBody. */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active{
+    overflow:hidden!important;
+    padding-top:6px!important;
+    padding-bottom:4px!important;
+  }
+  body.lesson-active .app{
+    height:calc(100dvh - 10px)!important;
+    min-height:0!important;
+  }
+  body.lesson-active header{
+    flex:0 0 auto!important;
+    margin-bottom:5px!important;
+  }
+  body.lesson-active main{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lesson{
+    height:100%!important;
+    min-height:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(250px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:12px!important;
+    padding:8px 10px!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lessonBoard{
+    grid-column:1!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    overflow:auto!important;
+  }
+  body.lesson-active #stepBody{
+    grid-column:2!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 8px 2px!important;
+    overscroll-behavior:contain;
+  }
+  body.lesson-active #lessonFooterZone{
+    flex:0 0 auto!important;
+    margin-top:4px!important;
+  }
+  body.lesson-active .footer{
+    flex:0 0 auto!important;
+    margin-top:2px!important;
+    font-size:.62rem!important;
+  }
+  body.lesson-active .topbar{font-size:.64rem!important}
+  body.lesson-active .lesson-badge{padding:2px 6px!important}
+}
+
+
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+ body.lesson-active .app{width:100%!important;max-width:none!important;margin:0!important;padding:0 6px!important}
+ body.lesson-active main{width:100%!important;max-width:none!important;margin:0!important}
+ body.lesson-active #lesson{width:100%!important;max-width:none!important;margin:0!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;column-gap:8px!important;border-radius:12px!important}
+ body.lesson-active #lessonBoard{width:100%!important;max-width:none!important;height:100%!important;display:flex!important;align-items:stretch!important;justify-content:stretch!important;padding:0!important}
+ body.lesson-active #lessonBoard>*{width:100%!important;max-width:100%!important}
+}
+
+
+/* Final home/footer + completion treatment */
+body.lesson-active #siteFooter,#summary:not(.hidden)~* #siteFooter{display:none}
+body:has(#summary:not(.hidden)) #siteFooter{display:none}
+.lesson-complete{text-align:center!important;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px}
+.lesson-complete.hidden{display:none!important}
+.lesson-complete .kicker{margin-bottom:8px}
+.lesson-complete h1{margin:0}
+.confetti-pop{font-size:48px;line-height:1;margin-top:22px;transform-origin:50% 80%;animation:confettiCelebrate 1.25s ease-in-out infinite}
+@keyframes confettiCelebrate{
+  0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}
+  35%{transform:translateY(-9px) rotate(7deg) scale(1.12)}
+  65%{transform:translateY(-3px) rotate(-3deg) scale(1.04)}
+}
+@media(prefers-reduced-motion:reduce){.confetti-pop{animation:none}}
+
+
+/* Touch policy: suppress double-tap zoom, preserve two-finger pinch zoom. */
+html,body,.app,button,a,.nav,#lessonFooterZone{
+  touch-action:manipulation;
+}
+button,a{
+  -webkit-tap-highlight-color:transparent;
+}
+.completion-actions{margin-top:24px;justify-content:center}
+
+/* iOS fallback: keep rapid repeated taps on fixed navigation from becoming a zoom gesture. */
+#prevBtn,#nextBtn{
+  touch-action:manipulation!important;
+}
+
+
+/* ===== Unified lesson layout =====
+   Narrow portrait: board above text.
+   Wide screens and short landscape: board left, text right. */
+
+@media (min-width:760px), (orientation:landscape) and (max-height:500px){
+  body.lesson-active .app{
+    width:min(1440px,100%)!important;
+    max-width:none!important;
+    margin:0 auto!important;
+  }
+  body.lesson-active main{
+    width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lesson{
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:18px!important;
+    padding:16px!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lessonBoard{
+    grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:auto!important;
+  }
+  body.lesson-active #lessonBoard>*{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  body.lesson-active #stepBody{
+    grid-column:2!important;
+    grid-row:1!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:6px 12px 12px 4px!important;
+  }
+}
+
+/* Phone landscape gets tighter gutters but the same left-board/right-text model. */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active .app{width:100%!important;padding:0 6px!important}
+  body.lesson-active #lesson{
+    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
+    column-gap:8px!important;
+    padding:8px 10px!important;
+  }
+}
+
+
+/* ===== Wide-screen refinement ===== */
+@media (min-width:760px){
+  body.lesson-active main{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  body.lesson-active #lesson{
+    /* Use the available viewport instead of pinning the card to its top edge. */
+    height:auto!important;
+    min-height:min(560px,calc(100dvh - 190px))!important;
+    max-height:calc(100dvh - 150px)!important;
+    align-self:center!important;
+  }
+  body.lesson-active #lessonBoard,
+  body.lesson-active #stepBody{
+    align-self:center!important;
+  }
+}
+
+
+@media (min-width:760px){
+  body.lesson-active #stepBody{
+    align-self:center!important;
+    justify-self:center!important;
+    width:min(100%,620px)!important;
+    height:auto!important;
+    max-height:100%!important;
+    text-align:left!important;
+    padding:12px 18px!important;
+  }
+}
+
+
+/* Keep notation responsive on narrow portrait screens. */
+#lessonBoard svg,.tone-count-board svg{
+  display:block;
+  max-width:100%!important;
+  height:auto!important;
+  overflow:visible;
+}
+@media (max-width:759px) and (orientation:portrait){
+  #lessonBoard,.tone-count-board,#enharmonicToneStaff{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+}
+
+
+#nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important}
+
+/* Lesson example audio */
+#lessonBoard{position:relative}
+.lesson-audio-btn{
+  position:absolute;top:10px;right:10px;z-index:20;
+  width:34px;height:34px;border:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.9);color:#007aff;
+  box-shadow:0 1px 5px rgba(0,0,0,.10);
+  cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent
+}
+.lesson-audio-btn svg{width:18px;height:18px;pointer-events:none}
+.lesson-audio-btn:active{transform:scale(.94)}
+.lesson-audio-btn.playing{background:#eef6ff}
+
+
+/* Keep the speaker control circular even when the blackboard becomes a wide-screen flex/grid item. */
+#lessonBoard > .lesson-audio-btn{
+  position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
+  min-height:34px!important;max-height:34px!important;
+  flex:0 0 34px!important;align-self:auto!important;
+  aspect-ratio:1/1!important;border-radius:50%!important;
+}
+
+
+/* Final audio control geometry: never participate in wide-screen flex/grid sizing. */
+#lessonBoard{position:relative!important}
+#lessonBoard .lesson-audio-btn{
+  position:absolute!important;
+  inset:auto 10px auto auto!important;
+  top:10px!important;
+  box-sizing:border-box!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:none!important;flex-grow:0!important;flex-shrink:0!important;flex-basis:32px!important;
+  align-self:auto!important;justify-self:auto!important;
+  aspect-ratio:1!important;border-radius:999px!important;
+  display:grid!important;place-items:center!important;
+  line-height:1!important;
+  transform:none;
+}
+#lessonBoard .lesson-audio-btn svg{
+  display:block!important;width:17px!important;height:17px!important;
+  min-width:17px!important;max-width:17px!important;
+  flex:none!important;
+}
+
+/* Audio button: override the wide-screen rule that stretches all direct board children. */
+body.lesson-active #lessonBoard > .lesson-audio-btn{
+  position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:0 0 32px!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+  display:grid!important;place-items:center!important;
+  z-index:20!important;
+}
+
+
+/* Home header: page count begins only after Learning starts. */
+body:not(.lesson-active) #headerLessonCount{display:none!important}
+
+/* Auxiliary practice link uses the existing secondary button language. */
+.aux-practice-link{display:block}
+
+
+/* Lesson 02: two-measure interval-quality board */
+.lesson02-second-board{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.lesson02-second-board svg{display:block;width:100%;height:100%;max-width:100%}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">1 / 23</span><span class="lesson-badge">LESSON 02</span></span></div>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+  </header>
 <main>
-<section class="card hero" id="home"><div class="kicker">INTERACTIVE LESSON</div><h1>音程理论基础 · 第二课</h1><p class="subtitle">音程的性质与自然音程</p><div class="hero-rule"></div><p class="lead">从上一课的<strong>度数与音数</strong>出发，通过五线谱和声音理解大、小、纯、增、减五种性质，并建立完整的音程判定方法。</p><div class="home-actions"><button class="primary" id="startLearning">开始学习</button><a class="secondary btn-link" href="practice/index.html">课后练习</a><a class="ghost btn-link" href="assets/lesson-02.pdf" target="_blank" rel="noopener">查看 PDF 教材 ↗</a></div></section>
-<section class="card hidden" id="lesson"><div class="step-head"><div><div class="step-no">LEARNING</div><h2 id="stepTitle"></h2></div><div class="step-count" id="stepCount"></div></div><div id="stepBody"></div><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></section>
-<section class="card hidden" id="summary"><div class="kicker">LESSON COMPLETE</div><h1>本课学习完成</h1><p class="subtitle">你已经完成 Lesson 02 的互动学习。</p><div class="summary-list"><div class="summary-item">Major / minor</div><div class="summary-item">Perfect</div><div class="summary-item">Augmented / diminished</div><div class="summary-item">M / m / P / A / d</div><div class="summary-item">性质判定四步法</div><div class="summary-item">自然音程</div><div class="summary-item">增四 / 减五</div><div class="summary-item">Tritone</div></div><div class="home-actions"><button class="primary" id="restart">重新学习</button><a class="secondary btn-link" href="practice/index.html">进入课后练习</a><button class="ghost" id="backHome">返回课程首页</button></div></section>
-</main><div class="footer">© 2026 Sheen · Music Theory</div></div>
+<section class="card hero" id="home">
+  <div class="home-course-title"><div class="home-course-index">音程 2</div><h1>音程的性质/自然音程</h1></div>
+  <div class="home-actions">
+    <button class="primary" id="startLearning">开始学习</button>
+    <a class="secondary btn-link" href="practice/index.html">课后练习</a>
+    <a class="secondary btn-link aux-practice-link" href="https://www.musictheory.net/exercises/keyboard-interval/99dnbyrby" target="_blank" rel="noopener">辅助练习 ↗</a>
+    <a class="ghost btn-link" href="assets/lesson-02.pdf" target="_blank" rel="noopener">查看 PDF 教材 ↗</a>
+  </div>
+</section>
+
+<section class="card hidden" id="lesson">
+ <div id="lessonBoard" class="lesson-board"></div>
+ <div id="stepBody" class="lesson-content"></div>
+</section>
+
+<section class="card hidden lesson-complete" id="summary">
+  <div class="kicker">LESSON COMPLETE</div>
+  <h1>本课学习完成</h1>
+  <div class="confetti-pop" aria-hidden="true">🎉</div>
+  <div class="home-actions completion-actions">
+    <a class="primary btn-link" href="practice/index.html">开始课后练习</a>
+    <a class="secondary btn-link aux-practice-link" href="https://www.musictheory.net/exercises/keyboard-interval/99dnbyrby" target="_blank" rel="noopener">辅助练习 ↗</a>
+    <button class="ghost" id="backHome">返回课程首页</button>
+  </div>
+</section>
+</main>
+<div class="lesson-footer-zone" id="lessonFooterZone"><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></div>
+<div class="footer" id="siteFooter">©Sheen · Music Theory</div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
 <script>
-const $=s=>document.querySelector(s),body=$('#stepBody'),home=$('#home'),lesson=$('#lesson'),summary=$('#summary');let current=0;
-const state={s1:'M3',s2:'3',s2size:'M',s3:'P1',s4:'P4',q4:null,s5a:'M3',s5b:'P5',s6:null,s6legal:{},s7:null,s8:null,s9:'FB',s10:'M3'};
-const freq={c4:261.63,cs4:277.18,db4:277.18,d4:293.66,ds4:311.13,eb4:311.13,e4:329.63,ebb4:293.66,es4:349.23,fb4:329.63,f4:349.23,fs4:369.99,gb4:369.99,g4:392,gs4:415.3,ab4:415.3,a4:440,as4:466.16,bb4:466.16,b4:493.88,bs4:523.25,cb5:493.88,c5:523.25,db5:554.37,d5:587.33,eb5:622.25,e5:659.25,f5:698.46};
-/* Shared piano sample library: repository-root /audio_pn/ (C3-G5).
-   This lesson lives at /MT-Intervals/lesson02/, so ../../audio_pn/ is the
-   single canonical relative path in both local Finder use and GitHub Pages. */
-const AUDIO_BASE=new URL('../../audio_pn/',document.baseURI);
-const NOTE_FILE={
-  c3:'C3.mp3',cs3:'Cs3.mp3',db3:'Cs3.mp3',d3:'D3.mp3',ds3:'Ds3.mp3',eb3:'Ds3.mp3',e3:'E3.mp3',fb3:'E3.mp3',es3:'F3.mp3',f3:'F3.mp3',fs3:'Fs3.mp3',gb3:'Fs3.mp3',g3:'G3.mp3',gs3:'Gs3.mp3',ab3:'Gs3.mp3',a3:'A3.mp3',as3:'As3.mp3',bb3:'As3.mp3',b3:'B3.mp3',cb4:'B3.mp3',bs3:'C4.mp3',
-  c4:'C4.mp3',cs4:'Cs4.mp3',db4:'Cs4.mp3',d4:'D4.mp3',ds4:'Ds4.mp3',eb4:'Ds4.mp3',ebb4:'D4.mp3',e4:'E4.mp3',fb4:'E4.mp3',es4:'F4.mp3',f4:'F4.mp3',fs4:'Fs4.mp3',gb4:'Fs4.mp3',g4:'G4.mp3',gs4:'Gs4.mp3',ab4:'Gs4.mp3',a4:'A4.mp3',as4:'As4.mp3',bb4:'As4.mp3',b4:'B4.mp3',cb5:'B4.mp3',bs4:'C5.mp3',
-  c5:'C5.mp3',cs5:'Cs5.mp3',db5:'Cs5.mp3',d5:'D5.mp3',ds5:'Ds5.mp3',eb5:'Ds5.mp3',e5:'E5.mp3',fb5:'E5.mp3',es5:'F5.mp3',f5:'F5.mp3',fs5:'Fs5.mp3',gb5:'Fs5.mp3',g5:'G5.mp3'
+const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepBody'),board=$('#lessonBoard');
+let current=0, audioCtx=null;
+const learningState={q2:null,q3:null,q4:null,flat4:false,degree5:0,odd5:'ll',even5:'ls',build6:null,mode7:'up',example8:null,pitch8:null,example9a:'e4',example9b:'fs4'};
+const noteFreq={c4:261.626,cs4:277.183,d4:293.665,ds4:311.127,e4:329.628,f4:349.228,fs4:369.994,g4:391.995,gs4:415.305,a4:440,as4:466.164,b4:493.883,c5:523.251,d5:587.33,e5:659.255,f5:698.456,g5:783.991};
+const chromatic=['c4','cs4','d4','ds4','e4','f4','fs4','g4','gs4','a4','as4','b4','c5'];
+const degreeNotes=['c4','d4','e4','f4','g4','a4','b4','c5']; const degreeCN=['一度','二度','三度','四度','五度','六度','七度','八度'];
+function ac(){if(!audioCtx||audioCtx.state==='closed') audioCtx=new (window.AudioContext||window.webkitAudioContext)();return audioCtx}
+function wakeAudio(){const c=ac();if(c.state==='suspended')c.resume().catch(()=>{});return c}
+function synth(note,d=.72,when=0){const c=wakeAudio(),t=c.currentTime+when,f=noteFreq[note]||noteFreq[note.replace('eb','ds').replace('gb','fs')]||440;const master=c.createGain();master.gain.setValueAtTime(.0001,t);master.gain.exponentialRampToValueAtTime(.20,t+.006);master.gain.exponentialRampToValueAtTime(.065,t+.09);master.gain.exponentialRampToValueAtTime(.0001,t+d);master.connect(c.destination);[[1,'triangle',1],[2,'sine',.13],[3,'sine',.045]].forEach(([m,type,level])=>{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f*m,t);g.gain.value=level;o.connect(g);g.connect(master);o.start(t);o.stop(t+d+.03)})}
+function play(note,d=.72,delay=0){wakeAudio();synth(note,d,delay)}
+function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);if(ia<0||ib<0)return [];if(ia>ib)[ia,ib]=[ib,ia];return chromatic.slice(ia,ib+1)}
+function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
+function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
+function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
+function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',12,'normal');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
+let openingSecondRevealed=false;
+function alignBoardRoleLabels(){
+  const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
+  if(!wrap||!staff)return;
+  requestAnimationFrame(()=>{
+    const notes=[...staff.querySelectorAll('.vf-stavenote')];
+    if(notes.length<2)return;
+    const wr=wrap.getBoundingClientRect();
+    const set=(label,note)=>{const r=note.getBoundingClientRect();label.style.left=(r.left-wr.left+r.width/2)+'px'};
+    const root=wrap.querySelector('.board-note-role.root'),crown=wrap.querySelector('.board-note-role.crown');
+    if(root)set(root,notes[0]); if(crown)set(crown,notes[notes.length-1]);
+  });
+}
+function renderMainBoard(mode='plain'){
+  board.innerHTML=`<div class="intro-stage"><div class="board-role-wrap"><div class="staff" id="mainBoardStaff"></div><span class="board-note-role root ${mode==='roles'?'visible':''}">根音（低音）</span><span class="board-note-role crown ${mode==='roles'?'visible':''}">冠音（高音）</span></div></div>`;
+  if(mode==='degree') drawDegreeStaff($('#mainBoardStaff')); else drawStaff($('#mainBoardStaff'),['c4','g4']);
+  if(mode==='roles') alignBoardRoleLabels();
+}
+function renderNameBoard(){
+  board.innerHTML=`<div class="degree-note-names" style="height:100%;display:flex;align-items:center;justify-content:space-around;padding:0 22px"><span class="endpoint">C4</span><span class="middle">D4</span><span class="middle">E4</span><span class="middle">F4</span><span class="endpoint">G4</span></div>`;
+}
+
+function drawUnisonMeasures(el,{accidentals=false}={}){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext();
+    const groups=w<380?[['f4','f4'],['g4','g4']]:[['f4','f4'],['g4','g4'],['a4','a4']];
+    const st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const tickables=[];
+    groups.forEach((pair,gi)=>{
+      pair.forEach((n,ni)=>{
+        const x=parseNote(n);
+        const sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'w'});
+        if(accidentals && ni===1)sn.addModifier(new VF.Accidental('#'),0);
+        tickables.push(sn);
+      });
+      if(gi<groups.length-1)tickables.push(new VF.BarNote());
+    });
+    const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function drawSecondMeasures(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext();
+    const groups=w<380?[['f4','g4'],['g4','a4']]:[['f4','g4'],['g4','a4'],['a4','b4']];
+    const st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const tickables=[];
+    groups.forEach((pair,gi)=>{
+      pair.forEach(n=>{
+        const x=parseNote(n);
+        tickables.push(new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'w'}));
+      });
+      if(gi<groups.length-1)tickables.push(new VF.BarNote());
+    });
+    const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function drawIntervalOverview(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').setContext(ctx).draw();
+    const uppers=['f4','g4','a4','b4','c5','d5','e5','f5'];
+    const labels=['uni.','2nd','3rd','4th','5th','6th','7th','oct.'];
+    const notes=uppers.map((u,i)=>{
+      const ux=parseNote(u);
+      const sn=new VF.StaveNote({clef:'treble',keys:['f/4',ux.letter+'/'+ux.oct],duration:'w'});
+      const an=new VF.Annotation(labels[i]).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
+      if(an.setFont)an.setFont('Arial',w<380?7.5:(w<500?8.5:10),'normal');
+      sn.addModifier(an,0); return sn;
+    });
+    const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function renderDegreeSequenceBoard(mode){
+  board.innerHTML='<div class="degree-sequence-board"><div id="degreeSequenceStaff" style="width:100%;height:100%"></div></div>';
+  const el=$('#degreeSequenceStaff');
+  if(mode==='unison')drawUnisonMeasures(el);
+  else if(mode==='altered-unison')drawUnisonMeasures(el,{accidentals:true});
+  else if(mode==='second')drawSecondMeasures(el);
+}
+function renderIntervalOverviewBoard(){
+  board.innerHTML='<div class="degree-list-board"><div id="intervalOverviewStaff" style="width:100%;height:100%"></div></div>';
+  drawIntervalOverview($('#intervalOverviewStaff'));
+}
+
+
+function makeLeader(container,x1,y1,x2,y2){
+  const line=document.createElement('div'); line.className='melodic-leader';
+  const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy),ang=Math.atan2(dy,dx)*180/Math.PI;
+  line.style.left=x1+'px'; line.style.top=y1+'px'; line.style.width=len+'px'; line.style.transform=`rotate(${ang}deg)`;
+  container.appendChild(line);
+}
+function drawMelodicBoard(el,mode='ascending'){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
+    let notes;
+    if(mode==='ascending'){
+      notes=[
+        new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'h',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'h',stem_direction:-1})
+      ];
+    }else{
+      notes=[
+        new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'q',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'q',stem_direction:-1}),
+        new VF.StaveNote({clef:'treble',keys:['g/4'],duration:'h',stem_direction:1})
+      ];
+    }
+    const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables(notes);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+    if(mode==='both'){
+      requestAnimationFrame(()=>{
+        const wrap=el.closest('.melodic-board-wrap'); if(!wrap)return;
+        wrap.querySelectorAll('.melodic-callout,.melodic-leader').forEach(n=>n.remove());
+        const svg=el.querySelector('svg'), sr=svg?.getBoundingClientRect(), wr=wrap.getBoundingClientRect();
+        if(!sr)return;
+        const centers=notes.map(n=>{
+          const bb=n.getBoundingBox?.();
+          if(bb)return {x:sr.left-wr.left+bb.getX()+bb.getW()/2,y:sr.top-wr.top+bb.getY()+bb.getH()/2};
+          return {x:wr.width/2,y:wr.height/2};
+        });
+        const upX=(centers[0].x+centers[1].x)/2, downX=(centers[1].x+centers[2].x)/2, labelY=10;
+        [['上行',upX],['下行',downX]].forEach(([t,x])=>{
+          const lab=document.createElement('div'); lab.className='melodic-callout'; lab.textContent=t; lab.style.left=x+'px'; wrap.appendChild(lab);
+        });
+        makeLeader(wrap,centers[0].x,centers[0].y-5,upX,labelY+22);
+        makeLeader(wrap,centers[1].x,centers[1].y-5,upX,labelY+22);
+        makeLeader(wrap,centers[1].x,centers[1].y+3,downX,labelY+22);
+        makeLeader(wrap,centers[2].x,centers[2].y-5,downX,labelY+22);
+      });
+    }
+  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+}
+function renderMelodicBoard(mode){
+  board.innerHTML='<div class="melodic-board-wrap"><div class="melodic-board"><div id="melodicStaff" style="width:100%;height:100%"></div></div></div>';
+  drawMelodicBoard($('#melodicStaff'),mode);
+}
+
+
+function drawHarmonicBoard(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
+
+    // Preserve the page-12 melodic positions: C5, D5, G4.
+    // Page 13 only changes C5/D5 stems upward and adds E4/F4 beneath them.
+    const c5=new VF.StaveNote({clef:'treble',keys:['c/5'],duration:'q',stem_direction:1});
+    const d5=new VF.StaveNote({clef:'treble',keys:['d/5'],duration:'q',stem_direction:1});
+    const g4=new VF.StaveNote({clef:'treble',keys:['g/4'],duration:'h',stem_direction:1});
+    const e4=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h',stem_direction:-1});
+    const f4=new VF.StaveNote({clef:'treble',keys:['f/4'],duration:'h',stem_direction:-1});
+
+    const upper=new VF.Voice({num_beats:4,beat_value:4}).addTickables([c5,d5,g4]);
+    const lower=new VF.Voice({num_beats:4,beat_value:4}).addTickables([e4,f4]);
+    new VF.Formatter().joinVoices([upper,lower]).formatToStave([upper,lower],st,{align_rests:false});
+    upper.draw(ctx,st); lower.draw(ctx,st);
+  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+function renderHarmonicBoard(){
+  board.innerHTML='<div class="melodic-board"><div id="harmonicStaff" style="width:100%;height:100%"></div></div>';
+  drawHarmonicBoard($('#harmonicStaff'));
+}
+// Quiz completion persists while the learner remains in this lesson session.
+// Going back and revisiting a passed quiz will not lock Continue again.
+const passedQuizzes=new Set();
+
+function setQuizContinueEnabled(enabled){
+  const btn=$('#nextBtn'); if(!btn)return;
+  btn.disabled=!enabled; btn.setAttribute('aria-disabled',enabled?'false':'true');
+}
+function bindDegreeQuiz(){
+  const c=$('#quizCorrect'),w=$('#quizWrong'); if(!c||!w)return;
+  c.addEventListener('click',()=>{c.classList.add('correct');w.classList.remove('wrong');passedQuizzes.add(current);setQuizContinueEnabled(true)});
+  w.addEventListener('click',()=>{w.classList.add('wrong');c.classList.add('correct')});
+}
+
+
+function renderCompactKeyboard(active=[]){
+  const naturals=['C4','D4','E4','F4','G4','A4','B4','C5','D5','E5','F5','G5','A5','B5','C6'];
+  const blackAfter={C4:'C#4',D4:'D#4',F4:'F#4',G4:'G#4',A4:'A#4',C5:'C#5',D5:'D#5',F5:'F#5',G5:'G#5',A5:'A#5'};
+  board.innerHTML='<div class="compact-keyboard-scroll"><div class="compact-keyboard" id="compactKeyboard"></div></div>';
+  const kb=$('#compactKeyboard');
+  naturals.forEach((n,i)=>{
+    const k=document.createElement('div'); k.className='white-key'+(active.includes(n)?' active':'');
+    k.innerHTML=`<span class="key-label">${n.replace(/[45]/,'')}</span>`; kb.appendChild(k);
+    const sharp=blackAfter[n];
+    if(sharp){
+      const b=document.createElement('div'); b.className='black-key'+(active.includes(sharp)?' active':'');
+      b.style.left=(8+(i+1)*29)+'px'; kb.appendChild(b);
+    }
+  });
+  requestAnimationFrame(()=>{
+    const scroll=board.querySelector('.compact-keyboard-scroll');
+    const first=kb.querySelector('.active');
+    if(scroll&&first) scroll.scrollLeft=Math.max(0,first.offsetLeft-scroll.clientWidth*.28);
+  });
+}
+function drawToneCountStaff(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext();
+    const groups=[
+      {upper:'e/4',acc:null,label:'2'},
+      {upper:'e/4',acc:'b',label:'1.5'},
+      {upper:'e/4',acc:'#',label:'2.5'}
+    ];
+    const gap=5,left=8,usable=w-left*2-gap*2,sw=usable/3;
+    const labelY=151, ns='http://www.w3.org/2000/svg';
+    groups.forEach((g,i)=>{
+      const st=new VF.Stave(left+i*(sw+gap),34,sw);
+      if(i===0)st.addClef('treble');
+      st.setContext(ctx).draw();
+      const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
+      if(g.acc)note.addModifier(new VF.Accidental(g.acc),1);
+      const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([note]);
+      new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
+      voice.draw(ctx,st);
+      const svg=el.querySelector('svg');
+      if(svg){
+        const t=document.createElementNS(ns,'text');
+        t.setAttribute('x',left+i*(sw+gap)+sw/2);t.setAttribute('y',labelY);
+        t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Arial,sans-serif');
+        t.setAttribute('font-size',w<380?'10':'12');t.setAttribute('font-weight','700');t.setAttribute('fill','#6e6e73');
+        t.textContent=g.label;svg.appendChild(t);
+      }
+    });
+    const svg=el.querySelector('svg');
+    if(svg){
+      const t=document.createElementNS(ns,'text');t.setAttribute('x','12');t.setAttribute('y',labelY);
+      t.setAttribute('font-family','PingFang SC,Arial,sans-serif');t.setAttribute('font-size',w<380?'9':'11');
+      t.setAttribute('font-weight','700');t.setAttribute('fill','#6e6e73');t.textContent='音数';svg.appendChild(t);
+    }
+  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+
+
+
+function drawEnharmonicToneStaff(el){
+  el.innerHTML=''; const VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,220,760),h=176;
+    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG); r.resize(w,h);
+    const ctx=r.getContext(),left=8,right=8,staffW=w-left-right,staveY=38;
+    const st=new VF.Stave(left,staveY,staffW);
+    st.addClef('treble').setContext(ctx).draw();
+
+    const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
+
+    const n1=new VF.StaveNote({clef:'treble',keys:['c/4','f/4'],duration:'w'});
+    n1.addModifier(new VF.Accidental('#'),1);
+    const n2=new VF.StaveNote({clef:'treble',keys:['c/4','g/4'],duration:'w'});
+    n2.addModifier(new VF.Accidental('b'),1);
+
+    const voice=new VF.Voice({num_beats:8,beat_value:4}).addTickables([n1,n2]);
+
+    // Snapshot the SVG before the notes are drawn. This lets us inspect only
+    // the final SVG geometry created by the notation pass.
+    const before=new Set([...svg.querySelectorAll('*')]);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
+    voice.draw(ctx,st);
+    const created=[...svg.querySelectorAll('*')].filter(node=>!before.has(node));
+
+    // Equal geometric measures.
+    const dividerX=left+staffW/2;
+    const bar=document.createElementNS(ns,'line');
+    bar.setAttribute('x1',dividerX);bar.setAttribute('x2',dividerX);
+    bar.setAttribute('y1',st.getYForLine(0));bar.setAttribute('y2',st.getYForLine(4));
+    bar.setAttribute('stroke','#111');bar.setAttribute('stroke-width','1');
+    svg.appendChild(bar);
+
+    /*
+      Find the ACTUAL rendered whole-note notehead paths.
+
+      We deliberately do not use:
+        - TickContext X
+        - StaveNote.getAbsoluteX()
+        - NoteHead.getAbsoluteX()
+        - the bounding box of the whole note+accidental group
+
+      Instead we inspect final SVG paths and identify the four whole-note heads
+      by their compact glyph geometry and their Y positions on this stave.
+      Accidentals are taller/narrower glyphs and are excluded by geometry.
+    */
+    const expectedYs=[
+      st.getYForNote(0), // retained only as a stave-relative reference
+    ];
+
+    const candidates=[];
+    created.forEach(node=>{
+      if(!(node instanceof SVGGraphicsElement)) return;
+      if(node.tagName.toLowerCase()!=='path') return;
+      try{
+        const b=node.getBBox();
+        // Whole-note heads are compact horizontal glyphs. Keep generous limits
+        // for VexFlow/font/browser variation, while excluding accidentals/stems.
+        if(b.width>=8 && b.width<=26 && b.height>=5 && b.height<=18){
+          candidates.push({
+            node,b,
+            cx:b.x+b.width/2,
+            cy:b.y+b.height/2
+          });
+        }
+      }catch(_){}
+    });
+
+    // Group candidate noteheads by horizontal location. Each harmonic interval
+    // contributes two heads at essentially the same X. The accidental paths do
+    // not form such a two-head vertical pair.
+    candidates.sort((a,b)=>a.cx-b.cx);
+    const clusters=[];
+    candidates.forEach(c=>{
+      let cluster=clusters.find(g=>Math.abs(g.x-c.cx)<4);
+      if(!cluster){
+        cluster={x:c.cx,items:[]};
+        clusters.push(cluster);
+      }
+      cluster.items.push(c);
+      cluster.x=cluster.items.reduce((s,v)=>s+v.cx,0)/cluster.items.length;
+    });
+
+    // A chord cluster must contain at least two vertically distinct compact
+    // notehead glyphs. Choose the two notation clusters from left to right.
+    const chordClusters=clusters.filter(g=>{
+      if(g.items.length<2)return false;
+      const ys=g.items.map(v=>v.cy);
+      return Math.max(...ys)-Math.min(...ys)>8;
+    }).sort((a,b)=>a.x-b.x).slice(0,2);
+
+    let x1=chordClusters[0]?.x ?? null;
+    let x2=chordClusters[1]?.x ?? null;
+
+    // Conservative fallback: if SVG glyph detection changes in a future
+    // VexFlow build, fall back to the notehead API rather than losing labels.
+    function fallbackX(note){
+      try{
+        const heads=note.getNoteHeads?note.getNoteHeads():[];
+        if(heads.length){
+          const h=heads[0];
+          const x=typeof h.getAbsoluteX==='function'?h.getAbsoluteX():
+                  (typeof h.getX==='function'?h.getX():NaN);
+          if(Number.isFinite(x))return x;
+        }
+      }catch(_){}
+      return null;
+    }
+    if(!Number.isFinite(x1))x1=fallbackX(n1);
+    if(!Number.isFinite(x2))x2=fallbackX(n2);
+
+    const add=(txt,x,y,size=11)=>{
+      if(!Number.isFinite(x))return;
+      const t=document.createElementNS(ns,'text');
+      t.setAttribute('x',x);t.setAttribute('y',y);
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','Arial,sans-serif');
+      t.setAttribute('font-size',size);t.setAttribute('font-weight','700');
+      t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
+    };
+
+    // Text follows the final visible notehead centres.
+    add('4th',x1,25,w<360?9:11);
+    add('5th',x2,25,w<360?9:11);
+    add('3',x1,160,w<360?10:12);
+    add('3',x2,160,w<360?10:12);
+
+    const label=document.createElementNS(ns,'text');
+    label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','160');
+    label.setAttribute('font-family','PingFang SC,Arial,sans-serif');
+    label.setAttribute('font-size',w<360?'9':'11');
+    label.setAttribute('font-weight','700');label.setAttribute('fill','#6e6e73');
+    label.textContent='音数';svg.appendChild(label);
+  }catch(e){
+    console.error('Page 21 SVG-notehead render failed:',e);
+    el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
+  }
+}
+function renderEnharmonicToneBoard(){
+  board.innerHTML='<div class="tone-count-board"><div id="enharmonicToneStaff" style="width:100%;height:100%"></div></div>';
+  drawEnharmonicToneStaff($('#enharmonicToneStaff'));
+}
+
+function bindChoiceQuiz(answer,attr='data-quiz-answer'){
+  const opts=[...document.querySelectorAll('['+attr+']')],wrongValues=new Set();
+  opts.forEach(btn=>btn.addEventListener('click',()=>{
+    if(btn.getAttribute(attr)===answer){btn.classList.add('correct');passedQuizzes.add(current);setQuizContinueEnabled(true);return}
+    btn.classList.add('wrong');wrongValues.add(btn.getAttribute(attr));
+    if(wrongValues.size>=opts.length-1){
+      const correct=document.querySelector('['+attr+'="'+answer+'"]');if(correct)correct.classList.add('correct');
+    }
+  }));
+}
+
+function bindToneNumberQuiz(){
+  const opts=[...document.querySelectorAll('[data-tone-answer]')],wrong=new Set();
+  opts.forEach(btn=>btn.addEventListener('click',()=>{
+    if(btn.dataset.toneAnswer==='4'){btn.classList.add('correct');passedQuizzes.add(current);setQuizContinueEnabled(true);return}
+    btn.classList.add('wrong');wrong.add(btn.dataset.toneAnswer);
+    if(wrong.size>=4){const correct=document.querySelector('[data-tone-answer="4"]');if(correct)correct.classList.add('correct')}
+  }));
+}
+
+
+
+
+
+
+
+
+/* ===== Lesson example audio =====
+   Human-facing page numbers (1-based).
+   Audio is created on demand; the lesson does not preload every MP3.
+*/
+const LESSON_AUDIO={
+  1:{file:'assets/audio/01.mp3'},2:{file:'assets/audio/01.mp3'},3:{file:'assets/audio/01.mp3'},
+  4:{file:'assets/audio/q1.mp3'},5:{file:'assets/audio/q2.mp3'},
+  6:{file:'assets/audio/02.mp3'},7:{file:'assets/audio/02.mp3'},
+  8:{file:'assets/audio/q3.mp3'},9:{file:'assets/audio/q4.mp3'}
 };
-const audioCache=new Map();
-function audioURL(note){const file=NOTE_FILE[String(note).toLowerCase()];return file?new URL(file,AUDIO_BASE).href:null}
-function getAudio(note){
-  const key=String(note).toLowerCase(),url=audioURL(key);if(!url)return null;
-  if(!audioCache.has(key)){const a=new Audio(url);a.preload='auto';a.volume=.9;audioCache.set(key,a)}
-  return audioCache.get(key);
+
+let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
+
+function stopLessonAudio(){
+  if(lessonAudio){
+    try{lessonAudio.pause();lessonAudio.currentTime=0}catch(_){}
+  }
+  lessonAudio=null;lessonAudioPage=null;
+  document.querySelector('.lesson-audio-btn')?.classList.remove('playing');
 }
-function playSample(note,delay=0){
-  const launch=()=>{const a=getAudio(note);if(!a)return;a.pause();try{a.currentTime=0}catch(e){};const p=a.play();if(p&&p.catch)p.catch(err=>console.error('Audio play failed:',audioURL(note),err))};
-  if(delay>0)setTimeout(launch,delay*1000);else launch();
+function playLessonAudio(pageNumber){
+  const spec=LESSON_AUDIO[pageNumber]; if(!spec)return;
+  if(!lessonAudio||lessonAudioPage!==pageNumber){
+    stopLessonAudio();
+    lessonAudio=new Audio(spec.file);
+    lessonAudio.preload='metadata';
+    lessonAudioPage=pageNumber;
+    lessonAudio.addEventListener('ended',()=>document.querySelector('.lesson-audio-btn')?.classList.remove('playing'));
+  }else{
+    try{lessonAudio.pause();lessonAudio.currentTime=0}catch(_){}
+  }
+  const btn=document.querySelector('.lesson-audio-btn');
+  btn?.classList.add('playing');
+  const p=lessonAudio.play();
+  if(p&&typeof p.catch==='function')p.catch(err=>{
+    btn?.classList.remove('playing');
+    console.warn('Lesson audio playback failed or was blocked:',spec.file,err);
+  });
 }
-function tone(n,d=.68,delay=0){playSample(n,delay)}
-function seq(a,b){playSample(a,0);playSample(b,.72)}
-function together(a,b){
-  const x=getAudio(a),y=getAudio(b);if(!x||!y)return;
-  [x,y].forEach(z=>{z.pause();try{z.currentTime=0}catch(e){}});
-  const p1=x.play(),p2=y.play();
-  if(p1&&p1.catch)p1.catch(err=>console.error('Audio play failed:',audioURL(a),err));
-  if(p2&&p2.catch)p2.catch(err=>console.error('Audio play failed:',audioURL(b),err));
+function installLessonAudio(pageNumber){
+  const boardEl=document.getElementById('lessonBoard'),spec=LESSON_AUDIO[pageNumber];
+  if(!boardEl||!spec)return;
+  const btn=document.createElement('button');
+  btn.type='button';btn.className='lesson-audio-btn';btn.setAttribute('aria-label','播放谱例');btn.title='播放谱例';
+  btn.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 16.5 12zm0-8.5v2.06A7 7 0 0 1 20 12a7 7 0 0 1-3.5 6.44v2.06A9 9 0 0 0 22 12a9 9 0 0 0-5.5-8.5z"/></svg>';
+  boardEl.appendChild(btn);
+  boardEl.dataset.audioPage=String(pageNumber);
+  boardEl.onclick=e=>{
+    e.preventDefault();
+    if(Number(boardEl.dataset.audioPage)!==current+1)return;
+    playLessonAudio(pageNumber);
+  };
+  btn.onclick=e=>{
+    e.preventDefault();e.stopPropagation();
+    if(Number(boardEl.dataset.audioPage)!==current+1)return;
+    playLessonAudio(pageNumber);
+  };
 }
-/* Preload only after the document is ready; playback still starts only from a user click. */
-window.addEventListener('DOMContentLoaded',()=>{Object.keys(NOTE_FILE).forEach(n=>getAudio(n))});
-function VF(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}function parse(n){const m=n.match(/^([a-g])(ss|bb|s|b)?(\d)$/);return{l:m[1],a:m[2]||'',o:m[3]}}function staff(el,notes,opt={}){el.innerHTML='';const V=VF();if(!V){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=Math.max(290,el.clientWidth||430),r=new V.Renderer(el,V.Renderer.Backends.SVG);r.resize(w,140);const c=r.getContext(),st=new V.Stave(12,30,w-24);st.addClef('treble').setContext(c).draw();const key=n=>{const x=parse(n);return x.l+'/'+x.o},acc=(sn,n,i=0)=>{const x=parse(n);if(x.a)sn.addModifier(new V.Accidental(x.a==='s'?'#':x.a==='ss'?'##':x.a==='bb'?'bb':'b'),i)};let ns;if(opt.harmonic){const sn=new V.StaveNote({clef:'treble',keys:notes.map(key),duration:'q'});notes.forEach((n,i)=>acc(sn,n,i));ns=[sn]}else ns=notes.map(n=>{const sn=new V.StaveNote({clef:'treble',keys:[key(n)],duration:'q'});acc(sn,n);return sn});V.Formatter.FormatAndDraw(c,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
-function choose(id,items,correct,key,ok,bad){return `<div class="choices" id="${id}">${items.map((x,i)=>`<button class="choice" data-i="${i}">${x}</button>`).join('')}</div><div class="feedback" id="${id}fb"></div>`}function bind(id,correct,key,ok,bad){const apply=i=>{document.querySelectorAll('#'+id+' .choice').forEach(b=>{b.classList.remove('correct','wrong');if(+b.dataset.i===i)b.classList.add(i===correct?'correct':'wrong')});const f=$('#'+id+'fb');if(i!==null&&i!==undefined){f.className='feedback '+(i===correct?'ok':'bad');f.textContent=i===correct?ok:bad}};apply(state[key]);document.querySelectorAll('#'+id+' .choice').forEach(b=>b.onclick=()=>{state[key]=+b.dataset.i;apply(state[key])})}
-function active(sel,val){document.querySelectorAll(sel).forEach(b=>b.classList.toggle('active',b.dataset.v===val))}
+function refreshLessonAudioForPage(pageIndex){
+  const pageNumber=pageIndex+1,token=++audioNavigationToken;
+  const nextSpec=LESSON_AUDIO[pageNumber];
+  const currentFile=lessonAudio?.getAttribute('src') || null;
+  const sameFile=!!(nextSpec?.file && currentFile===nextSpec.file);
+
+  // Only stop playback when the destination page uses a different audio file,
+  // or explicitly has no audio (page 15). Shared-audio page groups continue
+  // playing seamlessly across page changes.
+  if(!sameFile) stopLessonAudio();
+
+  requestAnimationFrame(()=>{
+    if(token!==audioNavigationToken||current!==pageIndex)return;
+    installLessonAudio(pageNumber);
+
+    // Auto-play only when entering a genuinely new audio file.
+    // Moving inside a shared-audio group must not restart an existing recording.
+    if(nextSpec?.auto && !sameFile) playLessonAudio(pageNumber);
+  });
+}
+
+function clearBoard(){
+  // Blackboard UI is rebuilt every page, but audio lifetime is controlled
+  // separately by refreshLessonAudioForPage so shared recordings can continue.
+  board.onclick=null;
+  board.removeAttribute('data-audio-page');
+  board.innerHTML='';
+}
+function renderOpening(showSecond){
+  openingSecondRevealed=showSecond;
+  renderMainBoard(showSecond?'roles':'plain');
+  body.innerHTML=`<p class="intro-definition lesson-paragraph" style="margin-top:0"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>${showSecond?`<p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>`:''}`;
+}
+
+function startLesson(){
+  openingSecondRevealed=false;
+  showStep(0,false);
+}
+
+function updateHeaderLessonCount(i){
+  const el=document.getElementById('headerLessonCount');
+  if(el) el.textContent=(i+1)+' / '+steps.length;
+}
+function revealNewestLessonText(){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    const scroller=body;
+    if(!scroller)return;
+    const paras=scroller.querySelectorAll('.lesson-paragraph,.quiz-block');
+    const last=paras[paras.length-1];
+    if(!last)return;
+    const visibleBottom=scroller.scrollTop+scroller.clientHeight;
+    const targetBottom=last.offsetTop+last.offsetHeight+12;
+    if(targetBottom>visibleBottom){
+      scroller.scrollTo({top:Math.max(0,targetBottom-scroller.clientHeight),behavior:'smooth'});
+    }
+  }));
+}
+function responsiveStaffWidth(el,min=280,max=760){
+  return Math.max(180,Math.min(max,el.clientWidth||430));
+}
+
+
+function renderLesson02SecondBoard(useQuality=false){
+  board.innerHTML='<div class="lesson02-second-board"><div id="lesson02SecondStaff" style="width:100%;height:100%"></div></div>';
+  const el=document.getElementById('lesson02SecondStaff');
+  const VF=vf();
+  if(!VF){
+    el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';
+    return;
+  }
+  try{
+    const w=responsiveStaffWidth(el,280,760);
+    const h=176;
+    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,h);
+    const ctx=r.getContext();
+
+    const x=12, y=38, staveW=w-24;
+    const st=new VF.Stave(x,y,staveW);
+    st.addClef('treble').setContext(ctx).draw();
+
+    const c1=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'});
+    const db=new VF.StaveNote({clef:'treble',keys:['d/4'],duration:'h'});
+    db.addModifier(new VF.Accidental('b'),0);
+    const bar=new VF.BarNote();
+    const c2=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'});
+    const d2=new VF.StaveNote({clef:'treble',keys:['d/4'],duration:'h'});
+
+    const tickables=[c1,db,bar,c2,d2];
+    const voice=new VF.Voice({num_beats:8,beat_value:4})
+      .setMode(VF.Voice.Mode.SOFT)
+      .addTickables(tickables);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+
+    const svg=el.querySelector('svg');
+    if(svg){
+      const NS='http://www.w3.org/2000/svg';
+      const addText=(text,xp,yp,{size=12,weight=400,fill='#64748b'}={})=>{
+        const t=document.createElementNS(NS,'text');
+        t.setAttribute('x',xp);
+        t.setAttribute('y',yp);
+        t.setAttribute('text-anchor','middle');
+        t.setAttribute('font-family','Arial, "PingFang SC", sans-serif');
+        t.setAttribute('font-size',size);
+        t.setAttribute('font-weight',weight);
+        t.setAttribute('fill',fill);
+        t.textContent=text;
+        svg.appendChild(t);
+      };
+
+      // Locate each measure from the actual rendered note positions.
+      const noteEls=[...svg.querySelectorAll('.vf-stavenote')];
+      const centerOf=(node,fallback)=>{
+        if(!node)return fallback;
+        try{
+          const b=node.getBBox();
+          return b.x+b.width/2;
+        }catch(e){return fallback;}
+      };
+      const p1=centerOf(noteEls[0],staveW*.25);
+      const p2=centerOf(noteEls[1],staveW*.40);
+      const p3=centerOf(noteEls[2],staveW*.63);
+      const p4=centerOf(noteEls[3],staveW*.80);
+      const m1=(p1+p2)/2, m2=(p3+p4)/2;
+
+      addText(useQuality?'m2':'2nd',m1,22,{size:13,weight:700,fill:'#6366f1'});
+      addText(useQuality?'M2':'2nd',m2,22,{size:13,weight:700,fill:'#6366f1'});
+      addText('0.5',m1,158,{size:12});
+      addText('1',m2,158,{size:12});
+      addText('音数',x+22,158,{size:12});
+    }
+  }catch(e){
+    el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
+  }
+}
+
+
+function renderL2Keyboard(active=[]){
+ const W=['c4','d4','e4','f4','g4','a4','b4','c5'], labs=['C4','D4','E4','F4','G4','A4','B4','C5'];
+ const B=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];
+ const on=n=>active.includes(n)||(n==='gs4'&&active.includes('ab4'));
+ board.innerHTML=`<div class="compact-keyboard-scroll"><div class="compact-keyboard">${W.map((n,i)=>`<div class="white-key ${on(n)?'active':''}"><span class="key-label">${labs[i]}</span></div>`).join('')}${B.map(([n,l])=>`<div class="black-key ${on(n)?'active':''}" style="left:${l}%"></div>`).join('')}</div></div>`;
+}
+function l2Quiz(q,ans){
+ body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option" data-a="M">大（M）</button><button class="quiz-option" data-a="m">小（m）</button></div><div class="feedback" id="l2fb"></div></div>`;
+ document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=()=>{
+   if(passedQuizzes.has(current))return;
+   const ok=b.dataset.a===ans;
+   document.querySelectorAll('.quiz-option').forEach(x=>x.classList.remove('correct','wrong'));
+   b.classList.add(ok?'correct':'wrong');
+   const f=document.getElementById('l2fb'); f.textContent=ok?'正确':'再想一想'; f.className='feedback '+(ok?'ok':'bad');
+   if(ok){passedQuizzes.add(current);setQuizContinueEnabled(true)}else setQuizContinueEnabled(false);
+ });
+ setQuizContinueEnabled(passedQuizzes.has(current));
+}
+function renderL2ThirdBoard(quality=false){
+ board.innerHTML='<div class="lesson02-second-board"><div id="l2third" style="width:100%;height:100%"></div></div>';
+ const el=document.getElementById('l2third'),VF=vf(); if(!VF)return;
+ try{
+  const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,176);const ctx=r.getContext(),x=12,sw=w-24;
+  const st=new VF.Stave(x,38,sw);st.addClef('treble').setContext(ctx).draw();
+  const c1=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'}), eb=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h'});eb.addModifier(new VF.Accidental('b'),0);
+  const c2=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'}),e2=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h'});
+  const v=new VF.Voice({num_beats:8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables([c1,eb,new VF.BarNote(),c2,e2]);
+  new VF.Formatter().joinVoices([v]).formatToStave([v],st,{align_rests:false});v.draw(ctx,st);
+  const svg=el.querySelector('svg'),ns=[...svg.querySelectorAll('.vf-stavenote')],cx=(n,f)=>{try{let b=n.getBBox();return b.x+b.width/2}catch(e){return f}};
+  const a=(cx(ns[0],sw*.25)+cx(ns[1],sw*.4))/2,b=(cx(ns[2],sw*.63)+cx(ns[3],sw*.8))/2,NS='http://www.w3.org/2000/svg';
+  const t=(z,X,Y,fill='#64748b',weight='400')=>{let e=document.createElementNS(NS,'text');Object.entries({x:X,y:Y,'text-anchor':'middle','font-family':'Arial, PingFang SC','font-size':'12','font-weight':weight,fill}).forEach(([k,v])=>e.setAttribute(k,v));e.textContent=z;svg.appendChild(e)};
+  t(quality?'m3':'3rd',a,22,'#6366f1','700');t(quality?'M3':'3rd',b,22,'#6366f1','700');t('1.5',a,158);t('2',b,158);t('音数',x+22,158);
+ }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+
 const steps=[
-{title:'同样是三度，为什么名字不同？',render(){body.innerHTML=`<p class="lead">上一课我们已经知道：<strong>度数</strong>看音名位置，<strong>音数</strong>看实际音高距离。现在比较两个三度。</p><div class="interaction-hint">点击两个音程，观察“度数不变、音数变化”以后，还缺少什么信息。</div><div class="stage"><div class="staff" id="s1"></div><div class="readout" id="r1"></div><div class="audio-row"><button class="audio-btn" data-v="M3">▶ C–E</button><button class="audio-btn" data-v="m3">▶ C–E♭</button></div></div><div class="term-box"><strong>性质：</strong>为了区分度数相同、但音数不同的音程，需要在度数前加入“性质”。C–E 是<strong>大三度</strong>，C–E♭ 是<strong>小三度</strong>。</div>`;const show=v=>{state.s1=v;active('#stepBody .audio-btn',v);if(v==='M3'){staff($('#s1'),['c4','e4']);$('#r1').innerHTML='C–E · 三度 · 音数 2 → <strong>大三度 M3</strong>'}else{staff($('#s1'),['c4','eb4']);$('#r1').innerHTML='C–E♭ · 三度 · 音数 1.5 → <strong>小三度 m3</strong>'}};show(state.s1);document.querySelectorAll('#stepBody .audio-btn').forEach(b=>b.onclick=()=>{show(b.dataset.v);seq('c4',b.dataset.v==='M3'?'e4':'eb4')})}},
-{title:'大与小：2、3、6、7 度',render(){const data={2:{M:['d4','M2','大二度 · 音数 1'],m:['db4','m2','小二度 · 音数 0.5']},3:{M:['e4','M3','大三度 · 音数 2'],m:['eb4','m3','小三度 · 音数 1.5']},6:{M:['a4','M6','大六度 · 音数 4.5'],m:['ab4','m6','小六度 · 音数 4']},7:{M:['b4','M7','大七度 · 音数 5.5'],m:['bb4','m7','小七度 · 音数 5']}};body.innerHTML=`<p class="lead">把三度的规律扩展到二、三、六、七度。每一组都保持<strong>度数不变</strong>，只改变半音距离。</p><div class="interaction-hint">先选度数，再切换“大 / 小”，听一听并观察相差多少。</div><div class="stage"><div class="chips" id="deg2">${[2,3,6,7].map(x=>`<button class="chip" data-v="${x}">${x} 度</button>`).join('')}</div><div class="staff" id="s2"></div><div class="readout" id="r2"></div><div class="audio-row"><button class="audio-btn" data-size="M">大 Major</button><button class="audio-btn" data-size="m">小 minor</button></div></div><div class="rule"><strong>核心规律：</strong>相同度数下，大音程比小音程的音数<strong>多一个半音（0.5）</strong>。</div>`;const show=(sound=false)=>{active('#deg2 .chip',String(state.s2));document.querySelectorAll('[data-size]').forEach(b=>b.classList.toggle('active',b.dataset.size===state.s2size));const x=data[state.s2][state.s2size];staff($('#s2'),['c4',x[0]]);$('#r2').textContent='C–'+({db4:'D♭',d4:'D',eb4:'E♭',e4:'E',ab4:'A♭',a4:'A',bb4:'B♭',b4:'B'}[x[0]])+' · '+x[2];if(sound)seq('c4',x[0])};show();document.querySelectorAll('#deg2 .chip').forEach(b=>b.onclick=()=>{state.s2=b.dataset.v;show(true)});document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{state.s2size=b.dataset.size;show(true)})}},
-{title:'一度与八度：听见“纯”',render(){body.innerHTML=`<p class="lead">现在换一组音程。先不要背名称，只听它们的声音。</p><div class="interaction-hint">分别播放纯一度与纯八度，再播放两个音同时发声，感受它们高度融合的听觉效果。</div><div class="stage"><div class="staff" id="s3"></div><div class="readout" id="r3"></div><div class="audio-row"><button class="audio-btn" data-v="P1">C–C · 一度</button><button class="audio-btn" data-v="P8">C–C · 八度</button></div><button class="secondary" id="harm3" style="width:100%;margin-top:8px">▶ 同时播放</button></div><div class="big-term">Perfect → P → 纯</div><p class="lead">在音程性质体系中，一度和八度的基本性质使用 <strong>Perfect（纯）</strong>，而不是 Major / minor。听觉上的高度融合，可以帮助我们记住这个家族。</p>`;const show=v=>{state.s3=v;active('#stepBody .audio-btn',v);if(v==='P1'){staff($('#s3'),['c4','c4'],{harmonic:true});$('#r3').textContent='P1 · 纯一度 · 音数 0'}else{staff($('#s3'),['c4','c5']);$('#r3').textContent='P8 · 纯八度 · 音数 6'}};show(state.s3);document.querySelectorAll('#stepBody .audio-btn').forEach(b=>b.onclick=()=>{show(b.dataset.v);b.dataset.v==='P1'?tone('c4'):seq('c4','c5')});$('#harm3').onclick=()=>state.s3==='P1'?tone('c4'):together('c4','c5')}},
-{title:'四度与五度：纯音程家族',render(){body.innerHTML=`<p class="lead">四度和五度也属于同一个性质家族。它们具有很强的协和感与稳定感。</p><div class="interaction-hint">切换 P4 / P5 并播放，然后完成下面的 Learning Check。</div><div class="stage"><div class="staff" id="s4"></div><div class="readout" id="r4"></div><div class="audio-row"><button class="audio-btn" data-v="P4">▶ C–F · P4</button><button class="audio-btn" data-v="P5">▶ C–G · P5</button></div></div><div class="term-box"><strong>纯音程家族：</strong>P1 · P4 · P5 · P8</div><div class="rule"><strong>助记口诀：</strong>一四五八没大小；二三六七没有纯。</div><div class="interaction-hint">Learning Check：C–G 应该使用哪一种性质？</div>${choose('q4',['M5','m5','P5','M4'],2,'q4','正确。五度属于纯音程家族，所以 C–G 是 P5。','回忆口诀：一、四、五、八使用“纯”。')}`;const show=v=>{state.s4=v;active('#stepBody .audio-btn',v);const n=v==='P4'?'f4':'g4';staff($('#s4'),['c4',n]);$('#r4').textContent=v==='P4'?'P4 · 纯四度 · 音数 2.5':'P5 · 纯五度 · 音数 3.5'};show(state.s4);document.querySelectorAll('#stepBody .audio-btn').forEach(b=>b.onclick=()=>{show(b.dataset.v);seq('c4',b.dataset.v==='P4'?'f4':'g4')});bind('q4',2,'q4','正确。五度属于纯音程家族，所以 C–G 是 P5。','回忆口诀：一、四、五、八使用“纯”。')}},
-{title:'增与减：继续扩大或缩小',render(){const a={d3:['ebb4','d3 · 减三度 · 音数 1'],m3:['eb4','m3 · 小三度 · 音数 1.5'],M3:['e4','M3 · 大三度 · 音数 2'],A3:['es4','A3 · 增三度 · 音数 2.5']},b={d5:['gb4','d5 · 减五度 · 音数 3'],P5:['g4','P5 · 纯五度 · 音数 3.5'],A5:['gs4','A5 · 增五度 · 音数 4']};body.innerHTML=`<p class="lead">“大 / 小”和“纯”分属两套基本系统，但<strong>增 / 减</strong>可以出现在两套系统中。关键条件是：<strong>度数保持不变</strong>。</p><div class="pattern-cards"><div class="pattern-card"><h3>三度家族</h3><div class="staff small" id="s5a"></div><div class="chips" id="c5a">${Object.keys(a).map(x=>`<button class="chip" data-v="${x}">${x}</button>`).join('')}</div><div class="readout" id="r5a"></div></div><div class="pattern-card"><h3>五度家族</h3><div class="staff small" id="s5b"></div><div class="chips" id="c5b">${Object.keys(b).map(x=>`<button class="chip" data-v="${x}">${x}</button>`).join('')}</div><div class="readout" id="r5b"></div></div></div><div class="rule"><strong>关系：</strong>d3 ← m3 ← M3 → A3；d5 ← P5 → A5。每移动一级，相差一个半音。增：比大或纯再宽半音；减：比小或纯再窄半音。</div><p class="tiny">教材还介绍倍增、倍减，但本课练习不展开。</p>`;const showA=(v,sound=false)=>{state.s5a=v;active('#c5a .chip',v);staff($('#s5a'),['c4',a[v][0]]);$('#r5a').textContent=a[v][1];if(sound)seq('c4',a[v][0])},showB=(v,sound=false)=>{state.s5b=v;active('#c5b .chip',v);staff($('#s5b'),['c4',b[v][0]]);$('#r5b').textContent=b[v][1];if(sound)seq('c4',b[v][0])};showA(state.s5a);showB(state.s5b);document.querySelectorAll('#c5a .chip').forEach(x=>x.onclick=()=>showA(x.dataset.v,true));document.querySelectorAll('#c5b .chip').forEach(x=>x.onclick=()=>showB(x.dataset.v,true))}},
-{title:'完整音程名称与缩写',render(){body.innerHTML=`<p class="lead">性质 + 度数，构成完整的音程名称。英文性质通常使用首字母缩写，其中小音程和减音程习惯使用小写。</p><div class="stage"><div class="relation"><span>M · Major · 大</span><span>m · minor · 小</span><span>P · Perfect · 纯</span><span>A · Augmented · 增</span><span>d · diminished · 减</span></div></div><div class="interaction-hint">点击名称，判断它在本课的性质系统中是否成立。</div><div class="legal-grid" id="legal6">${['M3','P5','m7','P3','M4','m5','A2','d8','M1'].map(x=>`<button data-v="${x}">${x}</button>`).join('')}</div><div class="feedback" id="f6"></div><div class="rule"><strong>判断原则：</strong>1、4、5、8 的基本性质不用大/小；2、3、6、7 不用纯。增、减可以用于各度数体系；教材另将“减一度”列为不存在的特殊情况。</div>`;const valid={M3:1,P5:1,m7:1,P3:0,M4:0,m5:0,A2:1,d8:1,M1:0};document.querySelectorAll('#legal6 button').forEach(b=>{const v=b.dataset.v;if(state.s6legal[v]!==undefined)b.classList.add(valid[v]?'good':'bad');b.onclick=()=>{state.s6legal[v]=valid[v];b.classList.add(valid[v]?'good':'bad');$('#f6').className='feedback '+(valid[v]?'ok':'bad');$('#f6').textContent=valid[v]?`${v} 可以成立。`:`${v} 不符合这一度数的性质家族。`}})}},
-{title:'如何判断一个音程的性质？',render(){const ex={m6:{notes:['c4','ab4'],lines:['C–D–E–F–G–A → 六度','六度属于“大 / 小”系统','C–A♭ 的音数 = 4','六度 + 音数 4 → m6 小六度']},A4:{notes:['c4','fs4'],lines:['C–D–E–F → 四度','四度属于“纯”系统','C–F♯ 的音数 = 3','P4 为 2.5；再宽半音 → A4 增四度']}};body.innerHTML=`<p class="lead">前面的知识可以整理成一套固定流程。以后看到任何音程，都按同样顺序判断。</p><div class="interaction-hint">切换两个例子，观察四步算法如何工作。</div><div class="chips"><button class="chip" data-v="m6">C–A♭</button><button class="chip" data-v="A4">C–F♯</button></div><div class="stage"><div class="staff" id="s7"></div><div class="formula" id="formula7"></div></div><div class="rule"><strong>四步法：</strong>① 先定度数 → ② 判断性质家族 → ③ 计算音数 → ④ 得出完整名称。</div>`;const show=v=>{state.s7=v;active('#stepBody .chip',v);staff($('#s7'),ex[v].notes);$('#formula7').innerHTML=ex[v].lines.map((x,i)=>`<div class="formula-row"><div class="formula-n">${i+1}</div><div class="formula-text">${x}</div></div>`).join('')};show(state.s7||'m6');document.querySelectorAll('#stepBody .chip').forEach(b=>b.onclick=()=>{show(b.dataset.v);seq(...ex[b.dataset.v].notes)})}},
-{title:'什么是自然音程？',render(){body.innerHTML=`<p class="lead">所有<strong>大音程、小音程、纯音程，以及增四度和减五度</strong>都属于自然音程。这个名称来自自然大调音阶中的音程关系。</p><div class="stage"><div class="note-strip">${['C','D','E','F','G','A','B','C'].map(x=>`<button>${x}</button>`).join('')}</div><div class="term-box">C、D、E、F、G、A、B 是自然音，也是 C 自然大调的组成音。由这些音组成的音程一定属于自然音程。</div></div><div class="interaction-hint">一个常见误区：C–E♭ 有降号，所以它不是自然音程。这个判断对吗？</div>${choose('q8',['正确：有变化音就不是自然音程','错误：C–E♭ 是 m3，小音程属于自然音程'],1,'s8','正确。有变化音并不等于“不是自然音程”；C–E♭ 是小三度，仍属于自然音程。','“自然音程”不是根据谱面上有没有升降号来判断。')}<div class="rule"><strong>不要混淆：</strong>“自然音”描述音本身；“自然音程”描述音程的性质类别。有变化音的音程仍然可能是自然音程。</div>`;bind('q8',1,'s8','正确。有变化音并不等于“不是自然音程”；C–E♭ 是小三度，仍属于自然音程。','“自然音程”不是根据谱面上有没有升降号来判断。')}},
-{title:'C 大调里的特殊音程：F–B',render(){body.innerHTML=`<p class="lead">增四度和减五度为什么也是自然音程？不要先背答案，直接在 C 自然大调里找。</p><div class="stage"><div class="note-strip" id="strip9">${['C','D','E','F','G','A','B','C'].map((x,i)=>`<button class="${x==='F'||x==='B'?'hot':''}">${x}</button>`).join('')}</div><div class="subread">F 与 B 都来自 C 自然大调。</div></div><div class="interaction-hint">点击 F→B 与 B→F，比较同样的音数为什么得到两个不同名称。</div><div class="stage"><div class="staff" id="s9"></div><div class="readout" id="r9"></div><div class="audio-row"><button class="audio-btn" data-v="FB">▶ F → B</button><button class="audio-btn" data-v="BF">▶ B → F</button></div></div><div class="term-box"><strong>Tritone · 三全音：</strong>A4 与 d5 的音数都为 3，也就是三个全音。它们是自然音程中唯一的一对增、减音程。</div>`;const show=v=>{state.s9=v;active('#stepBody .audio-btn',v);if(v==='FB'){staff($('#s9'),['f4','b4']);$('#r9').innerHTML='F → B：四度 · 音数 3 → <strong>A4 增四度</strong>'}else{staff($('#s9'),['b4','f5']);$('#r9').innerHTML='B → F：五度 · 音数 3 → <strong>d5 减五度</strong>'}};show(state.s9);document.querySelectorAll('#stepBody .audio-btn').forEach(b=>b.onclick=()=>{show(b.dataset.v);b.dataset.v==='FB'?seq('f4','b4'):seq('b4','f5')})}},
-{title:'自然音程全景',render(){const map={P1:['c4','c4','纯一度 P1','0','纯系统'],m2:['c4','db4','小二度 m2','0.5','大/小系统'],M2:['c4','d4','大二度 M2','1','大/小系统'],m3:['c4','eb4','小三度 m3','1.5','大/小系统'],M3:['c4','e4','大三度 M3','2','大/小系统'],P4:['c4','f4','纯四度 P4','2.5','纯系统'],A4:['c4','fs4','增四度 A4','3','增/减；三全音'],d5:['c4','gb4','减五度 d5','3','增/减；三全音'],P5:['c4','g4','纯五度 P5','3.5','纯系统'],m6:['c4','ab4','小六度 m6','4','大/小系统'],M6:['c4','a4','大六度 M6','4.5','大/小系统'],m7:['c4','bb4','小七度 m7','5','大/小系统'],M7:['c4','b4','大七度 M7','5.5','大/小系统'],P8:['c4','c5','纯八度 P8','6','纯系统']};body.innerHTML=`<p class="lead">最后把第二课放进一张可操作的“知识地图”。点击任意自然音程，查看它的度数、音数、性质家族与谱例。</p><div class="interaction-hint">特别观察音数 3：同一个音数会对应 A4 和 d5 两种不同度数。</div><div class="map" id="map10">${Object.keys(map).map(x=>`<button data-v="${x}">${x}</button>`).join('')}</div><div class="stage"><div class="staff" id="s10"></div><div class="readout" id="r10"></div><div class="subread" id="sub10"></div><button class="secondary" id="play10" style="width:100%;margin-top:10px">▶ 播放音程</button></div><div class="rule"><strong>自然音程：</strong>所有大、小、纯音程，以及 A4 / d5。音数帮助我们测量距离；度数 + 性质才构成完整的音程名称。</div>`;const show=v=>{state.s10=v;active('#map10 button',v);const x=map[v];staff($('#s10'),[x[0],x[1]]);$('#r10').textContent=x[2]+' · 音数 '+x[3];$('#sub10').textContent='性质家族：'+x[4]};show(state.s10);document.querySelectorAll('#map10 button').forEach(b=>b.onclick=()=>show(b.dataset.v));$('#play10').onclick=()=>{const x=map[state.s10];state.s10==='P1'?tone('c4'):seq(x[0],x[1])}}}
+{title:'音程的性质',render(){
+  renderLesson02SecondBoard(false);
+  body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p>`;
+}},
+{title:'大二度与小二度',render(){
+  renderLesson02SecondBoard(true);
+  body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p>`;
+}},
+{title:'大二度与小二度的音数',render(){
+  renderLesson02SecondBoard(true);
+  body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>`;
+}},
+{title:'Quiz',render(){renderL2Keyboard(['f4','g4']);l2Quiz('F 和 G 这个二度的性质是','M')}},
+{title:'Quiz',render(){renderL2Keyboard(['b4','c5']);l2Quiz('B 和 C 这个二度的性质是','m')}},
+{title:'三度的性质',render(){renderL2ThirdBoard(false);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p>`}},
+{title:'大三度与小三度',render(){renderL2ThirdBoard(true);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`}},
+{title:'Quiz',render(){renderL2Keyboard(['d4','f4']);l2Quiz('D 和 F 这个三度的性质是','m')}},
+{title:'Quiz',render(){renderL2Keyboard(['ab4','c5']);l2Quiz('A♭ 和 C 这个三度的性质是','M')}}
+
 ];
-function showStep(i){current=i;home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#stepMeta').textContent=`学习 ${i+1}/${steps.length}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();window.scrollTo({top:0,behavior:'smooth'})}function goHome(){lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';$('#stepMeta').textContent='课程首页';window.scrollTo({top:0,behavior:'smooth'})}function showSummary(){lesson.classList.add('hidden');summary.classList.remove('hidden');$('#progress').style.width='100%';$('#stepMeta').textContent='完成';window.scrollTo({top:0,behavior:'smooth'})}
-$('#startLearning').onclick=()=>showStep(0);$('#prevBtn').onclick=()=>current===0?goHome():showStep(current-1);$('#nextBtn').onclick=()=>current<steps.length-1?showStep(current+1):showSummary();$('#restart').onclick=()=>showStep(0);$('#backHome').onclick=goHome;
-</script></body></html>
+function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
+function showStep(i,doScroll=true){
+  const previous=current;
+  $('#siteFooter').style.display='none';
+  current=i;
+  document.body.classList.add('lesson-active');
+  home.classList.add('hidden');
+  summary.classList.add('hidden');
+  lesson.classList.remove('hidden');
+  lesson.classList.remove('opening');
+  $('#progress').style.width=((i+1)/steps.length*100)+'%';
+  $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
+  $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
+  setQuizContinueEnabled(![3,4,7,8].includes(i) || passedQuizzes.has(i));
+  steps[i].render();
+  refreshLessonAudioForPage(i);
+  updateHeaderLessonCount(i);
+  revealNewestLessonText();
+  if(doScroll){
+    requestAnimationFrame(()=>{
+      if(i>previous) revealNewestLessonText();
+      else body.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+}
+
+
+
+
+$('#startLearning').onclick=startLesson;
+$('#prevBtn').onclick=()=>{if(current===0)goHome();else showStep(current-1)};
+$('#nextBtn').onclick=()=>{
+  if(current<steps.length-1)showStep(current+1);
+  else showSummary();
+};
+$('#backHome').onclick=goHome;
+function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
+function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='none';$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
+// 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
+
+(function(){
+  let lastTouchEnd=0;
+  document.addEventListener('touchend',function(e){
+    if(e.touches && e.touches.length>0) return;
+    const now=Date.now();
+    if(now-lastTouchEnd<=300){
+      e.preventDefault();
+    }
+    lastTouchEnd=now;
+  },{passive:false});
+})();
+
+
+/* Desktop keyboard navigation.
+   ArrowLeft / ArrowUp  = Previous
+   ArrowRight / ArrowDown = Continue
+   Touch/click navigation remains unchanged. */
+document.addEventListener('keydown',function(e){
+  if(!document.body.classList.contains('lesson-active')) return;
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  const target=e.target;
+  if(target && (target.matches?.('input,textarea,select') || target.isContentEditable)) return;
+
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
+    e.preventDefault();
+    document.getElementById('prevBtn')?.click();
+  }else if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+    e.preventDefault();
+    document.getElementById('nextBtn')?.click();
+  }
+});
+
+</script>
+</body></html>
