@@ -350,6 +350,22 @@ body.lesson-active #lessonBoard{
  body.lesson-active #lessonBoard>*{width:100%!important;max-width:100%!important}
 }
 
+
+/* Final home/footer + completion treatment */
+body.lesson-active #siteFooter,#summary:not(.hidden)~* #siteFooter{display:none}
+body:has(#summary:not(.hidden)) #siteFooter{display:none}
+.lesson-complete{text-align:center!important;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px}
+.lesson-complete.hidden{display:none!important}
+.lesson-complete .kicker{margin-bottom:8px}
+.lesson-complete h1{margin:0}
+.confetti-pop{font-size:48px;line-height:1;margin-top:22px;transform-origin:50% 80%;animation:confettiCelebrate 1.25s ease-in-out infinite}
+@keyframes confettiCelebrate{
+  0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}
+  35%{transform:translateY(-9px) rotate(7deg) scale(1.12)}
+  65%{transform:translateY(-3px) rotate(-3deg) scale(1.04)}
+}
+@media(prefers-reduced-motion:reduce){.confetti-pop{animation:none}}
+
 </style>
 </head>
 <body>
@@ -373,15 +389,14 @@ body.lesson-active #lessonBoard{
  <div id="stepBody" class="lesson-content"></div>
 </section>
 
-<section class="card hidden" id="summary">
- <div class="kicker">LESSON COMPLETE</div><h1>本课学习完成</h1>
- <p class="subtitle">你已经完成 Lesson 01 的互动学习内容。</p>
- <div class="summary-list"><div class="summary-item">音程</div><div class="summary-item">根音 / 冠音</div><div class="summary-item">度数</div><div class="summary-item">一度～八度</div><div class="summary-item">旋律音程</div><div class="summary-item">上行 / 下行</div><div class="summary-item">和声音程</div><div class="summary-item">全音 / 半音</div><div class="summary-item">音数</div><div class="summary-item">度数与音数</div></div>
- <div class="home-actions"><a class="primary btn-link" href="practice/index.html">开始课后练习</a><a class="secondary btn-link" href="assets/lesson-01.pdf" target="_blank" rel="noopener">查看 PDF 教材 ↗</a><button class="ghost" id="backHome">返回课程首页</button></div>
+<section class="card hidden lesson-complete" id="summary">
+  <div class="kicker">LESSON COMPLETE</div>
+  <h1>本课学习完成</h1>
+  <div class="confetti-pop" aria-hidden="true">🎉</div>
 </section>
 </main>
 <div class="lesson-footer-zone" id="lessonFooterZone"><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></div>
-<div class="footer">© Sheen’s PopLab. All Rights Reserved.</div>
+<div class="footer" id="siteFooter">©Sheen · Music Theory</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js">
 let lessonResizeTimer=0;
@@ -677,37 +692,49 @@ function drawEnharmonicToneStaff(el){
     const w=responsiveStaffWidth(el,220,760);
     const r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext();
-    const left=8,gap=Math.max(8,w*.025),usable=w-left*2-gap,sw=usable/2;
+    const left=8,right=8,staffW=w-left-right;
+    const st=new VF.Stave(left,40,staffW);
+    st.addClef('treble').setContext(ctx).draw();
+
+    const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
+    const clefReserve=Math.min(52,Math.max(38,w*.10));
+    const musicLeft=left+clefReserve;
+    const musicRight=left+staffW-8;
+    const mid=(musicLeft+musicRight)/2;
+    const centers=[(musicLeft+mid)/2,(mid+musicRight)/2];
+
+    // One continuous staff, with a single measure divider.
+    const bar=document.createElementNS(ns,'line');
+    bar.setAttribute('x1',mid);bar.setAttribute('x2',mid);
+    bar.setAttribute('y1','40');bar.setAttribute('y2','120');
+    bar.setAttribute('stroke','#111');bar.setAttribute('stroke-width','1');
+    svg.appendChild(bar);
+
     const groups=[
-      {acc:'#',top:'4th',bottom:'3'},
-      {acc:'b',top:'5th',bottom:'3'}
+      {upper:'f/4',acc:'#',top:'4th',bottom:'3'},
+      {upper:'g/4',acc:'b',top:'5th',bottom:'3'}
     ];
-    const ns='http://www.w3.org/2000/svg';
     groups.forEach((g,i)=>{
-      const x=left+i*(sw+gap);
-      const st=new VF.Stave(x,40,sw);
-      if(i===0)st.addClef('treble');
-      st.setContext(ctx).draw();
-      const upperKey=i===0?'f/4':'g/4';
-      const note=new VF.StaveNote({clef:'treble',keys:['c/4',upperKey],duration:'w'});
+      const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
       note.addModifier(new VF.Accidental(g.acc),1);
-      const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([note]);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
-      voice.draw(ctx,st);
-      const svg=el.querySelector('svg');
-      const cx=x+sw/2;
+      note.setStave(st);
+      // Explicit x position keeps the chord centered under its labels.
+      note.setX(centers[i]);
+      note.setContext(ctx).draw();
+
       const add=(txt,y,size=11,weight='700')=>{
         const t=document.createElementNS(ns,'text');
-        t.setAttribute('x',cx);t.setAttribute('y',y);t.setAttribute('text-anchor','middle');
-        t.setAttribute('font-family','Arial,sans-serif');t.setAttribute('font-size',size);
-        t.setAttribute('font-weight',weight);t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
+        t.setAttribute('x',centers[i]);t.setAttribute('y',y);
+        t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Arial,sans-serif');
+        t.setAttribute('font-size',size);t.setAttribute('font-weight',weight);
+        t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
       };
       add(g.top,28,w<360?9:11);
       add(g.bottom,153,w<360?10:12);
     });
-    const svg=el.querySelector('svg');
+
     const label=document.createElementNS(ns,'text');
-    label.setAttribute('x',Math.max(14,left+8));label.setAttribute('y','153');
+    label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','153');
     label.setAttribute('font-family','PingFang SC,Arial,sans-serif');
     label.setAttribute('font-size',w<360?'9':'11');label.setAttribute('font-weight','700');
     label.setAttribute('fill','#6e6e73');label.textContent='音数';svg.appendChild(label);
@@ -868,6 +895,7 @@ function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){
   const previous=current;
+  $('#siteFooter').style.display='none';
   current=i;
   document.body.classList.add('lesson-active');
   home.classList.add('hidden');
@@ -945,8 +973,8 @@ $('#nextBtn').onclick=()=>{
   else showSummary();
 };
 $('#backHome').onclick=goHome;
-function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
-function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.remove('hidden');$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
+function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
+function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='none';$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
 // 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
 </script>
 </body></html>
