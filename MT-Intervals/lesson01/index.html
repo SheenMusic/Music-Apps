@@ -260,12 +260,93 @@ body.lesson-active header{
 .lesson-card .lesson-count,.board .lesson-count{display:none!important}
 #headerLessonCount{display:inline!important}
 
+
+/* ===== CLEAN BUILD: authoritative lesson layout ===== */
+
+/* There is exactly one page count: #headerLessonCount in the global header. */
+.step-head,#stepCount,#lessonStep,.lesson-step,.step-indicator,.page-indicator,
+.lesson-progress-text,.lesson-card .lesson-count,.board .lesson-count{
+  display:none!important;
+}
+#headerLessonCount{display:inline!important}
+
+/* Reclaim the old step-header space. */
+body.lesson-active #lesson{
+  padding-top:14px!important;
+}
+body.lesson-active #lessonBoard{
+  margin-top:0!important;
+}
+
+/* Phone landscape: actual DOM is #lesson > #lessonBoard + #stepBody. */
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
+  body.lesson-active{
+    overflow:hidden!important;
+    padding-top:6px!important;
+    padding-bottom:4px!important;
+  }
+  body.lesson-active .app{
+    height:calc(100dvh - 10px)!important;
+    min-height:0!important;
+  }
+  body.lesson-active header{
+    flex:0 0 auto!important;
+    margin-bottom:5px!important;
+  }
+  body.lesson-active main{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lesson{
+    height:100%!important;
+    min-height:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(250px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:12px!important;
+    padding:8px 10px!important;
+    overflow:hidden!important;
+  }
+  body.lesson-active #lessonBoard{
+    grid-column:1!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    overflow:auto!important;
+  }
+  body.lesson-active #stepBody{
+    grid-column:2!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 8px 2px!important;
+    overscroll-behavior:contain;
+  }
+  body.lesson-active #lessonFooterZone{
+    flex:0 0 auto!important;
+    margin-top:4px!important;
+  }
+  body.lesson-active .footer{
+    flex:0 0 auto!important;
+    margin-top:2px!important;
+    font-size:.62rem!important;
+  }
+  body.lesson-active .topbar{font-size:.64rem!important}
+  body.lesson-active .lesson-badge{padding:2px 6px!important}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">1 / 14</span><span class="lesson-badge">LESSON 01</span></span></div>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">1 / 21</span><span class="lesson-badge">LESSON 01</span></span></div>
   <div class="progress-wrap"><div class="progress" id="progress"></div></div>
   </header>
 <main>
@@ -279,7 +360,6 @@ body.lesson-active header{
 </section>
 
 <section class="card hidden" id="lesson">
- <div class="step-head"><div><div class="step-no" id="stepNo"></div><h2 id="stepTitle"></h2></div><div class="step-count" id="stepCount"></div></div>
  <div id="lessonBoard" class="lesson-board"></div>
  <div id="stepBody" class="lesson-content"></div>
 </section>
@@ -588,27 +668,34 @@ function bindToneNumberQuiz(){
 
 
 
-const lessonAudio=new Audio();
-lessonAudio.preload='auto';
-function preloadOpeningAudio(){
-  lessonAudio.src='audio_pn/C4.mp3';
-  try{lessonAudio.load()}catch(e){}
+
+let openingAudioData={c4:null,g4:null};
+async function preloadOpeningAudio(){
+  if(openingAudioData.c4 && openingAudioData.g4) return;
+  try{
+    const [c,g]=await Promise.all([
+      fetch('audio_pn/C4.mp3',{cache:'force-cache'}).then(r=>{if(!r.ok)throw new Error('C4 '+r.status);return r.arrayBuffer()}),
+      fetch('audio_pn/G4.mp3',{cache:'force-cache'}).then(r=>{if(!r.ok)throw new Error('G4 '+r.status);return r.arrayBuffer()})
+    ]);
+    openingAudioData={c4:c,g4:g};
+  }catch(e){console.warn('Opening audio preload failed:',e)}
 }
-function playOpeningInterval(){
-  // One persistent media element: C4 finishes first, then G4 starts.
-  // Later taps do not pause or replace this element.
-  lessonAudio.onended=null;
-  lessonAudio.src='audio_pn/C4.mp3';
-  lessonAudio.currentTime=0;
-  lessonAudio.onended=()=>{
-    lessonAudio.onended=null;
-    lessonAudio.src='audio_pn/G4.mp3';
-    lessonAudio.currentTime=0;
-    const p2=lessonAudio.play();
-    if(p2&&p2.catch)p2.catch(()=>{});
-  };
-  const p=lessonAudio.play();
-  if(p&&p.catch)p.catch(()=>{});
+async function playOpeningInterval(){
+  try{
+    const ctx=ac();
+    if(ctx.state==='suspended') await ctx.resume();
+    if(!openingAudioData.c4 || !openingAudioData.g4) await preloadOpeningAudio();
+    if(!openingAudioData.c4 || !openingAudioData.g4) return;
+    const [b1,b2]=await Promise.all([
+      ctx.decodeAudioData(openingAudioData.c4.slice(0)),
+      ctx.decodeAudioData(openingAudioData.g4.slice(0))
+    ]);
+    const s1=ctx.createBufferSource(),s2=ctx.createBufferSource();
+    s1.buffer=b1;s2.buffer=b2;s1.connect(ctx.destination);s2.connect(ctx.destination);
+    const t=ctx.currentTime+0.03;
+    s1.start(t);
+    s2.start(t+0.5);
+  }catch(e){console.warn('Opening interval playback failed:',e)}
 }
 
 function clearBoard(){board.innerHTML=''}
@@ -675,18 +762,34 @@ const steps=[
 {title:'C 到 F',render(){renderCompactKeyboard(['C4','F4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p>`}},
 {title:'C 到升 F',render(){renderCompactKeyboard(['C4','F#4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到升 F 的音数就是 3。</p>`}},
 {title:'音数与度数',render(){renderCompactKeyboard(['C4','F#4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到升 F 的音数就是 3。</p><p class="lesson-paragraph">音数反映的是两个音之间实际相隔多少个半音，而<span class="key-accent">不是</span>音程的度数。</p>`}},
-{title:'Quiz',render(){renderCompactKeyboard([]);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的音数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-tone-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-tone-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-tone-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-tone-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-tone-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindToneNumberQuiz()}},
-{title:'变音记号会改变度数吗？',render(){body.innerHTML=`<p class="lead">先观察 C–E。点击按钮，把 E 降低半音。</p><div class="interaction-hint">互动操作：点击“给 E 加 ♭”，观察谱面和度数是否变化。</div><div class="stage"><div class="staff" id="s4"></div><div class="readout" id="r4">C–E · 三度</div><div class="button-row"><button class="secondary interactive-control" id="flatBtn">给 E 加 ♭</button><button class="audio-btn" id="play4">▶ 播放</button></div></div><p class="lead">为什么 C–E♭ 仍然是三度？</p>${qChoices('q4',['因为 ♭ 不改变音高','因为音名仍然是 E','因为降号在音程中可以忽略','因为所有黑键都属于三度'],1,'正确。度数依据音名 / 谱表位置判断；E♭ 的音名位置仍然是 E。','注意区分“音高发生变化”和“音名位置发生变化”。')}<div class="rule"><strong>规则：</strong>变音记号会改变实际音高，但不改变音名位置，因此不直接改变音程的度数。</div>`;let flat=learningState.flat4;const render=()=>{drawStaff($('#s4'),['c4',flat?'eb4':'e4']);$('#r4').textContent=flat?'C–E♭ · 三度':'C–E · 三度';$('#flatBtn').textContent=flat?'恢复 E':'给 E 加 ♭'};render();$('#flatBtn').onclick=()=>{flat=!flat;learningState.flat4=flat;render()};$('#play4').onclick=()=>playSeq('c4',flat?'eb4':'e4');bindChoice('q4',1,'','')}},
-{title:'一度到八度与谱面规律',render(){body.innerHTML=`<p class="lead">固定 C4 为起点，点击 1–8 度，观察第二个音在五线谱上的位置变化。</p><div class="interaction-hint">互动操作：先点击 1–8 度，再比较下方“奇数度”和“偶数度”两张规律卡。</div><div class="stage"><div class="staff" id="s5"></div><div class="degree-grid">${degreeCN.map((x,i)=>`<button class="degree-btn ${i===learningState.degree5?'active':''}" data-d="${i}">${i+1}</button>`).join('')}</div><div class="readout" id="r5">C4 → C4 · 一度</div><div class="audio-row"><button class="audio-btn" id="play5">▶ 播放音程</button></div></div><div class="pattern-cards"><div class="pattern-card"><h3>奇数度</h3><p class="tiny">两个音同类分布：线—线，或间—间。</p><div class="staff small" id="odd5"></div><div class="example-chips"><button class="example-chip active" id="ll5">E–G · 线—线</button><button class="example-chip" id="ss5">F–A · 间—间</button></div></div><div class="pattern-card"><h3>偶数度</h3><p class="tiny">两个音异类分布：线—间，或间—线。</p><div class="staff small" id="even5"></div><div class="example-chips"><button class="example-chip active" id="ls5">E–A · 线—间</button><button class="example-chip" id="sl5">F–B · 间—线</button></div></div></div>`;let d=learningState.degree5;const rr=()=>{drawStaff($('#s5'),['c4',degreeNotes[d]]);$('#r5').textContent=`C4 → ${degreeNotes[d].replace('s','♯').toUpperCase()} · ${degreeCN[d]}`};rr();document.querySelectorAll('.degree-btn').forEach(b=>b.onclick=()=>{d=+b.dataset.d;learningState.degree5=d;document.querySelectorAll('.degree-btn').forEach(x=>x.classList.toggle('active',x===b));rr()});$('#play5').onclick=()=>playSeq('c4',degreeNotes[d]);const setPair=(staff,notes,a,b)=>{drawStaff($(staff),notes,{harmonic:true});$(a).classList.add('active');$(b).classList.remove('active')};drawStaff($('#odd5'),['e4','g4'],{harmonic:true});drawStaff($('#even5'),['e4','a4'],{harmonic:true});$('#ll5').onclick=()=>setPair('#odd5',['e4','g4'],'#ll5','#ss5');$('#ss5').onclick=()=>setPair('#odd5',['f4','a4'],'#ss5','#ll5');$('#ls5').onclick=()=>setPair('#even5',['e4','a4'],'#ls5','#sl5');$('#sl5').onclick=()=>setPair('#even5',['f4','b4'],'#sl5','#ls5')}},{title:'构建一个音程',render(){body.innerHTML=`<p class="lead">现在反过来操作：根据指定的度数，选择正确的第二个音。</p><div class="interaction-hint">需要你来完成：请选择 E、F、G、A 中的一个音，构建 C 上方的五度。</div><div class="stage"><div class="staff" id="s6"></div><div class="readout">请构建 C 上方的五度</div><div class="choices" id="build6"><button class="choice" data-note="e4">E</button><button class="choice" data-note="f4">F</button><button class="choice" data-note="g4">G</button><button class="choice" data-note="a4">A</button></div><div class="feedback" id="b6fb"></div></div><div class="rule">Learning Check 只用于确认理解，不计入课后练习成绩。</div>`;const applyBuild=n=>{drawStaff($('#s6'),n?['c4',n]:['c4']);document.querySelectorAll('#build6 .choice').forEach(x=>{x.classList.remove('correct','wrong');if(x.dataset.note===n)x.classList.add(n==='g4'?'correct':'wrong')});if(n){const ok=n==='g4';$('#b6fb').className='feedback '+(ok?'ok':'bad');$('#b6fb').textContent=ok?'正确。C–D–E–F–G，共五个音名位置。':'还不是五度。从 C 开始，把起点和终点都算进去再试一次。'}};applyBuild(learningState.build6);document.querySelectorAll('#build6 .choice').forEach(b=>b.onclick=()=>{learningState.build6=b.dataset.note;applyBuild(learningState.build6)})}},
-{title:'旋律音程与和声音程',render(){body.innerHTML=`<p class="lead">两个<strong>先后出现</strong>的音叫旋律音程；两个<strong>同时出现</strong>的音叫和声音程。</p><div class="interaction-hint">互动操作：依次点击上行、下行、同时三个按钮，观察音符位置和标题如何变化。</div><div class="stage"><div class="interval-mode-label" id="mode7">上行旋律音程</div><div class="staff" id="s7"></div><div class="direction-grid"><button class="audio-btn" id="up7">▶ C → G<br><small>上行</small></button><button class="audio-btn" id="down7">▶ G → C<br><small>下行</small></button><button class="audio-btn" id="harm7">▶ C + G<br><small>同时</small></button></div></div><div class="rule"><strong>旋律音程：</strong>先低后高 = 上行；先高后低 = 下行。<br><strong>和声音程：</strong>两个音同时出现。</div><div class="stage"><p class="lead"><strong>二度和声音程的记谱</strong></p><div class="notation-demo"><div><div class="staff small" id="s7b"></div><div class="notation-caption">单声部式写法：符头错开，可共享符干</div></div><div><div class="staff small" id="s7c"></div><div class="notation-caption">多声部写法：两个音可以使用独立符干</div></div></div><p class="tiny">同谱表二度和声音程为了避免符头重叠，需要左右错开；左右位置本身不表示哪个音更高。多声部记谱时，两个音也不一定共享同一根符干。</p></div>`;const show=(type,withSound=true)=>{learningState.mode7=type;if(type==='up'){drawStaff($('#s7'),['c4','g4']);$('#mode7').textContent='上行旋律音程';if(withSound)playSeq('c4','g4')}else if(type==='down'){drawStaff($('#s7'),['g4','c4']);$('#mode7').textContent='下行旋律音程';if(withSound)playSeq('g4','c4')}else{drawStaff($('#s7'),['c4','g4'],{harmonic:true});$('#mode7').textContent='和声音程';if(withSound)playTogether('c4','g4')}};show(learningState.mode7,false);drawStaff($('#s7b'),['c4','d4'],{harmonic:true});drawPolyphonicSecond($('#s7c'));$('#up7').onclick=()=>show('up');$('#down7').onclick=()=>show('down');$('#harm7').onclick=()=>show('harm')}},
-{title:'音数：实际音高距离',render(){body.innerHTML=`<p class="lead">音程中所包含的<strong>全音和半音的数量</strong>叫<strong>音数</strong>。一个全音音数为 1，一个半音音数为 0.5。</p><div class="term-box"><strong>这一页的重点：</strong>全音和半音是用来“量距离”的单位；<strong>音数</strong>才是我们最终要得到的距离数值。</div><div class="interaction-hint">第一步：点击例子，先确认一个全音 = 1、一个半音 = 0.5。</div><div class="stage"><div class="keyboard-wrap"><div class="keyboard" id="kb"></div></div><div class="readout" id="kr">点击例子，观察键盘上的实际距离。</div></div><p class="tiny"><strong>全音示例</strong></p><div class="example-chips" id="whole8"><button class="example-chip" data-key="cd" data-a="c4" data-b="d4">C–D</button><button class="example-chip" data-key="de" data-a="d4" data-b="e4">D–E</button><button class="example-chip" data-key="fg" data-a="f4" data-b="g4">F–G</button><button class="example-chip" data-key="ga" data-a="g4" data-b="a4">G–A</button><button class="example-chip" data-key="ab" data-a="a4" data-b="b4">A–B</button></div><p class="tiny"><strong>半音示例</strong></p><div class="example-chips" id="half8"><button class="example-chip" data-key="ef" data-a="e4" data-b="f4">E–F</button><button class="example-chip" data-key="bc" data-a="b4" data-b="c5">B–C</button></div><div class="interaction-hint" style="margin-top:18px">第二步：现在直接测量音程。点击下面任意一组音，数一数它跨过几个半音，再换算成音数。</div><div class="stage"><div class="readout" id="pitchReadout">例如 C–E：4 个半音 = 2 个全音，所以音数 = 2。</div><div class="example-chips" id="pitch8"><button class="example-chip" data-key="ce" data-a="c4" data-b="e4">C–E</button><button class="example-chip" data-key="cf" data-a="c4" data-b="f4">C–F</button><button class="example-chip" data-key="cg" data-a="c4" data-b="g4">C–G</button><button class="example-chip" data-key="df" data-a="d4" data-b="f4">D–F</button><button class="example-chip" data-key="bd" data-a="b4" data-b="d5">B–D</button></div></div><div class="rule"><strong>计算方法：</strong>先数实际相隔的半音数量，再用“每个半音 = 0.5”换算。比如 5 个半音的音数就是 2.5。</div>`;makeKeyboard();const allBtns=()=>document.querySelectorAll('#whole8 .example-chip,#half8 .example-chip,#pitch8 .example-chip');const activate=(b)=>{allBtns().forEach(x=>x.classList.remove('active'));b.classList.add('active')};const showBasic=(b)=>{activate(b);const a=b.dataset.a,c=b.dataset.b,path=semitonePath(a,c),n=semitoneCount(a,c);highlightKeys(path);playSeq(a,c);$('#kr').textContent=`${labelNote(a)} → ${labelNote(c)}：${n} 个半音 = 音数 ${n*.5}`;learningState.example8=b.dataset.key};document.querySelectorAll('#whole8 .example-chip,#half8 .example-chip').forEach(b=>b.onclick=()=>showBasic(b));document.querySelectorAll('#pitch8 .example-chip').forEach(b=>b.onclick=()=>{activate(b);const a=b.dataset.a,c=b.dataset.b,path=semitonePath(a,c),n=semitoneCount(a,c);highlightKeys(path);playSeq(a,c);$('#pitchReadout').textContent=`${labelNote(a)} → ${labelNote(c)}：跨过 ${n} 个半音 → ${n} × 0.5 = 音数 ${n*.5}`;learningState.pitch8=b.dataset.key});const saved=[...allBtns()].find(b=>b.dataset.key===learningState.pitch8)||[...allBtns()].find(b=>b.dataset.key===learningState.example8);if(saved){activate(saved);const a=saved.dataset.a,c=saved.dataset.b,path=semitonePath(a,c),n=semitoneCount(a,c);highlightKeys(path);if(saved.closest('#pitch8'))$('#pitchReadout').textContent=`${labelNote(a)} → ${labelNote(c)}：跨过 ${n} 个半音 → ${n} × 0.5 = 音数 ${n*.5}`;else $('#kr').textContent=`${labelNote(a)} → ${labelNote(c)}：${n} 个半音 = 音数 ${n*.5}`}}},{title:'度数 ≠ 音数',render(){body.innerHTML=`<p class="lead">最后把两个概念放在一起比较：<strong>度数看音名 / 谱表位置；音数看实际音高距离。</strong></p><div class="interaction-hint">互动操作：分别点击两组谱例按钮，注意变音记号、谱表位置与实际声音的关系。</div><div class="stage"><div class="staff" id="s9a"></div><table class="compare"><tr><th></th><th>C–E</th><th>C–E♭</th></tr><tr><td>度数</td><td>3</td><td>3</td></tr><tr><td>音数</td><td>2</td><td>1.5</td></tr></table><div class="audio-row"><button class="audio-btn" id="ce9">▶ C–E</button><button class="audio-btn" id="ceb9">▶ C–E♭</button></div></div><div class="rule"><strong>结论 1：</strong>度数相同，音数可以不同。</div><div class="stage"><div class="staff" id="s9b"></div><table class="compare"><tr><th></th><th>C–F♯</th><th>C–G♭</th></tr><tr><td>度数</td><td>4</td><td>5</td></tr><tr><td>音数</td><td>3</td><td>3</td></tr></table><div class="audio-row"><button class="audio-btn" id="cfs9">▶ C–F♯</button><button class="audio-btn" id="cgb9">▶ C–G♭</button></div></div><div class="rule"><strong>结论 2：</strong>音数相同，度数也不一定相同。</div>`;drawStaff($('#s9a'),['c4','e4']);drawStaff($('#s9b'),['c4','fs4']);$('#ce9').onclick=()=>{drawStaff($('#s9a'),['c4','e4']);playSeq('c4','e4')};$('#ceb9').onclick=()=>{drawStaff($('#s9a'),['c4','eb4']);playSeq('c4','eb4')};$('#cfs9').onclick=()=>{drawStaff($('#s9b'),['c4','fs4']);playSeq('c4','fs4')};$('#cgb9').onclick=()=>{drawStaff($('#s9b'),['c4','gb4']);playSeq('c4','gb4')}}}
+{title:'Quiz',render(){renderCompactKeyboard([]);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的音数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-tone-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-tone-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-tone-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-tone-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-tone-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindToneNumberQuiz()}}
 ];
 function labelNote(n){return n.replace(/s/,'♯').replace(/b/,'♭').replace(/\d/,'').toUpperCase()}
 function makeKeyboard(){const kb=$('#kb'),white=['c4','d4','e4','f4','g4','a4','b4','c5'],black=[['cs4',12.5],['ds4',25],['fs4',50],['gs4',62.5],['as4',75]];kb.innerHTML=white.map(n=>`<div class="white-key" data-note="${n}">${n.replace('4','').replace('5','').toUpperCase()}</div>`).join('')+black.map(([n,l])=>`<div class="black-key" style="left:${l}%" data-note="${n}">${n[0].toUpperCase()}♯</div>`).join('');kb.querySelectorAll('[data-note]').forEach(k=>k.onclick=()=>{play(k.dataset.note);highlightKeys([k.dataset.note]);$('#kr').textContent=k.dataset.note.replace('s','♯').toUpperCase()})}
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
-function showStep(i,doScroll=true){const previous=current;current=i;document.body.classList.add('lesson-active');home.classList.add('hidden');summary.classList.add('hidden');lesson.classList.remove('hidden');lesson.classList.toggle('opening',i<2);$('#stepNo').textContent='LEARNING';$('#stepTitle').textContent=steps[i].title;$('#stepCount').textContent=`${String(i+1).padStart(2,'0')} / ${String(steps.length).padStart(2,'0')}`;$('#progress').style.width=((i+1)/steps.length*100)+'%';$('#prevBtn').textContent=i===0?'返回首页':'← 上一步';$('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';steps[i].render();updateHeaderLessonCount(i);revealNewestLessonText();if(doScroll){requestAnimationFrame(()=>{const goingForward=i>previous;if(i<5&&goingForward&&body.scrollHeight>body.clientHeight){body.scrollTo({top:body.scrollHeight,behavior:'smooth'})}else{body.scrollTo({top:0,behavior:'smooth'})}})}}
+function showStep(i,doScroll=true){
+  const previous=current;
+  current=i;
+  document.body.classList.add('lesson-active');
+  home.classList.add('hidden');
+  summary.classList.add('hidden');
+  lesson.classList.remove('hidden');
+  lesson.classList.toggle('opening',i<2);
+  $('#progress').style.width=((i+1)/steps.length*100)+'%';
+  $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
+  $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
+  steps[i].render();
+  updateHeaderLessonCount(i);
+  revealNewestLessonText();
+  if(doScroll){
+    requestAnimationFrame(()=>{
+      if(i>previous) revealNewestLessonText();
+      else body.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+}
 
-$('#startLearning').onclick=startLesson;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
+$('#startLearning').onclick=startLesson;$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};$('#nextBtn').onclick=()=>{if(current===0){playOpeningInterval();showStep(1)}else if(current<steps.length-1)showStep(current+1);else showSummary()};$('#backHome').onclick=goHome;
 function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
 function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.remove('hidden');$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
 // 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
