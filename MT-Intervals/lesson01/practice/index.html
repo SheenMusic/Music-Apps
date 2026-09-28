@@ -666,6 +666,77 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+
+
+/* ===== UI SYNC WITH LESSON 01 · 2026-09-28 ===== */
+html{height:100%;background:var(--bg-color)}
+body{
+  min-height:100dvh;
+  align-items:stretch;
+  font-family:"PingFang SC","PingFangSC-Thin","苹方-简",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-weight:300;
+  padding-top:max(20px,env(safe-area-inset-top));
+  padding-left:max(10px,env(safe-area-inset-left));
+  padding-right:max(10px,env(safe-area-inset-right));
+  padding-bottom:max(20px,env(safe-area-inset-bottom));
+}
+.app-container{max-width:520px;min-height:calc(100dvh - 40px);margin:0 auto}
+.app-header{margin-bottom:16px}
+.header-top-bar{gap:8px;margin-bottom:12px;font-size:.8rem;font-weight:700;letter-spacing:.5px}
+.header-title-left{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-right-group{gap:.5ch;flex:0 0 auto;white-space:nowrap}
+.header-title-right{
+  background:#eef2ff;color:var(--primary-color);padding:4px 9px;border-radius:999px;
+  font-size:inherit;font-weight:800;letter-spacing:.08em;
+}
+.header-question-counter{font-size:.76rem;color:var(--text-muted);font-weight:500;margin-right:3px}
+.history-toggle-btn{
+  background:#fff;color:var(--text-muted);border:1px solid var(--border-color);border-radius:9px;
+  padding:4px 8px;font-size:.72rem;font-weight:650;
+}
+.history-toggle-btn:hover{background:#f8fafc}
+.progress-bar-container{height:8px;margin-bottom:10px}
+.header-meta{display:none!important}
+.card-container{border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-card)}
+.start-header{margin:2px 0 24px;text-align:center}
+.start-header .subtitle{
+  font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary-color);margin-bottom:7px;
+}
+.start-header .main-title{
+  margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text-main);letter-spacing:-.025em;
+}
+.start-info{background:#f8fafc;border:1px solid var(--border-color);border-radius:10px;padding:14px 16px;font-size:.88rem;line-height:1.65;margin-bottom:22px}
+.primary-btn,.secondary-btn{border-radius:10px;font-weight:700;box-shadow:none;padding:13px 16px}
+.primary-btn{background:var(--primary-color)}
+.secondary-btn{background:#fff;color:var(--text-muted);border:1px solid var(--border-color)}
+.secondary-btn:hover:not(:disabled){background:#f8fafc}
+.question-nav-toggle{border-radius:10px;background:#f8fafc}
+.type-badge{border-radius:999px;padding:4px 9px}
+.question-prompt{font-size:1.08rem;line-height:1.65;font-weight:650}
+.options-grid{gap:8px}
+.option-btn{background:#fff;border:1px solid var(--border-color);border-radius:10px;padding:12px 14px;font-weight:500}
+.option-btn:hover:not(.disabled){border-color:#a5b4fc;background:#fff}
+.option-btn.selected{border-color:var(--primary-color);background:#eef2ff;color:#4338ca}
+.feedback-box{border-radius:10px;padding:13px 14px}
+.stat-card,.detail-list,.history-card-item,.modal-tip{border-radius:10px}
+.modal-card{border-radius:16px;border:1px solid var(--border-color)}
+.return-home-wrap{margin-top:16px}
+.return-home-btn{font-size:.8rem;font-weight:650;color:var(--text-muted)}
+.app-footer{font-size:.75rem;font-weight:300;color:#94a3b8;padding-top:14px}
+@media(max-width:400px){
+  .card-container{padding:20px 17px}
+  .header-top-bar{font-size:clamp(.58rem,2.7vw,.76rem);letter-spacing:.2px}
+  .header-title-right{padding:3px 6px}
+  .history-toggle-btn{padding:3px 6px;font-size:.66rem}
+  .header-question-counter{font-size:.68rem}
+  .card-actions-grid{gap:8px}
+}
+@media(max-width:330px){
+  .header-top-bar{font-size:.56rem}
+  .header-title-left{letter-spacing:0}
+  .history-toggle-btn{font-size:.62rem;padding:3px 5px}
+}
+
 </style>
 </head>
 <body>
@@ -676,6 +747,7 @@ body {
       <div class="header-top-bar">
         <span class="header-title-left">MUSIC THEORY · INTERVAL</span>
         <div class="header-right-group">
+          <span class="header-question-counter" id="questionCounter">1 / 15</span>
           <span class="header-title-right">LESSON 01</span>
           <button class="history-toggle-btn" id="historyToggleBtn">历史记录</button>
         </div>
@@ -685,15 +757,14 @@ body {
       </div>
       <div class="header-meta hidden" id="headerMeta">
         <span class="lesson-tag" id="lessonTag">音程01</span>
-        <span class="question-counter" id="questionCounter">1 / 15</span>
       </div>
     </header>
 
     <!-- 1. Start Screen / Home -->
     <section class="card-container" id="startScreen">
       <div class="start-header">
-        <p class="subtitle">音程理论基础 · 第一课</p>
-        <h1 class="main-title">度数、音数、旋律音程与和声音程</h1>
+        <p class="subtitle">音程 1 · PRACTICE</p>
+        <h1 class="main-title">度数、旋律/和声音程、音数</h1>
       </div>
       <div class="start-info">
         <p>• 本测试共包含 <strong>15 个题目</strong>，刷新或关闭页面后，本次练习进度将不会保留。</p>
