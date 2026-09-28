@@ -366,6 +366,21 @@ body:has(#summary:not(.hidden)) #siteFooter{display:none}
 }
 @media(prefers-reduced-motion:reduce){.confetti-pop{animation:none}}
 
+
+/* Touch policy: suppress double-tap zoom, preserve two-finger pinch zoom. */
+html,body,.app,button,a,.nav,#lessonFooterZone{
+  touch-action:manipulation;
+}
+button,a{
+  -webkit-tap-highlight-color:transparent;
+}
+.completion-actions{margin-top:24px;justify-content:center}
+
+/* iOS fallback: keep rapid repeated taps on fixed navigation from becoming a zoom gesture. */
+#prevBtn,#nextBtn{
+  touch-action:manipulation!important;
+}
+
 </style>
 </head>
 <body>
@@ -393,6 +408,10 @@ body:has(#summary:not(.hidden)) #siteFooter{display:none}
   <div class="kicker">LESSON COMPLETE</div>
   <h1>本课学习完成</h1>
   <div class="confetti-pop" aria-hidden="true">🎉</div>
+  <div class="home-actions completion-actions">
+    <a class="primary btn-link" href="practice/index.html">开始课后练习</a>
+    <button class="ghost" id="backHome">返回课程首页</button>
+  </div>
 </section>
 </main>
 <div class="lesson-footer-zone" id="lessonFooterZone"><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></div>
@@ -976,5 +995,18 @@ $('#backHome').onclick=goHome;
 function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
 function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='none';$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
 // 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
+
+(function(){
+  let lastTouchEnd=0;
+  document.addEventListener('touchend',function(e){
+    if(e.touches && e.touches.length>0) return;
+    const now=Date.now();
+    if(now-lastTouchEnd<=300){
+      e.preventDefault();
+    }
+    lastTouchEnd=now;
+  },{passive:false});
+})();
+
 </script>
 </body></html>
