@@ -599,6 +599,26 @@ body:not(.lesson-active) #headerLessonCount{display:none!important}
 .qm-pure-wrap.revealed .qm-degree,.qm-mm-wrap.revealed .qm-degree{opacity:1}
 @media(max-width:390px){.quality-map{grid-template-columns:48px 1fr 48px;padding:8px 6px}.qm-mm{gap:28px}}
 
+
+/* === Final viewport/orientation layout override === */
+html,body{min-height:100%;}
+body:not(.lesson-active){min-height:100dvh;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(10px,env(safe-area-inset-bottom));}
+body:not(.lesson-active) .app{min-height:calc(100dvh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom)));}
+body:not(.lesson-active) .footer{margin-top:auto;}
+/* Learning split is determined by orientation, not device width. Portrait always stacks. */
+@media (orientation:portrait){
+ body.lesson-active .app{width:100%!important;max-width:520px!important;}
+ body.lesson-active main{width:100%!important;max-width:none!important;}
+ body.lesson-active #lesson{display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:100%!important;padding:16px 24px!important;overflow:hidden!important;}
+ body.lesson-active #lessonBoard{width:100%!important;height:178px!important;min-height:178px!important;max-height:178px!important;flex:0 0 178px!important;margin:0!important;}
+ body.lesson-active #stepBody{width:100%!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;padding:16px 2px 12px!important;border-left:0!important;}
+}
+/* Landscape uses side-by-side layout whenever there is enough usable width. */
+@media (orientation:landscape) and (min-width:600px){
+ body.lesson-active .app{width:min(1440px,100%)!important;max-width:none!important;margin:0 auto!important;}
+ body.lesson-active #lesson{display:grid!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;grid-template-rows:minmax(0,1fr)!important;column-gap:18px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -1292,20 +1312,25 @@ function l2QuizHistory(q,ans,pageIndex){
 }
 
 function l2QuizAppend(q,ans){
- const saved=quizAnswers.get(current);
+ const pageIndex=current;
+ const saved=quizAnswers.get(pageIndex);
  const wrap=document.createElement('div');
- wrap.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option ${saved==='M'?(saved===ans?'correct':'wrong'):''}" data-a="M">大（M）</button><button class="quiz-option ${saved==='m'?(saved===ans?'correct':'wrong'):''}" data-a="m">小（m）</button></div><div class="feedback ${saved?(saved===ans?'ok':'bad'):''}" id="l2fb">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
- body.appendChild(wrap.firstElementChild);
- document.querySelectorAll('.quiz-option').forEach(b=>b.onclick=()=>{
-   if(passedQuizzes.has(current))return;
-   const ok=b.dataset.a===ans;
-   quizAnswers.set(current,b.dataset.a);
-   document.querySelectorAll('.quiz-option').forEach(x=>x.classList.remove('correct','wrong'));
-   b.classList.add(ok?'correct':'wrong');
-   const f=document.getElementById('l2fb'); f.textContent=ok?'正确':'再想一想'; f.className='feedback '+(ok?'ok':'bad');
-   if(ok){passedQuizzes.add(current);setQuizContinueEnabled(true)}else setQuizContinueEnabled(false);
+ wrap.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div><div class="quiz-options vertical"><button class="quiz-option ${saved==='M'?(saved===ans?'correct':'wrong'):''}" data-a="M">大（M）</button><button class="quiz-option ${saved==='m'?(saved===ans?'correct':'wrong'):''}" data-a="m">小（m）</button></div><div class="feedback ${saved?(saved===ans?'ok':'bad'):''}">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
+ const block=wrap.firstElementChild;
+ body.appendChild(block);
+ const options=block.querySelectorAll('.quiz-option');
+ const feedback=block.querySelector('.feedback');
+ options.forEach(btn=>btn.onclick=()=>{
+   if(passedQuizzes.has(pageIndex))return;
+   const ok=btn.dataset.a===ans;
+   quizAnswers.set(pageIndex,btn.dataset.a);
+   options.forEach(x=>x.classList.remove('correct','wrong'));
+   btn.classList.add(ok?'correct':'wrong');
+   feedback.textContent=ok?'正确':'再想一想';
+   feedback.className='feedback '+(ok?'ok':'bad');
+   if(ok){passedQuizzes.add(pageIndex);setQuizContinueEnabled(true)}else setQuizContinueEnabled(false);
  });
- setQuizContinueEnabled(passedQuizzes.has(current));
+ setQuizContinueEnabled(passedQuizzes.has(pageIndex));
 }
 
 function l2Quiz(q,ans){
