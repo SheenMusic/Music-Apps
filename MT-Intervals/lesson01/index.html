@@ -722,7 +722,7 @@ function drawEnharmonicToneStaff(el){
     const mid=(musicLeft+musicRight)/2;
     const centers=[(musicLeft+mid)/2,(mid+musicRight)/2];
 
-    // One continuous staff, with a single measure divider.
+    // Continuous staff with one central barline.
     const bar=document.createElementNS(ns,'line');
     bar.setAttribute('x1',mid);bar.setAttribute('x2',mid);
     bar.setAttribute('y1','40');bar.setAttribute('y2','120');
@@ -733,18 +733,24 @@ function drawEnharmonicToneStaff(el){
       {upper:'f/4',acc:'#',top:'4th',bottom:'3'},
       {upper:'g/4',acc:'b',top:'5th',bottom:'3'}
     ];
+
     groups.forEach((g,i)=>{
       const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
       note.addModifier(new VF.Accidental(g.acc),1);
       note.setStave(st);
-      // Explicit x position keeps the chord centered under its labels.
-      note.setX(centers[i]);
+
+      // VexFlow 4: position the note through a TickContext, not StaveNote.setX().
+      const tc=new VF.TickContext();
+      tc.addTickable(note);
+      tc.preFormat();
+      tc.setX(centers[i]);
       note.setContext(ctx).draw();
 
       const add=(txt,y,size=11,weight='700')=>{
         const t=document.createElementNS(ns,'text');
         t.setAttribute('x',centers[i]);t.setAttribute('y',y);
-        t.setAttribute('text-anchor','middle');t.setAttribute('font-family','Arial,sans-serif');
+        t.setAttribute('text-anchor','middle');
+        t.setAttribute('font-family','Arial,sans-serif');
         t.setAttribute('font-size',size);t.setAttribute('font-weight',weight);
         t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
       };
@@ -755,9 +761,13 @@ function drawEnharmonicToneStaff(el){
     const label=document.createElementNS(ns,'text');
     label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','153');
     label.setAttribute('font-family','PingFang SC,Arial,sans-serif');
-    label.setAttribute('font-size',w<360?'9':'11');label.setAttribute('font-weight','700');
-    label.setAttribute('fill','#6e6e73');label.textContent='音数';svg.appendChild(label);
-  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+    label.setAttribute('font-size',w<360?'9':'11');
+    label.setAttribute('font-weight','700');label.setAttribute('fill','#6e6e73');
+    label.textContent='音数';svg.appendChild(label);
+  }catch(e){
+    console.error('Page 21 staff render failed:',e);
+    el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
+  }
 }
 function renderEnharmonicToneBoard(){
   board.innerHTML='<div class="tone-count-board"><div id="enharmonicToneStaff" style="width:100%;height:100%"></div></div>';
