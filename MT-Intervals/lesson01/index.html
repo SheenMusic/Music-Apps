@@ -453,6 +453,59 @@ button,a{
   }
 }
 
+
+/* ===== Wide-screen refinement ===== */
+@media (min-width:760px){
+  body.lesson-active main{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+  }
+  body.lesson-active #lesson{
+    /* Use the available viewport instead of pinning the card to its top edge. */
+    height:auto!important;
+    min-height:min(560px,calc(100dvh - 190px))!important;
+    max-height:calc(100dvh - 150px)!important;
+    align-self:center!important;
+  }
+  body.lesson-active #lessonBoard,
+  body.lesson-active #stepBody{
+    align-self:center!important;
+  }
+}
+
+
+@media (min-width:760px){
+  body.lesson-active #stepBody{
+    align-self:center!important;
+    justify-self:center!important;
+    width:min(100%,620px)!important;
+    height:auto!important;
+    max-height:100%!important;
+    text-align:left!important;
+    padding:12px 18px!important;
+  }
+}
+
+
+/* Keep notation responsive on narrow portrait screens. */
+#lessonBoard svg,.tone-count-board svg{
+  display:block;
+  max-width:100%!important;
+  height:auto!important;
+  overflow:visible;
+}
+@media (max-width:759px) and (orientation:portrait){
+  #lessonBoard,.tone-count-board,#enharmonicToneStaff{
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important;
+  }
+}
+
+
+#nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important}
 </style>
 </head>
 <body>
@@ -705,9 +758,17 @@ function renderHarmonicBoard(){
   board.innerHTML='<div class="melodic-board"><div id="harmonicStaff" style="width:100%;height:100%"></div></div>';
   drawHarmonicBoard($('#harmonicStaff'));
 }
+// Quiz completion persists while the learner remains in this lesson session.
+// Going back and revisiting a passed quiz will not lock Continue again.
+const passedQuizzes=new Set();
+
+function setQuizContinueEnabled(enabled){
+  const btn=$('#nextBtn'); if(!btn)return;
+  btn.disabled=!enabled; btn.setAttribute('aria-disabled',enabled?'false':'true');
+}
 function bindDegreeQuiz(){
   const c=$('#quizCorrect'),w=$('#quizWrong'); if(!c||!w)return;
-  c.addEventListener('click',()=>{c.classList.add('correct');w.classList.remove('wrong')});
+  c.addEventListener('click',()=>{c.classList.add('correct');w.classList.remove('wrong');passedQuizzes.add(current);setQuizContinueEnabled(true)});
   w.addEventListener('click',()=>{w.classList.add('wrong');c.classList.add('correct')});
 }
 
@@ -780,83 +841,129 @@ function renderToneCountBoard(){
 function drawEnharmonicToneStaff(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,220,760);
-    const h=176;
-    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,h); const ctx=r.getContext();
-
-    const left=8,right=8,staffW=w-left-right;
-    const staveY=46;
+    const w=responsiveStaffWidth(el,220,760),h=176;
+    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG); r.resize(w,h);
+    const ctx=r.getContext(),left=8,right=8,staffW=w-left-right,staveY=38;
     const st=new VF.Stave(left,staveY,staffW);
     st.addClef('treble').setContext(ctx).draw();
 
     const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
-    const clefReserve=Math.min(54,Math.max(42,w*.105));
-    const musicLeft=left+clefReserve;
-    const musicRight=left+staffW-10;
-    const mid=(musicLeft+musicRight)/2;
-    const centers=[
-      musicLeft+(mid-musicLeft)/2,
-      mid+(musicRight-mid)/2
-    ];
 
-    // Exact stave-line vertical bounds: VexFlow line 0..4 are spaced 10 px.
-    const lineTop=staveY+40;
-    const lineBottom=lineTop+40;
+    const n1=new VF.StaveNote({clef:'treble',keys:['c/4','f/4'],duration:'w'});
+    n1.addModifier(new VF.Accidental('#'),1);
+    const n2=new VF.StaveNote({clef:'treble',keys:['c/4','g/4'],duration:'w'});
+    n2.addModifier(new VF.Accidental('b'),1);
 
-    // Measure divider only across the five staff lines.
+    const voice=new VF.Voice({num_beats:8,beat_value:4}).addTickables([n1,n2]);
+
+    // Snapshot the SVG before the notes are drawn. This lets us inspect only
+    // the final SVG geometry created by the notation pass.
+    const before=new Set([...svg.querySelectorAll('*')]);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
+    voice.draw(ctx,st);
+    const created=[...svg.querySelectorAll('*')].filter(node=>!before.has(node));
+
+    // Equal geometric measures.
+    const dividerX=left+staffW/2;
     const bar=document.createElementNS(ns,'line');
-    bar.setAttribute('x1',mid); bar.setAttribute('x2',mid);
-    bar.setAttribute('y1',lineTop); bar.setAttribute('y2',lineBottom);
-    bar.setAttribute('stroke','#111'); bar.setAttribute('stroke-width','1');
+    bar.setAttribute('x1',dividerX);bar.setAttribute('x2',dividerX);
+    bar.setAttribute('y1',st.getYForLine(0));bar.setAttribute('y2',st.getYForLine(4));
+    bar.setAttribute('stroke','#111');bar.setAttribute('stroke-width','1');
     svg.appendChild(bar);
 
-    const groups=[
-      {upper:'f/4',acc:'#',top:'4th',bottom:'3'},
-      {upper:'g/4',acc:'b',top:'5th',bottom:'3'}
+    /*
+      Find the ACTUAL rendered whole-note notehead paths.
+
+      We deliberately do not use:
+        - TickContext X
+        - StaveNote.getAbsoluteX()
+        - NoteHead.getAbsoluteX()
+        - the bounding box of the whole note+accidental group
+
+      Instead we inspect final SVG paths and identify the four whole-note heads
+      by their compact glyph geometry and their Y positions on this stave.
+      Accidentals are taller/narrower glyphs and are excluded by geometry.
+    */
+    const expectedYs=[
+      st.getYForNote(0), // retained only as a stave-relative reference
     ];
 
-    // Render each chord in its own tiny offscreen VexFlow SVG, then translate
-    // the finished glyph group so its visual bounding-box center equals X1/X2.
-    groups.forEach((g,i)=>{
-      const holder=document.createElement('div');
-      holder.style.cssText='position:absolute;left:-9999px;top:-9999px;width:150px;height:120px';
-      document.body.appendChild(holder);
-      const rr=new VF.Renderer(holder,VF.Renderer.Backends.SVG);
-      rr.resize(150,120); const cc=rr.getContext();
-      const tempStave=new VF.Stave(0,20,150);
-      tempStave.setContext(cc); // stave itself is intentionally not drawn
-      const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
-      note.addModifier(new VF.Accidental(g.acc),1);
-      const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([note]);
-      new VF.Formatter().joinVoices([voice]).format([voice],110);
-      voice.draw(cc,tempStave);
-
-      const tempSvg=holder.querySelector('svg');
-      const glyphGroup=document.createElementNS(ns,'g');
-      [...tempSvg.childNodes].forEach(n=>glyphGroup.appendChild(n.cloneNode(true)));
-      svg.appendChild(glyphGroup);
-      document.body.removeChild(holder);
-
-      // Find actual rendered bounds, then align visual center to the measure center.
-      let bb;
-      try{bb=glyphGroup.getBBox()}catch(_){bb={x:0,y:0,width:100,height:100}}
-      const targetY=lineTop-22;
-      const dx=centers[i]-(bb.x+bb.width/2);
-      const dy=targetY-bb.y;
-      glyphGroup.setAttribute('transform',`translate(${dx} ${dy})`);
-
-      const add=(txt,y,size=11,weight='700')=>{
-        const t=document.createElementNS(ns,'text');
-        t.setAttribute('x',centers[i]);t.setAttribute('y',y);
-        t.setAttribute('text-anchor','middle');
-        t.setAttribute('font-family','Arial,sans-serif');
-        t.setAttribute('font-size',size);t.setAttribute('font-weight',weight);
-        t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
-      };
-      add(g.top,28,w<360?9:11);
-      add(g.bottom,160,w<360?10:12);
+    const candidates=[];
+    created.forEach(node=>{
+      if(!(node instanceof SVGGraphicsElement)) return;
+      if(node.tagName.toLowerCase()!=='path') return;
+      try{
+        const b=node.getBBox();
+        // Whole-note heads are compact horizontal glyphs. Keep generous limits
+        // for VexFlow/font/browser variation, while excluding accidentals/stems.
+        if(b.width>=8 && b.width<=26 && b.height>=5 && b.height<=18){
+          candidates.push({
+            node,b,
+            cx:b.x+b.width/2,
+            cy:b.y+b.height/2
+          });
+        }
+      }catch(_){}
     });
+
+    // Group candidate noteheads by horizontal location. Each harmonic interval
+    // contributes two heads at essentially the same X. The accidental paths do
+    // not form such a two-head vertical pair.
+    candidates.sort((a,b)=>a.cx-b.cx);
+    const clusters=[];
+    candidates.forEach(c=>{
+      let cluster=clusters.find(g=>Math.abs(g.x-c.cx)<4);
+      if(!cluster){
+        cluster={x:c.cx,items:[]};
+        clusters.push(cluster);
+      }
+      cluster.items.push(c);
+      cluster.x=cluster.items.reduce((s,v)=>s+v.cx,0)/cluster.items.length;
+    });
+
+    // A chord cluster must contain at least two vertically distinct compact
+    // notehead glyphs. Choose the two notation clusters from left to right.
+    const chordClusters=clusters.filter(g=>{
+      if(g.items.length<2)return false;
+      const ys=g.items.map(v=>v.cy);
+      return Math.max(...ys)-Math.min(...ys)>8;
+    }).sort((a,b)=>a.x-b.x).slice(0,2);
+
+    let x1=chordClusters[0]?.x ?? null;
+    let x2=chordClusters[1]?.x ?? null;
+
+    // Conservative fallback: if SVG glyph detection changes in a future
+    // VexFlow build, fall back to the notehead API rather than losing labels.
+    function fallbackX(note){
+      try{
+        const heads=note.getNoteHeads?note.getNoteHeads():[];
+        if(heads.length){
+          const h=heads[0];
+          const x=typeof h.getAbsoluteX==='function'?h.getAbsoluteX():
+                  (typeof h.getX==='function'?h.getX():NaN);
+          if(Number.isFinite(x))return x;
+        }
+      }catch(_){}
+      return null;
+    }
+    if(!Number.isFinite(x1))x1=fallbackX(n1);
+    if(!Number.isFinite(x2))x2=fallbackX(n2);
+
+    const add=(txt,x,y,size=11)=>{
+      if(!Number.isFinite(x))return;
+      const t=document.createElementNS(ns,'text');
+      t.setAttribute('x',x);t.setAttribute('y',y);
+      t.setAttribute('text-anchor','middle');
+      t.setAttribute('font-family','Arial,sans-serif');
+      t.setAttribute('font-size',size);t.setAttribute('font-weight','700');
+      t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
+    };
+
+    // Text follows the final visible notehead centres.
+    add('4th',x1,25,w<360?9:11);
+    add('5th',x2,25,w<360?9:11);
+    add('3',x1,160,w<360?10:12);
+    add('3',x2,160,w<360?10:12);
 
     const label=document.createElementNS(ns,'text');
     label.setAttribute('x',Math.max(12,left+6));label.setAttribute('y','160');
@@ -865,7 +972,7 @@ function drawEnharmonicToneStaff(el){
     label.setAttribute('font-weight','700');label.setAttribute('fill','#6e6e73');
     label.textContent='音数';svg.appendChild(label);
   }catch(e){
-    console.error('Page 21 instructional notation failed:',e);
+    console.error('Page 21 SVG-notehead render failed:',e);
     el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
   }
 }
@@ -875,36 +982,22 @@ function renderEnharmonicToneBoard(){
 }
 
 function bindChoiceQuiz(answer,attr='data-quiz-answer'){
-  const opts=[...document.querySelectorAll('['+attr+']')];
-  const wrongValues=new Set();
+  const opts=[...document.querySelectorAll('['+attr+']')],wrongValues=new Set();
   opts.forEach(btn=>btn.addEventListener('click',()=>{
-    if(btn.getAttribute(attr)===answer){
-      btn.classList.add('correct');
-      return;
-    }
-    btn.classList.add('wrong');
-    wrongValues.add(btn.getAttribute(attr));
+    if(btn.getAttribute(attr)===answer){btn.classList.add('correct');passedQuizzes.add(current);setQuizContinueEnabled(true);return}
+    btn.classList.add('wrong');wrongValues.add(btn.getAttribute(attr));
     if(wrongValues.size>=opts.length-1){
-      const correct=document.querySelector('['+attr+'="'+answer+'"]');
-      if(correct)correct.classList.add('correct');
+      const correct=document.querySelector('['+attr+'="'+answer+'"]');if(correct)correct.classList.add('correct');
     }
   }));
 }
 
 function bindToneNumberQuiz(){
-  const opts=[...document.querySelectorAll('[data-tone-answer]')];
-  let wrong=new Set();
+  const opts=[...document.querySelectorAll('[data-tone-answer]')],wrong=new Set();
   opts.forEach(btn=>btn.addEventListener('click',()=>{
-    if(btn.dataset.toneAnswer==='4'){
-      btn.classList.add('correct');
-      return;
-    }
-    btn.classList.add('wrong');
-    wrong.add(btn.dataset.toneAnswer);
-    if(wrong.size>=4){
-      const correct=document.querySelector('[data-tone-answer="4"]');
-      if(correct)correct.classList.add('correct');
-    }
+    if(btn.dataset.toneAnswer==='4'){btn.classList.add('correct');passedQuizzes.add(current);setQuizContinueEnabled(true);return}
+    btn.classList.add('wrong');wrong.add(btn.dataset.toneAnswer);
+    if(wrong.size>=4){const correct=document.querySelector('[data-tone-answer="4"]');if(correct)correct.classList.add('correct')}
   }));
 }
 
@@ -1060,6 +1153,7 @@ function showStep(i,doScroll=true){
   $('#progress').style.width=((i+1)/steps.length*100)+'%';
   $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
   $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
+  setQuizContinueEnabled(![13,21,22].includes(i) || passedQuizzes.has(i));
   steps[i].render();
   updateHeaderLessonCount(i);
   revealNewestLessonText();
@@ -1096,6 +1190,26 @@ function showSummary(){document.body.classList.remove('lesson-active');clearBoar
     lastTouchEnd=now;
   },{passive:false});
 })();
+
+
+/* Desktop keyboard navigation.
+   ArrowLeft / ArrowUp  = Previous
+   ArrowRight / ArrowDown = Continue
+   Touch/click navigation remains unchanged. */
+document.addEventListener('keydown',function(e){
+  if(!document.body.classList.contains('lesson-active')) return;
+  if(e.metaKey||e.ctrlKey||e.altKey) return;
+  const target=e.target;
+  if(target && (target.matches?.('input,textarea,select') || target.isContentEditable)) return;
+
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
+    e.preventDefault();
+    document.getElementById('prevBtn')?.click();
+  }else if(e.key==='ArrowRight'||e.key==='ArrowDown'){
+    e.preventDefault();
+    document.getElementById('nextBtn')?.click();
+  }
+});
 
 </script>
 </body></html>
