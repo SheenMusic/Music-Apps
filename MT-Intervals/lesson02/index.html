@@ -585,6 +585,20 @@ body:not(.lesson-active) #headerLessonCount{display:none!important}
 .lesson02-second-board svg{display:block;width:100%;height:100%;max-width:100%}
 
 
+
+/* Lesson 02 interval-quality logic map */
+.quality-map{height:100%;display:grid;grid-template-columns:70px 1fr 70px;align-items:center;gap:12px;padding:8px 18px}
+.qm-side{font-size:1.2rem;font-weight:900;color:var(--primary);text-align:center}
+.qm-center{height:100%;display:grid;grid-template-rows:1fr 1fr;align-items:center;gap:6px}
+.qm-pure-wrap,.qm-mm-wrap{display:grid;justify-items:center;align-items:center;min-height:68px}
+.qm-pure-wrap{grid-template-rows:22px 1px 32px}.qm-mm-wrap{grid-template-rows:32px 1px 22px}
+.qm-pure,.qm-mm{font-size:1.15rem;font-weight:900;color:var(--text)}
+.qm-mm{display:flex;gap:42px}.qm-line{width:min(180px,80%);height:1px;background:#94a3b8}
+.qm-degree{font:800 12px Arial,sans-serif;color:var(--primary);letter-spacing:.08em;opacity:0}
+.qm-pure-wrap:not(.revealed) .qm-line,.qm-mm-wrap:not(.revealed) .qm-line{opacity:0}
+.qm-pure-wrap.revealed .qm-degree,.qm-mm-wrap.revealed .qm-degree{opacity:1}
+@media(max-width:390px){.quality-map{grid-template-columns:48px 1fr 48px;padding:8px 6px}.qm-mm{gap:28px}}
+
 </style>
 </head>
 <body>
@@ -1076,7 +1090,10 @@ const LESSON_AUDIO={
   1:{file:'assets/audio/01.mp3'},2:{file:'assets/audio/01.mp3'},3:{file:'assets/audio/01.mp3'},
   4:{file:'assets/audio/q1.mp3',auto:true},5:{file:'assets/audio/q2.mp3',auto:true},
   6:{file:'assets/audio/02.mp3'},7:{file:'assets/audio/02.mp3'},
-  8:{file:'assets/audio/q3.mp3',auto:true},9:{file:'assets/audio/q4.mp3',auto:true}
+  8:{file:'assets/audio/q3.mp3',auto:true},9:{file:'assets/audio/q4.mp3',auto:true},
+  10:{file:'assets/audio/03.mp3'},11:{file:'assets/audio/03.mp3'},
+  12:{file:'assets/audio/04.mp3'},13:{file:'assets/audio/04.mp3'},14:{file:'assets/audio/04.mp3'},
+  15:{file:'assets/audio/05.mp3'},16:{file:'assets/audio/06.mp3'}
 };
 
 let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
@@ -1320,6 +1337,61 @@ function renderL2ThirdBoard(quality=false){
  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
 }
 
+
+function renderL2PairBoard(cfg){
+  board.innerHTML='<div class="lesson02-second-board"><div id="l2pair" style="width:100%;height:100%"></div></div>';
+  const el=document.getElementById('l2pair'),VF=vf(); if(!VF)return;
+  try{
+    const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176); const ctx=r.getContext(),x=12,sw=w-24;
+    const st=new VF.Stave(x,38,sw); st.addClef('treble').setContext(ctx).draw();
+
+    const mk=(key,acc)=>{
+      const n=new VF.StaveNote({clef:'treble',keys:[key],duration:'h'});
+      if(acc)n.addModifier(new VF.Accidental(acc),0);
+      return n;
+    };
+    const n1=mk(cfg.m1[0].key,cfg.m1[0].acc),n2=mk(cfg.m1[1].key,cfg.m1[1].acc);
+    const n3=mk(cfg.m2[0].key,cfg.m2[0].acc),n4=mk(cfg.m2[1].key,cfg.m2[1].acc);
+    const v=new VF.Voice({num_beats:8,beat_value:4}).setMode(VF.Voice.Mode.SOFT)
+      .addTickables([n1,n2,new VF.BarNote(),n3,n4]);
+    new VF.Formatter().joinVoices([v]).formatToStave([v],st,{align_rests:false}); v.draw(ctx,st);
+
+    const svg=el.querySelector('svg'),ns=[...svg.querySelectorAll('.vf-stavenote')],
+          cx=(n,f)=>{try{let b=n.getBBox();return b.x+b.width/2}catch(e){return f}},
+          a=(cx(ns[0],sw*.25)+cx(ns[1],sw*.4))/2,
+          b=(cx(ns[2],sw*.63)+cx(ns[3],sw*.8))/2,
+          NS='http://www.w3.org/2000/svg';
+    const t=(z,X,Y,fill='#64748b',weight='400')=>{
+      let e=document.createElementNS(NS,'text');
+      Object.entries({x:X,y:Y,'text-anchor':'middle','font-family':'Arial, PingFang SC','font-size':'12','font-weight':weight,fill})
+        .forEach(([k,v])=>e.setAttribute(k,v));
+      e.textContent=z; svg.appendChild(e);
+    };
+    t(cfg.label1,a,22,'#6366f1','700'); t(cfg.label2,b,22,'#6366f1','700');
+    t(cfg.count1,a,158); t(cfg.count2,b,158); t('音数',x+22,158);
+  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+
+function renderL2QualityMap(stage=0){
+  board.innerHTML=`<div class="quality-map">
+    <div class="qm-side qm-dim">减</div>
+    <div class="qm-center">
+      <div class="qm-pure-wrap ${stage>=1?'revealed':''}">
+        <div class="qm-degree qm-top">1 · 4 · 5 · 8</div>
+        <div class="qm-line"></div>
+        <div class="qm-pure">纯</div>
+      </div>
+      <div class="qm-mm-wrap ${stage>=2?'revealed':''}">
+        <div class="qm-mm"><span>小</span><span>大</span></div>
+        <div class="qm-line"></div>
+        <div class="qm-degree qm-bottom">2 · 3 · 6 · 7</div>
+      </div>
+    </div>
+    <div class="qm-side qm-aug">增</div>
+  </div>`;
+}
+
 const steps=[
 {title:'音程的性质',render(){
   renderLesson02SecondBoard(false);
@@ -1335,10 +1407,20 @@ const steps=[
 }},
 {title:'Quiz',render(){renderL2Keyboard(['F4','G4']);body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>`;l2QuizAppend('F 和 G 这个二度的性质是','M')}},
 {title:'Quiz',render(){renderL2Keyboard(['B4','C5']);body.innerHTML=`<p class="lesson-paragraph">为了区分<span class="key-accent">度数相同</span>但<span class="key-accent">音数不同</span>的音程，需要在度数前加上<strong>音程的性质</strong>。</p><p class="lesson-paragraph">谱例中 <span class="key-accent">M</span> 和 <span class="key-accent">m</span> 表示的就是二度的<span class="key-accent">“大”</span>和<span class="key-accent">“小”</span>两种性质。它们分别来自英文术语 <span class="key-accent">M</span>ajor 和 <span class="key-accent">m</span>inor 的首字母，通过大小写来区分大小。</p><p class="lesson-paragraph"><strong>小二度</strong>（m2）表示相距一个<span class="key-accent">半音</span>的二度，<strong>大二度</strong>（M2）表示相距一个<span class="key-accent">全音</span>的二度。</p>${l2QuizHistory('F 和 G 这个二度的性质是','M',3)}`;l2QuizAppend('B 和 C 这个二度的性质是','m')}},
-{title:'三度的性质',render(){renderL2ThirdBoard(false);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p>`}},
-{title:'大三度与小三度',render(){renderL2ThirdBoard(true);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`}},
-{title:'Quiz',render(){renderL2Keyboard(['D4','F4']);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`;l2QuizAppend('D 和 F 这个三度的性质是','m')}},
-{title:'Quiz',render(){renderL2Keyboard(['G#4','C5']);body.innerHTML=`<p class="lesson-paragraph">三度也可以被分为<span class="key-accent">小</span>和<span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>${l2QuizHistory('D 和 F 这个三度的性质是','m',7)}`;l2QuizAppend('A♭ 和 C 这个三度的性质是','M')}}
+{title:'三度的性质',render(){renderL2ThirdBoard(false);body.innerHTML=`<p class="lesson-paragraph">三度也有<span class="key-accent">小</span><span class="key-accent">大</span>两个性质。</p>`}},
+{title:'大三度与小三度',render(){renderL2ThirdBoard(true);body.innerHTML=`<p class="lesson-paragraph">三度也有<span class="key-accent">小</span><span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`}},
+{title:'Quiz',render(){renderL2Keyboard(['D4','F4']);body.innerHTML=`<p class="lesson-paragraph">三度也有<span class="key-accent">小</span><span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>`;l2QuizAppend('D 和 F 这个三度的性质是','m')}},
+{title:'Quiz',render(){renderL2Keyboard(['G#4','C5']);body.innerHTML=`<p class="lesson-paragraph">三度也有<span class="key-accent">小</span><span class="key-accent">大</span>两个性质。</p><p class="lesson-paragraph"><strong>小三度</strong>（m3）表示音数为 <span class="key-accent">1.5</span> 的三度，<strong>大三度</strong>（M3）表示音数为 <span class="key-accent">2</span> 的三度。</p>${l2QuizHistory('D 和 F 这个三度的性质是','m',7)}`;l2QuizAppend('A♭ 和 C 这个三度的性质是','M')}},
+{title:'纯四度与纯五度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4'}],m2:[{key:'c/4'},{key:'g/4'}],label1:'4th',label2:'5th',count1:'2.5',count2:'3.5'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p>`;}},
+{title:'纯音程',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4'}],m2:[{key:'c/4'},{key:'g/4'}],label1:'P4',label2:'P5',count1:'2.5',count2:'3.5'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p>`;}},
+{title:'增四度与减五度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'4th',label2:'5th',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p>`;}},
+{title:'增四度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'A4',label2:'5th',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p>`;}},
+{title:'减五度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'A4',label2:'d5',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p>`;}},
+{title:'增音程',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'d/4'}],m2:[{key:'c/4'},{key:'d/4',acc:'#'}],label1:'M2',label2:'A2',count1:'1',count2:'1.5'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p><p class="lesson-paragraph">增（A），除了表示变宽的纯音程（P），也可以表示变宽的<span class="key-accent">大</span>音程（M）。</p>`;}},
+{title:'减音程',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'e/4',acc:'b'}],m2:[{key:'c/4',acc:'#'},{key:'e/4',acc:'b'}],label1:'m3',label2:'d3',count1:'1.5',count2:'1'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p><p class="lesson-paragraph">增（A），除了表示变宽的纯音程（P），也可以表示变宽的<span class="key-accent">大</span>音程（M）。</p><p class="lesson-paragraph">减（d），除了表示变窄的纯音程（P），也可以表示变窄的<span class="key-accent">小</span>音程（m）。</p>`;}},
+{title:'五种基本性质',render(){renderL2QualityMap(0);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p>`;}},
+{title:'纯音程适用的度数',render(){renderL2QualityMap(1);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p>`;}},
+{title:'大小音程适用的度数',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p>`;}}
 
 ];
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
