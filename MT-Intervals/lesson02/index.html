@@ -701,7 +701,7 @@ function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);i
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
 function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
-function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',12,'normal');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
+function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
 let openingSecondRevealed=false;
 function alignBoardRoleLabels(){
   const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
@@ -780,7 +780,7 @@ function drawIntervalOverview(el){
       const ux=parseNote(u);
       const sn=new VF.StaveNote({clef:'treble',keys:['f/4',ux.letter+'/'+ux.oct],duration:'w'});
       const an=new VF.Annotation(labels[i]).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);
-      if(an.setFont)an.setFont('Arial',w<380?7.5:(w<500?8.5:10),'normal');
+      if(an.setFont)an.setFont('Arial',w<380?10:(w<500?12:14),'bold');
       sn.addModifier(an,0); return sn;
     });
     const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
@@ -1142,7 +1142,7 @@ const LESSON_AUDIO={
   8:{file:'assets/audio/q3.mp3',auto:true},9:{file:'assets/audio/q4.mp3',auto:true},
   10:{file:'assets/audio/03.mp3'},11:{file:'assets/audio/03.mp3'},
   12:{file:'assets/audio/04.mp3'},13:{file:'assets/audio/04.mp3'},14:{file:'assets/audio/04.mp3'},
-  15:{file:'assets/audio/05.mp3'},16:{file:'assets/audio/06.mp3'}
+  17:{file:'assets/audio/05.mp3'},18:{file:'assets/audio/06.mp3'}
 };
 
 let lessonAudio=null,lessonAudioPage=null,audioNavigationToken=0;
@@ -1379,8 +1379,9 @@ function l2MultiQuiz(q,correctAnswers){
 function confirmL2MultiQuiz(){
   const pageIndex=current;
   const correctSets={
-    21:new Set(['P','A']),      // Page 22
-    22:new Set(['d','P','A'])   // Page 23
+    23:new Set(['P','A']),          // Page 24
+    24:new Set(['d','P','A']),      // Page 25
+    25:new Set(['d','m','M','A'])   // Page 26
   };
   const correct=correctSets[pageIndex];
   if(!correct)return false;
@@ -1493,15 +1494,56 @@ function renderL2PairBoard(cfg){
           a=(cx(ns[0],sw*.25)+cx(ns[1],sw*.4))/2,
           b=(cx(ns[2],sw*.63)+cx(ns[3],sw*.8))/2,
           NS='http://www.w3.org/2000/svg';
-    const t=(z,X,Y,fill='#64748b',weight='400')=>{
+    const t=(z,X,Y,fill='#64748b',weight='400',size='12')=>{
       let e=document.createElementNS(NS,'text');
-      Object.entries({x:X,y:Y,'text-anchor':'middle','font-family':'Arial, PingFang SC','font-size':'12','font-weight':weight,fill})
+      Object.entries({x:X,y:Y,'text-anchor':'middle','font-family':'Arial, PingFang SC','font-size':size,'font-weight':weight,fill})
         .forEach(([k,v])=>e.setAttribute(k,v));
       e.textContent=z; svg.appendChild(e);
     };
-    t(cfg.label1,a,22,'#6366f1','700'); t(cfg.label2,b,22,'#6366f1','700');
+    t(cfg.label1,a,24,'#6366f1','800','17'); t(cfg.label2,b,24,'#6366f1','800','17');
     t(cfg.count1,a,158); t(cfg.count2,b,158); t('音数',x+22,158);
   }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+
+
+function renderL2QuizStaff(note1,note2){
+  board.innerHTML='<div class="lesson02-second-board"><div id="l2QuizStaff" style="width:100%;height:100%"></div></div>';
+  const el=document.getElementById('l2QuizStaff'),VF=vf(); if(!VF)return;
+  try{
+    const parse=(n)=>{
+      const m=n.match(/^([A-Ga-g])([#b]?)(\d)$/);
+      return {key:m[1].toLowerCase()+'/'+m[3],acc:m[2]||null};
+    };
+    const a=parse(note1),b=parse(note2);
+    const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    r.resize(w,176);const ctx=r.getContext(),st=new VF.Stave(12,38,w-24);
+    st.addClef('treble').setContext(ctx).draw();
+    const mk=(n)=>{const x=new VF.StaveNote({clef:'treble',keys:[n.key],duration:'h'});if(n.acc)x.addModifier(new VF.Accidental(n.acc),0);return x};
+    const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([mk(a),mk(b)]);
+    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    voice.draw(ctx,st);
+  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+}
+
+function l2QualityQuiz(q,ans){
+  const pageIndex=current;
+  const labels={P:'纯',A:'增',d:'减'};
+  const saved=quizAnswers.get(pageIndex);
+  body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">QUIZ</div><div class="quiz-question">${q}</div>
+    <div class="quiz-options vertical">${['P','A','d'].map(v=>`<button class="quiz-option ${saved===v?(saved===ans?'correct':'wrong'):''}" data-a="${v}">${labels[v]}</button>`).join('')}</div>
+    <div class="feedback ${saved?(saved===ans?'ok':'bad'):''}">${saved?(saved===ans?'正确':'再想一想'):''}</div></div>`;
+  const block=body.querySelector('.quiz-block'),options=[...block.querySelectorAll('.quiz-option')],feedback=block.querySelector('.feedback');
+  options.forEach(btn=>btn.onclick=()=>{
+    if(passedQuizzes.has(pageIndex))return;
+    const ok=btn.dataset.a===ans;
+    quizAnswers.set(pageIndex,btn.dataset.a);
+    options.forEach(x=>x.classList.remove('correct','wrong'));
+    btn.classList.add(ok?'correct':'wrong');
+    feedback.textContent=ok?'正确':'再想一想';
+    feedback.className='feedback '+(ok?'ok':'bad');
+    if(ok){passedQuizzes.add(pageIndex);setQuizContinueEnabled(true)}else setQuizContinueEnabled(false);
+  });
+  setQuizContinueEnabled(passedQuizzes.has(pageIndex));
 }
 
 function renderL2QualityMap(stage=0){
@@ -1547,6 +1589,8 @@ const steps=[
 {title:'增四度与减五度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'4th',label2:'5th',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p>`;}},
 {title:'增四度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'A4',label2:'5th',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p>`;}},
 {title:'减五度',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'f/4',acc:'#'}],m2:[{key:'c/4'},{key:'g/4',acc:'b'}],label1:'A4',label2:'d5',count1:'3',count2:'3'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p>`;}},
+{title:'Quiz',render(){renderL2QuizStaff('D4','G#4');l2QualityQuiz('D4 和 G♯4，这个四度的性质是','A');}},
+{title:'Quiz',render(){renderL2QuizStaff('F#4','C5');l2QualityQuiz('F♯4 和 C5，这个五度的性质是','d');}},
 {title:'增音程',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'d/4'}],m2:[{key:'c/4'},{key:'d/4',acc:'#'}],label1:'M2',label2:'A2',count1:'1',count2:'1.5'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p><p class="lesson-paragraph">增（A），除了表示变宽的纯音程（P），也可以表示变宽的<span class="key-accent">大</span>音程（M）。</p>`;}},
 {title:'减音程',render(){renderL2PairBoard({m1:[{key:'c/4'},{key:'e/4',acc:'b'}],m2:[{key:'c/4',acc:'#'},{key:'e/4',acc:'b'}],label1:'m3',label2:'d3',count1:'1.5',count2:'1'});body.innerHTML=`<p class="lesson-paragraph">四度和五度<span class="key-accent">不</span>区分大小，它们的基本性质用<strong>纯</strong>来表示。</p><p class="lesson-paragraph">谱例中的 <span class="key-accent">P</span> 表示的就是<span class="key-accent">纯</span>这一种音程性质。它来自英文术语 <span class="key-accent">P</span>erfect 的首字母，一般大写。</p><p class="lesson-paragraph">也<span class="key-accent">不</span>是所有的四度和五度性质都是纯。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的四度，性质为<strong>增</strong>。用 <span class="key-accent">A</span>ugmented 的首字母大写 <span class="key-accent">A</span> 表示。它比纯四度<span class="key-accent">宽</span>一个半音。</p><p class="lesson-paragraph">音数为 <span class="key-accent">3</span> 的五度，性质为<strong>减</strong>。用 <span class="key-accent">d</span>iminished 的首字母小写 <span class="key-accent">d</span> 表示。它比纯五度<span class="key-accent">窄</span>一个半音。</p><p class="lesson-paragraph">增（A），除了表示变宽的纯音程（P），也可以表示变宽的<span class="key-accent">大</span>音程（M）。</p><p class="lesson-paragraph">减（d），除了表示变窄的纯音程（P），也可以表示变窄的<span class="key-accent">小</span>音程（m）。</p>`;}},
 {title:'五种基本性质',render(){renderL2QualityMap(0);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p>`;}},
@@ -1557,7 +1601,8 @@ const steps=[
 {title:'减一度',render(){renderL2QualityMap(2);body.innerHTML=`<p class="lesson-paragraph">音程有五种基本性质：大（Major）、小（minor）、增（Augmented）、减（diminished）、纯（Perfect）。</p><p class="lesson-paragraph"><strong>纯音程</strong>由于协和度高，专用于<span class="key-accent">一</span>度、<span class="key-accent">四</span>度、<span class="key-accent">五</span>度和<span class="key-accent">八</span>度。</p><p class="lesson-paragraph"><strong>大/小音程</strong>：专用于<span class="key-accent">二</span>度、<span class="key-accent">三</span>度、<span class="key-accent">六</span>度和<span class="key-accent">七</span>度。大音程比小音程宽半音。</p><p class="lesson-paragraph"><strong>增/减音程</strong>：理论上，<span class="key-accent">所有</span>度数都可以通过增减音数变成“增/减”的性质。</p><p class="lesson-paragraph">但因为纯一度的音数为 0，没有比它更窄的音程，所以减一度是<span class="key-accent">不</span>存在的音程。</p>`;}},
 {title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('一度有哪些性质？',['P','A']);}},
 {title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('五度有哪些性质？',['d','P','A']);}}
-
+,
+{title:'Quiz',render(){renderL2QualityMap(2);l2MultiQuiz('六度有哪些性质？',['d','m','M','A']);}}
 ];
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){
@@ -1571,9 +1616,9 @@ function showStep(i,doScroll=true){
   lesson.classList.remove('opening');
   $('#progress').style.width=((i+1)/steps.length*100)+'%';
   $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
-  const isMultiQuiz=[21,22].includes(i);
+  const isMultiQuiz=[23,24,25].includes(i);
   $('#nextBtn').textContent=isMultiQuiz&&!passedQuizzes.has(i)?'确认':(i===steps.length-1?'完成学习':'继续 →');
-  setQuizContinueEnabled(isMultiQuiz || ![3,4,7,8].includes(i) || passedQuizzes.has(i));
+  setQuizContinueEnabled(isMultiQuiz || ![3,4,7,8,14,15].includes(i) || passedQuizzes.has(i));
   steps[i].render();
   if(isMultiQuiz){
     setQuizContinueEnabled(true);
@@ -1602,7 +1647,7 @@ $('#nextBtn').onclick=e=>{
     e?.stopPropagation();
     return;
   }
-  if([21,22].includes(current) && !passedQuizzes.has(current)){
+  if([23,24,25].includes(current) && !passedQuizzes.has(current)){
     confirmL2MultiQuiz();
     return;
   }
