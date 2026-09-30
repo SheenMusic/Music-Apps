@@ -599,6 +599,8 @@ body:not(.lesson-active) .footer{margin-top:auto;}
  body.lesson-active #lesson{display:grid!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;grid-template-rows:minmax(0,1fr)!important;column-gap:18px!important;}
 }
 
+
+
 </style>
 </head>
 <body>
@@ -1022,19 +1024,20 @@ function drawEnharmonicToneStaff(el){
     if(!Number.isFinite(x1))x1=fallbackX(n1);
     if(!Number.isFinite(x2))x2=fallbackX(n2);
 
-    const add=(txt,x,y,size=11)=>{
+    const add=(txt,x,y,size=11,fill='#6e6e73',weight='700')=>{
       if(!Number.isFinite(x))return;
       const t=document.createElementNS(ns,'text');
       t.setAttribute('x',x);t.setAttribute('y',y);
       t.setAttribute('text-anchor','middle');
       t.setAttribute('font-family','Arial,sans-serif');
-      t.setAttribute('font-size',size);t.setAttribute('font-weight','700');
-      t.setAttribute('fill','#6e6e73');t.textContent=txt;svg.appendChild(t);
+      t.setAttribute('font-size',size);t.setAttribute('font-weight',weight);
+      t.setAttribute('fill',fill);t.textContent=txt;svg.appendChild(t);
     };
 
-    // Text follows the final visible notehead centres.
-    add('4th',x1,25,w<360?9:11);
-    add('5th',x2,25,w<360?9:11);
+    // Interval labels match Lesson 2: larger, heavier, primary indigo.
+    // X remains tied to each final visible notehead centre.
+    add('4th',x1,25,17,'#6366f1','800');
+    add('5th',x2,25,17,'#6366f1','800');
     add('3',x1,160,w<360?10:12);
     add('3',x2,160,w<360?10:12);
 
