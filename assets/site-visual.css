@@ -113,18 +113,39 @@ html[data-visual] :is(a, button, input, select, textarea, summary):focus-visible
   outline-offset: 3px;
 }
 
-/* Opacity only: transforming a page root would change the containing block of
-   fixed menus, purchase sheets and lesson controls. No JS visibility gate,
-   no delays, no animation when switching questions or application screens. */
+/* Roots use opacity only: transforms would relocate fixed menus, purchase
+   sheets and lesson controls. CSS works without a JS visibility gate. Only
+   the homepage's stable, non-interactive content gets a small stagger. */
+html[data-visual] {
+  --site-reveal-duration: 1200ms;
+  --site-reveal-easing: cubic-bezier(.22, .61, .36, 1);
+}
 @keyframes site-page-reveal { from { opacity: 0.08; } to { opacity: 1; } }
+@keyframes site-detail-reveal {
+  from { opacity: 0.08; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 @media (prefers-reduced-motion: no-preference) {
   html[data-visual] body {
-    animation: site-page-reveal 550ms cubic-bezier(.22, .61, .36, 1);
+    animation: site-page-reveal var(--site-reveal-duration) var(--site-reveal-easing);
   }
+  /* Do not multiply whole-page and hero fades. Menus and application controls
+     stay outside the stagger, and never animate when opening or answering. */
+  html[data-home-experiment] body { animation: none; }
+  html[data-home-experiment] :is(.topbar, .hero-photo, .main-areas, .contact, footer) {
+    animation: site-page-reveal var(--site-reveal-duration) var(--site-reveal-easing) backwards;
+  }
+  html[data-home-experiment] .hero-copy > * {
+    animation: site-detail-reveal var(--site-reveal-duration) var(--site-reveal-easing) backwards;
+  }
+  html[data-home-experiment] .hero h1 { animation-delay: 120ms; }
+  html[data-home-experiment] .hero .roles { animation-delay: 240ms; }
+  html[data-home-experiment] .hero :is(.intro, .hero-actions) { animation-delay: 360ms; }
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-visual] { scroll-behavior: auto; }
   html[data-visual] body { animation: none; }
+  html[data-home-experiment] :is(.topbar, .hero-photo, .main-areas, .contact, footer, .hero-copy > *) { animation: none; }
   html[data-visual] :is(a, button, input, select, summary) { transition: none; }
 }
 

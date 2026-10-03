@@ -2,7 +2,7 @@
 
 `site-visual.css` is loaded **after** each page's existing styles. It provides
 system sans-serif typography, white Light Mode, OS-driven Dark Mode, focus
-outlines and a 550 ms opacity-only page entrance. No font downloads, theme
+outlines and a 1,200 ms opacity-only page entrance. No font downloads, theme
 storage, theme toggle, global JavaScript or changes to application logic are
 required. Reduced-motion preferences disable the entrance animation.
 
@@ -36,7 +36,11 @@ teaching component, inspect its own palette before adding a targeted boundary.
 Correct/error feedback adapts to readable green/red UI tints; its meaning and
 application state classes remain unchanged.
 
-The entrance uses opacity on the body only. Avoid transforms on page roots:
+The shared entrance uses opacity on the body. The experimental homepage uses
+separate CSS entrances for its static sections and Hero details: 120 ms steps,
+up to 360 ms delay, ending at 1,560 ms. Only Hero text details move (6 px);
+menus and fixed page roots do not. Reduced motion disables every entrance.
+Avoid transforms on page roots:
 they can relocate fixed lesson controls, menus and purchase sheets. Do not
 add visibility gates that depend on JavaScript or animate question changes.
 

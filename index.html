@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-visual="site" lang="zh-CN">
+<html data-visual="site" data-home-experiment lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -131,25 +131,30 @@
       max-width:28em;
     }
 
-    /* Hero */
-    .hero{
-      padding:28px 0 96px;
-    }
+    /* Editorial portrait: overlapping grid areas, with an alpha fade rather
+       than a background-colored overlay. The original photo stays untouched. */
+    .hero{padding:12px 0 80px}
     .hero-grid{
+      position:relative;
       display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(440px,1.18fr);
-      min-height:620px;
-      align-items:center;
-      gap:64px;
+      grid-template-columns:repeat(12,minmax(0,1fr));
+      min-height:680px;
+      isolation:isolate;
     }
-    .hero-copy{padding:34px 0}
+    .hero-copy{
+      grid-area:1 / 7 / 2 / 13;
+      align-self:center;
+      min-width:0;
+      padding:32px 0 32px 24px;
+      z-index:1;
+    }
     .hero h1{
       margin:0;
       font-family:var(--site-font);
       font-weight:700;
       letter-spacing:-.045em;
-      font-size:clamp(62px,7vw,104px);
-      line-height:.91;
+      font-size:clamp(72px,7vw,104px);
+      line-height:.96;
     }
     .hero h1 .cn{
       display:block;
@@ -160,50 +165,51 @@
       letter-spacing:.01em;
     }
     .roles{
-      margin:34px 0 0;
-      font-size:clamp(16px,1.6vw,20px);
+      margin:30px 0 0;
+      font-size:clamp(16px,1.5vw,20px);
       line-height:1.6;
-      color:#3e423e;
+      color:var(--muted);
     }
     .intro{
-      margin:34px 0 0;
+      margin:26px 0 0;
       max-width:32em;
       font-size:15px;
       line-height:1.9;
-      color:#333633;
+      color:var(--muted);
     }
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:14px;
-      margin-top:38px;
-    }
+    html[data-home-experiment] .hero :is(.roles,.intro){color:var(--site-text)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
     .button{
       min-height:52px;
       padding:0 24px;
-      border:1px solid #282b28;
+      border:1px solid var(--line);
       border-radius:999px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:18px;
       font-size:14px;
-      transition:transform .18s ease, background .18s ease, color .18s ease;
+      transition:background .18s ease, color .18s ease;
     }
-    .button:hover{transform:translateY(-1px)}
+    .button:hover{background:var(--site-soft)}
     .button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .hero-photo{
+      grid-area:1 / 1 / 2 / 9;
+      position:relative;
       margin:0;
-      height:100%;
-      min-height:620px;
+      min-width:0;
+      min-height:680px;
       overflow:hidden;
-      background:#eee;
+      -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 68%,rgba(0,0,0,.35) 85%,transparent 100%);
+      mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 68%,rgba(0,0,0,.35) 85%,transparent 100%);
     }
     .hero-photo img{
+      position:absolute;
+      inset:0;
       width:100%;
       height:100%;
       object-fit:cover;
-      object-position:50% 44%;
+      object-position:50% 18%;
     }
 
     /* Two main areas */
@@ -282,50 +288,45 @@
       line-height:1.8;
       max-width:32em;
     }
+    .contact-email{margin:0 0 30px;line-height:1.8;color:var(--muted)}
+    .contact-email a{overflow-wrap:anywhere}
     .contact-grid{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:20px;
+      max-width:620px;
     }
-    .contact-item{
+    .social-entry{
+      appearance:none;
+      border:0;
+      background:transparent;
+      padding:12px 4px;
+      min-height:88px;
       min-width:0;
-      padding:25px 24px 27px 0;
-    }
-    .contact-item + .contact-item{
-      border-left:1px solid var(--line);
-      padding-left:24px;
-    }
-    .contact-label{
-      display:block;
-      margin-bottom:8px;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .contact-value{
       display:flex;
-      flex-wrap:wrap;
+      flex-direction:column;
       align-items:center;
-      gap:9px;
-      min-width:0;
-      font-size:14px;
+      justify-content:center;
+      gap:12px;
+      text-align:center;
+      color:var(--text);
+      font:inherit;
+      border-radius:8px;
     }
-    .contact-value > *{min-width:0;max-width:100%;overflow-wrap:anywhere}
-    .contact-value a{
-      overflow-wrap:anywhere;
-      border-bottom:1px solid transparent;
-    }
-    .contact-value a:hover{border-color:currentColor}
-    .copy-button,.qr-button{
-      flex:0 0 auto;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:#fff;
-      padding:5px 9px;
-      cursor:pointer;
+    :is(a,button).social-entry{cursor:pointer}
+    :is(a,button).social-entry:hover{background:var(--site-soft)}
+    /* Plain platform names are intentional fallbacks until suitable official
+       brand files and their usage guidance can be verified. No imitation logos. */
+    .social-platform{font-size:15px;font-weight:500;line-height:28px}
+    .social-id{font-size:12px;font-weight:400;overflow-wrap:anywhere}
+    .social-feedback{
+      display:block;
+      min-height:22px;
+      max-width:620px;
+      text-align:center;
+      margin:12px 0 0;
       font-size:12px;
+      color:var(--muted);
     }
 
     /* QR dialog: optional; works once assets/wechat-qr.png is supplied */
@@ -373,25 +374,6 @@
         padding:34px 0;
       }
       .menu-note{align-self:start}
-      .hero{padding:14px 0 64px}
-      .hero-grid{
-        grid-template-columns:1fr;
-        min-height:0;
-        gap:34px;
-      }
-      .hero-copy{padding:22px 0 0}
-      .hero h1{font-size:clamp(58px,17vw,86px)}
-      .roles{margin-top:26px;font-size:16px}
-      .intro{margin-top:24px;font-size:14px}
-      .hero-actions{margin-top:30px}
-      .hero-photo{
-        min-height:0;
-        height:auto;
-        aspect-ratio:3 / 4;
-      }
-      .hero-photo img{
-        object-position:50% 42%;
-      }
       .main-areas{padding:58px 0 62px}
       .areas-grid{grid-template-columns:1fr}
       .area{padding:0 0 48px}
@@ -403,31 +385,107 @@
       .area h2{font-size:42px}
       .contact{padding:56px 0 40px}
       .contact-head{grid-template-columns:1fr;gap:18px;margin-bottom:34px}
-      .contact-grid{grid-template-columns:1fr 1fr}
-      .contact-item:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-left:0}
-      .contact-item:nth-child(4){border-top:1px solid var(--line)}
     }
 
     @media (max-width:520px){
       .shell{width:calc(100% - 30px)}
       .brand .cn{margin-left:7px}
-      .hero h1{font-size:58px}
-      .hero h1 .cn{font-size:.6em;margin-top:14px}
-      .roles{line-height:1.7}
-      .intro{line-height:1.85}
-      .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-      .button{padding:0 12px;gap:8px;font-size:13px}
-      .hero-photo{aspect-ratio:3 / 4}
-      .contact-grid{grid-template-columns:1fr}
-      .contact-item,
-      .contact-item + .contact-item,
-      .contact-item:nth-child(3){
-        border-left:0;
-        border-top:1px solid var(--line);
-        padding:20px 0;
-      }
-      .contact-item:first-child{border-top:0}
       .footer-inner{align-items:flex-end}
+    }
+
+    /* Landscape tablets use the same overlapping composition, scaled down. */
+    @media (min-width:861px) and (max-width:1200px){
+      .hero-grid,.hero-photo{min-height:600px}
+      .hero h1{font-size:82px}
+      .hero-copy{padding-left:18px}
+      .roles{font-size:17px}
+      .intro{font-size:14px}
+      .button{padding-inline:18px;gap:12px}
+    }
+
+    /* Portrait tablets and phones share a photo container; their compositions
+       are tuned separately below. Min heights allow longer fallback font text
+       to grow safely. Absolute imagery cannot shift the layout when it loads. */
+    @media (max-width:860px), (orientation:portrait) and (max-width:1100px){
+      .hero{padding:12px 0 48px}
+      .hero-grid{
+        grid-template-columns:minmax(0,1fr);
+        min-height:clamp(760px,calc(100svh - 120px),1020px);
+        background:#151719;
+        color:#fff;
+      }
+      .hero-photo{
+        position:absolute;
+        inset:0;
+        grid-area:auto;
+        min-height:0;
+        -webkit-mask-image:none;
+        mask-image:none;
+      }
+      .hero-photo img{object-position:50% 28%}
+      .hero-photo::after{
+        content:"";
+        position:absolute;
+        inset:0;
+        background:linear-gradient(180deg,transparent 0%,transparent 40%,rgba(10,13,17,.12) 50%,rgba(10,13,17,.75) 70%,rgba(10,13,17,.94) 100%);
+      }
+      .hero-copy{
+        grid-area:1 / 1;
+        align-self:end;
+        padding:40px;
+        max-width:680px;
+      }
+      .hero h1{font-size:80px}
+      .hero h1 .cn{margin-top:14px}
+      html[data-home-experiment] .hero :is(.roles,.intro){color:#f4f5f6}
+      .roles{font-size:18px;margin-top:22px}
+      .intro{font-size:15px;margin-top:20px}
+      .hero-actions{margin-top:26px}
+      html[data-home-experiment] .hero .hero-actions .button{
+        background:rgba(10,13,17,.28);
+        border-color:rgba(255,255,255,.65);
+        color:#fff;
+      }
+      html[data-home-experiment] .hero .hero-actions .button.primary{
+        background:#fff;
+        border-color:#fff;
+        color:#20252b;
+      }
+      html[data-home-experiment] .hero .hero-actions .button:hover{background:#e9edf1;color:#20252b}
+      html[data-home-experiment] .hero .hero-actions .button:focus-visible{outline-color:#fff;outline-offset:5px}
+    }
+    @media (max-width:599px){
+      .hero-grid{min-height:clamp(680px,calc(100svh - 92px),790px)}
+      .hero-photo img{object-position:52% 25%}
+      .hero-copy{padding:24px}
+      .hero h1{font-size:58px}
+      .hero h1 .cn{font-size:.56em;margin-top:10px}
+      .roles{font-size:14px;line-height:1.6;margin-top:16px}
+      .intro{font-size:13px;line-height:1.8;margin-top:14px}
+      .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+      .hero .button{min-height:48px;padding:0 10px;gap:8px;font-size:12px}
+      .contact-grid{gap:6px}
+      .social-platform{font-size:14px}
+      .social-id{font-size:11px}
+    }
+    /* Compact landscape phones should not inherit a tall portrait crop. */
+    @media (max-width:860px) and (orientation:landscape){
+      .hero-grid{grid-template-columns:repeat(12,minmax(0,1fr));min-height:470px;background:transparent;color:var(--text)}
+      .hero-photo{position:relative;inset:auto;grid-area:1 / 1 / 2 / 9;min-height:470px;
+        -webkit-mask-image:linear-gradient(90deg,#000 55%,transparent 100%);
+        mask-image:linear-gradient(90deg,#000 55%,transparent 100%)}
+      .hero-photo img{object-position:50% 12%}
+      .hero-photo::after{display:none}
+      .hero-copy{grid-area:1 / 7 / 2 / 13;align-self:center;padding:20px 0 20px 12px}
+      .hero h1{font-size:54px}
+      .hero h1 .cn{margin-top:10px}
+      .roles{font-size:13px;margin-top:20px}
+      .intro{font-size:12px;margin-top:18px}
+      .hero-actions{margin-top:20px;display:flex;gap:10px}
+      html[data-home-experiment] .hero :is(.roles,.intro){color:var(--site-muted)}
+      html[data-home-experiment] .hero .hero-actions .button{background:var(--site-bg);border-color:var(--site-border);color:var(--site-text)}
+      html[data-home-experiment] .hero .hero-actions .button.primary{background:var(--site-accent);border-color:var(--site-accent);color:var(--site-on-accent)}
+      html[data-home-experiment] .hero .hero-actions .button:focus-visible{outline-color:var(--site-focus)}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -469,6 +527,12 @@
   <main>
     <section class="hero">
       <div class="shell hero-grid">
+        <figure class="hero-photo">
+          <img src="./assets/home-portrait.jpg"
+               alt="Sheen 在音乐工作室"
+               width="1086" height="1448"
+               decoding="async" fetchpriority="high">
+        </figure>
         <div class="hero-copy">
           <h1>Sheen<span class="cn">杨鑫</span></h1>
           <p class="roles">键盘即兴伴奏 · 音乐理论 · 作曲</p>
@@ -482,17 +546,7 @@
           </div>
         </div>
 
-        <figure class="hero-photo">
-          <!--
-            请把首页照片单独放到：/assets/home-portrait.jpg
-            当前 CSS 按你上传照片的 3:4 纵向比例设计，并通过 object-fit: cover
-            自动适配桌面横向布局和手机纵向布局。
-          -->
-          <img src="./assets/home-portrait.jpg"
-               alt="Sheen 在音乐工作室"
-               width="1086" height="1448"
-               decoding="async" fetchpriority="high">
-        </figure>
+
       </div>
     </section>
 
@@ -531,34 +585,22 @@
           </p>
         </div>
 
-        <div class="contact-grid">
-          <div class="contact-item">
-            <span class="contact-label">邮箱</span>
-            <div class="contact-value">
-              <a href="mailto:sheenyangmusic@gmail.com">sheenyangmusic@gmail.com</a>
-            </div>
+        <p class="contact-email">邮箱 · <a href="mailto:sheenyangmusic@gmail.com">sheenyangmusic@gmail.com</a></p>
+        <div class="contact-grid" aria-label="社交平台">
+          <div class="social-entry" aria-label="抖音账号 @SheenYang">
+            <span class="social-platform">抖音</span>
+            <span class="social-id">@SheenYang</span>
           </div>
-
-          <div class="contact-item">
-            <span class="contact-label">抖音</span>
-            <div class="contact-value">@SheenYang</div>
-          </div>
-
-          <div class="contact-item">
-            <span class="contact-label">微信</span>
-            <div class="contact-value">
-              <span id="wechatId">sheen_musicLab</span>
-              <button class="copy-button" id="copyWechat" type="button">复制</button>
-            </div>
-          </div>
-
-          <div class="contact-item">
-            <span class="contact-label">Instagram</span>
-            <div class="contact-value">
-              <a href="https://www.instagram.com/sheen.poplab/" target="_blank" rel="noopener noreferrer">@sheen.poplab</a>
-            </div>
-          </div>
+          <button class="social-entry" id="copyWechat" type="button" aria-label="复制微信号 sheen_musicLab">
+            <span class="social-platform">微信</span>
+            <span class="social-id" id="wechatId">sheen_musicLab</span>
+          </button>
+          <a class="social-entry" href="https://www.instagram.com/sheen.poplab/" target="_blank" rel="noopener noreferrer" aria-label="打开 Instagram 主页 @sheen.poplab（新窗口）">
+            <span class="social-platform">Instagram</span>
+            <span class="social-id">@sheen.poplab</span>
+          </a>
         </div>
+        <span class="social-feedback" id="wechatFeedback" role="status" aria-live="polite"></span>
       </div>
     </section>
   </main>
@@ -596,21 +638,28 @@
     });
 
     const copyWechat = document.getElementById('copyWechat');
+    const wechatFeedback = document.getElementById('wechatFeedback');
+    let feedbackTimer;
     copyWechat.addEventListener('click', async () => {
       const value = 'sheen_musicLab';
+      let copied = false;
       try{
         await navigator.clipboard.writeText(value);
-        copyWechat.textContent = '已复制 ✓';
+        copied = true;
       }catch{
-        const input = document.createElement('input');
+        const input = document.createElement('textarea');
         input.value = value;
+        input.setAttribute('readonly', '');
+        input.style.cssText = 'position:fixed;left:-9999px;top:0;';
         document.body.appendChild(input);
         input.select();
-        document.execCommand('copy');
+        try{ copied = document.execCommand('copy'); }catch{ copied = false; }
         input.remove();
-        copyWechat.textContent = '已复制 ✓';
+        copyWechat.focus({preventScroll:true});
       }
-      setTimeout(() => copyWechat.textContent = '复制', 1600);
+      clearTimeout(feedbackTimer);
+      wechatFeedback.textContent = copied ? '已复制 ✓' : '未能复制，请手动复制微信号';
+      feedbackTimer = setTimeout(() => wechatFeedback.textContent = '', 1800);
     });
 
   </script>
