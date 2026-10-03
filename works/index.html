@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html data-visual="site" lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
     :root{--bg:#f4f2ec;--text:#20221f;--muted:#777b74;--line:#d9d6ce;--card:#faf9f5}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","Noto Sans SC","Noto Sans JP",Arial,sans-serif;letter-spacing:.01em}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--site-font);letter-spacing:.01em}
     a{color:inherit;text-decoration:none}
     .shell{width:min(1120px,calc(100% - 48px));margin:auto}
     header{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center}
@@ -34,6 +34,9 @@
     .lang button.active{color:var(--text)}
     @media(max-width:720px){.shell{width:min(100% - 28px,1120px)}.grid{grid-template-columns:1fr}main{padding-top:55px}}
   </style>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../assets/site-visual.css">
 </head>
 <body>
 <header><div class="shell"><nav>

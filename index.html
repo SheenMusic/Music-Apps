@@ -1,9 +1,8 @@
 <!doctype html>
-<html lang="zh-CN">
+<html data-visual="site" lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
   <meta name="description" content="Sheen Yang — 键盘即兴伴奏、音乐理论与作曲。乐谱、音乐课程与个人作品。">
   <title>Sheen Yang</title>
 
@@ -15,9 +14,10 @@
       --line:#dedfdb;
       --accent:#28332c;
       --max:1180px;
-      --serif: Georgia, "Times New Roman", "Noto Serif SC", "Songti SC", serif;
-      --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
-              Arial, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --heading: "Helvetica Neue", Helvetica, Arial, "PingFang SC",
+                 "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --sans: "PingFang SC", "Helvetica Neue", "Noto Sans SC",
+              "Microsoft YaHei", Arial, sans-serif;
     }
 
     *{box-sizing:border-box}
@@ -26,7 +26,9 @@
       margin:0;
       background:var(--bg);
       color:var(--text);
-      font-family:var(--sans);
+      font-family:var(--site-font);
+      font-size:14px;
+      font-weight:300;
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
     }
@@ -55,12 +57,13 @@
       justify-content:space-between;
     }
     .brand{
-      font-family:var(--serif);
+      font-family:var(--site-font);
+      font-weight:700;
       font-size:24px;
       letter-spacing:-.02em;
       white-space:nowrap;
     }
-    .brand .cn{margin-left:10px}
+    .brand .cn{margin-left:10px;font-family:var(--site-font);font-weight:600}
     .menu-button{
       width:44px;
       height:44px;
@@ -95,6 +98,9 @@
     .menu-panel{
       position:fixed;
       inset:88px 0 0;
+      overflow-y:auto;
+      overscroll-behavior-y:contain;
+      padding-bottom:env(safe-area-inset-bottom, 0px);
       z-index:25;
       background:rgba(255,255,255,.98);
       opacity:0;
@@ -112,7 +118,8 @@
     }
     .menu-links{display:grid}
     .menu-links a{
-      font-family:var(--serif);
+      font-family:var(--site-font);
+      font-weight:600;
       font-size:clamp(30px,4vw,52px);
       padding:13px 0;
       border-bottom:1px solid var(--line);
@@ -138,8 +145,8 @@
     .hero-copy{padding:34px 0}
     .hero h1{
       margin:0;
-      font-family:var(--serif);
-      font-weight:400;
+      font-family:var(--site-font);
+      font-weight:700;
       letter-spacing:-.045em;
       font-size:clamp(62px,7vw,104px);
       line-height:.91;
@@ -147,20 +154,21 @@
     .hero h1 .cn{
       display:block;
       margin-top:18px;
-      font-family:"Noto Serif SC","Songti SC",var(--serif);
+      font-family:var(--site-font);
+      font-weight:600;
       font-size:.56em;
       letter-spacing:.01em;
     }
     .roles{
       margin:34px 0 0;
-      font-size:clamp(17px,1.7vw,22px);
+      font-size:clamp(16px,1.6vw,20px);
       line-height:1.6;
       color:#3e423e;
     }
     .intro{
       margin:34px 0 0;
       max-width:32em;
-      font-size:17px;
+      font-size:15px;
       line-height:1.9;
       color:#333633;
     }
@@ -179,12 +187,13 @@
       align-items:center;
       justify-content:center;
       gap:18px;
-      font-size:15px;
+      font-size:14px;
       transition:transform .18s ease, background .18s ease, color .18s ease;
     }
     .button:hover{transform:translateY(-1px)}
     .button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .hero-photo{
+      margin:0;
       height:100%;
       min-height:620px;
       overflow:hidden;
@@ -218,25 +227,26 @@
     }
     .area-index{
       margin:0 0 18px;
-      font-family:var(--serif);
+      font-family:var(--site-font);
+      font-weight:400;
       font-size:15px;
     }
     .area h2{
       margin:0;
-      font-family:"Noto Serif SC","Songti SC",var(--serif);
-      font-weight:500;
+      font-family:var(--site-font);
+      font-weight:600;
       font-size:clamp(38px,4.2vw,58px);
       letter-spacing:-.035em;
     }
     .area-kicker{
       margin:12px 0 0;
-      font-size:18px;
+      font-size:16px;
       color:#444844;
     }
     .area-copy{
       margin:30px 0 0;
       max-width:31em;
-      font-size:16px;
+      font-size:14px;
       line-height:1.9;
       color:#414541;
     }
@@ -247,7 +257,7 @@
       margin-top:30px;
       padding-bottom:5px;
       border-bottom:1px solid var(--text);
-      font-size:15px;
+      font-size:14px;
     }
 
     /* Contact */
@@ -262,9 +272,9 @@
     }
     .contact h2{
       margin:0;
-      font-family:"Noto Serif SC","Songti SC",var(--serif);
+      font-family:var(--site-font);
       font-size:30px;
-      font-weight:500;
+      font-weight:600;
     }
     .contact-intro{
       margin:0;
@@ -296,11 +306,13 @@
     }
     .contact-value{
       display:flex;
+      flex-wrap:wrap;
       align-items:center;
       gap:9px;
       min-width:0;
-      font-size:15px;
+      font-size:14px;
     }
+    .contact-value > *{min-width:0;max-width:100%;overflow-wrap:anywhere}
     .contact-value a{
       overflow-wrap:anywhere;
       border-bottom:1px solid transparent;
@@ -369,8 +381,8 @@
       }
       .hero-copy{padding:22px 0 0}
       .hero h1{font-size:clamp(58px,17vw,86px)}
-      .roles{margin-top:26px;font-size:17px}
-      .intro{margin-top:24px;font-size:16px}
+      .roles{margin-top:26px;font-size:16px}
+      .intro{margin-top:24px;font-size:14px}
       .hero-actions{margin-top:30px}
       .hero-photo{
         min-height:0;
@@ -404,7 +416,7 @@
       .roles{line-height:1.7}
       .intro{line-height:1.85}
       .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-      .button{padding:0 12px;gap:8px;font-size:14px}
+      .button{padding:0 12px;gap:8px;font-size:13px}
       .hero-photo{aspect-ratio:3 / 4}
       .contact-grid{grid-template-columns:1fr}
       .contact-item,
@@ -423,6 +435,9 @@
       *{transition:none!important}
     }
   </style>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="assets/site-visual.css">
 </head>
 
 <body id="top">

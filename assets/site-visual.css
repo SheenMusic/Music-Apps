@@ -1,0 +1,257 @@
+/* Shared visual foundation. Load after page styles. data-visual selects a
+   small adapter for each existing application; no layout or behavior resets.
+   Teaching islands retain their original palette, including inherited tokens. */
+html[data-visual] {
+  color-scheme: light dark;
+  --site-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+    "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
+    "Helvetica Neue", Arial, sans-serif;
+  --site-bg: #ffffff;
+  --site-panel: #ffffff;
+  --site-soft: #f3f5f7;
+  --site-hover: #e9edf1;
+  --site-text: #20252b;
+  --site-muted: #626c78;
+  --site-border: #dce1e7;
+  --site-accent: #34485e;
+  --site-on-accent: #ffffff;
+  --site-focus: #386fa8;
+  --site-success: #166534;
+  --site-success-bg: #edf9f0;
+  --site-success-border: #86c79b;
+  --site-error: #b42318;
+  --site-error-bg: #fff0ef;
+  --site-error-border: #efa49f;
+  --site-warning: #8a5a00;
+  --site-warning-bg: #fff5df;
+  --site-tint: #eef2ff;
+  --site-tint-text: #4338ca;
+  --site-violet-bg: #f3e8ff;
+  --site-violet-text: #6b21a8;
+  --site-shadow: 0 8px 28px rgb(0 0 0 / 5%);
+  /* Compatibility with the variable names already used by each page. */
+  --sans: var(--site-font);
+  --heading: var(--site-font);
+  --bg: var(--site-bg);
+  --bg-color: var(--site-bg);
+  --surface: var(--site-panel);
+  --card: var(--site-panel);
+  --card-bg: var(--site-panel);
+  --paper: var(--site-panel);
+  --soft: var(--site-soft);
+  --surface-secondary: var(--site-soft);
+  --surface-tertiary: var(--site-hover);
+  --blue-soft: var(--site-soft);
+  --text: var(--site-text);
+  --text-main: var(--site-text);
+  --text-secondary: var(--site-muted);
+  --text-muted: var(--site-muted);
+  --text-tertiary: var(--site-muted);
+  --muted: var(--site-muted);
+  --line: var(--site-border);
+  --line-strong: var(--site-muted);
+  --border: var(--site-border);
+  --border-color: var(--site-border);
+  --success-bg: var(--site-success-bg);
+  --success-border: var(--site-success-border);
+  --error-bg: var(--site-error-bg);
+  --error-border: var(--site-error-border);
+  --shadow: var(--site-shadow);
+  --shadow-card: var(--site-shadow);
+  background: var(--site-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  html[data-visual] {
+    --site-bg: #121518;
+    --site-panel: #1c2025;
+    --site-soft: #242a31;
+    --site-hover: #303841;
+    --site-text: #e8ebef;
+    --site-muted: #abb3bd;
+    --site-border: #384049;
+    --site-accent: #c7d4e4;
+    --site-on-accent: #131923;
+    --site-focus: #8ab4f8;
+    --site-success: #a4ddb3;
+    --site-success-bg: #173024;
+    --site-success-border: #386b4b;
+    --site-error: #ffb4ab;
+    --site-error-bg: #38201f;
+    --site-error-border: #a65a55;
+    --site-warning: #f2c079;
+    --site-warning-bg: #33291b;
+    --site-tint: #292d48;
+    --site-tint-text: #c7d2fe;
+    --site-violet-bg: #352840;
+    --site-violet-text: #dab9fa;
+    --site-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+  }
+  html[data-visual="learning"], html[data-visual="practice"] {
+    --primary: #a5b4fc;
+    --primary-color: #a5b4fc;
+    --primary-hover: #c7d2fe;
+  }
+}
+
+html[data-visual] body {
+  background: var(--site-bg);
+  color: var(--site-text);
+  font-family: var(--site-font);
+  font-weight: 300;
+}
+html[data-visual] :is(button, input, select, textarea) {
+  font-family: var(--site-font);
+  font-weight: 500;
+}
+html[data-visual] :is(h1, .main-title) { font-weight: 700; }
+html[data-visual] :is(h2, h3, h4, .brand, .hero h1 .cn) { font-weight: 600; }
+html[data-visual] :is(label, small, .contact-label, .meta, .tiny) { font-weight: 400; }
+html[data-visual] :is(.question-prompt, .quiz-question, .questionLabel) { font-weight: 500; }
+html[data-visual] :is(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--site-focus);
+  outline-offset: 3px;
+}
+
+/* Opacity only: transforming a page root would change the containing block of
+   fixed menus, purchase sheets and lesson controls. No JS visibility gate,
+   no delays, no animation when switching questions or application screens. */
+@keyframes site-page-reveal { from { opacity: 0.08; } to { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  html[data-visual] body {
+    animation: site-page-reveal 550ms cubic-bezier(.22, .61, .36, 1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-visual] { scroll-behavior: auto; }
+  html[data-visual] body { animation: none; }
+  html[data-visual] :is(a, button, input, select, summary) { transition: none; }
+}
+
+/* Site pages and the separately retained legacy language-gate homepage. */
+html:is([data-visual="site"], [data-visual="legacy"]) { --accent: var(--site-accent); }
+html:is([data-visual="site"], [data-visual="legacy"]) :is(header, .topbar, .menu-panel, .buybar) {
+  background: var(--site-bg);
+}
+html:is([data-visual="site"], [data-visual="legacy"]) :is(.intro, .roles, .area-kicker, .area-copy, .identity, .about-copy, .contact-text, .arrow, .social-icon, .gate-intro, .gate-kicker, .footer-inner) {
+  color: var(--site-muted);
+}
+html:is([data-visual="site"], [data-visual="legacy"]) :is(.item, .card, .gate-card, .choice, .pay-summary, .method, .field input, .order-copy, .copy-button, .qr-button, dialog) {
+  background: var(--site-panel);
+  color: var(--site-text);
+  border-color: var(--site-border);
+}
+html:is([data-visual="site"], [data-visual="legacy"]) :is(.item:hover, .card:hover, .language-buttons button:hover, .social-icon:hover) {
+  background: var(--site-soft);
+  border-color: var(--site-muted);
+}
+html[data-visual="site"] :is(.button.primary, .primary, .wide, .open-pay) {
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+  color: var(--site-on-accent);
+}
+html[data-visual="site"] .button:not(.primary) { border-color: var(--site-border); }
+html[data-visual="site"] :is(.button:hover, .method:hover) { background: var(--site-hover); color: var(--site-text); }
+html[data-visual="site"] :is(.method.active, .lang button.active) { border-color: var(--site-text); }
+html[data-visual="site"] :is(.error, .wechat-warning, .fallback p, .copy-btn) { color: var(--site-error); }
+html[data-visual="site"] .fallback { background: var(--site-error-bg); border-color: var(--site-error-border); }
+html[data-visual="site"] :is(.close, .status .mark) { background: var(--site-soft); color: var(--site-text); }
+html[data-visual="site"] .legal { color: var(--site-muted); }
+html[data-visual="site"] :is(.pill, .play) { background: var(--site-soft); color: var(--site-text); }
+html[data-visual="legacy"] .language-buttons button {
+  background: var(--site-soft); color: var(--site-text); border-color: var(--site-border);
+}
+html[data-visual="legacy"] :is(.language-buttons button[data-lang="zh"], .lang-switch button.is-active) {
+  background: var(--site-accent); color: var(--site-on-accent); border-color: var(--site-accent);
+}
+
+/* Two early ear-training quizzes use literal neutral colors instead of tokens. */
+html[data-visual="ear-simple"] :is(.topbar, .modeCard, .audio, .play, .detail, .secondary) { border-color: var(--site-border); }
+html[data-visual="ear-simple"] :is(p, h1 span, .topbar, .topbar div:last-child, .eyebrow, .questionLabel, .scoreLabel, .modeBadge, .meta, .meta span, .modeCard span, .progressText, .audio small, .audio div, .feedback span, .textButton, .quit, .testSummary span, .resultRow, footer, .result #detail) { color: var(--site-muted); }
+html[data-visual="ear-simple"] :is(.modeCard, .play, .secondary) { color: var(--site-text); }
+html[data-visual="ear-simple"] .option { background: var(--site-panel); border-color: var(--site-border); color: var(--site-text); }
+html[data-visual="ear-simple"] :is(.option:hover:not(:disabled), .modeCard:hover) { border-color: var(--site-muted); }
+html[data-visual="ear-simple"] :is(.primary, .next) { background: var(--site-accent); color: var(--site-on-accent); }
+html[data-visual="ear-simple"] .next:disabled { background: var(--site-soft); color: var(--site-muted); }
+html[data-visual="ear-simple"] .bar { background: var(--site-border); }
+html[data-visual="ear-simple"] .bar i { background: var(--site-accent); }
+html[data-visual="ear-simple"] :is(.option.correct, .feedback.is-correct) { background: var(--site-success-bg); color: var(--site-success); border-color: var(--site-success-border); }
+html[data-visual="ear-simple"] :is(.option.wrong, .feedback.is-wrong) { background: var(--site-error-bg); color: var(--site-error); border-color: var(--site-error-border); }
+html[data-visual="ear-simple"] .option.answer { outline-color: var(--site-success); }
+html[data-visual="ear-simple"] .resultRow .ok { color: var(--site-success); }
+html[data-visual="ear-simple"] .resultRow .ng { color: var(--site-error); }
+
+/* Singing apps: controls/panels adapt; pitch-meter teaching colors stay local. */
+html[data-visual="ear"] :is(.card, .settings-details, .target-card, .status-box, .status-box-dual, .status-box-global) { border-color: var(--site-border); }
+html[data-visual="ear"] :is(select, .status-box, .status-box-dual, .status-box-global) { background: var(--site-panel); }
+html[data-visual="ear"] :is(.btn-tone, .btn-next:not(.unlocked)) { background: var(--site-soft); color: var(--site-muted); }
+html[data-visual="ear"] :is(.btn-tone:hover:not(:disabled), .btn-restart:hover:not(:disabled)) { background: var(--site-hover); }
+html[data-visual="ear"] .btn-tone.playing { background: var(--warning); color: #fff; }
+html[data-visual="ear"] :is(.mic-btn, .mic-capture-btn):not(.active):not(.locked) { background: var(--site-accent); color: var(--site-on-accent); }
+html[data-visual="ear"] .rule-box-inner { background: var(--site-warning-bg); color: var(--site-warning); }
+/* Existing scripts write this neutral reset color inline. Adapt only that
+   exact neutral state; leave their green/red/amber feedback colors intact. */
+html[data-visual="ear"] :is(#centsDevText, #holdingProgress)[style*="color: rgb(100, 116, 139)"] {
+  color: var(--site-muted) !important;
+}
+
+/* Learning UI. These selectors deliberately never target the lesson board,
+   piano keys, SVG paths/text, notation or images. */
+html[data-visual="learning"] :is(.lead, .intro-definition, .intro-role-text, .degree-explain, .lesson-paragraph, .footer) { color: var(--site-muted); }
+html[data-visual="learning"] .progress-wrap { background: var(--site-border); }
+html[data-visual="learning"] :is(.ghost, .choice, .degree-btn, .quiz-option) { background: var(--site-panel); color: var(--site-text); border-color: var(--site-border); }
+html[data-visual="learning"] :is(.primary, .degree-btn.active, .example-chip.active) { background: var(--primary); color: var(--site-on-accent); }
+html[data-visual="learning"] :is(.secondary, .lesson-badge, .audio-btn, .example-chip, .pill) { background: var(--site-tint); color: var(--site-tint-text); }
+html[data-visual="learning"] :is(.rule, .summary-item, .term-box, .pattern-card, .lesson-footer-zone .nav) { background: var(--site-soft); }
+html[data-visual="learning"] .interaction-hint { background: var(--site-warning-bg); color: var(--site-warning); }
+html[data-visual="learning"] :is(.quiz-option.correct, .choice.correct) { background: var(--site-success-bg); color: var(--site-success); border-color: var(--site-success-border); }
+html[data-visual="learning"] :is(.quiz-option.wrong, .choice.wrong) { background: var(--site-error-bg); color: var(--site-error); border-color: var(--site-error-border); }
+html[data-visual="learning"] .feedback.ok { color: var(--site-success); }
+html[data-visual="learning"] .feedback.bad { color: var(--site-error); }
+
+/* Practice/Quiz UI: neutral controls, status tints and modal surfaces. */
+html[data-visual="practice"] :is(.start-info, .question-nav-toggle, .question-nav-btn, .stat-card, .detail-list, .modal-tip, .history-card-item) { background: var(--site-soft); }
+html[data-visual="practice"] .progress-bar-container { background: var(--site-border); }
+html[data-visual="practice"] :is(.start-info, .explanation-text, .app-footer) { color: var(--site-muted); }
+html[data-visual="practice"] :is(.option-btn, .secondary-btn, .history-toggle-btn, .modal-card) { background: var(--site-panel); }
+html[data-visual="practice"] :is(.secondary-btn, .history-toggle-btn) { color: var(--site-muted); }
+html[data-visual="practice"] :is(.option-btn:hover:not(.disabled), .secondary-btn:hover:not(:disabled), .question-nav-btn:hover, .question-nav-toggle:hover, .history-toggle-btn:hover) { background: var(--site-hover); }
+html[data-visual="practice"] :is(.header-title-right, .lesson-tag, .option-btn.selected) { background: var(--site-tint); color: var(--site-tint-text); }
+html[data-visual="practice"] :is(.primary-btn, .question-nav-btn.current) { background: var(--primary-color); color: var(--site-on-accent); }
+html[data-visual="practice"] .primary-btn:hover:not(:disabled) { background: var(--primary-hover); }
+html[data-visual="practice"] .primary-btn:disabled { background: var(--site-soft); color: var(--site-muted); }
+html[data-visual="practice"] :is(.option-btn.correct, .question-nav-btn.solved, .feedback-box.correct-bg .feedback-header) { color: var(--site-success); }
+html[data-visual="practice"] :is(.option-btn.wrong, .question-nav-btn.attempted, .question-nav-btn.needs-review, .feedback-box.wrong-bg .feedback-header, .detail-item-wrong-choices) { color: var(--site-error); }
+html[data-visual="practice"] .option-btn.correct { background: var(--site-success-bg); }
+html[data-visual="practice"] :is(.option-btn.wrong, .detail-item-wrong-choices) { background: var(--site-error-bg); }
+html[data-visual="practice"] .question-nav-btn.current { color: var(--site-on-accent); }
+html[data-visual="practice"] :is(.type-badge.single, .question-keyword) { background: var(--site-tint); color: var(--site-tint-text); }
+html[data-visual="practice"] .type-badge.boolean { background: var(--site-violet-bg); color: var(--site-violet-text); }
+html[data-visual="practice"] .type-badge.multiple { background: var(--site-warning-bg); color: var(--site-warning); }
+
+/* Teaching islands: freeze original local tokens under both themes. This also
+   protects CSS-var colors used by dynamically generated diagrams and SVGs.
+   color-scheme:light keeps native notation/keyboard controls consistent.
+   No filters and no global SVG fill/stroke or piano-key overrides. */
+html[data-visual="learning"] :is(.lesson-board, .staff, .keyboard, .compact-keyboard, .stage),
+html[data-visual="practice"] .staff-question {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --card: #fff;
+  --text: #1e293b;
+  --text-main: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-color: #e2e8f0;
+  --primary: #6366f1;
+  --primary-color: #6366f1;
+  --primary-hover: #4f46e5;
+  --success: #10b981;
+  --success-bg: #ecfdf5;
+  --error: #ef4444;
+  --error-bg: #fef2f2;
+  color: #1e293b;
+}
+html[data-visual="learning"] .lesson-board,
+html[data-visual="practice"] .staff-question { background: #fff; }
+html[data-visual="ear"] .meter-bar { color-scheme: light; }
