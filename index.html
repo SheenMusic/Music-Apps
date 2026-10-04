@@ -189,6 +189,7 @@
       font-size:14px;
       transition:background .18s ease, color .18s ease;
     }
+    .hero-actions .button{justify-content:flex-start;text-align:left}
     .button:hover{background:var(--site-soft)}
     .button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .hero-photo{
@@ -395,6 +396,7 @@
       .roles{font-size:17px}
       .intro{font-size:14px}
       .button{padding-inline:22px;gap:10px}
+      .hero-actions .button{padding-inline:26px 18px}
     }
 
     /* Wide photos keep the soft text-side fade and a clean cropped right edge.
@@ -468,7 +470,7 @@
       .roles{font-size:14px;line-height:1.6;margin-top:16px}
       .intro{font-size:13px;line-height:1.8;margin-top:14px}
       .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-      .hero .button{min-height:48px;padding:0 12px;gap:6px;font-size:12px}
+      .hero .button{min-height:48px;padding:0 24px;gap:6px;font-size:12px}
     }
     /* Compact landscape phones should not inherit a tall portrait crop. */
     @media (max-width:860px) and (orientation:landscape){
