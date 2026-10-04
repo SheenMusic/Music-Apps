@@ -113,6 +113,10 @@
     body.replaceChildren(fragment);
     body.classList.add('content-ready');
     status.textContent = '';
+    // Analytics observes successful loads without changing Markdown or layout.
+    window.dispatchEvent(new CustomEvent('site:article-loaded', {
+      detail: {slug:item.slug, title:item.title}
+    }));
   }
 
   async function init(){
