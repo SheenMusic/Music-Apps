@@ -1,9 +1,9 @@
-/* Data-driven catalogue. No payment is initiated from the preparation dialog. */
+/* Data-driven catalogue; validated selections are passed to the shared checkout. */
 (() => {
   'use strict';
   const byID = id => document.getElementById(id);
   const selected = new Set();
-  let catalogue, packages, maxCount, lastFocus, previousOverflow;
+  let catalogue, packages, maxCount;
   const numberLabel = n => String(n).padStart(3,'0');
   const normalize = value => value.normalize('NFKC').toLocaleLowerCase().replace(/\s+/g,'');
   function element(tag, className, text){
@@ -56,13 +56,8 @@
     byID('catalogStatus').textContent = tracks.length ? '' : '没有找到符合条件的曲目。';
     updateSelection();
   }
-  function preparePurchase(tracks, price, label){
-    lastFocus = document.activeElement;
-    byID('purchaseSummary').textContent = `${label} · ${tracks.length} 首 · ¥${price}`;
-    byID('purchaseTracks').replaceChildren(...tracks.map(track=>element('li','',`${numberLabel(track.number)} ${track.artist}《${track.title}》${track.free ? ' · FREE' : ''}`)));
-    previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    byID('purchaseDialog').showModal();
+  function preparePurchase(tracks, price, label, packageType){
+    window.scoreCheckout.open({tracks, price, label, packageType});
   }
   function renderVolumes(){
     const fragment = document.createDocumentFragment();
@@ -74,7 +69,7 @@
       const freeTitles = tracks.filter(track=>track.free).map(track=>`《${track.title}》`).join('、');
       info.append(element('h2','',volume.title),element('p','',volume.description),element('p','volume-range',`${numberLabel(volume.start)}–${numberLabel(volume.end)}${freeTitles ? ` · 全集包含免费样本${freeTitles}` : ''}`));
       const button = element('button','button',`购买全辑 · ¥${volume.price}`);
-      button.type = 'button'; button.addEventListener('click',()=>preparePurchase(tracks,volume.price,volume.title));
+      button.type = 'button'; button.addEventListener('click',()=>preparePurchase(tracks,volume.price,volume.title,`${volume.title} · 全${tracks.length}首`));
       section.append(info,button); fragment.append(section);
     }
     byID('volumes').replaceChildren(fragment);
@@ -107,10 +102,8 @@
   byID('clearSelection').addEventListener('click',()=>{selected.clear();updateSelection()});
   byID('confirmSelection').addEventListener('click',()=>{
     const price = packages.get(selected.size);
-    if(price !== undefined) preparePurchase(catalogue.tracks.filter(track=>selected.has(track.number) && !track.free),price,'自选前奏');
+    if(price !== undefined) preparePurchase(catalogue.tracks.filter(track=>selected.has(track.number) && !track.free),price,'自选前奏', selected.size === 1 ? '单首' : `任选${selected.size}首`);
   });
-  for(const id of ['closeDialog','returnToCatalog']) byID(id).addEventListener('click',()=>byID('purchaseDialog').close());
-  byID('purchaseDialog').addEventListener('close',()=>{document.body.style.overflow = previousOverflow || ''; lastFocus?.focus()});
   async function init(){
     try{
       const response = await fetch('../data/piano-intros.json',{cache:'no-cache'});
