@@ -1,0 +1,62 @@
+/* Article layouts only. Shared site-visual.css owns fonts, colors, themes,
+   focus and the 1.2-second page reveal; other site pages are untouched. */
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100svh;display:flex;flex-direction:column;
+  font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+a{color:inherit;text-decoration:none}
+.shell{width:min(calc(100% - 30px),1180px);margin-inline:auto}
+.topbar{height:72px;display:flex;align-items:center;flex:none}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font-family:var(--site-font);font-size:20px;letter-spacing:-.02em;white-space:nowrap}
+.page-nav{display:flex;align-items:center;gap:20px;color:var(--site-muted);font-size:13px}
+.page-nav a{padding-block:10px;white-space:nowrap}
+.page-nav a:hover{color:var(--site-text)}
+.page-main{flex:1;padding-block:54px 80px}
+.reading-width{width:100%;max-width:720px;margin-inline:auto;min-width:0}
+.page-title{margin:0;font-size:clamp(38px,5vw,58px);line-height:1.2;letter-spacing:-.025em;overflow-wrap:anywhere}
+.article-heading{margin-bottom:36px}
+.article-heading .page-title{min-height:1.2em}
+.article-date{display:block;margin-top:16px;color:var(--site-muted);font-size:12px}
+[hidden]{display:none!important}
+.load-status{color:var(--site-muted);font-size:14px;line-height:1.8;margin:24px 0}
+.load-status:empty{display:none}
+.article-list{list-style:none;padding:0;margin:46px 0 0}
+.article-list li{border-top:1px solid var(--site-border)}
+.article-list li:last-child{border-bottom:1px solid var(--site-border)}
+.article-link{display:block;padding-block:25px}
+.article-link h2{font-size:24px;line-height:1.4;margin:0;letter-spacing:-.015em}
+.article-link:hover h2{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
+.article-link p{font-size:14px;line-height:1.8;margin:12px 0 0;color:var(--site-muted)}
+.article-link time{display:block;margin-top:10px;font-size:12px;color:var(--site-muted)}
+.markdown-body{font-size:16px;line-height:1.95;overflow-wrap:anywhere}
+.markdown-body>:first-child{margin-top:0}
+.markdown-body>:last-child{margin-bottom:0}
+.markdown-body :is(h1,h2,h3){line-height:1.4;letter-spacing:-.015em;margin:2em 0 .75em}
+.markdown-body h1{font-size:32px}
+.markdown-body h2{font-size:26px}
+.markdown-body h3{font-size:21px}
+.markdown-body p{margin:0 0 1.3em}
+.markdown-body :is(ul,ol){padding-left:1.5em;margin:1.3em 0}
+.markdown-body li{margin:.4em 0}
+.markdown-body strong{font-weight:600}
+.markdown-body a{color:var(--site-text);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.markdown-body blockquote{margin:1.6em 0;padding-left:20px;border-left:2px solid var(--site-border);color:var(--site-muted)}
+.markdown-body blockquote p:last-child{margin-bottom:0}
+.markdown-body img{display:block;max-width:100%;height:auto;margin:28px auto}
+.markdown-body :is(pre,code){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em}
+.markdown-body pre{max-width:100%;overflow:auto;padding:16px;background:var(--site-soft);border-radius:8px;line-height:1.6}
+.markdown-body hr{border:0;border-top:1px solid var(--site-border);margin:2em 0}
+.page-footer{flex:none;padding:28px 0 38px;text-align:center;font-size:12px;line-height:1.8;color:var(--site-muted)}
+@media(min-width:861px){
+  .shell{width:min(calc(100% - 48px),1180px)}
+  .topbar{height:88px}.brand{font-size:24px}
+  .page-main{padding-block:86px 110px}
+}
+@media(max-width:360px){.page-nav{gap:12px;font-size:12px}.brand{font-size:18px}}
+@media(prefers-reduced-motion:no-preference){
+  /* Async article/list contents dissolve on insertion using shared timing.
+     The shell and navigation remain visible if loading or JS fails. */
+  .content-ready{animation:site-page-reveal var(--site-reveal-duration) var(--site-reveal-easing)}
+}

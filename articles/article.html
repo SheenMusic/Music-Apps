@@ -9,24 +9,30 @@
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="../assets/site-visual.css">
   <link rel="stylesheet" href="./articles.css">
+  <script src="./vendor/marked.umd.js" defer></script>
+  <script src="./vendor/purify.min.js" defer></script>
   <script src="./articles.js" defer></script>
 </head>
-<body data-article-page="index">
+<body data-article-page="article">
   <header class="topbar">
     <div class="shell topbar-inner">
       <a class="brand" href="../">Sheen Yang</a>
       <nav class="page-nav" aria-label="页面导航">
-        <a href="../">← 首页</a>
+        <a href="./">← 文章</a>
+        <a href="../">首页</a>
       </nav>
     </div>
   </header>
   <main class="shell page-main">
-    <div class="reading-width">
-      <h1 class="page-title">文章</h1>
-      <p class="load-status" id="articleStatus" role="status" aria-live="polite">正在加载文章列表…</p>
-      <ol class="article-list" id="articleList" aria-label="文章列表"></ol>
-      <noscript><p>请启用 JavaScript 以显示文章列表。<a href="./article.html?slug=about">关于我</a></p></noscript>
-    </div>
+    <article class="reading-width" aria-labelledby="articleTitle">
+      <header class="article-heading">
+        <h1 class="page-title" id="articleTitle"></h1>
+        <time class="article-date" id="articleDate" hidden></time>
+      </header>
+      <p class="load-status" id="articleStatus" role="status" aria-live="polite">正在加载文章…</p>
+      <div class="markdown-body" id="articleBody"></div>
+      <noscript><p>请启用 JavaScript 以读取文章。<a href="./">返回文章列表</a></p></noscript>
+    </article>
   </main>
   <footer class="page-footer">
     <div class="shell">© 2026 Sheen Yang, All rights reserved.</div>
