@@ -33,6 +33,12 @@
       text-rendering:optimizeLegibility;
     }
     body.menu-open{overflow:hidden}
+    /* Light deterrence only; native scrolling, links and editing stay intact. */
+    body{-webkit-user-select:none;user-select:none}
+    :is(a,input,textarea,select,[contenteditable="true"]){
+      -webkit-user-select:text;
+      user-select:text;
+    }
     a{color:inherit;text-decoration:none}
     button{font:inherit;color:inherit}
     img{display:block;max-width:100%}
@@ -63,7 +69,6 @@
       letter-spacing:-.02em;
       white-space:nowrap;
     }
-    .brand .cn{margin-left:10px;font-family:var(--site-font);font-weight:600}
     .menu-button{
       width:44px;
       height:44px;
@@ -113,8 +118,7 @@
       margin:auto;
       padding:58px 0;
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:56px;
+      grid-template-columns:1fr;
     }
     .menu-links{display:grid}
     .menu-links a{
@@ -123,12 +127,6 @@
       font-size:clamp(30px,4vw,52px);
       padding:13px 0;
       border-bottom:1px solid var(--line);
-    }
-    .menu-note{
-      align-self:end;
-      color:var(--muted);
-      line-height:1.8;
-      max-width:28em;
     }
 
     /* Editorial portrait: overlapping grid areas, with an alpha fade rather
@@ -142,10 +140,10 @@
       isolation:isolate;
     }
     .hero-copy{
-      grid-area:1 / 7 / 2 / 13;
+      grid-area:1 / 1 / 2 / 7;
       align-self:center;
       min-width:0;
-      padding:32px 0 32px 24px;
+      padding:32px 0;
       z-index:1;
     }
     .hero h1{
@@ -153,15 +151,15 @@
       font-family:var(--site-font);
       font-weight:700;
       letter-spacing:-.045em;
-      font-size:clamp(72px,7vw,104px);
-      line-height:.96;
+      font-size:clamp(76px,6.4vw,92px);
+      line-height:1.05;
     }
-    .hero h1 .cn{
+    .hero h1 .cn{display:block;letter-spacing:.02em}
+    .hero h1 .en{
       display:block;
-      margin-top:18px;
-      font-family:var(--site-font);
-      font-weight:600;
-      font-size:.56em;
+      margin-top:16px;
+      font-size:.38em;
+      font-weight:400;
       letter-spacing:.01em;
     }
     .roles{
@@ -183,7 +181,7 @@
       min-height:52px;
       padding:0 24px;
       border:1px solid var(--line);
-      border-radius:999px;
+      border-radius:14px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -194,22 +192,25 @@
     .button:hover{background:var(--site-soft)}
     .button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
     .hero-photo{
-      grid-area:1 / 1 / 2 / 9;
+      grid-area:1 / 6 / 2 / 13;
       position:relative;
       margin:0;
       min-width:0;
       min-height:680px;
       overflow:hidden;
-      -webkit-mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 68%,rgba(0,0,0,.35) 85%,transparent 100%);
-      mask-image:linear-gradient(90deg,#000 0%,#000 58%,rgba(0,0,0,.88) 68%,rgba(0,0,0,.35) 85%,transparent 100%);
+      -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 86%,rgba(0,0,0,.8) 93%,transparent 100%);
+      mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 86%,rgba(0,0,0,.8) 93%,transparent 100%);
     }
+    .hero-photo{ -webkit-touch-callout:none; }
     .hero-photo img{
       position:absolute;
       inset:0;
       width:100%;
       height:100%;
       object-fit:cover;
-      object-position:50% 18%;
+      object-position:50% 50%;
+      -webkit-user-drag:none;
+      pointer-events:none;
     }
 
     /* Two main areas */
@@ -290,78 +291,70 @@
     }
     .contact-email{margin:0 0 30px;line-height:1.8;color:var(--muted)}
     .contact-email a{overflow-wrap:anywhere}
-    .contact-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:20px;
-      max-width:620px;
+    .consultation{
+      max-width:760px;
+      margin-inline:auto;
+      padding:32px;
+      border:1px solid var(--site-border);
+      border-radius:20px;
+      background:var(--site-panel);
+    }
+    .consultation h3{font-size:24px;margin:0 0 28px;font-weight:600}
+    .consultation-fields{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .consultation-field{display:grid;gap:9px;min-width:0}
+    .consultation-field.full{grid-column:1 / -1}
+    .consultation label{font-size:14px;font-weight:400}
+    .consultation :is(input,select,textarea){
+      width:100%;min-width:0;
+      padding:13px 14px;
+      border:1px solid var(--site-border);
+      border-radius:12px;
+      background:var(--site-bg);
+      color:var(--site-text);
+      font:400 16px/1.6 var(--site-font);
+      -webkit-touch-callout:default;
+    }
+    .consultation textarea{resize:vertical;min-height:136px}
+    .consultation .button{margin-top:26px;cursor:pointer;font-weight:500}
+    .consultation .button:disabled{cursor:default;opacity:.65}
+    .consultation-status{min-height:44px;margin:16px 0 0;font-size:13px;line-height:1.7;color:var(--site-muted)}
+    .consultation-status[data-state="error"]{color:var(--site-error)}
+    .consultation-status[data-state="success"]{color:var(--site-success)}
+
+    footer{padding:28px 0 38px}
+    .footer-inner{position:relative;text-align:center;color:var(--muted);font-size:12px}
+    .social-links{
+      display:flex;
+      justify-content:center;
+      gap:clamp(24px,5vw,64px);
+      margin:0 auto 28px;
+      width:max-content;
+      max-width:100%;
     }
     .social-entry{
-      appearance:none;
-      border:0;
-      background:transparent;
-      padding:12px 4px;
-      min-height:88px;
-      min-width:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap:12px;
-      text-align:center;
-      color:var(--text);
-      font:inherit;
-      border-radius:8px;
+      display:flex;flex-direction:column;align-items:center;gap:12px;
+      min-width:124px;padding:12px 4px;text-align:center;border-radius:12px;
     }
-    :is(a,button).social-entry{cursor:pointer}
-    :is(a,button).social-entry:hover{background:var(--site-soft)}
-    /* Plain platform names are intentional fallbacks until suitable official
-       brand files and their usage guidance can be verified. No imitation logos. */
-    .social-platform{font-size:15px;font-weight:500;line-height:28px}
-    .social-id{font-size:12px;font-weight:400;overflow-wrap:anywhere}
-    .social-feedback{
-      display:block;
-      min-height:22px;
-      max-width:620px;
-      text-align:center;
-      margin:12px 0 0;
-      font-size:12px;
-      color:var(--muted);
+    .social-entry:hover{background:var(--site-soft)}
+    .social-logo{
+      width:56px;height:56px;display:grid;place-items:center;
+      background:rgba(245,246,248,.9);
+      border:1px solid rgba(120,125,135,.15);border-radius:12px;
     }
-
-    /* QR dialog: optional; works once assets/wechat-qr.png is supplied */
-    dialog{
-      border:0;
-      padding:0;
-      width:min(88vw,360px);
-      background:#fff;
-      box-shadow:0 22px 70px rgba(0,0,0,.16);
+    .social-logo img{width:34px;height:34px;object-fit:contain}
+    .social-id{font-size:12px;font-weight:400;-webkit-user-select:text;user-select:text}
+    .copyright{margin:0;line-height:1.8}
+    .to-top{position:absolute;right:0;bottom:0;width:44px;height:44px;display:grid;place-items:center;font-size:18px}
+    @media (prefers-color-scheme:dark){.social-logo{background:rgba(245,246,248,.86)}}
+    @media (max-width:599px){
+      .consultation{padding:24px 20px}
+      .consultation-fields{grid-template-columns:1fr;gap:18px}
+      .consultation-field.full{grid-column:auto}
+      .social-entry{min-width:116px}
+      .copyright{font-size:11px}
+      .to-top{bottom:-34px;right:calc(50% - 22px)}
+      footer{padding-bottom:72px}
     }
-    dialog::backdrop{background:rgba(0,0,0,.32)}
-    .qr-card{padding:24px}
-    .qr-card-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:18px;
-    }
-    .qr-card h3{margin:0;font-size:17px}
-    .close-dialog{
-      border:0;background:transparent;cursor:pointer;font-size:25px;line-height:1;
-    }
-    .qr-card img{width:100%;aspect-ratio:1;object-fit:contain;background:#f6f6f4}
-    .qr-card p{margin:14px 0 0;color:var(--muted);font-size:13px;line-height:1.6}
-
-    footer{padding:0 0 38px}
-    .footer-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      color:#777b76;
-      font-size:12px;
-    }
-    .to-top{font-size:18px}
 
     @media (max-width:860px){
       .shell{width:min(calc(100% - 34px), var(--max))}
@@ -373,7 +366,6 @@
         grid-template-columns:1fr;
         padding:34px 0;
       }
-      .menu-note{align-self:start}
       .main-areas{padding:58px 0 62px}
       .areas-grid{grid-template-columns:1fr}
       .area{padding:0 0 48px}
@@ -389,15 +381,13 @@
 
     @media (max-width:520px){
       .shell{width:calc(100% - 30px)}
-      .brand .cn{margin-left:7px}
-      .footer-inner{align-items:flex-end}
     }
 
     /* Landscape tablets use the same overlapping composition, scaled down. */
     @media (min-width:861px) and (max-width:1200px){
       .hero-grid,.hero-photo{min-height:600px}
       .hero h1{font-size:82px}
-      .hero-copy{padding-left:18px}
+      .hero-copy{padding-right:18px}
       .roles{font-size:17px}
       .intro{font-size:14px}
       .button{padding-inline:18px;gap:12px}
@@ -436,7 +426,7 @@
         max-width:680px;
       }
       .hero h1{font-size:80px}
-      .hero h1 .cn{margin-top:14px}
+      .hero h1 .en{margin-top:12px}
       html[data-home-experiment] .hero :is(.roles,.intro){color:#f4f5f6}
       .roles{font-size:18px;margin-top:22px}
       .intro{font-size:15px;margin-top:20px}
@@ -458,27 +448,24 @@
       .hero-grid{min-height:clamp(680px,calc(100svh - 92px),790px)}
       .hero-photo img{object-position:52% 25%}
       .hero-copy{padding:24px}
-      .hero h1{font-size:58px}
-      .hero h1 .cn{font-size:.56em;margin-top:10px}
+      .hero h1{font-size:60px}
+      .hero h1 .en{margin-top:10px;font-size:.36em}
       .roles{font-size:14px;line-height:1.6;margin-top:16px}
       .intro{font-size:13px;line-height:1.8;margin-top:14px}
       .hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
       .hero .button{min-height:48px;padding:0 10px;gap:8px;font-size:12px}
-      .contact-grid{gap:6px}
-      .social-platform{font-size:14px}
-      .social-id{font-size:11px}
     }
     /* Compact landscape phones should not inherit a tall portrait crop. */
     @media (max-width:860px) and (orientation:landscape){
       .hero-grid{grid-template-columns:repeat(12,minmax(0,1fr));min-height:470px;background:transparent;color:var(--text)}
-      .hero-photo{position:relative;inset:auto;grid-area:1 / 1 / 2 / 9;min-height:470px;
-        -webkit-mask-image:linear-gradient(90deg,#000 55%,transparent 100%);
-        mask-image:linear-gradient(90deg,#000 55%,transparent 100%)}
-      .hero-photo img{object-position:50% 12%}
+      .hero-photo{position:relative;inset:auto;grid-area:1 / 6 / 2 / 13;min-height:470px;
+        -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 86%,rgba(0,0,0,.8) 93%,transparent 100%);
+        mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 86%,rgba(0,0,0,.8) 93%,transparent 100%)}
+      .hero-photo img{object-position:50% 50%}
       .hero-photo::after{display:none}
-      .hero-copy{grid-area:1 / 7 / 2 / 13;align-self:center;padding:20px 0 20px 12px}
+      .hero-copy{grid-area:1 / 1 / 2 / 7;align-self:center;padding:20px 12px 20px 0}
       .hero h1{font-size:54px}
-      .hero h1 .cn{margin-top:10px}
+      .hero h1 .en{margin-top:10px}
       .roles{font-size:13px;margin-top:20px}
       .intro{font-size:12px;margin-top:18px}
       .hero-actions{margin-top:20px;display:flex;gap:10px}
@@ -501,7 +488,7 @@
 <body id="top">
   <header class="topbar">
     <div class="shell topbar-inner">
-      <a class="brand" href="#top" aria-label="返回首页顶部">Sheen <span class="cn">杨鑫</span></a>
+      <a class="brand" href="#top" aria-label="返回首页顶部">Sheen Yang</a>
       <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
         <span class="menu-icon" aria-hidden="true"><span></span></span>
       </button>
@@ -518,9 +505,6 @@
         <a href="#contact">关于我</a>
         <a href="#contact">联系我</a>
       </nav>
-      <p class="menu-note">
-        乐谱、课程、文章与作品都会慢慢整理在这里。首页只保留最主要的入口，其余内容可以从这里继续浏览。
-      </p>
     </div>
   </div>
 
@@ -528,13 +512,17 @@
     <section class="hero">
       <div class="shell hero-grid">
         <figure class="hero-photo">
-          <img src="./assets/home-portrait.jpg"
-               alt="Sheen 在音乐工作室"
-               width="1086" height="1448"
-               decoding="async" fetchpriority="high">
+          <picture>
+            <source media="(orientation: landscape), (min-width: 1101px)"
+                    srcset="./assets/home-wide.jpg" width="1672" height="941">
+            <img src="./assets/home-portrait.jpg"
+                 alt="Sheen 杨鑫在音乐工作室"
+                 width="1086" height="1448" draggable="false"
+                 decoding="async" fetchpriority="high">
+          </picture>
         </figure>
         <div class="hero-copy">
-          <h1>Sheen<span class="cn">杨鑫</span></h1>
+          <h1><span class="cn">杨鑫</span><span class="en" lang="en">Sheen</span></h1>
           <p class="roles">键盘即兴伴奏 · 音乐理论 · 作曲</p>
           <p class="intro">
             教过音乐学院，也弹过乐队键盘。<br>
@@ -586,32 +574,58 @@
         </div>
 
         <p class="contact-email">邮箱 · <a href="mailto:sheenyangmusic@gmail.com">sheenyangmusic@gmail.com</a></p>
-        <div class="contact-grid" aria-label="社交平台">
-          <div class="social-entry" aria-label="抖音账号 @SheenYang">
-            <span class="social-platform">抖音</span>
-            <span class="social-id">@SheenYang</span>
+        <!-- Configure only with a confirmed project Formspree endpoint. -->
+        <form class="consultation" id="consultationForm" method="post" action="https://formspree.io/f/xnpneyko" data-formspree-endpoint="https://formspree.io/f/xnpneyko" aria-labelledby="consultationHeading" aria-describedby="consultationStatus">
+          <h3 id="consultationHeading">课程咨询</h3>
+          <input type="hidden" name="_subject" value="课程咨询 | Sheen Yang">
+          <div class="consultation-fields">
+            <div class="consultation-field">
+              <label for="consultationName">怎么称呼你</label>
+              <input id="consultationName" name="name" type="text" autocomplete="name" maxlength="80" required>
+            </div>
+            <div class="consultation-field">
+              <label for="consultationEmail">Email</label>
+              <input id="consultationEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+            </div>
+            <div class="consultation-field full">
+              <label for="consultationTopic">想学习什么</label>
+              <select id="consultationTopic" name="learning_topic" required>
+                <option value="" disabled selected>请选择</option>
+                <option>即兴伴奏</option>
+                <option>音乐理论</option>
+                <option>扒谱与听力</option>
+                <option>升学与作品集</option>
+                <option>其他</option>
+              </select>
+            </div>
+            <div class="consultation-field full">
+              <label for="consultationMessage">简单说说你的音乐基础和学习目标</label>
+              <textarea id="consultationMessage" name="message" rows="4" maxlength="3000" required></textarea>
+            </div>
           </div>
-          <button class="social-entry" id="copyWechat" type="button" aria-label="复制微信号 sheen_musicLab">
-            <span class="social-platform">微信</span>
-            <span class="social-id" id="wechatId">sheen_musicLab</span>
-          </button>
-          <a class="social-entry" href="https://www.instagram.com/sheen.poplab/" target="_blank" rel="noopener noreferrer" aria-label="打开 Instagram 主页 @sheen.poplab（新窗口）">
-            <span class="social-platform">Instagram</span>
-            <span class="social-id">@sheen.poplab</span>
-          </a>
-        </div>
-        <span class="social-feedback" id="wechatFeedback" role="status" aria-live="polite"></span>
+          <button class="button primary" id="consultationSubmit" type="submit">发送咨询</button>
+          <p class="consultation-status" id="consultationStatus" role="status" aria-live="polite"></p>
+        </form>
       </div>
     </section>
   </main>
 
   <footer>
     <div class="shell footer-inner">
-      <span>© 2026 Sheen Yang</span>
+      <nav class="social-links" aria-label="社交平台">
+        <a class="social-entry" href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer" aria-label="打开抖音主页 @SheenYang（新窗口）">
+          <span class="social-logo" aria-hidden="true"><img src="./assets/douyin.svg" alt="" width="34" height="34" loading="lazy"></span>
+          <span class="social-id">@SheenYang</span>
+        </a>
+        <a class="social-entry" href="https://www.instagram.com/sheen_musiclab/" target="_blank" rel="noopener noreferrer" aria-label="打开 Instagram 主页 @sheen_musicLab（新窗口）">
+          <span class="social-logo" aria-hidden="true"><img src="./assets/instagram.svg" alt="" width="34" height="34" loading="lazy"></span>
+          <span class="social-id">@sheen_musicLab</span>
+        </a>
+      </nav>
+      <p class="copyright">© 2026 Sheen Yang, All rights reserved.</p>
       <a class="to-top" href="#top" aria-label="回到顶部">⌃</a>
     </div>
   </footer>
-
 
   <script>
     const menuButton = document.getElementById('menuButton');
@@ -637,29 +651,60 @@
       if(e.key === 'Escape') setMenu(false);
     });
 
-    const copyWechat = document.getElementById('copyWechat');
-    const wechatFeedback = document.getElementById('wechatFeedback');
-    let feedbackTimer;
-    copyWechat.addEventListener('click', async () => {
-      const value = 'sheen_musicLab';
-      let copied = false;
-      try{
-        await navigator.clipboard.writeText(value);
-        copied = true;
-      }catch{
-        const input = document.createElement('textarea');
-        input.value = value;
-        input.setAttribute('readonly', '');
-        input.style.cssText = 'position:fixed;left:-9999px;top:0;';
-        document.body.appendChild(input);
-        input.select();
-        try{ copied = document.execCommand('copy'); }catch{ copied = false; }
-        input.remove();
-        copyWechat.focus({preventScroll:true});
+    // Protect only the portrait region; never cancel page-wide touch/context events.
+    document.querySelector('.hero-photo').addEventListener('contextmenu', event => event.preventDefault());
+
+    const consultationForm = document.getElementById('consultationForm');
+    const consultationSubmit = document.getElementById('consultationSubmit');
+    const consultationStatus = document.getElementById('consultationStatus');
+    const endpoint = consultationForm.dataset.formspreeEndpoint;
+    let confirmedEndpoint = '';
+    try{
+      const url = new URL(endpoint);
+      if(url.origin === 'https://formspree.io' && /^\/f\/[a-zA-Z0-9]+$/.test(url.pathname)) confirmedEndpoint = url.href;
+    }catch{ /* No endpoint is assumed or invented. */ }
+    if(confirmedEndpoint){
+      consultationForm.action = confirmedEndpoint;
+      consultationStatus.textContent = '';
+    }
+    // The confirmed action also supports ordinary HTML form submission if
+    // JavaScript is unavailable; JS adds inline status and duplicate protection.
+    let submitting = false;
+    consultationForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if(submitting || !consultationForm.reportValidity()) return;
+      if(!confirmedEndpoint){
+        consultationStatus.dataset.state = 'error';
+        consultationStatus.textContent = '咨询表单暂未开放，请通过上方 Email 联系。';
+        return;
       }
-      clearTimeout(feedbackTimer);
-      wechatFeedback.textContent = copied ? '已复制 ✓' : '未能复制，请手动复制微信号';
-      feedbackTimer = setTimeout(() => wechatFeedback.textContent = '', 1800);
+      submitting = true;
+      consultationSubmit.disabled = true;
+      consultationSubmit.textContent = '正在发送…';
+      consultationForm.setAttribute('aria-busy', 'true');
+      consultationStatus.dataset.state = '';
+      consultationStatus.textContent = '正在发送你的咨询…';
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      try{
+        const response = await fetch(confirmedEndpoint, {
+          method: 'POST', body: new FormData(consultationForm),
+          headers: {Accept: 'application/json'}, signal: controller.signal
+        });
+        if(!response.ok) throw new Error('Submission failed');
+        consultationForm.reset();
+        consultationStatus.dataset.state = 'success';
+        consultationStatus.textContent = '咨询已发送，谢谢！我会通过 Email 回复你。';
+      }catch{
+        consultationStatus.dataset.state = 'error';
+        consultationStatus.textContent = '发送未成功，你填写的内容已保留。请稍后重试，或通过上方 Email 联系。';
+      }finally{
+        clearTimeout(timeout);
+        submitting = false;
+        consultationForm.removeAttribute('aria-busy');
+        consultationSubmit.disabled = false;
+        consultationSubmit.textContent = '发送咨询';
+      }
     });
 
   </script>
