@@ -103,8 +103,14 @@
     const response = await fetch(sourceURL, {cache:'no-cache'});
     if(!response.ok) throw new Error('Article unavailable');
     const markdown = await response.text();
+    // Front matter is metadata, not article prose; keep the source file intact.
+    const content = markdown.replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, '');
+    const fragment = markdownFragment(content, sourceURL);
+    // The template already displays the article title. Render it only once.
+    const first = fragment.firstElementChild;
+    if(first?.tagName === 'H1' && first.textContent.trim() === item.title.trim()) first.remove();
     const body = document.getElementById('articleBody');
-    body.replaceChildren(markdownFragment(markdown, sourceURL));
+    body.replaceChildren(fragment);
     body.classList.add('content-ready');
     status.textContent = '';
   }

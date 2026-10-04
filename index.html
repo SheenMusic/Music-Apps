@@ -349,7 +349,11 @@
     .to-top{position:absolute;right:0;bottom:0;width:44px;height:44px;display:grid;place-items:center;font-size:18px}
     @media (max-width:599px){
       .contact-layout{grid-template-columns:1fr;gap:26px}
-      .consultation{max-width:360px;padding:14px;justify-self:end}
+      .consultation{max-width:360px;padding:16px;justify-self:center}
+      .consultation-fields{gap:12px}
+      .consultation .button{width:100%;margin-top:12px}
+      .consultation-status{min-height:0;margin-top:12px}
+      .consultation-status:empty{display:none}
       .consultation :is(input,textarea){font-size:16px}
       .social-entry{min-width:116px}
       .copyright{font-size:11px}
@@ -391,6 +395,17 @@
       .roles{font-size:17px}
       .intro{font-size:14px}
       .button{padding-inline:18px;gap:12px}
+    }
+
+    /* Wide photos keep the soft text-side fade and a clean cropped right edge.
+       The extra image width crops the outer environment without scaling the face
+       down or changing portrait / compact-landscape compositions. */
+    @media (min-width:1101px), (min-width:861px) and (orientation:landscape){
+      .hero-photo{
+        -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 100%);
+        mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.15) 14%,rgba(0,0,0,.88) 34%,#000 46%,#000 100%);
+      }
+      .hero-photo img{width:112%;max-width:none}
     }
 
     /* Portrait tablets and phones share a photo container; their compositions
