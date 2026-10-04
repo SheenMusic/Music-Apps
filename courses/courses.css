@@ -1,0 +1,15 @@
+/* Courses only. Shared site CSS owns font stack, palette, focus and reveal. */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--site-bg);color:var(--site-text);font-family:var(--site-font);font-size:15px;font-weight:300;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}
+.shell{width:min(calc(100% - 36px),1040px);margin-inline:auto}
+header{height:78px;border-bottom:1px solid var(--site-border);display:flex;align-items:center}
+nav{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:20px;font-weight:600;letter-spacing:-.025em}.back{font-size:13px;color:var(--site-muted);padding-block:12px}.back:hover{color:var(--site-text)}
+main{padding-block:52px 90px}.eyebrow{font-size:11px;color:var(--site-muted);letter-spacing:.09em;margin:0 0 18px}.page-title{font-size:clamp(40px,6vw,64px);font-weight:600;letter-spacing:-.04em;margin:0 0 24px;line-height:1.12}.intro{max-width:660px;margin:0 0 64px;color:var(--site-muted);font-size:15px;line-height:1.9}
+.course-list{list-style:none;margin:0;padding:0}.course-item{padding:36px 0}.course-item:first-child{padding-top:0}.course-item:last-child{padding-bottom:0}.course-item+.course-item{border-top:1px solid color-mix(in srgb,var(--site-border) 75%,transparent)}.course-entry{display:grid;grid-template-columns:44px minmax(0,1fr);gap:24px;align-items:baseline}.course-number{font-size:12px;color:var(--site-muted);font-variant-numeric:tabular-nums}.course-title{font-size:clamp(25px,3vw,32px);font-weight:500;letter-spacing:-.025em;line-height:1.35;margin:0 0 16px}.course-description{font-size:14px;line-height:1.9;margin:0;color:var(--site-muted);max-width:42em}
+.consultation{margin-top:72px}.consultation p{font-size:14px;line-height:1.9;color:var(--site-muted);margin:0 0 24px}.consultation-actions{display:flex;flex-wrap:wrap;gap:14px}.button{display:inline-flex;align-items:center;justify-content:flex-start;gap:18px;min-height:52px;padding:10px 26px;border:1px solid var(--site-border);border-radius:999px;background:transparent;font-size:14px;font-weight:500;line-height:1.5}.button:hover{background:var(--site-soft)}.button.primary{background:var(--site-accent);border-color:var(--site-accent);color:var(--site-on-accent)}.button.primary:hover{background:var(--site-text);border-color:var(--site-text);color:var(--site-bg)}
+footer{border-top:1px solid var(--site-border);padding:25px 0 calc(25px + env(safe-area-inset-bottom));text-align:center;font-size:11px;color:var(--site-muted)}
+@media(min-width:861px){.shell{width:min(calc(100% - 48px),1040px)}header{height:88px}.brand{font-size:24px}main{padding-top:76px}}
+@media(max-width:599px){.intro{margin-bottom:48px}.course-entry{grid-template-columns:28px minmax(0,1fr);gap:14px}.course-item{padding-block:28px}.course-title{font-size:24px}.consultation{margin-top:56px}.button{min-height:48px;padding:10px 24px;gap:12px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

@@ -2,94 +2,35 @@
 <html data-visual="site" lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>课程 · Sheen Yang</title>
-  <style>
-    :root{--bg:#f4f2ec;--text:#20221f;--muted:#777b74;--line:#d9d6ce;--card:#faf9f5}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--site-font);letter-spacing:.01em}
-    a{color:inherit;text-decoration:none}
-    .shell{width:min(1120px,calc(100% - 48px));margin:auto}
-    header{height:78px;border-bottom:1px solid var(--line);display:flex;align-items:center}
-    nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
-    .brand{font-size:14px;font-weight:650;letter-spacing:.12em}
-    .back{font-size:13px;color:var(--muted)}
-    main{padding:82px 0 100px}
-    .eyebrow{font-size:12px;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;margin:0 0 18px}
-    h1{font-size:clamp(42px,7vw,82px);font-weight:520;letter-spacing:-.055em;margin:0 0 22px;line-height:.95}
-    .intro{max-width:660px;color:var(--muted);font-size:15px;line-height:1.85;margin:0 0 64px}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .item{display:block;border:1px solid var(--line);background:rgba(255,255,255,.25);padding:26px;min-height:220px;transition:.18s ease}
-    .item:hover{transform:translateY(-2px);background:var(--card)}
-    .meta{font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-    .item h2{font-size:25px;font-weight:520;letter-spacing:-.025em;margin:46px 0 10px}
-    .item p{font-size:13px;line-height:1.7;color:var(--muted);margin:0}
-    .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
-    .tag{font-size:10px;border:1px solid var(--line);border-radius:999px;padding:5px 8px;color:var(--muted)}
-    .empty{grid-column:1/-1;border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:14px}
-    footer{border-top:1px solid var(--line);padding:25px 0;text-align:center;font-size:11px;color:var(--muted)}
-    .lang{display:flex;gap:5px}
-    .lang button{border:0;background:none;color:var(--muted);font:inherit;font-size:11px;cursor:pointer;padding:4px}
-    .lang button.active{color:var(--text)}
-    @media(max-width:720px){.shell{width:min(100% - 28px,1120px)}.grid{grid-template-columns:1fr}main{padding-top:55px}}
-  </style>
-  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="三个独立又相互关联的训练单元，为即兴伴奏、扒谱与编配打好基础。">
+  <title>音乐课程 · Sheen Yang</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
   <link rel="stylesheet" href="../assets/site-visual.css">
+  <link rel="stylesheet" href="./courses.css">
   <script src="../assets/site-analytics.js" defer></script>
 </head>
 <body>
-<header><div class="shell"><nav>
-  <a class="brand" href="../">SHEEN YANG</a>
-  <div style="display:flex;align-items:center;gap:22px">
-    <div class="lang"><button data-lang="zh">中</button><button data-lang="en">EN</button><button data-lang="ja">日</button></div>
-    <a class="back" href="../" id="back">← 首页</a>
-  </div>
+<header><div class="shell"><nav aria-label="页面导航">
+  <a class="brand" href="../">Sheen Yang</a>
+  <a class="back" href="../">← 首页</a>
 </nav></div></header>
-<main><div class="shell">
-  <p class="eyebrow">Courses</p>
-  <h1 id="pageTitle">课程</h1>
-  <p class="intro" id="pageIntro">乐理、记谱、听觉训练、即兴伴奏与互动式学习工具。</p>
-  <div class="grid" id="contentGrid"></div>
-</div></main>
+<main class="shell">
+  <p class="eyebrow" lang="en">Courses</p>
+  <h1 class="page-title">音乐课程</h1>
+  <p class="intro">三个独立又相互关联的训练单元，为即兴伴奏、扒谱与编配打好基础。每门课程约一周，可组合学习，也可针对薄弱环节单独选择。</p>
+  <ol class="course-list" aria-label="课程展示">
+    <li class="course-item"><article class="course-entry" aria-labelledby="theoryHeading"><span class="course-number" aria-hidden="true">01</span><div><h2 class="course-title" id="theoryHeading">音程理论训练课</h2><p class="course-description">理解音程的构成、性质与转位，建立清晰的音程理论框架。</p></div></article></li>
+    <li class="course-item"><article class="course-entry" aria-labelledby="earHeading"><span class="course-number" aria-hidden="true">02</span><div><h2 class="course-title" id="earHeading">音程听力训练课</h2><p class="course-description">通过系统的听辨练习，建立音程与实际声音之间的联系。</p></div></article></li>
+    <li class="course-item"><article class="course-entry" aria-labelledby="chordHeading"><span class="course-number" aria-hidden="true">03</span><div><h2 class="course-title" id="chordHeading">和弦记号训练课</h2><p class="course-description">学习常见和弦记号的构成与识读，建立快速读懂和弦的能力。</p></div></article></li>
+  </ol>
+  <section class="consultation" aria-label="课程咨询">
+    <p>对课程有疑问，或不知道从哪一门开始，可以直接和我聊聊。</p>
+    <div class="consultation-actions"><a class="button primary" href="../#contact">通过网站咨询 <span aria-hidden="true">→</span></a><a class="button" href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer" aria-label="打开抖音主页，通过私信咨询课程（新窗口）">抖音私信 <span aria-hidden="true">→</span></a></div>
+  </section>
+</main>
 <footer>© <span id="year"></span> Sheen Yang</footer>
-<script>
-const TYPE="courses";
-const copy={
- zh:{title:"音乐课程",intro:"乐理、记谱、听觉训练、即兴伴奏与互动式学习工具。",back:"← 首页",empty:"这里的内容会逐步更新。"},
- en:{title:"Music Courses",intro:"Music theory, notation, ear training, improvisational accompaniment and interactive learning tools.",back:"← Home",empty:"New material will be added here over time."},
- ja:{title:"音楽コース",intro:"音楽理論、記譜、聴音、即興伴奏、インタラクティブ教材。",back:"← ホーム",empty:"コンテンツは順次追加していきます。"}
-};
-let items=[];
-function t(v,lang){return typeof v==="object" ? (v[lang]||v.zh||v.en||"") : (v||"")}
-function render(lang){
- document.documentElement.lang=lang==="zh"?"zh-CN":lang;
- document.getElementById("pageTitle").textContent=copy[lang].title;
- document.getElementById("pageIntro").textContent=copy[lang].intro;
- document.getElementById("back").textContent=copy[lang].back;
- document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
- const grid=document.getElementById("contentGrid");
- if(!items.length){grid.innerHTML=`<div class="empty">${copy[lang].empty}</div>`;return}
- grid.innerHTML=items.map(item=>{
-   const title=t(item.title,lang), desc=t(item.description,lang), meta=[item.year,t(item.type,lang)].filter(Boolean).join(" · ");
-   const tags=(item.tags||[]).map(x=>`<span class="tag">${t(x,lang)}</span>`).join("");
-   const body=`<span class="meta">${meta}</span><h2>${title}</h2><p>${desc}</p><div class="tags">${tags}</div>`;
-   return item.url ? `<a class="item" href="${item.url}" ${item.external?'target="_blank" rel="noopener noreferrer"':''}>${body}</a>` : `<article class="item">${body}</article>`;
- }).join("");
-}
-async function init(){
- try{
-   const r=await fetch(`../data/${TYPE}.json`,{cache:"no-store"});
-   if(!r.ok) throw new Error(r.status);
-   items=await r.json();
- }catch(e){console.warn("Content data could not be loaded.",e)}
- const saved=localStorage.getItem("sheen-lang")||"zh";
- render(copy[saved]?saved:"zh");
-}
-document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{localStorage.setItem("sheen-lang",b.dataset.lang);render(b.dataset.lang)}));
-document.getElementById("year").textContent=new Date().getFullYear();
-init();
-</script>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
 </body>
 </html>
