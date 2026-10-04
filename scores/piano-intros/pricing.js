@@ -1,16 +1,16 @@
-/* Shared catalogue/checkout quote: base package + extra paid tracks. */
+/* Automatic paid-track pricing, shared by selection and checkout. */
 (() => {
   'use strict';
-  function quote(count, catalogue){
+  const UNIT_PRICE = 2;
+  const DISCOUNTS = [{count:10,price:17},{count:5,price:9}];
+  const VOLUME_THRESHOLD = 16;
+  const VOLUME_PRICE = 29;
+  function quote(count){
     if(!Number.isInteger(count) || count < 1) return null;
-    const prices = new Map(catalogue.selectionPackages.map(pack=>[pack.count,pack.price]));
-    const base = count >= 10 ? 10 : count >= 5 ? 5 : 0;
-    const extraPrice = prices.get(1);
-    const price = base ? prices.get(base)+(count-base)*extraPrice : count*extraPrice;
-    const method = base
-      ? `${base}首套餐 ¥${prices.get(base)}${count > base ? ` + ${count-base}首 × ¥${extraPrice}` : ''}`
-      : `每首 ¥${extraPrice} × ${count}`;
-    return {price,method};
+    if(count >= VOLUME_THRESHOLD) return {price:VOLUME_PRICE,volume:1,method:'Piano Intros Vol. 1 · 全30首 · ¥29'};
+    const discount = DISCOUNTS.find(tier=>count >= tier.count);
+    const price = discount ? discount.price+(count-discount.count)*UNIT_PRICE : count*UNIT_PRICE;
+    return {price,volume:null,method:discount ? '多选自动优惠' : '单首 ¥2'};
   }
   window.scorePricing = {quote};
 })();

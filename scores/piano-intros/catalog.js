@@ -21,17 +21,18 @@
   }
   function selectionPlan(){
     const tracks = catalogue.tracks.filter(track=>selected.has(track.number) && !track.free);
-    const quote = window.scorePricing.quote(tracks.length,catalogue);
+    const quote = window.scorePricing.quote(tracks.length);
     if(!quote) return null;
     const bundle = completeVolume(1);
-    const recommend = bundle && tracks.every(track=>track.volume === 1) && quote.price >= bundle.volume.price;
+    const recommend = bundle && tracks.every(track=>track.volume === 1) && quote.volume === bundle.volume.id;
     return {tracks,quote,bundle:recommend ? bundle : null};
   }
   function updateSelection(){
     const count = selected.size, plan = selectionPlan();
     byID('selectedCount').textContent = `已选 ${count} 首`;
-    byID('selectionPrice').textContent = !plan ? '请选择曲目'
-      : plan.bundle ? `购买 Vol.1 全30首更划算 · ¥${plan.bundle.volume.price}` : `¥${plan.quote.price}`;
+    byID('selectedCount').hidden = !plan?.bundle;
+    byID('selectionPrice').textContent = !plan ? '单首 ¥2 · 多选自动优惠'
+      : plan.bundle ? `Vol. 1 全30首更划算 · ¥${plan.bundle.volume.price}` : `已选 ${count} 首 · ¥${plan.quote.price}`;
     byID('confirmSelection').disabled = !plan;
     byID('confirmSelection').textContent = plan?.bundle ? `购买 Vol.1 · ¥${plan.bundle.volume.price}` : '确认选择';
     byID('confirmSelection').closest('.selection-bar').classList.toggle('recommending',Boolean(plan?.bundle));
@@ -73,13 +74,13 @@
     byID('catalogStatus').textContent = tracks.length ? '' : '没有找到符合条件的曲目。';
     updateSelection();
   }
-  function preparePurchase(tracks, price, label, packageType, pricingMethod, requestedPaidCount){
-    window.scoreCheckout.open({tracks, price, label, packageType, pricingMethod, requestedPaidCount});
+  function preparePurchase(tracks, price, label, packageType, pricingMethod, requestedTracks){
+    window.scoreCheckout.open({tracks, price, label, packageType, pricingMethod, requestedTracks});
   }
-  function purchaseVolume(bundle, requestedPaidCount){
+  function purchaseVolume(bundle, requestedTracks){
     const {volume,tracks} = bundle;
     preparePurchase(tracks,volume.price,volume.title,`${volume.title} · 全${tracks.length}首`,
-      `${volume.title} · 全${tracks.length}首 · ¥${volume.price}`,requestedPaidCount);
+      `${volume.title} · 全${tracks.length}首 · ¥${volume.price}`,requestedTracks);
   }
   function renderVolumes(){
     const fragment = document.createDocumentFragment();
@@ -125,7 +126,7 @@
   byID('confirmSelection').addEventListener('click',()=>{
     const plan = selectionPlan();
     if(!plan) return;
-    if(plan.bundle) purchaseVolume(plan.bundle,plan.tracks.length);
+    if(plan.bundle) purchaseVolume(plan.bundle,plan.tracks);
     else preparePurchase(plan.tracks,plan.quote.price,'自选前奏',`自由选曲 · ${plan.tracks.length}首`,plan.quote.method);
   });
   async function init(){

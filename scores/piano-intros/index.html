@@ -24,13 +24,13 @@
   <section class="song-catalog" aria-labelledby="libraryHeading">
     <div class="section-heading"><h2 id="libraryHeading">曲库</h2><span id="resultCount" class="muted"></span></div>
     <label class="search-label" for="songSearch">搜索歌名或歌手</label><input class="search-input" id="songSearch" type="search" placeholder="歌名或歌手" autocomplete="off" disabled>
-    <p class="selection-note">自由选曲：每首 ¥3；5首 ¥8、10首 ¥15，超过套餐数量的部分每首 ¥3。15首起推荐 Vol.1 全30首 ¥29。免费《江南》不计入付费数量。</p>
+    <p class="selection-note">单首 ¥2 · 多选自动优惠</p>
     <p id="catalogStatus" class="muted" role="status" aria-live="polite">正在加载曲库…</p>
     <ol class="song-list" id="songList"></ol>
     <noscript><p>请启用 JavaScript 以搜索和选择曲目。<a href="../jiangnan/">免费《江南》乐谱仍可直接下载。</a></p></noscript>
   </section>
   <aside class="selection-bar" aria-label="已选曲目与套餐">
-    <div class="selection-summary" role="status" aria-live="polite" aria-atomic="true"><span id="selectedCount">已选 0 首</span><strong id="selectionPrice">请选择曲目</strong></div>
+    <div class="selection-summary" role="status" aria-live="polite" aria-atomic="true"><span id="selectedCount" hidden>已选 0 首</span><strong id="selectionPrice">单首 ¥2 · 多选自动优惠</strong></div>
     <div class="selection-actions"><button class="text-button" id="clearSelection" type="button" disabled>清空</button><button class="button primary" id="confirmSelection" type="button" disabled>确认选择</button></div>
   </aside>
 </main>

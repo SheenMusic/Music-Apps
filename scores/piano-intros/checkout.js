@@ -42,11 +42,13 @@
     if(submitting || dialog.open || !options.tracks.length || !Number.isFinite(options.price) || options.price <= 0) return;
     const bundle = options.packageType.startsWith('Piano Intros Vol.');
     if(!bundle && options.tracks.some(track=>track.free)) return;
+    const requestedTracks = options.requestedTracks ?? options.tracks.filter(track=>!track.free);
     // Snapshot the approved price and all tracks, independent of later search/filter state.
     purchase = Object.freeze({
       price:options.price, packageType:options.packageType, pricingMethod:options.pricingMethod,
       paidCount:options.tracks.filter(track=>!track.free).length,
-      requestedPaidCount:options.requestedPaidCount ?? options.tracks.filter(track=>!track.free).length,
+      requestedPaidCount:requestedTracks.length,
+      requestedTracks:Object.freeze(requestedTracks.map(track=>Object.freeze({...track}))),
       product:bundle ? `${options.label} · 全${options.tracks.length}首` : `钢琴前奏 · ${options.packageType}`,
       tracks:Object.freeze(options.tracks.map(track=>Object.freeze({...track})))
     });
@@ -90,6 +92,7 @@
       package_type:purchase.packageType, purchase_type:purchase.packageType,
       pricing_method:purchase.pricingMethod, selected_paid_count:purchase.paidCount,
       requested_paid_count:purchase.requestedPaidCount,
+      requested_tracks:purchase.requestedTracks.map(track=>`${numberLabel(track.number)} ${track.title}`).join('\n'),
       track_count:tracks.length, selected_tracks:tracks.map(track=>`${track.number} ${track.title}`).join('\n'), tracks,
       payment_method:method, buyer_email:email,
       payment_name:byID('paymentName').value.trim() || '未填写',
@@ -97,7 +100,7 @@
     };
   }
   function orderText(data){
-    return `订单号：${data.order_id}\n商品：${data.product}\n套餐：${data.package_type}\n计价方式：${data.pricing_method}\n金额：${data.amount}\n付费曲目：${data.selected_paid_count}首\n曲目（${data.track_count}首）：\n${data.selected_tracks}\n支付方式：${data.payment_method}\n接收邮箱：${data.buyer_email}\n付款昵称：${data.payment_name}`;
+    return `订单号：${data.order_id}\n商品：${data.product}\n套餐：${data.package_type}\n计价方式：${data.pricing_method}\n金额：${data.amount}\n实际勾选：${data.requested_paid_count}首\n勾选曲目：\n${data.requested_tracks}\n付费曲目：${data.selected_paid_count}首\n曲目（${data.track_count}首）：\n${data.selected_tracks}\n支付方式：${data.payment_method}\n接收邮箱：${data.buyer_email}\n付款昵称：${data.payment_name}`;
   }
   byID('copyOrder').addEventListener('click',async()=>{
     const text = byID('orderCopy').textContent, button = byID('copyOrder');
