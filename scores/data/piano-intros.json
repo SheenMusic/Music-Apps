@@ -1,0 +1,210 @@
+{
+  "selectionPackages": [
+    {
+      "count": 1,
+      "price": 3
+    },
+    {
+      "count": 5,
+      "price": 8
+    },
+    {
+      "count": 10,
+      "price": 15
+    }
+  ],
+  "volumes": [
+    {
+      "id": 1,
+      "title": "Piano Intros Vol. 1",
+      "description": "钢琴前奏 · 30首精选",
+      "start": 1,
+      "end": 30,
+      "price": 29
+    }
+  ],
+  "tracks": [
+    {
+      "number": 1,
+      "title": "默",
+      "artist": "那英",
+      "volume": 1
+    },
+    {
+      "number": 2,
+      "title": "江南",
+      "artist": "林俊杰",
+      "volume": 1,
+      "free": true,
+      "url": "../jiangnan/"
+    },
+    {
+      "number": 3,
+      "title": "不将就",
+      "artist": "李荣浩",
+      "volume": 1
+    },
+    {
+      "number": 4,
+      "title": "我怀念的",
+      "artist": "孙燕姿",
+      "volume": 1
+    },
+    {
+      "number": 5,
+      "title": "枫",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 6,
+      "title": "空白格",
+      "artist": "蔡健雅",
+      "volume": 1
+    },
+    {
+      "number": 7,
+      "title": "分裂",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 8,
+      "title": "可惜没有如果",
+      "artist": "林俊杰",
+      "volume": 1
+    },
+    {
+      "number": 9,
+      "title": "搁浅",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 10,
+      "title": "不该",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 11,
+      "title": "Cheek to Cheek",
+      "artist": "Irving Berlin",
+      "volume": 1
+    },
+    {
+      "number": 12,
+      "title": "小镇姑娘",
+      "artist": "陶喆",
+      "volume": 1
+    },
+    {
+      "number": 13,
+      "title": "不能说的秘密",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 14,
+      "title": "你听得到",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 15,
+      "title": "雪之华",
+      "artist": "中岛美嘉",
+      "volume": 1
+    },
+    {
+      "number": 16,
+      "title": "First Love",
+      "artist": "宇多田光",
+      "volume": 1
+    },
+    {
+      "number": 17,
+      "title": "普通朋友",
+      "artist": "陶喆",
+      "volume": 1
+    },
+    {
+      "number": 18,
+      "title": "安静",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 19,
+      "title": "蒲公英的约定",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 20,
+      "title": "龙卷风",
+      "artist": "周杰伦",
+      "volume": 1
+    },
+    {
+      "number": 21,
+      "title": "我只在乎你",
+      "artist": "邓丽君",
+      "volume": 1
+    },
+    {
+      "number": 22,
+      "title": "好想好想",
+      "artist": "古巨基",
+      "volume": 1
+    },
+    {
+      "number": 23,
+      "title": "爱",
+      "artist": "莫文蔚",
+      "volume": 1
+    },
+    {
+      "number": 24,
+      "title": "十年",
+      "artist": "陈奕迅",
+      "volume": 1
+    },
+    {
+      "number": 25,
+      "title": "Uptown Funk",
+      "artist": "Bruno Mars",
+      "volume": 1
+    },
+    {
+      "number": 26,
+      "title": "世界赠与我的",
+      "artist": "王菲",
+      "volume": 1
+    },
+    {
+      "number": 27,
+      "title": "如愿",
+      "artist": "王菲",
+      "volume": 1
+    },
+    {
+      "number": 28,
+      "title": "可惜不是你",
+      "artist": "梁静茹",
+      "volume": 1
+    },
+    {
+      "number": 29,
+      "title": "Misty",
+      "artist": "Jazz Standard",
+      "volume": 1
+    },
+    {
+      "number": 30,
+      "title": "分手快乐",
+      "artist": "梁静茹",
+      "volume": 1
+    }
+  ]
+}

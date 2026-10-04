@@ -1,0 +1,41 @@
+<!doctype html>
+<html data-visual="site" lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Piano Intros｜按编号浏览、搜索与选择钢琴前奏乐谱。">
+  <title>钢琴前奏 · 乐铺屋 · Sheen Yang</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../scores.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+  <script src="./catalog.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="shell header-inner"><a class="brand" href="../../">Sheen Yang</a><a class="back-link" href="../">← 乐铺屋</a></div></header>
+<main class="shell intros-main">
+  <section class="page-heading"><span class="eyebrow">乐铺屋 / PIANO INTROS</span><h1>钢琴前奏</h1><p class="lead" lang="en">Piano Intros</p></section>
+  <section id="volumes" class="volumes" aria-label="前奏合辑"></section>
+  <section class="song-catalog" aria-labelledby="libraryHeading">
+    <div class="section-heading"><h2 id="libraryHeading">曲库</h2><span id="resultCount" class="muted"></span></div>
+    <label class="search-label" for="songSearch">搜索歌名或歌手</label><input class="search-input" id="songSearch" type="search" placeholder="歌名或歌手" autocomplete="off" disabled>
+    <p class="selection-note">自选套餐：1首 ¥3 · 任选5首 ¥8 · 任选10首 ¥15。免费《江南》不计入自选名额。</p>
+    <p id="catalogStatus" class="muted" role="status" aria-live="polite">正在加载曲库…</p>
+    <ol class="song-list" id="songList"></ol>
+    <noscript><p>请启用 JavaScript 以搜索和选择曲目。<a href="../jiangnan/">免费《江南》乐谱仍可直接下载。</a></p></noscript>
+  </section>
+  <aside class="selection-bar" aria-label="已选曲目与套餐">
+    <div class="selection-summary" role="status" aria-live="polite" aria-atomic="true"><span id="selectedCount">已选 0 首</span><strong id="selectionPrice">请选择 1、5 或 10 首</strong></div>
+    <div class="selection-actions"><button class="text-button" id="clearSelection" type="button" disabled>清空</button><button class="button primary" id="confirmSelection" type="button" disabled>确认选择</button></div>
+  </aside>
+</main>
+<dialog id="purchaseDialog" class="purchase-dialog" aria-labelledby="purchaseHeading" aria-describedby="purchaseNote">
+  <div class="dialog-heading"><h2 id="purchaseHeading">确认选择</h2><button class="close-button" id="closeDialog" type="button" aria-label="关闭购买确认">×</button></div>
+  <p id="purchaseSummary" class="purchase-summary"></p><ol id="purchaseTracks" class="purchase-tracks"></ol>
+  <p id="purchaseNote" class="preparation-note">已准备好你的选择，尚未发起付款。新套餐支付入口暂未开放，请勿按旧《江南》价格付款。</p>
+  <button class="button" id="returnToCatalog" type="button">返回曲库</button>
+</dialog>
+<footer class="site-footer shell">© 2026 Sheen Yang, All rights reserved.</footer>
+</body>
+</html>
