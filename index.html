@@ -271,12 +271,13 @@
     .contact{
       padding:68px 0 48px;
     }
-    .contact-head{
+    .contact-layout{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:64px;
-      margin-bottom:48px;
+      grid-template-columns:minmax(0,1fr) minmax(0,360px);
+      gap:48px;
+      align-items:start;
     }
+    .contact-head{margin-bottom:22px}
     .contact h2{
       margin:0;
       font-family:var(--site-font);
@@ -284,40 +285,40 @@
       font-weight:600;
     }
     .contact-intro{
-      margin:0;
+      margin:18px 0 0;
       color:var(--muted);
       line-height:1.8;
       max-width:32em;
     }
-    .contact-email{margin:0 0 30px;line-height:1.8;color:var(--muted)}
+    .contact-email{margin:0;line-height:1.8;color:var(--muted)}
     .contact-email a{overflow-wrap:anywhere}
     .consultation{
-      max-width:760px;
-      margin-inline:auto;
-      padding:32px;
-      border:1px solid var(--site-border);
-      border-radius:20px;
-      background:var(--site-panel);
+      width:100%;max-width:360px;
+      padding:16px;
+      border-radius:16px;
+      background:color-mix(in srgb,var(--site-soft) 65%,transparent);
     }
-    .consultation h3{font-size:24px;margin:0 0 28px;font-weight:600}
-    .consultation-fields{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-    .consultation-field{display:grid;gap:9px;min-width:0}
-    .consultation-field.full{grid-column:1 / -1}
-    .consultation label{font-size:14px;font-weight:400}
-    .consultation :is(input,select,textarea){
-      width:100%;min-width:0;
-      padding:13px 14px;
-      border:1px solid var(--site-border);
-      border-radius:12px;
-      background:var(--site-bg);
+    .consultation-fields{display:grid;gap:10px}
+    .consultation-field{min-width:0}
+    .visually-hidden{
+      position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+      overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+    }
+    .consultation :is(input,textarea){
+      display:block;width:100%;min-width:0;
+      padding:10px 12px;
+      border:1px solid color-mix(in srgb,var(--site-border) 75%,transparent);
+      border-radius:10px;
+      background:color-mix(in srgb,var(--site-bg) 70%,transparent);
       color:var(--site-text);
-      font:400 16px/1.6 var(--site-font);
+      font:400 14px/1.5 var(--site-font);
       -webkit-touch-callout:default;
     }
-    .consultation textarea{resize:vertical;min-height:136px}
-    .consultation .button{margin-top:26px;cursor:pointer;font-weight:500}
+    .consultation :is(input,textarea)::placeholder{color:var(--site-muted);opacity:1}
+    .consultation textarea{resize:vertical;min-height:84px}
+    .consultation .button{min-height:38px;padding:0 16px;margin-top:12px;cursor:pointer;font-size:13px;font-weight:500;border-radius:10px}
     .consultation .button:disabled{cursor:default;opacity:.65}
-    .consultation-status{min-height:44px;margin:16px 0 0;font-size:13px;line-height:1.7;color:var(--site-muted)}
+    .consultation-status{min-height:40px;margin:8px 0 0;font-size:12px;line-height:1.65;color:var(--site-muted)}
     .consultation-status[data-state="error"]{color:var(--site-error)}
     .consultation-status[data-state="success"]{color:var(--site-success)}
 
@@ -333,23 +334,23 @@
     }
     .social-entry{
       display:flex;flex-direction:column;align-items:center;gap:12px;
-      min-width:124px;padding:12px 4px;text-align:center;border-radius:12px;
+      min-width:124px;padding:12px 4px;text-align:center;
     }
-    .social-entry:hover{background:var(--site-soft)}
-    .social-logo{
-      width:56px;height:56px;display:grid;place-items:center;
-      background:rgba(245,246,248,.9);
-      border:1px solid rgba(120,125,135,.15);border-radius:12px;
+    .social-logo{width:44px;height:44px;display:grid;place-items:center}
+    .social-logo img{width:34px;height:34px;object-fit:contain;transition:transform 180ms cubic-bezier(.22,.61,.36,1)}
+    @media (hover:hover){.social-entry:hover .social-logo img{transform:scale(1.07)}}
+    .social-entry:focus-visible .social-logo img{transform:scale(1.07)}
+    .social-entry:active .social-logo img{transform:scale(.96);transition-duration:80ms}
+    @media (prefers-reduced-motion:reduce){
+      .social-entry .social-logo img{transition:none!important;transform:none!important}
     }
-    .social-logo img{width:34px;height:34px;object-fit:contain}
     .social-id{font-size:12px;font-weight:400;-webkit-user-select:text;user-select:text}
     .copyright{margin:0;line-height:1.8}
     .to-top{position:absolute;right:0;bottom:0;width:44px;height:44px;display:grid;place-items:center;font-size:18px}
-    @media (prefers-color-scheme:dark){.social-logo{background:rgba(245,246,248,.86)}}
     @media (max-width:599px){
-      .consultation{padding:24px 20px}
-      .consultation-fields{grid-template-columns:1fr;gap:18px}
-      .consultation-field.full{grid-column:auto}
+      .contact-layout{grid-template-columns:1fr;gap:26px}
+      .consultation{max-width:360px;padding:14px;justify-self:end}
+      .consultation :is(input,textarea){font-size:16px}
       .social-entry{min-width:116px}
       .copyright{font-size:11px}
       .to-top{bottom:-34px;right:calc(50% - 22px)}
@@ -376,7 +377,6 @@
       }
       .area h2{font-size:42px}
       .contact{padding:56px 0 40px}
-      .contact-head{grid-template-columns:1fr;gap:18px;margin-bottom:34px}
     }
 
     @media (max-width:520px){
@@ -565,7 +565,8 @@
     </section>
 
     <section class="contact" id="contact">
-      <div class="shell">
+      <div class="shell contact-layout">
+        <div class="contact-copy">
         <div class="contact-head">
           <h2>联系我</h2>
           <p class="contact-intro">
@@ -574,33 +575,22 @@
         </div>
 
         <p class="contact-email">邮箱 · <a href="mailto:sheenyangmusic@gmail.com">sheenyangmusic@gmail.com</a></p>
+        </div>
         <!-- Configure only with a confirmed project Formspree endpoint. -->
-        <form class="consultation" id="consultationForm" method="post" action="https://formspree.io/f/xnpneyko" data-formspree-endpoint="https://formspree.io/f/xnpneyko" aria-labelledby="consultationHeading" aria-describedby="consultationStatus">
-          <h3 id="consultationHeading">课程咨询</h3>
-          <input type="hidden" name="_subject" value="课程咨询 | Sheen Yang">
+        <form class="consultation" id="consultationForm" method="post" action="https://formspree.io/f/xnpneyko" data-formspree-endpoint="https://formspree.io/f/xnpneyko" aria-label="网站咨询" aria-describedby="consultationStatus">
+          <input type="hidden" name="_subject" value="网站咨询 | Sheen Yang">
           <div class="consultation-fields">
             <div class="consultation-field">
-              <label for="consultationName">怎么称呼你</label>
-              <input id="consultationName" name="name" type="text" autocomplete="name" maxlength="80" required>
+              <label class="visually-hidden" for="consultationName">怎么称呼你</label>
+              <input id="consultationName" name="name" type="text" placeholder="怎么称呼你" autocomplete="name" maxlength="80" required>
             </div>
             <div class="consultation-field">
-              <label for="consultationEmail">Email</label>
-              <input id="consultationEmail" name="email" type="email" autocomplete="email" maxlength="254" required>
+              <label class="visually-hidden" for="consultationContact">Email、微信或其他联系方式</label>
+              <input id="consultationContact" name="contact" type="text" placeholder="Email、微信或其他联系方式" autocomplete="off" maxlength="254" required>
             </div>
-            <div class="consultation-field full">
-              <label for="consultationTopic">想学习什么</label>
-              <select id="consultationTopic" name="learning_topic" required>
-                <option value="" disabled selected>请选择</option>
-                <option>即兴伴奏</option>
-                <option>音乐理论</option>
-                <option>扒谱与听力</option>
-                <option>升学与作品集</option>
-                <option>其他</option>
-              </select>
-            </div>
-            <div class="consultation-field full">
-              <label for="consultationMessage">简单说说你的音乐基础和学习目标</label>
-              <textarea id="consultationMessage" name="message" rows="4" maxlength="3000" required></textarea>
+            <div class="consultation-field">
+              <label class="visually-hidden" for="consultationMessage">简单说说你的需求或想法</label>
+              <textarea id="consultationMessage" name="message" placeholder="简单说说你的需求或想法" rows="3" maxlength="3000" required></textarea>
             </div>
           </div>
           <button class="button primary" id="consultationSubmit" type="submit">发送咨询</button>
@@ -694,7 +684,7 @@
         if(!response.ok) throw new Error('Submission failed');
         consultationForm.reset();
         consultationStatus.dataset.state = 'success';
-        consultationStatus.textContent = '咨询已发送，谢谢！我会通过 Email 回复你。';
+        consultationStatus.textContent = '咨询已发送，谢谢！我会通过你留下的联系方式回复。';
       }catch{
         consultationStatus.dataset.state = 'error';
         consultationStatus.textContent = '发送未成功，你填写的内容已保留。请稍后重试，或通过上方 Email 联系。';
