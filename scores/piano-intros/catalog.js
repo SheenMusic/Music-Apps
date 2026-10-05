@@ -54,6 +54,8 @@
         const link = element('a','', '');
         link.href = track.url;
         link.dataset.scoreConsent = `piano-intros:${numberLabel(track.number)}`;
+        link.dataset.scoreId = track.score_id || new URL(track.url,location.href).pathname.split('/').filter(Boolean).pop();
+        link.dataset.scoreTitle = track.title;
         link.setAttribute('aria-label',`免费下载《${track.title}》前奏乐谱`);
         link.append(element('strong','free-tag','FREE'),element('span','','查看乐谱 ↗'));
         label.append(link);

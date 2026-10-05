@@ -45,7 +45,14 @@
     const link = event.target.closest('a[data-score-consent]');
     if(!link || event.defaultPrevented || hasAccepted(link.dataset.scoreConsent)) return;
     event.preventDefault();
+    const scoreID = link.dataset.scoreId, scoreTitle = link.dataset.scoreTitle;
     if(!await request('free')) return;
+    // Only an explicitly acknowledged FREE continuation counts; cached
+    // consent, opening the dialog and checkbox changes never emit this event.
+    if(scoreID && scoreTitle && typeof window.gtag === 'function'){
+      try{window.gtag('event','score_download',{score_id:scoreID,score_title:scoreTitle,score_type:'free'})}
+      catch{ /* Analytics must not block viewing or downloading a score. */ }
+    }
     const key = link.dataset.scoreConsent;accepted.add(key);
     try{sessionStorage.setItem(`score-consent:${key}`,'accepted')}catch{}
     // Keep the original URL, preview target and download filename unchanged.
