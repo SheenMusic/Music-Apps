@@ -14,13 +14,15 @@ header[data-site-navigation]{height:88px;display:flex;align-items:center;backgro
 [data-site-navigation] .menu-button[aria-expanded="true"] .menu-icon::before{top:8px;transform:rotate(45deg)}
 [data-site-navigation] .menu-button[aria-expanded="true"] .menu-icon span{opacity:0}
 [data-site-navigation] .menu-button[aria-expanded="true"] .menu-icon::after{top:8px;transform:rotate(-45deg)}
-.menu-panel[data-site-navigation]{position:fixed;inset:88px 0 0;overflow-y:auto;overscroll-behavior-y:contain;padding-bottom:env(safe-area-inset-bottom,0px);z-index:25;background:var(--site-bg);opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease}
-.menu-panel[data-site-navigation].is-open{opacity:1;visibility:visible;transition:opacity .2s ease}
-[data-site-navigation] .menu-inner{width:min(calc(100% - 48px),1180px);margin:auto;padding:58px 0;display:grid;grid-template-columns:1fr}
-[data-site-navigation] .menu-links{display:grid;gap:0;width:100%;align-items:stretch;justify-content:normal}
-[data-site-navigation] .menu-links a{font-family:var(--site-font);font-weight:500;font-size:19px;min-height:52px;box-sizing:border-box;padding:13px 0;border-bottom:1px solid var(--site-border);color:inherit;text-decoration:none;line-height:1.6;letter-spacing:normal}
+/* The full-screen layer is only a light scrim; the links own their panel. */
+html .menu-panel[data-site-navigation]{--menu-backdrop:rgb(0 0 0 / .12);position:fixed;inset:0;z-index:25;background:var(--menu-backdrop);opacity:0;visibility:hidden;overflow:hidden;transition:opacity .2s ease,visibility .2s ease}
+html .menu-panel[data-site-navigation].is-open{opacity:1;visibility:visible;transition:opacity .2s ease}
+[data-site-navigation] .menu-inner{position:absolute;top:var(--menu-top,100px);right:var(--menu-right,max(24px,calc((100vw - 1180px)/2)));width:min(280px,calc(100% - 30px));padding:0;margin:0;display:block;transform:translateY(-6px);opacity:0;transition:transform .2s ease,opacity .2s ease;pointer-events:none}
+html .menu-panel[data-site-navigation].is-open .menu-inner{transform:translateY(0);opacity:1}
+[data-site-navigation] .menu-links{display:grid;gap:0;width:100%;box-sizing:border-box;padding:12px 20px;max-height:calc(100dvh - var(--menu-top,100px) - 16px - env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain;align-items:stretch;justify-content:normal;text-align:right;border-radius:24px;border:1px solid color-mix(in srgb,var(--site-border) 65%,transparent);background:color-mix(in srgb,var(--site-bg) 96%,transparent);box-shadow:none;pointer-events:auto}
+[data-site-navigation] .menu-links a{font-family:var(--site-font);font-weight:500;font-size:19px;min-height:52px;box-sizing:border-box;padding:10px 0;border:0;color:inherit;text-decoration:none;line-height:1.6;letter-spacing:normal}
 [data-site-navigation] .menu-links a[aria-current="page"]{opacity:.78}
-@media(max-width:860px){header[data-site-navigation]{height:72px}[data-site-navigation] .brand{font-size:20px}[data-site-navigation] .topbar-inner{width:calc(100% - 34px)}.menu-panel[data-site-navigation]{inset:72px 0 0}[data-site-navigation] .menu-inner{width:calc(100% - 34px);padding:34px 0}}
-@media(max-width:520px){[data-site-navigation] .topbar-inner{width:calc(100% - 30px)}}
-@media(min-width:861px) and (orientation:landscape),(min-width:1101px){[data-site-navigation] .menu-inner{padding-top:24px}[data-site-navigation] .menu-links{width:240px;max-width:100%;justify-self:end;text-align:right}[data-site-navigation] .menu-links a{padding-block:10px}}
-@media(prefers-reduced-motion:reduce){[data-site-navigation] .menu-icon::before,[data-site-navigation] .menu-icon::after,[data-site-navigation] .menu-icon span,.menu-panel[data-site-navigation]{transition:none}}
+@media(max-width:860px){header[data-site-navigation]{height:72px}[data-site-navigation] .brand{font-size:20px}[data-site-navigation] .topbar-inner{width:calc(100% - 34px)}html .menu-panel[data-site-navigation]{--menu-top:84px;--menu-right:17px}}
+@media(max-width:520px){[data-site-navigation] .topbar-inner{width:calc(100% - 30px)}html .menu-panel[data-site-navigation]{--menu-right:15px}}
+@media(prefers-color-scheme:dark){html .menu-panel[data-site-navigation]{--menu-backdrop:rgb(0 0 0 / .22)}}
+@media(prefers-reduced-motion:reduce){[data-site-navigation] .menu-icon::before,[data-site-navigation] .menu-icon::after,[data-site-navigation] .menu-icon span,html .menu-panel[data-site-navigation],[data-site-navigation] .menu-inner{transition:none}}

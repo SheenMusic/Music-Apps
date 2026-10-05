@@ -10,6 +10,14 @@
     if(link.dataset.navSection === current) link.setAttribute('aria-current','page');
   }
   let previousInert = [];
+  function positionPanel(){
+    const rect = button.getBoundingClientRect();
+    const header = button.closest('header').getBoundingClientRect();
+    panel.style.setProperty('--menu-right',`${document.documentElement.clientWidth-rect.right}px`);
+    panel.style.setProperty('--menu-top',`${Math.max(12,header.bottom+12)}px`);
+  }
+  window.addEventListener('resize',()=>{if(button.getAttribute('aria-expanded') === 'true') positionPanel()});
+  panel.addEventListener('click',event=>{if(!event.target.closest('.menu-links')) setMenu(false)});
   function setMenu(open){
     button.setAttribute('aria-expanded',String(open));
     button.setAttribute('aria-label',open ? '关闭菜单' : '打开菜单');
@@ -18,6 +26,7 @@
     panel.inert = !open;
     document.body.classList.toggle('menu-open',open);
     if(open){
+      positionPanel();
       previousInert = Array.from(document.body.children)
         .filter(node=>node !== panel && !node.contains(button) && !['SCRIPT','STYLE','TEMPLATE'].includes(node.tagName))
         .map(node=>[node,node.inert]);
