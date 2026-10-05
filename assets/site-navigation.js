@@ -14,11 +14,11 @@
     const rect = button.getBoundingClientRect();
     const header = button.closest('header').getBoundingClientRect();
     panel.style.setProperty('--menu-right',`${document.documentElement.clientWidth-rect.right}px`);
-    panel.style.setProperty('--menu-top',`${Math.max(12,header.bottom+12)}px`);
+    panel.style.setProperty('--menu-top',`${Math.max(12,header.bottom)}px`);
   }
   window.addEventListener('resize',()=>{if(button.getAttribute('aria-expanded') === 'true') positionPanel()});
   panel.addEventListener('click',event=>{if(!event.target.closest('.menu-links')) setMenu(false)});
-  function setMenu(open){
+  function setMenu(open,keyboard = false){
     button.setAttribute('aria-expanded',String(open));
     button.setAttribute('aria-label',open ? '关闭菜单' : '打开菜单');
     panel.classList.toggle('is-open',open);
@@ -31,14 +31,14 @@
         .filter(node=>node !== panel && !node.contains(button) && !['SCRIPT','STYLE','TEMPLATE'].includes(node.tagName))
         .map(node=>[node,node.inert]);
       for(const [node] of previousInert) node.inert = true;
-      panel.querySelector('[aria-current="page"]')?.focus({preventScroll:true});
+      if(keyboard) panel.querySelector('[aria-current="page"]')?.focus({preventScroll:true});
     }else{
       for(const [node,inert] of previousInert) node.inert = inert;
       previousInert = [];
       button.focus({preventScroll:true});
     }
   }
-  button.addEventListener('click',()=>setMenu(button.getAttribute('aria-expanded') !== 'true'));
+  button.addEventListener('click',event=>setMenu(button.getAttribute('aria-expanded') !== 'true',event.detail === 0));
   panel.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setMenu(false)));
   document.addEventListener('keydown',event=>{
     if(button.getAttribute('aria-expanded') !== 'true') return;
