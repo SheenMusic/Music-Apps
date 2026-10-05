@@ -66,7 +66,7 @@
     lastFocus = document.activeElement;previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';syncViewport();showStep('checkoutDetails');dialog.showModal();
   }
-  byID('checkoutEmailForm').addEventListener('submit',event=>{
+  byID('checkoutEmailForm').addEventListener('submit',async event=>{
     event.preventDefault();
     const input = byID('buyerEmail');
     const value = input.value.trim();
@@ -76,6 +76,8 @@
     email = value;byID('emailError').hidden = true;
     byID('orderId').textContent = order;byID('emailShow').textContent = email;
     byID('submitError').hidden = true;byID('orderFallback').hidden = true;
+    if(!await window.scoreConsent.request('paid')) return;
+    if(!dialog.open) return;
     showStep('checkoutPayment');syncPaymentUI();byID('paidBtn').focus({preventScroll:true});dialog.scrollTop = 0;
   });
   byID('buyerEmail').addEventListener('invalid',event=>{event.preventDefault();byID('emailError').hidden=false;byID('buyerEmail').focus()});
