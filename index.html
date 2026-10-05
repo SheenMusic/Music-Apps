@@ -1,5 +1,5 @@
 <!doctype html>
-<html data-visual="site" data-home-experiment lang="zh-CN">
+<html data-visual="site" data-public-visual data-home-experiment lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -237,7 +237,6 @@
     .consultation-status[data-state="error"]{color:var(--site-error)}
     .consultation-status[data-state="success"]{color:var(--site-success)}
 
-    footer{padding:28px 0 38px}
     .footer-inner{position:relative;text-align:center;color:var(--muted);font-size:12px}
     .social-links{
       display:flex;
@@ -271,9 +270,7 @@
       .consultation-status:empty{display:none}
       .consultation :is(input,textarea){font-size:16px}
       .social-entry{min-width:116px}
-      .copyright{font-size:11px}
       .to-top{bottom:-34px;right:calc(50% - 22px)}
-      footer{padding-bottom:72px}
     }
 
     @media (max-width:860px){
@@ -524,7 +521,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="visual-footer">
     <div class="shell footer-inner">
       <nav class="social-links" aria-label="社交平台">
         <a class="social-entry" href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer" aria-label="打开抖音主页 @SheenYang（新窗口）">

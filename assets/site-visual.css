@@ -104,8 +104,8 @@ html[data-visual] :is(button, input, select, textarea) {
   font-family: var(--site-font);
   font-weight: 500;
 }
-html[data-visual] :is(h1, .main-title) { font-weight: 700; }
-html[data-visual] :is(h2, h3, h4, .brand, .hero h1 .cn) { font-weight: 600; }
+html[data-visual] :is(h1, .main-title):not(:where(.public-title)) { font-weight: 700; }
+html[data-visual] :is(h2, h3, h4, .brand, .hero h1 .cn):not(:where(.public-section, .public-entry)) { font-weight: 600; }
 html[data-visual] :is(label, small, .contact-label, .meta, .tiny) { font-weight: 400; }
 html[data-visual] :is(.question-prompt, .quiz-question, .questionLabel) { font-weight: 500; }
 html[data-visual] :is(a, button, input, select, textarea, summary):focus-visible {
@@ -166,13 +166,13 @@ html:is([data-visual="site"], [data-visual="legacy"]) :is(.item:hover, .card:hov
   background: var(--site-soft);
   border-color: var(--site-muted);
 }
-html[data-visual="site"] :is(.button.primary, .primary, .wide, .open-pay) {
+html[data-visual="site"] :is(.button.primary, .primary, .wide, .open-pay):not(:where(.site-cta)) {
   background: var(--site-accent);
   border-color: var(--site-accent);
   color: var(--site-on-accent);
 }
-html[data-visual="site"] .button:not(.primary) { border-color: var(--site-border); }
-html[data-visual="site"] :is(.button:hover, .method:hover) { background: var(--site-hover); color: var(--site-text); }
+html[data-visual="site"] .button:not(.primary):not(:where(.site-cta)) { border-color: var(--site-border); }
+html[data-visual="site"] :is(.button:hover, .method:hover):not(:where(.site-cta)) { background: var(--site-hover); color: var(--site-text); }
 html[data-visual="site"] :is(.method.active, .lang button.active) { border-color: var(--site-text); }
 html[data-visual="site"] :is(.error, .wechat-warning, .fallback p, .copy-btn) { color: var(--site-error); }
 html[data-visual="site"] .fallback { background: var(--site-error-bg); border-color: var(--site-error-border); }
@@ -276,3 +276,101 @@ html[data-visual="practice"] .staff-question {
 html[data-visual="learning"] .lesson-board,
 html[data-visual="practice"] .staff-question { background: #fff; }
 html[data-visual="ear"] .meter-bar { color-scheme: light; }
+
+/* Opt-in ordinary public pages only. Works, legacy and teaching apps do not
+   carry data-public-visual. Hero, Markdown, forms and checkout stay local. */
+html[data-public-visual] {
+  --public-gutter: 18px;
+  --public-top: 52px;
+  --public-section: 56px;
+  --public-section-inset: 32px;
+  --public-heading-gap: 24px;
+  --public-item-space: 28px;
+}
+:where(html[data-public-visual]) .public-title {
+  font-size: clamp(40px, 6vw, 64px);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -.04em;
+}
+:where(html[data-public-visual]) .public-section {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: -.015em;
+}
+:where(html[data-public-visual]) .public-entry {
+  font-size: clamp(25px, 3vw, 32px);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -.025em;
+}
+/* Explicit opt-in links: never applies to Hero or functional buttons. */
+:where(html[data-public-visual]) a.site-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  font-family: var(--site-font);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  min-height: 52px;
+  padding: 10px 26px;
+  gap: 18px;
+  border: 1px solid var(--site-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--site-text);
+  text-decoration: none;
+  transition: background .18s ease, color .18s ease;
+}
+:where(html[data-public-visual]) a.site-cta-compact {
+  min-height: 46px;
+  padding: 10px 24px;
+  gap: 16px;
+  font-size: 13px;
+}
+:where(html[data-public-visual]) a.site-cta.primary {
+  background: var(--site-accent);
+  border-color: var(--site-accent);
+  color: var(--site-on-accent);
+}
+:where(html[data-public-visual]) a.site-cta:hover {
+  background: var(--site-hover);
+  color: var(--site-text);
+}
+:where(html[data-public-visual]) a.site-cta.primary:hover {
+  background: var(--site-text);
+  border-color: var(--site-text);
+  color: var(--site-bg);
+}
+:where(html[data-public-visual]) .visual-footer {
+  border: 0;
+  padding: 28px 0 calc(var(--public-footer-bottom, 38px) + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--site-muted);
+}
+@media (min-width: 861px) {
+  html[data-public-visual] {
+    --public-gutter: 24px;
+    --public-top: 76px;
+    --public-section: 80px;
+    --public-section-inset: 40px;
+    --public-item-space: 36px;
+  }
+}
+@media (max-width: 599px) {
+  :where(html[data-public-visual]) a.site-cta:not(.site-cta-compact) {
+    min-height: 48px;
+    padding-inline: 24px;
+    gap: 14px;
+  }
+  :where(html[data-public-visual]) .public-entry { font-size: 24px; }
+  html[data-public-visual][data-home-experiment] { --public-footer-bottom: 72px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(html[data-public-visual]) a.site-cta { transition: none; }
+}
