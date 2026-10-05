@@ -35,8 +35,8 @@
 
 ## 乐谱使用确认
 
-`consent.js` / `consent.css` 提供 FREE / PAID 共用确认界面。免费入口标记 `data-score-consent="稳定且唯一的乐谱标识"`，同一乐谱的目录、预览和下载入口使用同一标识；原 `href`、`target`、`download` 保持原样。动态前奏曲库使用 `piano-intros:三位编号`。免费确认仅在当前浏览会话复用，未使用长期存储。
+`consent.js` / `consent.css` 提供 FREE / PAID 共用确认界面。只有详情页真正获取文件的入口标记 `data-score-consent` 并提供 `data-score-id` / `data-score-title`；目录、曲库导航不标记。每次查看或下载都重新确认，不使用存储或记忆已确认状态。原 `href`、`target`、`download` 保持原样。
 
 付费流程每次从 Email/订单详情进入付款前调用 `scoreConsent.request('paid')`，不保存确认状态；取消确认停留在订单详情，返回修改后需重新确认。计价、订单数据、收款码和提交逻辑继续由原模块控制。
 
-免费入口同时提供 `data-score-id` / `data-score-title`，共享确认模块仅在勾选并点击「继续查看乐谱」后调用现有 GA4 的 `score_download`（`score_id`、`score_title`、`score_type: free`）。进入页面、打开说明、勾选或取消、复用已确认状态均不发送事件。前奏 JSON 免费曲目沿用 `title`，可提供 `score_id`；未提供时从现有免费详情 URL 提取 slug。GA4 不可用时仍正常继续查看/下载。
+免费入口仅在勾选并点击「继续查看乐谱」、继续执行该次查看或下载时调用现有 GA4 的 `score_download`（`score_id`、`score_title`、`score_type: free`、`score_action: view / download`）。进入页面、打开说明、勾选或取消均不发送事件。GA4 不可用时仍正常继续查看/下载。

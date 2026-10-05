@@ -2,7 +2,6 @@
 (() => {
   'use strict';
   const usage = '本站乐谱仅供个人学习、交流与研究使用，请勿二次转发、分享、再次销售或用于其他商业用途。';
-  const accepted = new Set();
   let pending = null;
   const dialog = document.createElement('dialog');
   dialog.className = 'score-consent';
@@ -37,24 +36,17 @@
     document.body.style.overflow = 'hidden';
     return new Promise(resolve=>{pending = resolve;dialog.showModal();checkbox.focus({preventScroll:true})});
   }
-  function hasAccepted(key){
-    if(accepted.has(key)) return true;
-    try{return sessionStorage.getItem(`score-consent:${key}`) === 'accepted'}catch{return false}
-  }
   document.addEventListener('click',async event=>{
     const link = event.target.closest('a[data-score-consent]');
-    if(!link || event.defaultPrevented || hasAccepted(link.dataset.scoreConsent)) return;
+    if(!link || event.defaultPrevented) return;
     event.preventDefault();
     const scoreID = link.dataset.scoreId, scoreTitle = link.dataset.scoreTitle;
     if(!await request('free')) return;
-    // Only an explicitly acknowledged FREE continuation counts; cached
-    // consent, opening the dialog and checkbox changes never emit this event.
+    // Only this operation's explicit FREE continuation counts.
     if(scoreID && scoreTitle && typeof window.gtag === 'function'){
-      try{window.gtag('event','score_download',{score_id:scoreID,score_title:scoreTitle,score_type:'free'})}
+      try{window.gtag('event','score_download',{score_id:scoreID,score_title:scoreTitle,score_type:'free',score_action:link.hasAttribute('download') ? 'download' : 'view'})}
       catch{ /* Analytics must not block viewing or downloading a score. */ }
     }
-    const key = link.dataset.scoreConsent;accepted.add(key);
-    try{sessionStorage.setItem(`score-consent:${key}`,'accepted')}catch{}
     // Keep the original URL, preview target and download filename unchanged.
     const continuation = link.cloneNode(true);continuation.removeAttribute('data-score-consent');
     if(event.ctrlKey || event.metaKey || event.shiftKey) continuation.target = '_blank';
