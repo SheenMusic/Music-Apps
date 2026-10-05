@@ -39,3 +39,26 @@ main{padding-block:var(--public-top) 90px}.eyebrow{font-size:11px;color:var(--si
 .package-rules{font-size:13px;color:var(--site-muted);line-height:1.9;padding-left:20px;margin:30px 0 0}
 .package-rules li+li{margin-top:8px}
 @media(max-width:599px){.learning-section+.learning-section{margin-top:var(--public-section);padding-top:var(--public-section-inset)}.private-intro{margin-bottom:48px}.session-options,.package-options{grid-template-columns:1fr;gap:0}.session-option{padding:0 0 26px}.session-option+.session-option{border-left:0;border-top:1px solid var(--site-border);padding:26px 0}.session-option:last-child{padding-bottom:0}.package-option+.package-option{margin-top:28px}}
+
+/* Public training descriptions only; student applications stay independent. */
+.course-title-link{display:inline-block;text-underline-offset:.22em}
+.course-title-link span{font-size:.7em;color:var(--site-muted)}
+.course-title-link:hover{text-decoration:underline;text-decoration-thickness:1px}
+.training-detail{max-width:880px}
+.training-back{display:inline-block;margin-bottom:24px}
+.training-lead{font-size:18px;line-height:1.8;margin:0 0 28px;font-weight:400}
+.training-detail .training-copy,.training-detail .learning-section{max-width:700px}
+.training-detail p,.training-audience{line-height:1.95}
+.training-copy p,.training-detail .learning-section>p{margin:0 0 20px}
+.training-detail .learning-section{margin-top:var(--public-section)}
+.training-units{list-style:none;margin:0;padding:0}
+.training-unit+.training-unit{margin-top:26px}
+.training-unit h3{font-size:17px;line-height:1.7;margin:0 0 8px}
+.training-unit p{margin:0;color:var(--site-muted)}
+.training-audience{padding-left:1.4em;margin:0 0 22px}
+.training-audience li+li{margin-top:8px}
+.training-info{margin:0}
+.training-info>div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:16px;padding:12px 0}
+.training-info dt{color:var(--site-muted)}
+.training-info dd{margin:0;line-height:1.8}
+@media(max-width:599px){.training-lead{font-size:16px}.training-info>div{grid-template-columns:112px minmax(0,1fr);gap:12px}}
