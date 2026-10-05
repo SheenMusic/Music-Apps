@@ -79,10 +79,10 @@
   <section id="checkoutPayment" class="checkout-step" hidden aria-label="支付和提交订单">
     <p class="checkout-order">订单 <span id="orderId"></span><br>接收邮箱：<span id="emailShow"></span></p>
     <div class="payment-methods" role="group" aria-label="支付方式"><button class="button payment-method" type="button" data-method="支付宝" aria-pressed="true">支付宝</button><button class="button payment-method" type="button" data-method="微信" aria-pressed="false">微信</button></div>
-    <div class="payment-qr"><img id="qrImg" src="../jiangnan/assets/alipay.jpg" width="260" height="260" alt="支付宝收款二维码"></div>
+    <div class="payment-qr"><img id="qrImg" src="../assets/payment/alipay.jpg" width="260" height="260" alt="支付宝收款二维码"></div>
     <p class="payment-hint" id="payHint"></p>
     <a id="openPay" class="button" href="https://qr.alipay.com/fkx13921kb0l57ujqpulsb8" target="_blank" rel="noopener noreferrer" hidden>打开支付宝付款</a>
-    <a id="saveQr" class="save-qr" href="../jiangnan/assets/alipay.jpg" download="支付宝收款码.jpg">保存收款码</a>
+    <a id="saveQr" class="save-qr" href="../assets/payment/alipay.jpg" download="支付宝收款码.jpg">保存收款码</a>
     <div class="checkout-field"><label for="paymentName">付款昵称（建议填写，方便核对）</label><input id="paymentName" type="text" maxlength="60" placeholder="微信或支付宝付款昵称" autocomplete="off"></div>
     <p id="submitError" class="checkout-error" role="alert" hidden>订单尚未提交成功，已保留你的信息。如果已经付款，请勿重复付款。</p>
     <div id="orderFallback" class="order-fallback" hidden><p>请先保存订单信息。如果重试仍失败，请复制后通过联系过我的平台私信发送，以便人工处理。</p><pre id="orderCopy" class="order-copy"></pre><button id="copyOrder" class="button" type="button">复制订单信息</button></div>

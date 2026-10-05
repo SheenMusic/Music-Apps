@@ -28,7 +28,7 @@
   }
   function syncPaymentUI(){
     const wechat = method === '微信';
-    const image = wechat ? '../jiangnan/assets/wechat-pay.jpg' : '../jiangnan/assets/alipay.jpg';
+    const image = wechat ? '../assets/payment/wechat-pay.jpg' : '../assets/payment/alipay.jpg';
     byID('qrImg').src = image;byID('qrImg').alt = `${method}收款二维码`;
     byID('saveQr').href = image;byID('saveQr').download = `${method}收款码.jpg`;
     byID('openPay').href = PAY_LINK;byID('openPay').hidden = !isMobile || wechat;

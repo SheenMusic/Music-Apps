@@ -40,7 +40,7 @@
 
 <main class="shell detail-main">
   <section class="page-heading"><span class="eyebrow">FREE SCORE · 002</span><h1>江南 前奏</h1><p class="lead">JJ Lin · Arr. by Sheen</p><p class="muted">林俊杰 · 钢琴前奏 · 视频同款乐谱</p></section>
-  <div class="score-actions"><a class="button" href="../assets/jiangnan-intro.pdf" data-score-consent="piano-intros:002" data-score-id="jiangnan" data-score-title="江南" target="_blank" rel="noopener">查看乐谱 <span aria-hidden="true">↗</span></a><a class="button primary" href="../assets/jiangnan-intro.pdf" data-score-consent="piano-intros:002" data-score-id="jiangnan" data-score-title="江南" download="江南-前奏.pdf">下载 PDF <span aria-hidden="true">↓</span></a></div>
+  <div class="score-actions"><a class="button" href="./assets/jiangnan-intro.pdf" data-score-consent="piano-intros:002" data-score-id="jiangnan" data-score-title="江南" target="_blank" rel="noopener">查看乐谱 <span aria-hidden="true">↗</span></a><a class="button primary" href="./assets/jiangnan-intro.pdf" data-score-consent="piano-intros:002" data-score-id="jiangnan" data-score-title="江南" download="江南-前奏.pdf">下载 PDF <span aria-hidden="true">↓</span></a></div>
   <p class="score-spec">Piano · 4 bars · PDF <span class="free-tag">FREE</span></p>
   <section class="demo-section" aria-labelledby="demoHeading"><h2 id="demoHeading">Demo Video</h2><div class="demo-video"><video controls playsinline preload="metadata" width="1080" height="1920"><source src="./assets/jiangnan-demo.mp4" type="video/mp4">你的浏览器暂不支持视频播放。</video></div></section>
   <p class="detail-note">收录于 <a href="../piano-intros/">Piano Intros Vol. 1</a>。这首乐谱为免费样本。</p>
@@ -69,7 +69,7 @@ footer{border-top:1px solid var(--line);padding:24px 0 calc(24px + env(safe-area
 </div>
 <div class="step" id="step2"><div class="pay-summary">订单 <span id="orderId"></span><br>《江南》钢琴前奏谱<br><strong id="amount">¥5</strong> · <span id="tierLabel">直接购买</span><br>接收邮箱：<span id="emailShow"></span></div>
 <div class="method-tabs"><button class="method active" data-method="支付宝">支付宝</button><button class="method" data-method="微信">微信</button></div>
-<div class="qr"><img id="qrImg" src="./assets/alipay.jpg" alt="支付宝收款二维码"></div><div class="hint" id="payHint">请扫码支付 <strong id="amountHint">¥5</strong>。<br>付款完成后，再点击下面的按钮提交订单。</div><div class="mobile-pay" id="mobilePay"><a class="open-pay" id="openPay" href="https://qr.alipay.com/fkx13921kb0l57ujqpulsb8">打开支付宝付款</a><a class="save-qr" id="saveQr" href="./assets/alipay.jpg" download="支付宝收款码.jpg">保存收款码备用</a><p class="mobile-note" id="mobileNote">如果支付宝没有自动打开，可保存收款码后在支付宝中识别。</p></div><div class="wechat-warning" id="wechatWarning">微信支付暂不支持从本页面直接跳转。手机用户请先保存收款码，再打开微信「扫一扫」从相册识别。</div>
+<div class="qr"><img id="qrImg" src="../assets/payment/alipay.jpg" alt="支付宝收款二维码"></div><div class="hint" id="payHint">请扫码支付 <strong id="amountHint">¥5</strong>。<br>付款完成后，再点击下面的按钮提交订单。</div><div class="mobile-pay" id="mobilePay"><a class="open-pay" id="openPay" href="https://qr.alipay.com/fkx13921kb0l57ujqpulsb8">打开支付宝付款</a><a class="save-qr" id="saveQr" href="../assets/payment/alipay.jpg" download="支付宝收款码.jpg">保存收款码备用</a><p class="mobile-note" id="mobileNote">如果支付宝没有自动打开，可保存收款码后在支付宝中识别。</p></div><div class="wechat-warning" id="wechatWarning">微信支付暂不支持从本页面直接跳转。手机用户请先保存收款码，再打开微信「扫一扫」从相册识别。</div>
 <div class="field"><label for="payName">付款昵称（建议填写，方便核对）</label><input id="payName" type="text" maxlength="60" placeholder="微信或支付宝付款昵称"></div>
 <div class="error" id="submitError">订单信息尚未提交成功。请检查网络后重新提交；如果你已经付款，请不要关闭本页面。</div><div class="fallback" id="fallback"><strong>已经付款？请先保存订单信息</strong><p>如果多次提交仍失败，请复制下面的信息，通过你看到《江南》视频的平台私信发给我，我会人工处理。</p><div class="order-copy" id="orderCopy"></div><button class="copy-btn" id="copyOrder" type="button">复制订单信息</button></div><button class="wide" id="paidBtn">我已完成付款</button><button class="minor" id="backBtn">返回修改</button><div class="legal">点击“我已完成付款”仅表示你已提交付款信息。订单将在人工核对到账后发货。</div></div>
 <div class="step" id="step3"><div class="status"><div class="mark">✓</div><h3>购买信息已提交</h3><p>订单号：<strong id="doneOrder"></strong><br>确认到账后，PDF 乐谱会发送到<br><strong id="doneEmail"></strong></p></div><button class="wide" id="doneBtn">完成</button></div>
@@ -88,7 +88,7 @@ $('#buyBtn').onclick=()=>openBuy('5');$('#supportBtn').onclick=()=>openBuy('2');
 $('#toPay').addEventListener('pointerdown',e=>e.preventDefault());
 $('#toPay').onclick=()=>{const email=$('#email').value.trim();if(!/^\S+@\S+\.\S+$/.test(email)){ $('#emailError').style.display='block';requestAnimationFrame(()=>{const el=$('#email');el.focus({preventScroll:true});try{el.setSelectionRange(el.value.length,el.value.length)}catch(_){}el.scrollIntoView({block:'center',behavior:'smooth'})});return}$('#emailError').style.display='none';const tier=$('input[name="tier"]:checked').value;order=makeOrder();$('#orderId').textContent=order;$('#amount').textContent=$('#amountHint').textContent='¥'+tier;$('#tierLabel').textContent=tier==='2'?'视频留言支持价':'直接购买';$('#emailShow').textContent=email;showStep(2);syncPaymentUI()};
 function syncPaymentUI(){
- const wx=method==='微信', img=wx?'./assets/wechat-pay.jpg':'./assets/alipay.jpg';
+ const wx=method==='微信', img=wx?'../assets/payment/wechat-pay.jpg':'../assets/payment/alipay.jpg';
  $('#qrImg').src=img;$('#qrImg').alt=method+'收款二维码';
  $('#saveQr').href=img;$('#saveQr').download=method+'收款码.jpg';
  $('#wechatWarning').classList.toggle('show',wx);

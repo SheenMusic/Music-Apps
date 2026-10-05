@@ -29,7 +29,7 @@
 - `selected_tracks`：可直接阅读的“编号 歌名”逐行清单；`tracks`：结构化曲目数组；`track_count`。
 - `buyer_email`、`payment_method`、`payment_name`、`submitted_at`。
 
-原《江南》支付样式、控件和订单代码仍原样保留在免费详情页的 `template#legacy-jiangnan-checkout`，不显示、不执行；新购买流程只在曲库页面执行。付款二维码保持原色白底，不随 Dark Mode 反色。
+原《江南》支付样式、控件和订单代码仍保留（资源引用随迁移更新）在免费详情页的 `template#legacy-jiangnan-checkout`，不显示、不执行；新购买流程只在曲库页面执行。付款二维码保持原色白底，不随 Dark Mode 反色。
 
 在当前 Cloud 环境 Formspree 网络访问被阻止，浏览器测试验证的是完整请求数据、成功响应、失败/超时及同号重试。正式环境收件与支付宝/微信实际 App 付款需人工验证。
 
@@ -40,3 +40,11 @@
 付费流程每次从 Email/订单详情进入付款前调用 `scoreConsent.request('paid')`，不保存确认状态；取消确认停留在订单详情，返回修改后需重新确认。计价、订单数据、收款码和提交逻辑继续由原模块控制。
 
 免费入口仅在勾选并点击「继续查看乐谱」、继续执行该次查看或下载时调用现有 GA4 的 `score_download`（`score_id`、`score_title`、`score_type: free`、`score_action: view / download`）。进入页面、打开说明、勾选或取消均不发送事件。GA4 不可用时仍正常继续查看/下载。
+
+## 资源目录规则
+
+- `scores/assets/` 仅放多个 Scores 页面共享资源；收款码统一为 `assets/payment/alipay.jpg` 和 `assets/payment/wechat-pay.jpg`。
+- 单首乐谱使用 `scores/[slug]/index.html`，自己的 PDF、视频、图片放在该目录的 `assets/`；不建立 `scores/free/`。
+- 《江南》资源为 `jiangnan/assets/jiangnan-intro.pdf` 和 `jiangnan/assets/jiangnan-demo.mp4`；未使用的旧封面已删除。
+- 以后例如《蒲公英的约定》使用 `pugongying-de-yueding/index.html`、`pugongying-de-yueding/assets/pugongying-de-yueding.pdf`，如有示范则同目录放 `pugongying-de-yueding-demo.mp4`。这里只记录规则，不预建页面。
+- 移动资源时同步检查 HTML、JS 及保留模板中的引用，保持原查看/下载、consent 和支付行为。
