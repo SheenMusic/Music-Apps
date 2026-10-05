@@ -13,3 +13,26 @@ footer{border-top:1px solid var(--site-border);padding:25px 0 calc(25px + env(sa
 @media(min-width:861px){.shell{width:min(calc(100% - 48px),1040px)}header{height:88px}.brand{font-size:24px}main{padding-top:76px}}
 @media(max-width:599px){.intro{margin-bottom:48px}.course-entry{grid-template-columns:28px minmax(0,1fr);gap:14px}.course-item{padding-block:28px}.course-title{font-size:24px}.consultation{margin-top:56px}.button{min-height:48px;padding:10px 24px;gap:12px;font-size:13px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Learning products and their ordinary detail page; no course apps use this file. */
+.learning-section+.learning-section{margin-top:76px;padding-top:44px;border-top:1px solid var(--site-border)}
+.section-title{font-size:22px;line-height:1.5;margin:0 0 20px;letter-spacing:-.015em}
+.section-intro{max-width:660px;font-size:15px;line-height:1.9;color:var(--site-muted);margin:0 0 36px}
+.section-intro p{margin:0 0 16px}
+.private-main{max-width:880px}
+.private-intro{max-width:700px;line-height:1.95;margin-bottom:64px}
+.private-intro p{margin:0 0 22px}
+.session-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:30px}
+.session-option{padding:0 24px 0 0;min-width:0}
+.session-option+.session-option{border-left:1px solid var(--site-border);padding-left:24px}
+.session-option h3,.package-option h3{font-size:20px;margin:0 0 18px;line-height:1.5}
+.session-option p,.package-option p{font-size:14px;line-height:1.9;color:var(--site-muted);margin:0 0 12px}
+.session-option .lesson-price,.package-option .lesson-price{font-size:34px;line-height:1.3;color:var(--site-text);font-weight:500;margin-bottom:24px;font-variant-numeric:tabular-nums}
+.session-option.regular .lesson-price{font-size:38px;font-weight:600}
+.lesson-note{font-size:13px;line-height:1.9;color:var(--site-muted);margin:26px 0 0}
+.package-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:36px}
+.package-option{border-top:1px solid var(--site-border);padding-top:24px}
+.package-option .package-original{font-size:13px}
+.package-rules{font-size:13px;color:var(--site-muted);line-height:1.9;padding-left:20px;margin:30px 0 0}
+.package-rules li+li{margin-top:8px}
+@media(max-width:599px){.learning-section+.learning-section{margin-top:56px;padding-top:32px}.section-title{font-size:21px}.private-intro{margin-bottom:48px}.session-options,.package-options{grid-template-columns:1fr;gap:0}.session-option{padding:0 0 26px}.session-option+.session-option{border-left:0;border-top:1px solid var(--site-border);padding:26px 0}.session-option:last-child{padding-bottom:0}.package-option+.package-option{margin-top:28px}}
