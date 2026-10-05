@@ -28,7 +28,6 @@
       -webkit-font-smoothing:antialiased;
       text-rendering:optimizeLegibility;
     }
-    body.menu-open{overflow:hidden}
     /* Light deterrence only; native scrolling, links and editing stay intact. */
     body{-webkit-user-select:none;user-select:none}
     :is(a,input,textarea,select,[contenteditable="true"]){
@@ -42,87 +41,6 @@
     .shell{
       width:min(calc(100% - 48px), var(--max));
       margin-inline:auto;
-    }
-
-    /* Header */
-    .topbar{
-      height:88px;
-      display:flex;
-      align-items:center;
-      background:#fff;
-      position:relative;
-      z-index:30;
-    }
-    .topbar-inner{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .brand{
-      font-family:var(--site-font);
-      font-weight:700;
-      font-size:24px;
-      letter-spacing:-.02em;
-      white-space:nowrap;
-    }
-    .menu-button{
-      width:44px;
-      height:44px;
-      border:0;
-      background:transparent;
-      display:grid;
-      place-items:center;
-      cursor:pointer;
-      padding:0;
-    }
-    .menu-icon{
-      width:27px;
-      height:18px;
-      position:relative;
-    }
-    .menu-icon::before,.menu-icon::after,.menu-icon span{
-      content:"";
-      position:absolute;
-      left:0;
-      width:100%;
-      height:1.5px;
-      background:var(--text);
-      transition:transform .22s ease, top .22s ease, opacity .18s ease;
-    }
-    .menu-icon::before{top:0}
-    .menu-icon span{top:8px}
-    .menu-icon::after{top:16px}
-    .menu-button[aria-expanded="true"] .menu-icon::before{top:8px;transform:rotate(45deg)}
-    .menu-button[aria-expanded="true"] .menu-icon span{opacity:0}
-    .menu-button[aria-expanded="true"] .menu-icon::after{top:8px;transform:rotate(-45deg)}
-
-    .menu-panel{
-      position:fixed;
-      inset:88px 0 0;
-      overflow-y:auto;
-      overscroll-behavior-y:contain;
-      padding-bottom:env(safe-area-inset-bottom, 0px);
-      z-index:25;
-      background:rgba(255,255,255,.98);
-      opacity:0;
-      visibility:hidden;
-      transition:opacity .2s ease, visibility .2s ease;
-    }
-    .menu-panel.is-open{opacity:1;visibility:visible}
-    .menu-inner{
-      width:min(calc(100% - 48px), var(--max));
-      margin:auto;
-      padding:58px 0;
-      display:grid;
-      grid-template-columns:1fr;
-    }
-    .menu-links{display:grid}
-    .menu-links a{
-      font-family:var(--site-font);
-      font-weight:600;
-      font-size:clamp(30px,4vw,52px);
-      padding:13px 0;
-      border-bottom:1px solid var(--line);
     }
 
     /* Editorial portrait: overlapping grid areas, with an alpha fade rather
@@ -360,14 +278,6 @@
 
     @media (max-width:860px){
       .shell{width:min(calc(100% - 34px), var(--max))}
-      .topbar{height:72px}
-      .brand{font-size:20px}
-      .menu-panel{inset:72px 0 0}
-      .menu-inner{
-        width:calc(100% - 34px);
-        grid-template-columns:1fr;
-        padding:34px 0;
-      }
       .main-areas{padding:58px 0 62px}
       .areas-grid{grid-template-columns:1fr}
       .area{padding:0 0 48px}
@@ -497,31 +407,31 @@
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="assets/site-visual.css">
   <script src="assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="assets/site-navigation.css">
+  <script src="assets/site-navigation.js" defer></script>
 </head>
 
 <body id="top">
-  <header class="topbar">
-    <div class="shell topbar-inner">
-      <a class="brand" href="#top" aria-label="返回首页顶部">Sheen Yang</a>
-      <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
-        <span class="menu-icon" aria-hidden="true"><span></span></span>
-      </button>
-    </div>
-  </header>
-
-  <div class="menu-panel" id="menuPanel" aria-hidden="true">
-    <div class="menu-inner">
-      <nav class="menu-links" aria-label="网站导航">
-        <a href="./scores/">乐铺屋</a>
-        <a href="./courses/">音乐课程</a>
-        <a href="./articles/">文章</a>
-        <a href="./works/">作品集</a>
-        <a href="./articles/article.html?slug=about">关于我</a>
-        <a href="#contact">联系我</a>
-      </nav>
-    </div>
+  <header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
   </div>
-
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
   <main>
     <section class="hero">
       <div class="shell hero-grid">
@@ -632,29 +542,6 @@
   </footer>
 
   <script>
-    const menuButton = document.getElementById('menuButton');
-    const menuPanel = document.getElementById('menuPanel');
-
-    function setMenu(open){
-      menuButton.setAttribute('aria-expanded', String(open));
-      menuButton.setAttribute('aria-label', open ? '关闭菜单' : '打开菜单');
-      menuPanel.classList.toggle('is-open', open);
-      menuPanel.setAttribute('aria-hidden', String(!open));
-      document.body.classList.toggle('menu-open', open);
-    }
-
-    menuButton.addEventListener('click', () => {
-      setMenu(menuButton.getAttribute('aria-expanded') !== 'true');
-    });
-
-    menuPanel.querySelectorAll('a').forEach(a => {
-      a.addEventListener('click', () => setMenu(false));
-    });
-
-    document.addEventListener('keydown', e => {
-      if(e.key === 'Escape') setMenu(false);
-    });
-
     // Protect only the portrait region; never cancel page-wide touch/context events.
     document.querySelector('.hero-photo').addEventListener('contextmenu', event => event.preventDefault());
 

@@ -10,12 +10,31 @@
   <link rel="stylesheet" href="../assets/site-visual.css">
   <link rel="stylesheet" href="./courses.css">
   <script src="../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../assets/site-navigation.css">
+  <script src="../assets/site-navigation.js" defer></script>
 </head>
 <body>
-<header><div class="shell"><nav aria-label="页面导航">
-  <a class="brand" href="../">Sheen Yang</a>
-  <a class="back" href="../">← 首页</a>
-</nav></div></header>
+<header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
+
 <main class="shell">
   <p class="eyebrow" lang="en">Courses</p>
   <h1 class="page-title">音乐课程</h1>

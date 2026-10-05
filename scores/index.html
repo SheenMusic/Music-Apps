@@ -11,9 +11,31 @@
   <link rel="stylesheet" href="./scores.css">
   <script src="../assets/site-analytics.js" defer></script>
 
+  <link rel="stylesheet" href="../assets/site-navigation.css">
+  <script src="../assets/site-navigation.js" defer></script>
 </head>
 <body>
-<header class="site-header"><div class="shell header-inner"><a class="brand" href="../">Sheen Yang</a><a class="back-link" href="../">首页</a></div></header>
+<header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
+
 <main class="shell">
   <section class="page-heading"><h1>乐铺屋</h1><p class="lead">喜欢的音乐，拿来弹弹。</p><p class="catalog-intro-note">更多乐谱会逐渐出现在这里，敬请期待。</p></section>
   <section class="catalog-section" aria-labelledby="freeHeading">
