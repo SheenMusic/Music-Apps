@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-visual="learning">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>乐理 · 音程 06｜综合复习</title>
+  <meta name="description" content="音程理论训练第六课：整理快速判断方法，通过针对性练习查漏补缺。">
+  <link rel="stylesheet" href="lesson.css">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+  <script src="lesson.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="topbar"><span>MUSIC THEORY · INTERVAL</span><span class="header-right"><span id="stepCount">开始</span><span class="lesson-badge">LESSON 06</span></span></div>
+    <div class="progress-wrap" role="progressbar" aria-label="第六课复习进度" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0"><div class="progress" id="progress"></div></div>
+  </header>
+  <main>
+    <section class="card hero" id="home" aria-labelledby="homeTitle">
+      <div class="home-course-title"><p class="home-course-index">音程 6 · 综合复习</p><h1 id="homeTitle" tabindex="-1">音程的快速识别</h1></div>
+      <p class="lead">把前五课学过的知识，整理成更顺手的判断方法。</p>
+      <ol class="review-outline"><li>二度与三度：找到参考音程</li><li>四度与五度：抓住特例与位形</li><li>六度与七度：借助转位判断</li><li>复音程：回到对应的单音程</li></ol>
+      <p class="tiny">每组复习后进入对应的外部练习，按自己的薄弱环节反复练习。外部练习在新窗口打开，返回后可以继续本课；这里不记录外部练习的成绩。</p>
+      <div class="home-actions"><button class="primary" id="startReview" type="button">开始复习</button><a class="ghost" href="assets/lesson-06.pdf" target="_blank" rel="noopener">查看 PDF 教材 ↗</a></div>
+    </section>
+    <section class="card lesson" id="lesson" hidden aria-labelledby="moduleTitle">
+      <div class="lesson-board" id="lessonBoard"></div>
+      <div class="lesson-content" id="lessonContent">
+        <p class="kicker" id="moduleNumber"></p><h1 id="moduleTitle" tabindex="-1"></h1>
+        <div id="moduleCopy"></div>
+        <section class="exercises" aria-labelledby="exerciseTitle"><h2 id="exerciseTitle">针对性练习</h2><p class="tiny">MusicTheory.net · 外部练习，新窗口打开</p><div class="exercise-links" id="exerciseLinks"></div><p class="tiny exercise-note">完成练习后回到这里，继续整理下一组方法。</p></section>
+      </div>
+    </section>
+    <section class="card lesson-complete" id="summary" hidden aria-labelledby="summaryTitle">
+      <p class="home-course-index">音程理论 · 六个单元</p><h1 id="summaryTitle" tabindex="-1">音程理论训练完成</h1>
+      <p class="lead">你已经完成音程理论的六个单元。</p><p class="lead">接下来，不必急着记更多规则。在识谱、听辨和实际音乐中反复使用这些判断方法，让它们逐渐变成自己的习惯。</p>
+      <p class="tiny">这一步代表完成本课的复习流程，并不代替外部练习。遇到不熟悉的部分，可以随时回来再练。</p>
+      <div class="home-actions"><button class="primary" id="backHome" type="button">返回课程首页</button><button class="secondary" id="reviewAgain" type="button">回看复习方法</button><a class="ghost" href="assets/lesson-06.pdf" target="_blank" rel="noopener">查看第六课 PDF 教材 ↗</a></div>
+    </section>
+  </main>
+  <nav class="lesson-nav" id="lessonNav" aria-label="复习步骤" hidden><button class="ghost" id="prevBtn" type="button">← 上一步</button><button class="primary" id="nextBtn" type="button">继续 →</button></nav>
+  <div class="footer">©Sheen · Music Theory</div>
+</div>
+<noscript><p class="no-script">互动复习需要 JavaScript。你仍可以<a href="assets/lesson-06.pdf">查看第六课 PDF 教材</a>，其中包含全部外部练习链接。</p></noscript>
+</body>
+</html>
