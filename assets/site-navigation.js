@@ -9,6 +9,13 @@
   for(const link of panel.querySelectorAll('[data-nav-section]')){
     if(link.dataset.navSection === current) link.setAttribute('aria-current','page');
   }
+  // Move the visible page gently; leave the real toggle anchored to its grid.
+  document.querySelectorAll('body > main, body > footer, header[data-site-navigation] .brand, header[data-site-navigation] .lang')
+    .forEach(node=>node.classList.add('menu-page-shift'));
+  for(const link of panel.querySelectorAll('a')){
+    const arrow = document.createElement('span');arrow.className = 'menu-link-arrow';
+    arrow.setAttribute('aria-hidden','true');arrow.textContent = '→';link.append(arrow);
+  }
   let previousInert = [];
   // Keep one real toggle; its placeholder preserves the existing header grid.
   const placeholder = document.createElement('span');
