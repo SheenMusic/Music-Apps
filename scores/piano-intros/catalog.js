@@ -98,7 +98,7 @@
     byID('volumes').replaceChildren(fragment);
   }
   function validate(data){
-    if(!data || !Array.isArray(data.tracks) || !Array.isArray(data.volumes) || !Array.isArray(data.selectionPackages)) throw new Error('Invalid catalogue');
+    if(!data || !Array.isArray(data.tracks) || !Array.isArray(data.volumes)) throw new Error('Invalid catalogue');
     const numbers = new Set();
     for(const track of data.tracks){
       if(!Number.isInteger(track.number) || track.number < 1 || numbers.has(track.number) || typeof track.title !== 'string' || typeof track.artist !== 'string' || !Number.isInteger(track.volume)) throw new Error('Invalid track');
@@ -109,12 +109,6 @@
       }
     }
     data.tracks.sort((a,b)=>a.number-b.number);
-    const counts = new Set();
-    for(const pack of data.selectionPackages){
-      if(![1,5,10].includes(pack.count) || counts.has(pack.count) || !Number.isFinite(pack.price) || pack.price <= 0) throw new Error('Invalid package');
-      counts.add(pack.count);
-    }
-    if(counts.size !== 3) throw new Error('Missing package');
     const volumeIDs = new Set();
     for(const volume of data.volumes){
       if(!Number.isInteger(volume.id) || volumeIDs.has(volume.id) || !Number.isInteger(volume.start) || !Number.isInteger(volume.end) || volume.start < 1 || volume.end < volume.start || !Number.isFinite(volume.price) || volume.price <= 0 || typeof volume.title !== 'string' || typeof volume.description !== 'string') throw new Error('Invalid volume');

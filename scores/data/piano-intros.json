@@ -1,18 +1,4 @@
 {
-  "selectionPackages": [
-    {
-      "count": 1,
-      "price": 3
-    },
-    {
-      "count": 5,
-      "price": 8
-    },
-    {
-      "count": 10,
-      "price": 15
-    }
-  ],
   "volumes": [
     {
       "id": 1,

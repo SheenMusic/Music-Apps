@@ -1,7 +1,5 @@
 # 乐铺屋 / Scores
 
-本轮前版本：`ed39780a19d2a09b8c87dbdcc88d8743f1c17e66`。
-
 - `/scores/`：出版物目录，不使用商品封面墙。
 - `/scores/jiangnan/`：免费样本、原 Demo Video 和原样上传的 PDF。
 - `/scores/piano-intros/`：曲库浏览、搜索、自选、扫码付款与订单提交。
@@ -14,8 +12,8 @@
 - `tracks` 中增加 `number`、`title`、`artist`、`volume`。编号会自动排序和显示为三位数。
 - 001–030 的 `volume` 固定为 1；031 起填 2。以后新增合辑时在 `volumes` 增加编号范围、标题、说明、价格；只有该范围曲目全部存在时才展示合辑购买入口。
 - 免费样本设 `free: true` 并提供相对曲库页面的 `url`。不占付费自选名额。
-- `selectionPackages` 保存单首基础价和 5、10 首套餐价格；附加曲目按单首基础价计算。`pricing.js` 与目录共用计价规则，不限制勾选数量。
-- 1–4首按每首 ¥3；5–9首按 ¥8 + 超出5首的数量 × ¥3；10–14首按 ¥15 + 超出10首的数量 × ¥3。当前 Vol.1 自选从15首起，确认按钮推荐全30首 ¥29；点击后明确购买全辑，保留原自选状态。
+- 自动计价统一由 `piano-intros/pricing.js` 管理，不限制勾选数量，前台仅显示当前优惠价。
+- 1–4首每首 ¥2；5–9首 ¥9 + 超出5首的数量 × ¥2；10–15首 ¥17 + 超出10首的数量 × ¥2。16首起采用 Piano Intros Vol. 1 全30首 ¥29；继续勾选、搜索或取消不会丢失选择，降回15首恢复自选 ¥27。
 
 ## 支付流程
 
@@ -26,7 +24,8 @@
 每次打开购买窗口会冻结所选曲目与价格，生成 `PI-日期-随机码` 订单号。同一订单重试沿用该编号，方便人工识别可能重复收到的提交。Formspree 字段：
 
 - `_subject`、`order_id`、`product`、`amount`、`package_type` / `purchase_type`。
-- `pricing_method`：基础套餐及附加数量公式，或全辑说明。`selected_paid_count`：实际订单的付费曲目数；`requested_paid_count`：触发推荐前的自选数（直接购买全辑时为全辑付费曲目数）。
+- `pricing_method`：单首、多选自动优惠或全辑说明。`selected_paid_count`：实际订单的付费曲目数；`requested_paid_count`：触发推荐前的自选数（直接购买全辑时为全辑付费曲目数）。
+- `requested_tracks`：用户实际勾选的付费曲目“编号 歌名”清单；采用全辑时仍保留原勾选信息。
 - `selected_tracks`：可直接阅读的“编号 歌名”逐行清单；`tracks`：结构化曲目数组；`track_count`。
 - `buyer_email`、`payment_method`、`payment_name`、`submitted_at`。
 
