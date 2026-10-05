@@ -19,6 +19,9 @@ main{padding-block:var(--public-top) 90px}.eyebrow{font-size:11px;color:var(--si
 .section-title{margin:0 0 var(--public-heading-gap)}
 .section-intro{max-width:660px;font-size:15px;line-height:1.9;color:var(--site-muted);margin:0 0 var(--public-item-space)}
 .section-intro p{margin:0 0 16px}
+.training-intro{margin-bottom:0}
+/* Same secondary level as Scores .catalog-intro-note; keep list spacing. */
+.training-note{margin:14px 0 var(--public-item-space);font-size:13px;font-weight:300;line-height:1.9;color:var(--site-muted)}
 .private-main{max-width:880px}
 .private-intro{max-width:700px;line-height:1.95;margin-bottom:64px}
 .private-intro p{margin:0 0 22px}
