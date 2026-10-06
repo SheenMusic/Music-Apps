@@ -1,0 +1,206 @@
+<!doctype html>
+<html data-visual="site" data-public-visual data-home-experiment lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Sheen Yang — independent music teacher and keyboard player based in Japan. Scores, lessons and ideas about learning music.">
+  <title>Sheen Yang</title>
+
+  <link rel="stylesheet" href="./home.css">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../assets/site-visual.css">
+  <script src="../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../assets/site-navigation.css">
+  <script src="../assets/site-navigation.js" defer></script>
+</head>
+
+<body id="top">
+  <header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/en/">Sheen Yang</a>
+    <div class="lang"><a class="language-link" href="/" lang="zh-CN" hreflang="zh-CN" aria-label="Chinese homepage">中文</a></div>
+    <button class="menu-button" id="menuButton" type="button" aria-label="Open menu" data-open-label="Open menu" data-close-label="Close menu" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-label="Site navigation" aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="Site navigation">
+      <a href="/en/" data-nav-section="home">Home</a>
+      <a href="/scores/" data-nav-section="scores">Scores</a>
+      <a href="/courses/" data-nav-section="courses">Lessons</a>
+      <a href="/articles/" data-nav-section="articles">Writing</a>
+      <a href="/works/" data-nav-section="works">Works</a>
+      <a href="/en/#contact" data-nav-section="contact">Contact</a>
+    </nav>
+    <p class="menu-note">Content beyond this homepage is currently in Chinese.</p>
+  </div>
+</div>
+  <main>
+    <section class="hero">
+      <div class="shell hero-grid">
+        <figure class="hero-photo">
+          <picture>
+            <source media="(orientation: landscape), (min-width: 1101px)"
+                    srcset="../assets/home-wide.jpg" width="1672" height="941">
+            <img src="../assets/home-portrait.jpg"
+                 alt="Sheen Yang in a music studio"
+                 width="1086" height="1448" draggable="false"
+                 decoding="async" fetchpriority="high">
+          </picture>
+        </figure>
+        <div class="hero-copy">
+          <h1>Sheen Yang</h1>
+          <p class="roles">Keyboard improvisation · Theory · Composition</p>
+          <p class="intro">
+            I’m an independent music teacher and keyboard player based in Japan.<br>
+            I’m interested in how we learn music—through listening, playing, and making sense of what we hear.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="/scores/">Browse scores <span aria-hidden="true">→</span></a>
+            <a class="button" href="/courses/">Take lessons <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+
+    <section class="main-areas">
+      <div class="shell areas-grid">
+        <article class="area">
+          <p class="area-index">01</p>
+          <h2>Scores</h2>
+          <p class="area-kicker">Music to play and explore</p>
+          <p class="area-copy">
+            Transcriptions, arrangements, and original scores, including piano passages from songs I enjoy. There are free excerpts alongside paid collections.
+            For a transcription or arrangement of your own, get in touch.
+          </p>
+          <a class="text-link" href="/scores/">Browse the collection <span aria-hidden="true">→</span></a>
+        </article>
+
+        <article class="area">
+          <p class="area-index">02</p>
+          <h2>Lessons</h2>
+          <p class="area-kicker">Start with the music you want to understand</p>
+          <p class="area-copy">
+            Private lessons begin with what you can already do and what you want to work on: keyboard accompaniment, theory, learning by ear, arranging, or composition.
+            There are also focused courses in interval theory and ear training.
+          </p>
+          <a class="text-link" href="/courses/">Explore learning options <span aria-hidden="true">→</span></a>
+        </article>
+      </div>
+      <div class="shell"><p class="language-note">The score catalogue, lesson details, and writing are currently in Chinese. This page is a first step toward an English version of the site.</p></div>
+    </section>
+
+    <section class="contact" id="contact">
+      <div class="shell contact-layout">
+        <div class="contact-copy">
+        <div class="contact-head">
+          <h2>Get in touch</h2>
+          <p class="contact-intro">
+            For lessons, a score request, or a possible collaboration, tell me a little about what you have in mind.
+          </p>
+        </div>
+
+        <p class="contact-email">Email · <a href="mailto:sheenyoung0601@gmail.com">sheenyoung0601@gmail.com</a></p>
+        </div>
+        <!-- Configure only with a confirmed project Formspree endpoint. -->
+        <form class="consultation" id="consultationForm" method="post" action="https://formspree.io/f/xnpneyko" data-formspree-endpoint="https://formspree.io/f/xnpneyko" aria-label="Contact form" aria-describedby="consultationStatus">
+          <input type="hidden" name="_subject" value="Website inquiry | Sheen Yang">
+          <div class="consultation-fields">
+            <div class="consultation-field">
+              <label class="visually-hidden" for="consultationName">Your name</label>
+              <input id="consultationName" name="name" type="text" placeholder="Your name" autocomplete="name" maxlength="80" required>
+            </div>
+            <div class="consultation-field">
+              <label class="visually-hidden" for="consultationContact">Your email</label>
+              <input id="consultationContact" name="contact" type="email" placeholder="Your email" autocomplete="email" maxlength="254" required>
+            </div>
+            <div class="consultation-field">
+              <label class="visually-hidden" for="consultationMessage">What would you like to work on?</label>
+              <textarea id="consultationMessage" name="message" placeholder="What would you like to work on?" rows="3" maxlength="3000" required></textarea>
+            </div>
+          </div>
+          <button class="button primary" id="consultationSubmit" type="submit">Send message</button>
+          <p class="consultation-status" id="consultationStatus" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="visual-footer">
+    <div class="shell footer-inner">
+      <nav class="social-links" aria-label="Social links">
+        <a class="social-entry" href="https://www.instagram.com/sheen_musiclab/" target="_blank" rel="noopener noreferrer" aria-label="Instagram: @sheen_musicLab (opens in a new tab)">
+          <span class="social-logo" aria-hidden="true"><img src="../assets/instagram.svg" alt="" width="34" height="34" loading="lazy"></span>
+          <span class="social-id">@sheen_musicLab</span>
+        </a>
+      </nav>
+      <p class="copyright">© 2026 Sheen Yang, All rights reserved.</p>
+      <a class="to-top" href="#top" aria-label="Back to top">⌃</a>
+    </div>
+  </footer>
+
+  <script>
+    // Protect only the portrait region; never cancel page-wide touch/context events.
+    document.querySelector('.hero-photo').addEventListener('contextmenu', event => event.preventDefault());
+
+    const consultationForm = document.getElementById('consultationForm');
+    const consultationSubmit = document.getElementById('consultationSubmit');
+    const consultationStatus = document.getElementById('consultationStatus');
+    const endpoint = consultationForm.dataset.formspreeEndpoint;
+    let confirmedEndpoint = '';
+    try{
+      const url = new URL(endpoint);
+      if(url.origin === 'https://formspree.io' && /^\/f\/[a-zA-Z0-9]+$/.test(url.pathname)) confirmedEndpoint = url.href;
+    }catch{ /* No endpoint is assumed or invented. */ }
+    if(confirmedEndpoint){
+      consultationForm.action = confirmedEndpoint;
+      consultationStatus.textContent = '';
+    }
+    // The confirmed action also supports ordinary HTML form submission if
+    // JavaScript is unavailable; JS adds inline status and duplicate protection.
+    let submitting = false;
+    consultationForm.addEventListener('submit', async event => {
+      event.preventDefault();
+      if(submitting || !consultationForm.reportValidity()) return;
+      if(!confirmedEndpoint){
+        consultationStatus.dataset.state = 'error';
+        consultationStatus.textContent = 'The form is unavailable. Please email me using the address above.';
+        return;
+      }
+      submitting = true;
+      consultationSubmit.disabled = true;
+      consultationSubmit.textContent = 'Sending…';
+      consultationForm.setAttribute('aria-busy', 'true');
+      consultationStatus.dataset.state = '';
+      consultationStatus.textContent = 'Sending your message…';
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000);
+      try{
+        const response = await fetch(confirmedEndpoint, {
+          method: 'POST', body: new FormData(consultationForm),
+          headers: {Accept: 'application/json'}, signal: controller.signal
+        });
+        if(!response.ok) throw new Error('Submission failed');
+        consultationForm.reset();
+        consultationStatus.dataset.state = 'success';
+        consultationStatus.textContent = 'Thanks—your message has been sent. I’ll reply to the email address you provided.';
+      }catch{
+        consultationStatus.dataset.state = 'error';
+        consultationStatus.textContent = 'Your message could not be sent. Your text is still here; please try again or email me directly.';
+      }finally{
+        clearTimeout(timeout);
+        submitting = false;
+        consultationForm.removeAttribute('aria-busy');
+        consultationSubmit.disabled = false;
+        consultationSubmit.textContent = 'Send message';
+      }
+    });
+
+  </script>
+</body>
+</html>

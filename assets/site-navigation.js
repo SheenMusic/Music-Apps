@@ -21,12 +21,12 @@
     button.style.setProperty('--toggle-top',`${rect.top}px`);
   }
   window.addEventListener('resize',()=>{if(button.getAttribute('aria-expanded') === 'true') syncTogglePosition()});
-  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label','网站导航');
+  panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','true');panel.setAttribute('aria-label',panel.getAttribute('aria-label') || '网站导航');
   panel.addEventListener('click',event=>{if(!event.target.closest('.menu-inner,.menu-button')) setMenu(false)});
   function setMenu(open,keyboard = false){
     const toggleRect = open ? button.getBoundingClientRect() : null;
     button.setAttribute('aria-expanded',String(open));
-    button.setAttribute('aria-label',open ? '关闭菜单' : '打开菜单');
+    button.setAttribute('aria-label',open ? (button.dataset.closeLabel || '关闭菜单') : (button.dataset.openLabel || '打开菜单'));
     panel.classList.toggle('is-open',open);
     panel.setAttribute('aria-hidden',String(!open));
     panel.inert = !open;
