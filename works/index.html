@@ -39,13 +39,14 @@
   <link rel="stylesheet" href="../assets/site-visual.css">
   <script src="../assets/site-analytics.js" defer></script>
   <link rel="stylesheet" href="../assets/site-navigation.css">
+  <script src="/assets/site-language.js" defer></script>
   <script src="../assets/site-navigation.js" defer></script>
 </head>
 <body>
 <header class="topbar" data-site-navigation>
   <div class="shell topbar-inner">
     <a class="brand" href="/">Sheen Yang</a>
-    <div class="lang"><button data-lang="zh">中</button><button data-lang="en">EN</button><button data-lang="ja">日</button></div>
+    <div class="lang"></div>
     <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
       <span class="menu-icon" aria-hidden="true"><span></span></span>
     </button>
@@ -100,10 +101,8 @@ async function init(){
    if(!r.ok) throw new Error(r.status);
    items=await r.json();
  }catch(e){console.warn("Content data could not be loaded.",e)}
- const saved=localStorage.getItem("sheen-lang")||"zh";
- render(copy[saved]?saved:"zh");
+ render("zh"); // Shared language state shows the progress note until English content is ready.
 }
-document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{localStorage.setItem("sheen-lang",b.dataset.lang);render(b.dataset.lang)}));
 document.getElementById("year").textContent=new Date().getFullYear();
 init();
 </script>

@@ -33,3 +33,8 @@ html .menu-panel[data-site-navigation].is-open .menu-inner{transform:translateX(
 [data-site-navigation] .menu-links a:hover{opacity:.8}
 @media(prefers-color-scheme:dark){html .menu-panel[data-site-navigation]{--menu-backdrop:rgb(0 0 0 / .22)}}
 @media(prefers-reduced-motion:reduce){[data-site-navigation] .menu-icon::before,[data-site-navigation] .menu-icon::after,[data-site-navigation] .menu-icon span,html .menu-panel[data-site-navigation],[data-site-navigation] .menu-inner,.menu-page-shift{transition:none}}
+/* Shared language entry and fallback notice; only public navigation opts in. */
+header[data-site-navigation] .language-link{font-size:13px;font-weight:300;color:var(--site-muted);padding:12px 0;text-decoration:none}
+header[data-site-navigation] .language-link:hover{text-decoration:underline;text-underline-offset:4px}
+body:has(header[data-site-navigation]) .site-language-progress{font:300 13px/1.8 var(--site-font);color:var(--site-muted);margin:0 0 24px}
+body:has(header[data-site-navigation]) [data-content-lang][hidden]{display:none!important}

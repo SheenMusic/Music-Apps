@@ -398,8 +398,6 @@
 .hero .roles{font-size:18px}
 .language-link{font-size:13px;color:var(--site-muted);padding:12px 0}
 .language-link:hover{text-decoration:underline;text-underline-offset:4px}
-.language-note{margin:38px 0 0;color:var(--site-muted);font-size:13px;line-height:1.8;max-width:40em}
-.menu-note{font-size:12px;line-height:1.7;color:var(--site-muted);margin:24px 0 0}
 .contact-intro{max-width:35em}
 @media(min-width:861px) and (max-width:1200px){.hero h1{font-size:64px}.hero .roles{font-size:16px}}
 @media(max-width:860px), (orientation:portrait) and (max-width:1100px){.hero h1{font-size:70px}.hero .roles{font-size:17px}}
