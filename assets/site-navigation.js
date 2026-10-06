@@ -5,7 +5,8 @@
   const panel = document.getElementById('menuPanel');
   if(!button || !panel) return;
   const section = location.pathname.split('/').filter(Boolean)[0];
-  const current = ['scores','courses','articles','works'].includes(section) ? section : 'home';
+  const isAbout = location.pathname === '/articles/article.html' && new URLSearchParams(location.search).get('slug') === 'about';
+  const current = isAbout ? 'about' : ['scores','courses','articles','works'].includes(section) ? section : 'home';
   for(const link of panel.querySelectorAll('[data-nav-section]')){
     if(link.dataset.navSection === current) link.setAttribute('aria-current','page');
   }

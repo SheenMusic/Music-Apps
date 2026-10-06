@@ -11,8 +11,8 @@
   const originalLinks = new WeakMap();
   let language;
   const labels = {
-    zh: {home:'首页',scores:'乐谱',courses:'课程',articles:'文章',works:'作品',contact:'联系'},
-    en: {home:'Home',scores:'Scores',courses:'Lessons',articles:'Writing',works:'Works',contact:'Contact'}
+    zh: {home:'首页',about:'关于我',scores:'乐谱',courses:'课程',articles:'文章',works:'作品',contact:'联系'},
+    en: {home:'Home',about:'About',scores:'Scores',courses:'Lessons',articles:'Writing',works:'Works',contact:'Contact'}
   };
   function resolve() {
     const explicit = new URL(location.href).searchParams.get('lang');
@@ -102,6 +102,10 @@
     refresh();
   }
   for (const link of document.querySelectorAll('.language-link')) link.addEventListener('click',() => save(language === 'en' ? 'zh' : 'en'));
+  const about = document.createElement('a');
+  about.href = '/articles/article.html?slug=about';
+  about.dataset.navSection = 'about';
+  document.querySelector('.menu-links [data-nav-section="home"]').after(about);
   apply();
   // Article lists/Markdown and other public content can add links after loading.
   let scheduled = false;
