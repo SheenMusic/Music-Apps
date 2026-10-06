@@ -80,6 +80,8 @@
     return fragment;
   }
 
+  let renderedLanguage;
+  const currentLanguage = () => document.documentElement.dataset.siteLanguage === 'en' ? 'en' : 'zh';
   async function renderArticle(items){
     const slug = new URLSearchParams(location.search).get('slug');
     const item = items.find(article => article.slug === slug);
@@ -90,16 +92,22 @@
       status.textContent = '请从文章列表选择要阅读的文章。';
       return;
     }
-    title.textContent = item.title;
-    document.title = `${item.title} · Sheen Yang`;
-    document.querySelector('meta[name="description"]').content = typeof item.description === 'string' ? item.description : '';
+    const language = currentLanguage();
+    const translated = language === 'en' ? item.translations?.en : null;
+    const metadata = translated || item;
+    const contentLanguage = translated ? 'en' : 'zh';
+    const body = document.getElementById('articleBody');
+    if (item.translations?.en) body.dataset.contentLang = contentLanguage;
+    title.textContent = metadata.title;
+    document.title = metadata.documentTitle || `${metadata.title} · Sheen Yang`;
+    document.querySelector('meta[name="description"]').content = typeof metadata.description === 'string' ? metadata.description : '';
     const date = document.getElementById('articleDate');
     if(typeof item.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(item.date)){
       date.dateTime = item.date;
       date.textContent = item.date;
       date.hidden = false;
     }
-    const sourceURL = new URL(`./posts/${encodeURIComponent(item.slug)}.md`, location.href);
+    const sourceURL = new URL(`./posts/${encodeURIComponent(item.slug)}${translated ? ".en" : ""}.md`, location.href);
     const response = await fetch(sourceURL, {cache:'no-cache'});
     if(!response.ok) throw new Error('Article unavailable');
     const markdown = await response.text();
@@ -108,14 +116,14 @@
     const fragment = markdownFragment(content, sourceURL);
     // The template already displays the article title. Render it only once.
     const first = fragment.firstElementChild;
-    if(first?.tagName === 'H1' && first.textContent.trim() === item.title.trim()) first.remove();
-    const body = document.getElementById('articleBody');
+    if(first?.tagName === 'H1' && first.textContent.trim() === metadata.title.trim()) first.remove();
     body.replaceChildren(fragment);
+    renderedLanguage = language;
     body.classList.add('content-ready');
     status.textContent = '';
     // Analytics observes successful loads without changing Markdown or layout.
     window.dispatchEvent(new CustomEvent('site:article-loaded', {
-      detail: {slug:item.slug, title:item.title}
+      detail: {slug:item.slug, title:metadata.title}
     }));
   }
 
@@ -123,7 +131,18 @@
     try{
       const items = await loadManifest();
       if(document.body.dataset.articlePage === 'index') renderList(items);
-      else await renderArticle(items);
+      else {
+        await renderArticle(items);
+        // A restored Chinese URL may now inherit a newly chosen English preference.
+        // Run after the shared language-state pageshow handler has resolved it.
+        window.addEventListener('pageshow', event => {
+          if (event.persisted) queueMicrotask(() => {
+            if (currentLanguage() !== renderedLanguage) renderArticle(items).catch(() => {
+              status.textContent = '文章暂时无法加载，请稍后重试。';
+            });
+          });
+        });
+      }
     }catch{
       const title = document.getElementById('articleTitle');
       if(title && !title.textContent) title.textContent = '文章';

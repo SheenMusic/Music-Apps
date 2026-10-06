@@ -3,6 +3,13 @@
     "slug": "about",
     "title": "关于我",
     "date": "2026-10-04",
-    "description": "关于音乐，也关于音乐以外的一些事情。"
+    "description": "关于音乐，也关于音乐以外的一些事情。",
+    "translations": {
+      "en": {
+        "title": "About",
+        "documentTitle": "About | Sheen Yang",
+        "description": "A musician and educator exploring how we learn, understand, and make music."
+      }
+    }
   }
 ]
