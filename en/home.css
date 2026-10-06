@@ -405,3 +405,5 @@
 @media(max-width:860px), (orientation:portrait) and (max-width:1100px){.hero h1{font-size:70px}.hero .roles{font-size:17px}}
 @media(max-width:599px){.hero h1{font-size:clamp(42px,11.5vw,56px)}.hero .roles{font-size:14px}.hero .intro{font-size:14px}.hero-actions{grid-template-columns:1fr 1fr}.hero .button{padding-inline:18px;font-size:13px;gap:10px}}
 @media(max-width:860px) and (orientation:landscape){.hero h1{font-size:48px}.hero .roles{font-size:13px}.hero .intro{font-size:12px}}
+/* Final English CTA copy: retain capsule height and fit narrow phones. */
+@media(max-width:599px){.hero-actions{grid-template-columns:1.1fr .9fr}.hero .button{padding-inline:14px;font-size:12px;gap:6px}}

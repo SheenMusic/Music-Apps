@@ -43,6 +43,9 @@
       margin-inline:auto;
     }
 
+    .language-link{font-size:13px;color:var(--site-muted);padding:12px 0}
+    .language-link:hover{text-decoration:underline;text-underline-offset:4px}
+
     /* Editorial portrait: overlapping grid areas, with an alpha fade rather
        than a background-colored overlay. The original photo stays untouched. */
     .hero{padding:12px 0 80px}
@@ -412,6 +415,7 @@
   <header class="topbar" data-site-navigation>
   <div class="shell topbar-inner">
     <a class="brand" href="/">Sheen Yang</a>
+    <div class="lang"><a class="language-link" href="/en/" lang="en" hreflang="en" aria-label="英文首页">EN</a></div>
     <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
       <span class="menu-icon" aria-hidden="true"><span></span></span>
     </button>
