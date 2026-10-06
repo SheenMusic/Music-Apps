@@ -18,7 +18,7 @@ After graduate school, I spent some time teaching keyboards at a contemporary mu
 
 Once I began exploring improvisation more seriously, it opened the door to many other things. To improvise, I needed to understand harmony more deeply. Harmony led naturally to arranging and composition; arranging led me to think more about instrumentation, texture, and orchestration. My interest gradually expanded from playing music to understanding how music is put together.
 
-Along the way, I continued studying music production and scoring, including coursework through Berklee and the Academy of Art University in San Francisco. These experiences gradually broadened both the kind of music I make and the kind of work I take on—from keyboard playing and teaching to arranging, composition, production, and score preparation.
+Along the way, I also had the opportunity to learn from course materials from Berklee and the Academy of Art University in San Francisco, particularly in music production and scoring. These experiences gradually broadened both the kind of music I make and the kind of work I take on—from keyboard playing and teaching to arranging, composition, production, and score preparation.
 
 More recently, as AI has begun to reshape parts of music creation and music technology, some of my work has extended in that direction as well. I’ve been involved in projects where musical knowledge and human judgment are used to help evaluate and improve AI systems—another new way of asking questions about how we understand sound and music.
 
