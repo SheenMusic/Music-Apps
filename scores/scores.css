@@ -41,3 +41,30 @@ main{padding-block:var(--public-top) 90px}.page-heading{margin-bottom:64px}.page
 
 .custom-score-copy{max-width:40em}.custom-score-actions{display:flex;flex-wrap:wrap;gap:12px;flex:none}
 @media(min-width:600px) and (max-width:860px){.custom-publication{align-items:flex-start;flex-direction:column}}
+
+/* Catalogue cards are scoped to /scores/; detail and checkout layouts stay local. */
+.scores-catalog .page-heading{margin-bottom:0}
+.scores-catalog .catalog-section{margin-top:56px;padding-top:0}
+.scores-catalog .section-heading{margin-bottom:22px}
+.score-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.score-card-grid--single{grid-template-columns:minmax(0,1fr)}
+.score-card{display:flex;flex-direction:column;min-width:0;min-height:210px;padding:26px;border:1px solid var(--site-border);background:var(--site-panel);transition:background .18s ease,border-color .18s ease}
+.score-card:hover{background:var(--site-soft);border-color:var(--site-muted)}
+.score-card .eyebrow{color:var(--site-muted);line-height:1.5}
+.score-card .public-entry{margin:14px 0 12px;overflow-wrap:anywhere}
+.score-card .score-card-subtitle{display:block;margin-top:5px;font-size:14px;font-weight:400;line-height:1.5;letter-spacing:0;color:var(--site-muted)}
+.score-card-meta{margin:0;font-size:13px;font-weight:400;line-height:1.8;color:var(--site-muted)}
+.score-card-action{display:flex;align-items:center;gap:16px;align-self:flex-end;margin-top:auto;padding-top:20px;font-size:13px;font-weight:500;line-height:1.6}
+.score-card:hover .score-card-action{text-decoration:underline;text-underline-offset:5px}
+.scores-catalog .custom-publication{padding:0}
+@media(max-width:720px){
+ .scores-catalog .catalog-section{margin-top:40px}
+ .scores-catalog .section-heading{margin-bottom:18px}
+ .scores-catalog .section-heading h2 span{display:inline-block;margin-left:10px}
+ .score-card-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+ .score-card{min-height:0;padding:22px}
+ .score-card .public-entry{margin-top:12px;margin-bottom:10px;font-size:24px}
+ .score-card-action{padding-top:18px}
+ .scores-catalog .custom-publication{gap:20px}
+}
+@media(prefers-reduced-motion:reduce){.score-card{transition:none}}

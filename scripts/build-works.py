@@ -170,17 +170,15 @@ def build():
     scores_path = ROOT / "scores/index.html"
     scores = scores_path.read_text()
     start, end = "<!-- WORKS FREE SCORES START -->", "<!-- WORKS FREE SCORES END -->"
-    entrances = {
-        "original": ("原创作品", "我的原创器乐作品，可在线试听并预览乐谱。"),
-        "transcription": ("扒谱作品", "扒谱与制谱排版作品，可在线试听并预览乐谱。"),
-    }
+    entrances = {"original": "原创作品", "transcription": "扒谱作品"}
     entries = ""
-    for key, (title, description) in entrances.items():
+    for key, title in entrances.items():
         count = sum(w["category"] == key and score_visible(w) for w in works)
         if count:
-            entries += f'''    <a class="publication" href="/works/#{ANCHORS[key]}">
-      <div><span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)} · <span lang="en">{e(CATEGORIES[key][1])}</span></h3><p>{e(description)}</p><p class="publication-meta">{count} 首作品</p></div>
-      <span class="publication-link">查看作品 <span aria-hidden="true">→</span></span>
+            entries += f'''    <a class="score-card" href="/works/#{ANCHORS[key]}">
+      <span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)}<span class="score-card-subtitle" lang="en">{e(CATEGORIES[key][1])}</span></h3>
+      <p class="score-card-meta">{count} 首 · 试听 · 乐谱预览</p>
+      <span class="score-card-action">浏览作品 <span aria-hidden="true">→</span></span>
     </a>
 '''
     block = f'{start}\n{entries}\n{end}'
