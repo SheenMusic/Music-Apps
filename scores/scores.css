@@ -48,7 +48,7 @@ main{padding-block:var(--public-top) 90px}.page-heading{margin-bottom:64px}.page
 .scores-catalog .section-heading{margin-bottom:22px}
 .score-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .score-card-grid--single{grid-template-columns:minmax(0,1fr)}
-.score-card{display:flex;flex-direction:column;min-width:0;min-height:210px;padding:26px;border:1px solid var(--site-border);background:var(--site-panel);transition:background .18s ease,border-color .18s ease}
+.score-card{display:flex;flex-direction:column;min-width:0;min-height:190px;padding:26px;border-radius:var(--site-card-radius);border:1px solid var(--site-border);background:var(--site-panel);transition:background .18s ease,border-color .18s ease}
 .score-card:hover{background:var(--site-soft);border-color:var(--site-muted)}
 .score-card .eyebrow{color:var(--site-muted);line-height:1.5}
 .score-card .public-entry{margin:14px 0 12px;overflow-wrap:anywhere}

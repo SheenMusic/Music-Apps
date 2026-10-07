@@ -8,6 +8,7 @@ html[data-visual] {
     "Helvetica Neue", Arial, sans-serif;
   --site-bg: #ffffff;
   --site-panel: #ffffff;
+  --site-card-radius: 8px;
   --site-soft: #f3f5f7;
   --site-hover: #e9edf1;
   --site-text: #20252b;

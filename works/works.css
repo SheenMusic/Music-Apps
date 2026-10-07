@@ -15,13 +15,14 @@ button{font:inherit;color:inherit;cursor:pointer}
 .works-section{margin-top:var(--public-section);scroll-margin-top:32px}
 .works-section>.public-section{margin:0 0 var(--public-heading-gap)}
 .works-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
-.work-card{min-width:0;display:flex;flex-direction:column;min-height:220px;padding:28px;border:1px solid var(--site-border);background:var(--site-panel);transition:background .18s ease,border-color .18s ease}
+.work-card{min-width:0;display:flex;flex-direction:column;min-height:180px;padding:28px;border-radius:var(--site-card-radius);border:1px solid var(--site-border);background:var(--site-panel);transition:background .18s ease,border-color .18s ease}
 .work-card:hover{background:var(--site-soft);border-color:var(--site-muted)}
 .work-category{margin:0 0 18px;color:var(--site-muted);font-size:12px;line-height:1.7}
 .work-card .public-entry{margin:0 0 28px;overflow-wrap:anywhere}
 .work-summary{margin:0 0 24px;font-size:14px;color:var(--site-muted);line-height:1.8;white-space:pre-line;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.work-card-bottom{margin-top:auto;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12px}
-.work-availability{color:var(--site-muted)}
+.work-card-bottom{margin-top:auto;display:flex;justify-content:flex-end;gap:16px;flex-wrap:wrap;font-size:12px}
+.work-availability{color:var(--site-muted);margin-right:auto}
+.works-intro{margin:18px 0 0;font-size:13px;color:var(--site-muted)}
 .work-link{white-space:nowrap}
 .work-thumbnail{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;margin-bottom:22px}
 .work-detail{max-width:800px;padding-block:var(--public-top) 72px}
@@ -51,6 +52,6 @@ video{display:block;width:100%;max-height:75svh;background:#111}
 .other-works .work-card{padding:22px;min-height:180px}
 .other-works .public-entry{font-size:24px}
 .other-works>.work-back{margin-top:24px}
-@media(max-width:720px){.works-grid{grid-template-columns:1fr;gap:18px}.work-card{padding:24px;min-height:190px}.work-detail{padding-bottom:48px}.work-heading{margin-top:28px}.work-media{margin-top:36px;padding-top:24px}.other-works{margin-top:56px}}
+@media(max-width:720px){.works-grid{grid-template-columns:1fr;gap:18px}.work-card{padding:24px;min-height:150px}.work-detail{padding-bottom:48px}.work-heading{margin-top:28px}.work-media{margin-top:36px;padding-top:24px}.other-works{margin-top:56px}}
 @media(max-width:359px){.work-card{padding:20px}.work-card-bottom{gap:10px}.work-credits>div{grid-template-columns:1fr;gap:4px}}
 @media(prefers-reduced-motion:reduce){.work-card,.score-actions button.site-cta{transition:none}}

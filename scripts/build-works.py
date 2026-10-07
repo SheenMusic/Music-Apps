@@ -45,21 +45,17 @@ def score_visible(work):
 
 
 def card(work, heading="h3"):
-    year = f' · {e(work["year"])}' if work.get("year") else ""
     description = (f'<p class="work-summary">{text(work["description"])}</p>'
                    if work.get("description") else "")
     thumbnail = (f'<img class="work-thumbnail" src="{e(work["thumbnail"])}" alt="" loading="lazy" width="640" height="360">'
                  if work.get("thumbnail") else "")
-    media = labels("试听", "Audio") if work.get("audio") else ""
-    if score_visible(work):
-        media += " · " + labels("乐谱预览", "Score preview") if media else labels("乐谱预览", "Score preview")
-    if work.get("video"):
-        media += " · " + labels("视频", "Video") if media else labels("视频", "Video")
+    media = labels("视频", "Video") if work.get("video") else ""
+    year_line = f'<p class="work-category">{e(work["year"])}</p>' if work.get("year") else ""
+    availability = f'<span class="work-availability">{media}</span>' if media else ""
     return f'''<a class="work-card" href="{url(work)}">
-      {thumbnail}<p class="work-category">{category(work)}{year}</p>
-      <{heading} class="public-entry">{e(work["title"])}</{heading}>
-      {description}<div class="work-card-bottom"><span class="work-availability">{media}</span>
-      <span class="work-link">{labels("查看作品", "View work")} <span aria-hidden="true">→</span></span></div>
+      {thumbnail}{year_line}<{heading} class="public-entry">{e(work["title"])}</{heading}>
+      {description}<div class="work-card-bottom">{availability}
+      <span class="work-link" aria-hidden="true">→</span></div>
     </a>'''
 
 
@@ -158,8 +154,10 @@ def build():
         cards = "".join(card(w) for w in works if w["category"] == key)
         legacy_anchor = '<span id="transcription" aria-hidden="true"></span>' if key == "transcription" else ""
         sections += f'<section class="works-section" id="{ANCHORS[key]}" aria-labelledby="{key}Heading">{legacy_anchor}<h2 id="{key}Heading" class="public-section">{labels(*names)}</h2><div class="works-grid">{cards}</div></section>'
+    intro = ('<p class="works-intro">' + labels("在线试听 · 乐谱预览", "Listen online · Preview scores") + '</p>'
+             if all(w.get("audio") and score_visible(w) for w in works) else "")
     overview = shell("作品", "/works/", f'''<main class="shell works-main">
-    <div class="works-heading"><p class="work-eyebrow">Portfolio</p><h1 class="public-title">{labels("作品", "Works")}</h1></div>
+    <div class="works-heading"><p class="work-eyebrow">Portfolio</p><h1 class="public-title">{labels("作品", "Works")}</h1>{intro}</div>
     <nav class="works-jumps" aria-label="作品类别"><a href="#original">{labels(*CATEGORIES['original'])} ↓</a><a href="#transcriptions">{labels(*CATEGORIES['transcription'])} ↓</a></nav>
     {sections}</main>''')
     (ROOT / "works/index.html").write_text(overview)
@@ -177,8 +175,8 @@ def build():
         if count:
             entries += f'''    <a class="score-card" href="/works/#{ANCHORS[key]}">
       <span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)}<span class="score-card-subtitle" lang="en">{e(CATEGORIES[key][1])}</span></h3>
-      <p class="score-card-meta">{count} 首 · 试听 · 乐谱预览</p>
-      <span class="score-card-action">浏览作品 <span aria-hidden="true">→</span></span>
+      <p class="score-card-meta">{count} 首</p>
+      <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>
 '''
     block = f'{start}\n{entries}\n{end}'
