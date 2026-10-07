@@ -13,6 +13,7 @@ import unicodedata
 ROOT = Path(__file__).resolve().parents[1]
 CATEGORIES = {"original": ("原创器乐", "Original Works"),
               "transcription": ("扒谱作品", "Transcriptions")}
+ANCHORS = {"original": "original", "transcription": "transcriptions"}
 
 
 def e(value):
@@ -155,10 +156,11 @@ def build():
     sections = ""
     for key, names in CATEGORIES.items():
         cards = "".join(card(w) for w in works if w["category"] == key)
-        sections += f'<section class="works-section" id="{key}" aria-labelledby="{key}Heading"><h2 id="{key}Heading" class="public-section">{labels(*names)}</h2><div class="works-grid">{cards}</div></section>'
+        legacy_anchor = '<span id="transcription" aria-hidden="true"></span>' if key == "transcription" else ""
+        sections += f'<section class="works-section" id="{ANCHORS[key]}" aria-labelledby="{key}Heading">{legacy_anchor}<h2 id="{key}Heading" class="public-section">{labels(*names)}</h2><div class="works-grid">{cards}</div></section>'
     overview = shell("作品", "/works/", f'''<main class="shell works-main">
     <div class="works-heading"><p class="work-eyebrow">Portfolio</p><h1 class="public-title">{labels("作品", "Works")}</h1></div>
-    <nav class="works-jumps" aria-label="作品类别"><a href="#original">{labels(*CATEGORIES['original'])} ↓</a><a href="#transcription">{labels(*CATEGORIES['transcription'])} ↓</a></nav>
+    <nav class="works-jumps" aria-label="作品类别"><a href="#original">{labels(*CATEGORIES['original'])} ↓</a><a href="#transcriptions">{labels(*CATEGORIES['transcription'])} ↓</a></nav>
     {sections}</main>''')
     (ROOT / "works/index.html").write_text(overview)
     for work in works:
@@ -168,7 +170,19 @@ def build():
     scores_path = ROOT / "scores/index.html"
     scores = scores_path.read_text()
     start, end = "<!-- WORKS FREE SCORES START -->", "<!-- WORKS FREE SCORES END -->"
-    entries = "".join(f'''<a class="publication" href="{url(w)}"><div><span class="eyebrow">FREE PREVIEW</span><h3 class="public-entry">{e(w['title'])}</h3><p class="publication-meta">{e(CATEGORIES[w['category']][0])} · 试听 · 乐谱预览</p></div><span class="publication-link">查看作品 <span aria-hidden="true">→</span></span></a>''' for w in works if score_visible(w))
+    entrances = {
+        "original": ("原创作品", "我的原创器乐作品，可在线试听并预览乐谱。"),
+        "transcription": ("扒谱作品", "扒谱与制谱排版作品，可在线试听并预览乐谱。"),
+    }
+    entries = ""
+    for key, (title, description) in entrances.items():
+        count = sum(w["category"] == key and score_visible(w) for w in works)
+        if count:
+            entries += f'''    <a class="publication" href="/works/#{ANCHORS[key]}">
+      <div><span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)} · <span lang="en">{e(CATEGORIES[key][1])}</span></h3><p>{e(description)}</p><p class="publication-meta">{count} 首作品</p></div>
+      <span class="publication-link">查看作品 <span aria-hidden="true">→</span></span>
+    </a>
+'''
     block = f'{start}\n{entries}\n{end}'
     assert scores.count(start) == scores.count(end) == 1
     scores = re.sub(re.escape(start) + r".*?" + re.escape(end), lambda _: block, scores, flags=re.S)
