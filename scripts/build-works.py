@@ -11,9 +11,13 @@ import re
 import unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
-CATEGORIES = {"original": ("原创器乐", "Original Works"),
-              "transcription": ("扒谱作品", "Transcriptions")}
-ANCHORS = {"original": "original", "transcription": "transcriptions"}
+CATEGORIES = {"original": ("原创器乐", "Original Music"),
+              "arrangement": ("改编作品", "Arrangements"),
+              "transcription": ("扒谱作品", "Transcriptions"),
+              "orchestration": ("配器作品", "Orchestration")}
+ANCHORS = {"original": "original", "arrangement": "arrangements",
+           "transcription": "transcriptions", "orchestration": "orchestration"}
+
 
 
 def e(value):
@@ -44,18 +48,32 @@ def score_visible(work):
     return work.get("scoreMode") == "preview" and bool(work.get("score"))
 
 
+def compact_metadata(work):
+    parts = list(work.get("genres", []))
+    if work.get("year"):
+        parts.append(str(work["year"]))
+    if work.get("duration"):
+        parts.append(work["duration"])
+    meta = f'<p class="work-meta">{e(" · ".join(parts))}</p>' if parts else ""
+    instruments = work.get("instrumentation", [])
+    if instruments:
+        meta += f'<p class="work-instruments">{e(" · ".join(instruments))}</p>'
+    return meta
+
+
 def card(work, heading="h3"):
-    description = (f'<p class="work-summary">{text(work["description"])}</p>'
-                   if work.get("description") else "")
-    thumbnail = (f'<img class="work-thumbnail" src="{e(work["thumbnail"])}" alt="" loading="lazy" width="640" height="360">'
-                 if work.get("thumbnail") else "")
-    media = labels("视频", "Video") if work.get("video") else ""
-    year_line = f'<p class="work-category">{e(work["year"])}</p>' if work.get("year") else ""
-    availability = f'<span class="work-availability">{media}</span>' if media else ""
+    media = []
+    if work.get("audio"):
+        media.append(labels("试听", "Audio"))
+    if score_visible(work):
+        media.append(labels("乐谱预览", "Score preview"))
+    if work.get("video"):
+        media.append(labels("视频", "Video"))
+    availability = " · ".join(media)
     return f'''<a class="work-card" href="{url(work)}">
-      {thumbnail}{year_line}<{heading} class="public-entry">{e(work["title"])}</{heading}>
-      {description}<div class="work-card-bottom">{availability}
-      <span class="work-link" aria-hidden="true">→</span></div>
+      <{heading} class="public-entry">{e(work["title"])}</{heading}>
+      {compact_metadata(work)}<div class="work-card-bottom"><span class="work-availability">{availability}</span>
+      <span class="work-link">{labels("查看作品", "View work")} <span aria-hidden="true">→</span></span></div>
     </a>'''
 
 
@@ -102,14 +120,24 @@ def shell(title, path, content):
 
 
 def detail(work, works):
-    year = f'<p class="work-year">{e(work["year"])}</p>' if work.get("year") else ""
+    production = ""
+    notes = []
+    if work.get("roles"):
+        notes.append(f'<p>{e(" · ".join(work["roles"]))}</p>')
+    if work.get("productionDate"):
+        notes.append(f'<p>{labels("制作", "Produced")} · {e(work["productionDate"])}</p>')
+    if work.get("soundLibraries"):
+        notes.append(f'<p>{labels("音源", "Sound libraries")} · {e(" · ".join(work["soundLibraries"]))}</p>')
+    if notes:
+        production = '<aside class="work-production">' + "".join(notes) + '</aside>'
+
     description = f'<div class="work-description">{text(work["description"])}</div>' if work.get("description") else ""
     audio = f'''<section class="work-media" aria-labelledby="audioHeading">
-      <h2 id="audioHeading" class="public-section">{labels("聆听", "Listen")}</h2>
+      <h2 id="audioHeading" class="visually-hidden">{labels("聆听", "Listen")}</h2>
       <audio controls preload="none" aria-label="{e(work["title"])}"><source src="{e(work["audio"])}" type="audio/mpeg"></audio>
     </section>''' if work.get("audio") else ""
     score = f'''<section class="work-media" aria-labelledby="scoreHeading">
-      <h2 id="scoreHeading" class="public-section">{labels("乐谱预览", "Score preview")}</h2>
+      <h2 id="scoreHeading" class="public-section">{labels("乐谱", "Score")}</h2>
       <div class="score-actions">
         <button class="site-cta site-cta-compact" type="button" data-score-src="{e(work['score'])}" data-score-title="{e(work['title'])}" aria-expanded="false" aria-controls="scoreFrame">{labels("在线预览乐谱", "Preview score")} <span aria-hidden="true">⌄</span></button>
         <a class="score-window-link" href="{e(work['score'])}#toolbar=0&navpanes=0" target="_blank" rel="noopener">{labels("新窗口查看", "Open in a new window")} <span aria-hidden="true">↗</span></a>
@@ -124,9 +152,9 @@ def detail(work, works):
     others = [w for w in works if w["id"] != work["id"] and w["category"] == work["category"]][:2]
     related = "".join(card(w) for w in others)
     return shell(work["title"], url(work), f'''<main class="shell work-detail">
-    <a class="work-back" href="/works/">← {labels("返回作品", "Back to Works")}</a>
-    <div class="work-heading"><p class="work-category">{category(work)}</p><h1 class="public-title">{e(work['title'])}</h1>{year}{description}</div>
-    {audio}{score}{credits}{video}
+    <a class="work-back" href="/works/#{ANCHORS[work["category"]]}">← Portfolio</a>
+    <div class="work-heading"><h1 class="public-title">{e(work['title'])}</h1>{compact_metadata(work)}{description}</div>
+    {audio}{score}{production}{credits}{video}
     <section class="other-works"><h2 class="public-section">{labels("其他作品", "Other works")}</h2><div class="works-grid">{related}</div><a class="work-back" href="/works/">{labels("查看全部作品", "View all works")} →</a></section>
   </main>''')
 
@@ -151,15 +179,24 @@ def build():
     works.sort(key=lambda w: (list(CATEGORIES).index(w["category"]), w.get("order", 0)))
     sections = ""
     for key, names in CATEGORIES.items():
-        cards = "".join(card(w) for w in works if w["category"] == key)
-        legacy_anchor = '<span id="transcription" aria-hidden="true"></span>' if key == "transcription" else ""
-        sections += f'<section class="works-section" id="{ANCHORS[key]}" aria-labelledby="{key}Heading">{legacy_anchor}<h2 id="{key}Heading" class="public-section">{labels(*names)}</h2><div class="works-grid">{cards}</div></section>'
-    intro = ('<p class="works-intro">' + labels("在线试听 · 乐谱预览", "Listen online · Preview scores") + '</p>'
-             if all(w.get("audio") and score_visible(w) for w in works) else "")
+        selected = [w for w in works if w["category"] == key]
+        cards = "".join(card(w) for w in selected)
+        count = f'<span class="category-count">{labels(f"{len(selected)} 首作品", f"{len(selected)} Works")}</span>' if selected else ""
+        empty_en = "Selected arrangements will be added here." if key == "arrangement" else "Selected orchestration work will be added here."
+        content = f'<div class="works-grid">{cards}</div>' if selected else f'<p class="category-empty">{labels("作品将陆续加入。", empty_en)}</p>'
+        anchor = ANCHORS[key]
+        legacy = '<span id="transcription" aria-hidden="true"></span>' if key == "transcription" else ""
+        sections += f'''<details class="works-category" id="{anchor}">
+          <summary class="category-card" id="{anchor}Heading" role="button" aria-expanded="false" aria-controls="{anchor}Panel">
+            <span class="category-label"><span class="work-eyebrow" lang="en">{e(names[1])}</span><span class="category-title">{labels(*names)}</span>{count}</span>
+            <span class="category-indicator" aria-hidden="true"></span>
+          </summary>
+          {legacy}<div class="category-content" id="{anchor}Panel" role="region" aria-labelledby="{anchor}Heading">{content}</div>
+        </details>'''
     overview = shell("作品", "/works/", f'''<main class="shell works-main">
-    <div class="works-heading"><p class="work-eyebrow">Portfolio</p><h1 class="public-title">{labels("作品", "Works")}</h1>{intro}</div>
-    <nav class="works-jumps" aria-label="作品类别"><a href="#original">{labels(*CATEGORIES['original'])} ↓</a><a href="#transcriptions">{labels(*CATEGORIES['transcription'])} ↓</a></nav>
-    {sections}</main>''')
+    <div class="works-heading"><p class="work-eyebrow">Portfolio</p><h1 class="public-title">{labels("作品", "Works")}</h1>
+    <p class="works-intro">{labels("我的音乐创作、改编、扒谱与配器作品。", "My original music, arrangements, transcriptions and orchestration work.")}</p></div>
+    <div class="works-categories">{sections}</div></main>''')
     (ROOT / "works/index.html").write_text(overview)
     for work in works:
         folder = ROOT / "works" / work["slug"]
@@ -174,7 +211,7 @@ def build():
         count = sum(w["category"] == key and score_visible(w) for w in works)
         if count:
             entries += f'''    <a class="score-card" href="/works/#{ANCHORS[key]}">
-      <span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)}<span class="score-card-subtitle" lang="en">{e(CATEGORIES[key][1])}</span></h3>
+      <span class="eyebrow">PORTFOLIO</span><h3 class="public-entry">{e(title)}<span class="score-card-subtitle" lang="en">{e("Original Works" if key == "original" else CATEGORIES[key][1])}</span></h3>
       <p class="score-card-meta">{count} 首</p>
       <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>

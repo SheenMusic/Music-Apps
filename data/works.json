@@ -2,62 +2,160 @@
   {
     "id": "orig-001",
     "slug": "opening-pulse",
-    "title": "Opening pulse",
+    "title": "Opening Pulse",
     "category": "original",
-    "year": null,
-    "description": "",
+    "year": 2026,
+    "description": {
+      "zh": "为游戏 Opening 场景创作的 16 秒 Swing Jazz 短篇。作品不依赖明确调性与功能和声，以节奏推进、Chord Voicing 与 Voice Leading 为主要材料，在紧凑的四重奏编制中建立鲜明的开场感。",
+      "en": "A 16-second swing jazz piece composed for a game opening scene. Rather than relying on a clear tonality or functional harmony, it uses rhythmic momentum, chord voicing and voice leading as its primary materials to establish a distinct opening within a compact quartet."
+    },
     "audio": "/works/opening-pulse/assets/audio.mp3",
     "score": "/works/opening-pulse/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
     "credits": [],
-    "order": 1
+    "order": 1,
+    "productionDate": "2026-08",
+    "duration": "0:16",
+    "genres": [
+      "Swing Jazz",
+      "Game Music"
+    ],
+    "instrumentation": [
+      "Alto Saxophone",
+      "Piano",
+      "Bass",
+      "Drums"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Studio Alto Sax",
+      "Pianoteq",
+      "Roots Upright",
+      "Studio Drummer"
+    ]
   },
   {
     "id": "orig-002",
     "slug": "before-the-scream",
     "title": "Before the Scream",
     "category": "original",
-    "year": null,
-    "description": "",
+    "year": 2026,
+    "description": {
+      "zh": "为 Jump Scare 前逐渐累积的紧张感而创作的弦乐作品。作品弱化明确旋律与调性，通过音色、音域、不协和音程与声响密度的变化建立不稳定的音响空间，并运用 Artificial Harmonics、Sul ponticello、Tritone、Minor 2nd 以及局部 Controlled Aleatory，使心理压力随时间逐渐增加。",
+      "en": "A string piece composed to build tension before a jump scare. Clear melody and tonality are downplayed; changes in timbre, register, dissonant intervals and sound density create an unstable sonic space. Artificial harmonics, sul ponticello, tritones, minor seconds and passages of controlled aleatory gradually increase psychological tension."
+    },
     "audio": "/works/before-the-scream/assets/audio.mp3",
     "score": "/works/before-the-scream/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
     "credits": [],
-    "order": 2
+    "order": 2,
+    "productionDate": "2026-07",
+    "duration": "1:11",
+    "genres": [
+      "Horror",
+      "Cinematic Music"
+    ],
+    "instrumentation": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Modern Scoring Strings (MSS)"
+    ]
   },
   {
     "id": "orig-003",
     "slug": "the-enchanted-box",
     "title": "The Enchanted Box",
     "category": "original",
-    "year": null,
-    "description": "",
+    "year": 2023,
+    "description": {
+      "zh": "以绘本般的 Fantasy 场景为想象背景创作的木管四重奏。作品从 Octatonic Scale 构建动机，通过动机发展、声部间的传递与模仿以及对位处理展开，并利用四种木管乐器不同的音色与音域，营造逐渐展开的温和、幻想性世界。",
+      "en": "A woodwind quartet inspired by a picture-book-like fantasy scene. Motifs drawn from the octatonic scale unfold through development, exchange and imitation between parts, and contrapuntal writing. The contrasting timbres and registers of the four woodwinds create a gentle fantasy world that gradually opens up."
+    },
     "audio": "/works/the-enchanted-box/assets/audio.mp3",
     "score": "/works/the-enchanted-box/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
     "credits": [],
-    "order": 3
+    "order": 3,
+    "productionDate": "2023-11",
+    "duration": "1:11",
+    "genres": [
+      "Fantasy",
+      "Chamber Music"
+    ],
+    "instrumentation": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Bassoon"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "NotePerformer"
+    ]
   },
   {
     "id": "orig-004",
     "slug": "beyond-the-horizon",
     "title": "Beyond the Horizon",
     "category": "original",
-    "year": null,
-    "description": "",
+    "year": 2022,
+    "description": {
+      "zh": "为宏大影像场景创作的管弦乐作品。从抒情而开阔的主题逐渐发展至具有战斗行进感的紧张段落，并通过多次转调、节奏变化以及共同旋律动机的持续发展与变形，在不同音乐情绪之间保持整体统一。",
+      "en": "An orchestral piece composed for a large-scale visual scene. A lyrical, expansive theme gradually develops into a tense passage with the character of a battle march. Repeated modulations, rhythmic changes and the continuing development and transformation of shared melodic motifs maintain unity across different musical moods."
+    },
     "audio": "/works/beyond-the-horizon/assets/audio.mp3",
     "score": "/works/beyond-the-horizon/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
     "credits": [],
-    "order": 4
+    "order": 4,
+    "productionDate": "2022-01",
+    "duration": "2:04",
+    "genres": [
+      "Cinematic",
+      "Orchestral Music"
+    ],
+    "instrumentation": [
+      "Full Orchestra"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Orchestral Tools Berlin Series",
+      "Modern Scoring Strings (MSS)"
+    ]
   },
   {
     "id": "trans-001",
