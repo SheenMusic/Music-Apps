@@ -49,8 +49,8 @@ def score_visible(work):
 
 
 def compact_metadata(work):
-    parts = list(work.get("genres", []))
-    if work.get("year"):
+    parts = [work["projectType"]] if work.get("projectType") else list(work.get("genres", []))
+    if work.get("year") and work["category"] != "transcription":
         parts.append(str(work["year"]))
     if work.get("duration"):
         parts.append(work["duration"])
@@ -59,6 +59,22 @@ def compact_metadata(work):
     if instruments:
         meta += f'<p class="work-instruments">{e(" · ".join(instruments))}</p>'
     return meta
+
+
+def secondary_title(work):
+    return f'<p class="work-secondary-title">{e(work["secondaryTitle"])}</p>' if work.get("secondaryTitle") else ""
+
+
+def performer(work):
+    return next((c["name"] for c in work.get("credits", []) if c["role"] == "Performed by"), "")
+
+
+def source_intro(work):
+    if not work.get("projectType"):
+        return ""
+    parts = [work.get("source", {}).get("description", ""), performer(work)]
+    value = " · ".join(p for p in parts if p)
+    return f'<p class="work-source">{e(value)}</p>' if value else ""
 
 
 def card(work, heading="h3"):
@@ -70,6 +86,15 @@ def card(work, heading="h3"):
     if work.get("video"):
         media.append(labels("视频", "Video"))
     availability = " · ".join(media)
+    if work.get("projectType"):
+        summary = f'<p class="work-source">{e(performer(work))}</p>' if performer(work) else ""
+        meta_parts = [work["projectType"]] + ([work["duration"]] if work.get("duration") else [])
+        meta = f'<p class="work-meta">{e(" · ".join(meta_parts))}</p>'
+        return f'''<a class="work-card" href="{url(work)}">
+          <{heading} class="public-entry">{e(work["title"])}</{heading}>
+          {secondary_title(work)}{meta}{summary}
+          <div class="work-card-bottom"><span class="work-link">{labels("查看作品", "View work")} <span aria-hidden="true">→</span></span></div>
+        </a>'''
     return f'''<a class="work-card" href="{url(work)}">
       <{heading} class="public-entry">{e(work["title"])}</{heading}>
       {compact_metadata(work)}<div class="work-card-bottom"><span class="work-availability">{availability}</span>
@@ -132,6 +157,9 @@ def detail(work, works):
         production = '<aside class="work-production">' + "".join(notes) + '</aside>'
 
     description = f'<div class="work-description">{text(work["description"])}</div>' if work.get("description") else ""
+    if work.get("projectType") and isinstance(work.get("description"), str) and work["description"]:
+        paragraphs = "".join(f'<p>{e(part)}</p>' for part in work["description"].split("\n\n"))
+        description = f'<div class="work-description work-description-paragraphs" lang="en">{paragraphs}</div>'
     audio = f'''<section class="work-media" aria-labelledby="audioHeading">
       <h2 id="audioHeading" class="visually-hidden">{labels("聆听", "Listen")}</h2>
       <audio controls preload="none" aria-label="{e(work["title"])}"><source src="{e(work["audio"])}" type="audio/mpeg"></audio>
@@ -145,7 +173,21 @@ def detail(work, works):
       <div class="score-frame" id="scoreFrame" hidden></div>
     </section>''' if score_visible(work) else ""
     credits = ""
-    if work.get("credits"):
+    if work.get("projectType"):
+        lines = []
+        if work.get("originalArtist"):
+            lines.append(("Original Artist", work["originalArtist"]))
+        lines.extend((c["role"], c["name"]) for c in work.get("credits", []))
+        if work.get("scope"):
+            lines.append(("Scope", work["scope"]))
+        source = work.get("source", {})
+        if source.get("description"):
+            lines.append(("Source", source["description"]))
+        if source.get("performanceDate"):
+            lines.append(("Source Performance Date", source["performanceDate"]))
+        credits = '<aside class="work-source-credits" aria-label="Credits and source">' + "".join(
+            f'<p><span class="credit-label">{e(role)}</span> · {e(value)}</p>' for role, value in lines) + '</aside>'
+    elif work.get("credits"):
         entries = "".join(f'<div><dt>{text(c["role"])}</dt><dd>{text(c["name"])}</dd></div>' for c in work["credits"])
         credits = f'<section class="work-media"><h2 class="public-section">Credits</h2><dl class="work-credits">{entries}</dl></section>'
     video = f'<section class="work-media"><h2 class="public-section">{labels("视频", "Video")}</h2><video controls playsinline preload="none" src="{e(work["video"])}"></video></section>' if work.get("video") else ""
@@ -153,7 +195,7 @@ def detail(work, works):
     related = "".join(card(w) for w in others)
     return shell(work["title"], url(work), f'''<main class="shell work-detail">
     <a class="work-back" href="/works/#{ANCHORS[work["category"]]}">← Portfolio</a>
-    <div class="work-heading"><h1 class="public-title">{e(work['title'])}</h1>{compact_metadata(work)}{description}</div>
+    <div class="work-heading"><h1 class="public-title">{e(work['title'])}</h1>{secondary_title(work)}{compact_metadata(work)}{source_intro(work)}{description}</div>
     {audio}{score}{production}{credits}{video}
     <section class="other-works"><h2 class="public-section">{labels("其他作品", "Other works")}</h2><div class="works-grid">{related}</div><a class="work-back" href="/works/">{labels("查看全部作品", "View all works")} →</a></section>
   </main>''')
@@ -169,6 +211,9 @@ def build():
         slugs.add(work["slug"]); ids.add(work["id"])
         assert work.get("scoreMode") in ("preview", "hidden")
         assert work["title"] == unicodedata.normalize("NFC", work["title"])
+        for field in ("secondaryTitle", "projectType"):
+            if work.get(field):
+                assert work[field] == unicodedata.normalize("NFC", work[field])
         for key in ("audio", "score", "video", "thumbnail"):
             asset = work.get(key)
             if key == "score" and not score_visible(work):

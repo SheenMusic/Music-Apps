@@ -92,3 +92,15 @@ video{display:block;width:100%;max-height:75svh;background:#111}
 @media(prefers-reduced-motion:reduce){.category-card,.category-indicator::after{transition:none}.works-category[open] .category-content{animation:none}}
 
 html[data-site-language="en"] .category-label .work-eyebrow{display:none}
+
+/* Voice-and-piano projects: concise sources, paragraph copy, compact credits. */
+.work-secondary-title{margin:0 0 12px;font-size:15px;line-height:1.7;color:var(--site-muted);overflow-wrap:anywhere}
+.work-heading .work-secondary-title{margin:12px 0 0;font-size:18px}
+.work-source{margin:10px 0 0;font-size:13px;line-height:1.8;color:var(--site-muted);overflow-wrap:anywhere}
+.work-heading .work-source{margin-top:14px;font-size:14px}
+.work-description-paragraphs{white-space:normal}
+.work-description-paragraphs p{margin:0 0 18px}
+.work-description-paragraphs p:last-child{margin-bottom:0}
+.work-source-credits{margin-top:32px;font-size:13px;line-height:1.8;color:var(--site-muted);overflow-wrap:anywhere}
+.work-source-credits p{margin:8px 0}
+.credit-label{color:var(--site-text)}

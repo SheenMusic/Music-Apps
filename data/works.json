@@ -163,29 +163,85 @@
     "title": "Poker Face",
     "category": "transcription",
     "year": null,
-    "description": "",
+    "description": "A complete voice-and-piano transcription of the Glee Cast recording of Poker Face, performed as a duet by Lea Michele and Idina Menzel. Both vocal parts are notated on a single staff, using harmonic intervals when their rhythms align and independent voices when they differ.\n\nThe performance features highly flexible timing and extensive piano ornamentation. The transcription establishes a readable metric framework informed by Lady Gaga’s original dance version, while aiming to preserve the phrasing, rhythmic character, and ornamental detail of the Glee performance.",
     "audio": "/works/poker-face/assets/audio.mp3",
     "score": "/works/poker-face/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
-    "credits": [],
-    "order": 1
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Glee Cast — Lea Michele & Idina Menzel"
+      },
+      {
+        "role": "Words",
+        "name": "Lady Gaga"
+      },
+      {
+        "role": "Music",
+        "name": "Lady Gaga & RedOne"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 1,
+    "duration": "3:41",
+    "scope": "Full transcription",
+    "source": {
+      "description": "Glee Cast recording"
+    },
+    "originalArtist": "Lady Gaga",
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
   },
   {
     "id": "trans-002",
     "slug": "guo-bu-qu",
-    "title": "过不去",
+    "title": "過不去",
     "category": "transcription",
     "year": null,
-    "description": "",
+    "description": "A complete voice-and-piano transcription of A-Mei’s original studio recording of Guò Bú Qù, from the album 也許明天. The piano accompaniment becomes particularly dense during the song’s more emotionally intense vocal passages, making individual notes and inner voices challenging to distinguish by ear.\n\nThe transcription aims to reconstruct these piano textures as faithfully as possible while translating the recording’s flexible pulse and expressive timing into clear, readable rhythmic notation.",
     "audio": "/works/guo-bu-qu/assets/audio.mp3",
     "score": "/works/guo-bu-qu/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
-    "credits": [],
-    "order": 2
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "A-Mei (張惠妹)"
+      },
+      {
+        "role": "Words",
+        "name": "廖莹如"
+      },
+      {
+        "role": "Music",
+        "name": "伍冠谚 · 易桀齐"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 2,
+    "secondaryTitle": "Guò Bú Qù",
+    "duration": "3:45",
+    "scope": "Full transcription",
+    "source": {
+      "description": "Original studio recording from 也許明天"
+    },
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
   },
   {
     "id": "trans-003",
@@ -193,14 +249,43 @@
     "title": "死ぬのがいいわ",
     "category": "transcription",
     "year": null,
-    "description": "",
+    "description": "A complete voice-and-piano transcription of Fujii Kaze’s short live performance of Shinunoga E-Wa on Tetsuko’s Room. The performance features expressive timing and spontaneous piano playing, with the main transcription challenges involving rhythmic interpretation and harmonic detail.\n\nThe score also requires careful handling of Japanese lyrics and their alignment with the vocal notation.",
     "audio": "/works/shinunoga-ii-wa/assets/audio.mp3",
     "score": "/works/shinunoga-ii-wa/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
-    "credits": [],
-    "order": 3
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Lyrics",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Music",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 3,
+    "secondaryTitle": "Shinunoga E-Wa",
+    "duration": "1:01",
+    "scope": "Complete transcription of the selected live performance",
+    "source": {
+      "description": "Live performance on Tetsuko’s Room",
+      "performanceDate": "2025-09-08"
+    },
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
   },
   {
     "id": "trans-004",
@@ -208,13 +293,43 @@
     "title": "하루하루",
     "category": "transcription",
     "year": null,
-    "description": "",
+    "description": "A complete transcription of Baek A-yeon’s shortened live rendition of BIGBANG’s Haru Haru, performed on KBS’s You Hee-yeol’s Sketchbook. Her interpretation presents the original electronic K-pop song as a compact, lyrical voice-and-piano performance.\n\nThe transcription focuses on presenting this stripped-down version in a clear, concise score, including the accurate placement and alignment of Korean lyrics within the vocal notation.",
     "audio": "/works/haru-haru/assets/audio.mp3",
     "score": "/works/haru-haru/assets/score.pdf",
     "scoreMode": "preview",
     "video": null,
     "thumbnail": null,
-    "credits": [],
-    "order": 4
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Baek A-yeon (백아연)"
+      },
+      {
+        "role": "Lyrics",
+        "name": "G-Dragon"
+      },
+      {
+        "role": "Music",
+        "name": "G-Dragon & Daishi Dance"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 4,
+    "secondaryTitle": "Haru Haru",
+    "duration": "1:23",
+    "scope": "Complete transcription of the selected shortened live performance",
+    "source": {
+      "description": "Live performance on You Hee-yeol’s Sketchbook (KBS)",
+      "performanceDate": "2022-06-17"
+    },
+    "originalArtist": "BIGBANG",
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
   }
 ]
