@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="description" content="专题训练与一对一音乐课，从具体能力或个人目标出发学习音乐。">
-  <title>学习 · Sheen Yang</title>
+  <meta name="description" data-description-en="Focused courses and one-to-one music lessons, built around your skills and goals." content="专题训练与一对一音乐课，从具体能力或个人目标出发学习音乐。">
+  <title data-title-en="Courses · Sheen Yang">课程 · Sheen Yang</title>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
   <link rel="stylesheet" href="../assets/site-visual.css">
@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="../assets/site-navigation.css">
   <script src="/assets/site-language.js" defer></script>
   <script src="../assets/site-navigation.js" defer></script>
+  <script src="./courses.js" defer></script>
 </head>
 <body>
 <header class="topbar" data-site-navigation>
@@ -36,27 +37,36 @@
   </div>
 </div>
 
-<main class="shell">
-  <h1 class="page-title public-title">学习</h1>
-  <p class="intro">这里有两种不同的学习方式：<br>你可以围绕一个具体能力进行短期、集中的专题训练，也可以从自己的基础和目标出发，进行持续的一对一学习。</p>
+<main class="shell courses-overview">
+  <h1 class="page-title public-title"><span data-content-lang="zh">课程</span><span data-content-lang="en" hidden>Courses</span></h1>
+  <p class="intro"><span data-content-lang="zh">这里有两种不同的学习方式：</span><span data-content-lang="en" hidden>Two ways to study music:</span><br><span data-content-lang="zh">你可以围绕一个具体能力进行短期、集中的专题训练，也可以从自己的基础和目标出发，进行持续的一对一学习。</span><span data-content-lang="en" hidden>Build a specific skill through a short, focused course, or study one-to-one over time, starting from your experience and goals.</span></p>
   <section class="learning-section" aria-labelledby="trainingHeading">
-    <h2 class="section-title public-section" id="trainingHeading">专题训练</h2>
-    <p class="section-intro training-intro">围绕一个具体能力进行短期、集中的训练。每个单元大概需要一个星期的学习时间，可以独立学习，也可以根据需要进行组合。</p>
-    <p class="training-note">更多专题训练会逐渐出现在这里，敬请期待。</p>
-  <ol class="course-list" aria-label="课程展示">
-    <li class="course-item"><article class="course-entry" aria-labelledby="theoryHeading"><span class="course-number" aria-hidden="true">01</span><div><h3 class="course-title public-entry" id="theoryHeading"><a class="course-title-link" href="./interval-theory/">音程理论训练课<span aria-hidden="true"> →</span></a></h3><p class="course-description">理解音程的构成、性质与转位，建立清晰的音程理论框架。</p></div></article></li>
-    <li class="course-item"><article class="course-entry" aria-labelledby="earHeading"><span class="course-number" aria-hidden="true">02</span><div><h3 class="course-title public-entry" id="earHeading"><a class="course-title-link" href="./interval-ear-training/">音程听力训练课<span aria-hidden="true"> →</span></a></h3><p class="course-description">通过系统的听辨练习，建立音程与实际声音之间的联系。</p></div></article></li>
-    <li class="course-item"><article class="course-entry" aria-labelledby="chordHeading"><span class="course-number" aria-hidden="true">03</span><div><h3 class="course-title public-entry" id="chordHeading">和弦记号训练课</h3><p class="course-description">学习常见和弦记号的构成与识读，建立快速读懂和弦的能力。</p></div></article></li>
-  </ol>
+    <h2 class="section-title public-section" id="trainingHeading"><span data-content-lang="zh">专题训练</span><span data-content-lang="en" hidden>Focused Training</span></h2>
+    <p class="section-intro training-intro"><span data-content-lang="zh">围绕一个具体能力进行短期、集中的训练。每个单元大概需要一个星期的学习时间，可以独立学习，也可以根据需要进行组合。</span><span data-content-lang="en" hidden>Short, structured courses focused on a specific skill. Each course takes roughly a week, and you can take courses individually or combine them to suit your needs.</span></p>
+    <p class="training-note"><span data-content-lang="zh">更多专题训练会逐渐出现在这里，敬请期待。</span><span data-content-lang="en" hidden>More focused courses will be added over time.</span></p>
+  <div class="training-cards">
+    <details class="training-card" id="interval-theory">
+      <summary aria-expanded="false" aria-controls="interval-theory-content"><span class="course-number" aria-hidden="true">01</span><span class="training-card-title"><span data-content-lang="zh">音程理论训练课</span><span data-content-lang="en" hidden>Interval Theory</span></span><span class="training-indicator" aria-hidden="true"></span></summary>
+      <div class="training-card-content" id="interval-theory-content"><p class="course-description"><span data-content-lang="zh">理解音程的构成、性质与转位，建立清晰的音程理论框架。</span><span data-content-lang="en" hidden>Understand how intervals are built, their qualities, and how inversion works. Develop a clear framework for interval theory.</span></p><a class="training-card-link" href="./interval-theory/"><span data-content-lang="zh">查看课程</span><span data-content-lang="en" hidden>Explore the course</span> <span aria-hidden="true">→</span></a></div>
+    </details>
+    <details class="training-card" id="interval-ear-training">
+      <summary aria-expanded="false" aria-controls="interval-ear-training-content"><span class="course-number" aria-hidden="true">02</span><span class="training-card-title"><span data-content-lang="zh">音程听力训练课</span><span data-content-lang="en" hidden>Interval Ear Training</span></span><span class="training-indicator" aria-hidden="true"></span></summary>
+      <div class="training-card-content" id="interval-ear-training-content"><p class="course-description"><span data-content-lang="zh">通过系统的听辨练习，建立音程与实际声音之间的联系。</span><span data-content-lang="en" hidden>Connect intervals with their sound through structured listening and singing exercises.</span></p><a class="training-card-link" href="./interval-ear-training/"><span data-content-lang="zh">查看课程</span><span data-content-lang="en" hidden>Explore the course</span> <span aria-hidden="true">→</span></a></div>
+    </details>
+    <details class="training-card" id="chord-symbols">
+      <summary aria-expanded="false" aria-controls="chord-symbols-content"><span class="course-number" aria-hidden="true">03</span><span class="training-card-title"><span data-content-lang="zh">和弦记号理论训练课</span><span data-content-lang="en" hidden>Chord Symbol Theory</span></span><span class="training-indicator" aria-hidden="true"></span></summary>
+      <div class="training-card-content" id="chord-symbols-content"><p class="course-description"><span data-content-lang="zh">学习常见和弦记号的构成与识读，建立快速读懂和弦的能力。</span><span data-content-lang="en" hidden>Learn how common chord symbols are constructed and read, and build confidence in interpreting them quickly.</span></p><a class="training-card-link" href="/#contact"><span data-content-lang="zh">咨询课程</span><span data-content-lang="en" hidden>Ask about this course</span> <span aria-hidden="true">→</span></a></div>
+    </details>
+  </div>
   </section>
   <section class="learning-section" aria-labelledby="privateHeading">
-    <h2 class="section-title public-section" id="privateHeading">一对一音乐课</h2>
-    <div class="section-intro"><p>从你现在会什么、想做什么开始，根据个人基础、学习目标和实际遇到的问题安排学习内容。</p><p>课程可以围绕键盘即兴伴奏、音乐理论、听力与扒谱、编曲与创作，以及升学和作品集指导展开。</p></div>
-    <a class="button site-cta site-cta-compact" href="./private-lessons/">了解一对一音乐课 <span aria-hidden="true">→</span></a>
+    <h2 class="section-title public-section" id="privateHeading"><span data-content-lang="zh">一对一音乐课</span><span data-content-lang="en" hidden>One-to-One Music Lessons</span></h2>
+    <div class="section-intro"><p><span data-content-lang="zh">从你现在会什么、想做什么开始，根据个人基础、学习目标和实际遇到的问题安排学习内容。</span><span data-content-lang="en" hidden>Start with what you can already do and what you want to work on. Your lessons are tailored to your experience, goals, and the questions you encounter along the way.</span></p><p><span data-content-lang="zh">课程可以围绕键盘即兴伴奏、音乐理论、听力与扒谱、编曲与创作，以及升学和作品集指导展开。</span><span data-content-lang="en" hidden>Areas of study include improvised keyboard accompaniment, music theory, ear training and transcription, arranging and composition, and guidance with music school applications and portfolios.</span></p></div>
+    <a class="button site-cta site-cta-compact" href="./private-lessons/"><span data-content-lang="zh">了解一对一音乐课</span><span data-content-lang="en" hidden>Explore one-to-one lessons</span> <span aria-hidden="true">→</span></a>
   </section>
-  <section class="consultation" aria-label="课程咨询">
-    <p>对课程有疑问，或不知道从哪一门开始，可以直接和我聊聊。</p>
-    <div class="consultation-actions"><a class="button primary site-cta" href="../#contact">通过网站咨询 <span aria-hidden="true">→</span></a><a class="button site-cta" href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer" aria-label="打开抖音主页，通过私信咨询课程（新窗口）">抖音私信 <span aria-hidden="true">→</span></a></div>
+  <section class="consultation" aria-label="课程咨询" data-aria-en="Course enquiries">
+    <p><span data-content-lang="zh">对课程有疑问，或不知道从哪一门开始，可以直接和我聊聊。</span><span data-content-lang="en" hidden>Have a question about a course, or not sure where to start? Get in touch.</span></p>
+    <div class="consultation-actions"><a class="button primary site-cta" href="../#contact"><span data-content-lang="zh">通过网站咨询</span><span data-content-lang="en" hidden>Get in touch</span> <span aria-hidden="true">→</span></a><a class="button site-cta" href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer" aria-label="打开抖音主页，通过私信咨询课程（新窗口）" data-aria-en="Message about courses on Douyin (opens in a new tab)"><span data-content-lang="zh">抖音私信</span><span data-content-lang="en" hidden>Message on Douyin</span> <span aria-hidden="true">→</span></a></div>
   </section>
 </main>
 <footer class="visual-footer">© <span id="year"></span> Sheen Yang</footer>

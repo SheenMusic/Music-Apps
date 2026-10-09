@@ -12,7 +12,7 @@
   let language;
   const labels = {
     zh: {home:'首页',about:'关于我',scores:'乐谱',courses:'课程',articles:'文章',works:'作品',contact:'联系'},
-    en: {home:'Home',about:'About',scores:'Scores',courses:'Lessons',articles:'Writing',works:'Works',contact:'Contact'}
+    en: {home:'Home',about:'About',scores:'Scores',courses:'Courses',articles:'Writing',works:'Works',contact:'Contact'}
   };
   function resolve() {
     const explicit = new URL(location.href).searchParams.get('lang');
