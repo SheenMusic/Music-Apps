@@ -68,3 +68,5 @@ main{padding-block:var(--public-top) 90px}.page-heading{margin-bottom:64px}.page
  .scores-catalog .custom-publication{gap:20px}
 }
 @media(prefers-reduced-motion:reduce){.score-card{transition:none}}
+/* Free detail metadata sits together under the title; keep media breathing room. */
+.free-score-demo{margin-top:54px}
