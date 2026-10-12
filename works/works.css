@@ -104,3 +104,9 @@ html[data-site-language="en"] .category-label .work-eyebrow{display:none}
 .work-source-credits{margin-top:32px;font-size:13px;line-height:1.8;color:var(--site-muted);overflow-wrap:anywhere}
 .work-source-credits p{margin:8px 0}
 .credit-label{color:var(--site-text)}
+
+/* Portfolio closing; existing project layouts remain independent. */
+.works-closing{margin-top:var(--public-section);max-width:680px}
+.works-closing-part>.public-section{margin:0 0 16px}
+.works-closing-part>p{margin:0 0 12px;color:var(--site-muted)}
+.works-closing-part+.works-closing-part{margin-top:var(--public-section-inset);padding-top:var(--public-section-inset);border-top:1px solid var(--site-border)}
