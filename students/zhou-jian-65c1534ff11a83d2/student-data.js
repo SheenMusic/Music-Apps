@@ -3,7 +3,7 @@ const studentData = {
   studentName:'周舰',
   showPeriodDuration:true,
   courses:[
-    {id:'chord-theory',title:'和弦记号训练',status:'previous',accessEnabled:false},
+    {id:'chord-theory',title:'和弦记号理论训练',status:'completed',accessEnabled:false},
     {
       id:'interval-ear-training',title:'音程听力训练',status:'active',accessEnabled:true,
       currentLessons:[9],
