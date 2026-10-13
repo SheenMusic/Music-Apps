@@ -12,13 +12,13 @@ const studentData = {
       currentLessons:[5,6],
       accessibleLessons:[1,2,3,4,5,6,7],
       lessonURLs:{
-        1:'/ET-Intervals/01-Direction/',
-        2:'/ET-Intervals/02-Distance/',
-        3:'/ET-Intervals/03-EchoSinging/',
-        4:'/ET-Intervals/04-Octave/',
-        5:'/ET-Intervals/05-2nd/',
-        6:'/ET-Intervals/06-2nd/',
-        7:'/ET-Intervals/07-7th/'
+        1:'/ET-Intervals/01-Direction-gn2y3h/',
+        2:'/ET-Intervals/02-Distance-p65l32/',
+        3:'/ET-Intervals/03-EchoSinging-l9ipbz/',
+        4:'/ET-Intervals/04-Octave-irx7ar/',
+        5:'/ET-Intervals/05-2nd-d7wzes/',
+        6:'/ET-Intervals/06-2nd-9g6ymn/',
+        7:'/ET-Intervals/07-7th-wns1er/'
       }
     }
   ],

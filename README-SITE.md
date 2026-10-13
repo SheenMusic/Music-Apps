@@ -40,7 +40,9 @@ Append an object to the appropriate JSON array. Example:
 ```
 
 For an internal course, `url` can be something like:
-`../ET-Intervals/01-Direction/`
+`../ET-Intervals/01-Direction-gn2y3h/`
+
+Ear-training lesson folders retain their number and topic, followed by an independent six-character random suffix (`01-Topic-xxxxxx`, lowercase letters and digits). Generate each suffix with a cryptographically secure random generator. Keep actual lesson URLs only in the relevant student dashboard configuration; do not publish a lesson index. This naming scheme is link-display management, not authentication.
 
 JSON rules:
 1. Items are separated by commas.
