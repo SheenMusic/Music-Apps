@@ -486,6 +486,16 @@
       cursor: pointer;
     }
 
+    /* Optional external practice appears only at the end of the report. */
+    .additional-practice { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
+    .additional-practice h2 { margin: 0 0 8px; font-size: 18px; }
+    .additional-practice .additional-title { font-size: 12px; font-weight: 400; color: var(--text-secondary); }
+    .additional-practice h3 { margin: 18px 0 8px; font-size: 15px; }
+    .additional-practice p { margin: 0 0 14px; font-size: 13px; line-height: 1.8; color: var(--text-secondary); }
+    .additional-practice .btn { text-decoration: none; background: var(--surface-secondary); color: var(--text-main); }
+    .additional-practice .btn:hover { background: var(--surface-tertiary); }
+    .additional-practice .additional-note { margin: 10px 0 0; font-size: 12px; }
+
     /* Report */
     .report-table {
       width: 100%;
@@ -706,6 +716,13 @@
 
       <button class="btn mic-btn" style="margin-top: 16px;" onclick="copyReport()">复制练习报告</button>
       <button class="btn btn-tone" style="margin-top: 8px;" onclick="restartPractice()">重新开始练习</button>
+      <section class="additional-practice" aria-labelledby="additionalPracticeHeading">
+        <h2 id="additionalPracticeHeading">拓展练习 <span class="additional-title" lang="en">Additional Practice</span></h2>
+        <h3>八度音程听辨</h3>
+        <p>通过额外的听辨练习，进一步巩固八度音程的听觉识别能力。</p>
+        <a class="btn" href="https://www.musictheory.net/exercises/ear-interval/yyrrbynfqxyyoyrb" target="_blank" rel="noopener noreferrer">开始练习 ↗</a>
+        <p class="additional-note">由 MusicTheory.net 提供，将在新标签页中打开。</p>
+      </section>
     </div>
   </main>
 
