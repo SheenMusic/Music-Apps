@@ -50,6 +50,25 @@
       // FormData preserves every checked current_status entry; disabled fields are omitted.
       const data = new FormData(form);
       data.set('music_training_background',training.filter(input => input.checked).map(input => input.value).join('；'));
+      const summary = ['【学员学习背景调查】'];
+      const add = (label, value, multiline = false) => {
+        const text = typeof value === 'string' ? value.trim() : '';
+        if (text) summary.push(`${label}：${multiline ? '\n' : ''}${text}`);
+      };
+      add('姓名',data.get('student_name'));
+      add('年龄',data.get('age_group'));
+      add('当前身份',data.getAll('current_status').join('；'));
+      add('身份补充说明',data.get('current_status_other'));
+      add('音乐学习背景',data.get('music_training_background'),true);
+      add('其他学习经历',data.get('music_training_other'),true);
+      add('当前学习是否与音乐相关',data.get('study_music_related'));
+      add('当前工作是否与音乐相关',data.get('work_music_related'));
+      add('当前主要学习或活动是否与音乐相关',data.get('other_music_related'));
+      add('音乐专业及学习方向',data.get('music_specialization'),true);
+      // These additions leave all original survey fields and validation intact.
+      data.set('_subject',`学员档案｜${String(data.get('student_name')).trim().replace(/[\r\n]+/g,' ')}`);
+      data.set('student_summary',summary.join('\n\n'));
+
       const response = await fetch(form.action,{method:'POST',body:data,headers:{Accept:'application/json'},signal:controller.signal});
       if (!response.ok) throw new Error('Submission failed');
       form.reset();updateIdentity();updateTraining();
