@@ -39,7 +39,7 @@
         .filter(node=>node !== panel && !['SCRIPT','STYLE','TEMPLATE'].includes(node.tagName))
         .map(node=>[node,node.inert]);
       for(const [node] of previousInert) node.inert = true;
-      (keyboard ? panel.querySelector('[aria-current="page"]') : button)?.focus({preventScroll:true});
+      (keyboard ? (panel.querySelector('[aria-current="page"]') || button) : button)?.focus({preventScroll:true});
     }else{
       for(const [node,inert] of previousInert) node.inert = inert;
       previousInert = [];
@@ -49,12 +49,13 @@
     }
   }
   button.addEventListener('click',event=>setMenu(button.getAttribute('aria-expanded') !== 'true',event.detail === 0));
-  panel.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setMenu(false)));
+  panel.addEventListener('click',event=>{if(event.target.closest('a[href]')) setMenu(false)});
   document.addEventListener('keydown',event=>{
     if(button.getAttribute('aria-expanded') !== 'true') return;
     if(event.key === 'Escape'){event.preventDefault();setMenu(false)}
     if(event.key === 'Tab'){
-      const controls = [button,...panel.querySelectorAll('a[href]')];
+      const controls = [button,...panel.querySelectorAll('a[href],summary,button:not(.menu-button)')]
+        .filter(control=>control.getClientRects().length > 0);
       const index = controls.indexOf(document.activeElement);
       if(event.shiftKey && index <= 0){event.preventDefault();controls.at(-1).focus()}
       else if(!event.shiftKey && (index === controls.length-1 || index === -1)){event.preventDefault();button.focus()}

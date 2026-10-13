@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>教师课程资源 · Sheen Yang</title>
   <link rel="stylesheet" href="/assets/site-visual.css">
+  <link rel="stylesheet" href="/assets/site-navigation.css">
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="/learning-resources/resource-links.css">
   <script src="/learning-resources/course-catalog.js" defer></script>
@@ -13,8 +14,24 @@
   <script src="/learning-resources/interval-theory.js" defer></script>
   <script src="./teacher-data.js" defer></script>
   <script src="./script.js" defer></script>
+  <script src="/assets/site-navigation.js" defer></script>
 </head>
 <body>
+<header class="topbar" data-site-navigation>
+  <div class="topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel"><span class="menu-icon" aria-hidden="true"><span></span></span></button>
+  </div>
+</header>
+<div class="menu-panel teacher-menu" id="menuPanel" data-site-navigation aria-label="教师课程导航" aria-hidden="true" inert>
+  <div class="menu-inner"><nav class="menu-links" aria-label="教师课程导航">
+    <a href="/teacher/" aria-current="page">教师主页</a>
+    <details><summary>音程听力训练</summary><ul class="resource-list" id="menuEarLessons"></ul></details>
+    <details><summary>音程理论基础</summary><ul class="resource-list" id="menuTheoryLessons"></ul></details>
+    <details><summary>补充训练</summary><ul class="resource-list" id="menuSupplementary"></ul></details>
+    <details><summary>学员信息</summary><ul class="resource-list" id="menuStudents"></ul></details>
+  </nav></div>
+</div>
 <main class="teacher-dashboard">
   <header><p class="eyebrow">Teacher Dashboard · V1.1</p><h1 class="public-title">教师课程资源</h1><p class="intro">课程与补充训练的只读资源导航。所有练习在新标签页打开。</p></header>
   <section class="teacher-section" aria-labelledby="catalogHeading">

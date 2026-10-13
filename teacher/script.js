@@ -25,4 +25,11 @@
     link.setAttribute('aria-label',`${student.displayName} 学习页，在新标签页打开`);
     row.append(link);students.append(row);
   });
+  // Independent teacher menu HTML, populated from the same rendered resources.
+  for (const [source,target] of [
+    ['teacherLessons','menuEarLessons'],['teacherTheory','menuTheoryLessons'],
+    ['teacherSupplementary','menuSupplementary'],['studentLinks','menuStudents']
+  ]) {
+    document.getElementById(target).append(...Array.from(document.getElementById(source).children,row=>row.cloneNode(true)));
+  }
 })();
