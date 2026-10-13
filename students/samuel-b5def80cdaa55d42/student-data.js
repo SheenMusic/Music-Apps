@@ -1,5 +1,6 @@
 /* Manual maintenance only. Progress, visible lesson links and validity are independent.
  * Append a dated learning period to renew; the last dated entry is displayed.
+ * URLs and lesson titles live in /learning-resources/course-catalog.js.
  * accessibleLessons controls link display, not authentication or file authorization.
  */
 const studentData = {
@@ -11,15 +12,7 @@ const studentData = {
       id:'interval-ear-training', title:'音程听力训练', status:'active', accessEnabled:true,
       currentLessons:[5,6],
       accessibleLessons:[1,2,3,4,5,6,7],
-      lessonURLs:{
-        1:'/ET-Intervals/01-Direction-gn2y3h/',
-        2:'/ET-Intervals/02-Distance-p65l32/',
-        3:'/ET-Intervals/03-EchoSinging-l9ipbz/',
-        4:'/ET-Intervals/04-Octave-irx7ar/',
-        5:'/ET-Intervals/05-2nd-d7wzes/',
-        6:'/ET-Intervals/06-2nd-9g6ymn/',
-        7:'/ET-Intervals/07-7th-wns1er/'
-      }
+      accessibleSupplementary:[]
     }
   ],
   learningPeriods:[

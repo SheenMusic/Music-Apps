@@ -28,18 +28,23 @@
   const access = document.getElementById('courseAccess');
   studentData.courses.filter(c=>c.accessEnabled && c.status!=='completed').forEach(course=>{
     access.append(text('p',course.title,'access-course'));
-    const links = text('ul','','lesson-list');
+    const resources = courseCatalog.courses[course.id];
+    const links = text('ul','','resource-list');
     for (const number of course.accessibleLessons || []) {
-      const item = document.createElement('li');
-      const configured = course.lessonURLs?.[number];
-      if (configured) {
-        const link = document.createElement('a');link.href = configured;
-        link.setAttribute('aria-label',`${course.title} ${lesson(number)}，进入课程`);
-        link.append(text('span',lesson(number)),text('span','进入课程 →','lesson-action'));item.append(link);
-      } else item.append(text('span',`${lesson(number)} · 地址待补充`,'lesson-unavailable'));
-      links.append(item);
+      const resource = resources?.lessons.find(item=>item.number===number && item.isFormal);
+      if (resource) links.append(courseResourceUI.lessonRow(resource));
+      else links.append(text('li',`${lesson(number)} · 资源待补充`,'resource-row'));
     }
     access.append(links);
+    const supplements = courseCatalog.supplementaryExercises.filter(item=>
+      item.isSupplementary && (course.accessibleSupplementary || []).includes(item.id));
+    if (supplements.length) {
+      const section = document.createElement('section');section.className = 'supplementary-access';
+      section.append(text('h3','补充训练'));
+      const extra = text('ul','','resource-list');
+      supplements.forEach(item=>extra.append(courseResourceUI.supplementaryRow(item)));
+      section.append(extra);access.append(section);
+    }
   });
   // Historical periods with unknown dates remain in configuration without invented dates.
   const period = studentData.learningPeriods.filter(p=>p.start && p.end).at(-1);
