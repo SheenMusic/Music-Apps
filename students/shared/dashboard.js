@@ -31,12 +31,11 @@
       panel.id = `course-access-${course.id}`;panel.hidden = true;
       const toggle = text('button','','course-current course-toggle');toggle.type = 'button';
       toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls',panel.id);
-      const arrow = text('span','⌄','course-toggle-arrow');arrow.setAttribute('aria-hidden','true');
-      toggle.append(text('span',current),arrow);
+      const arrow = text('span','','course-toggle-arrow');arrow.setAttribute('aria-hidden','true');
+      toggle.append(arrow,text('span',current));
       toggle.addEventListener('click',()=>{
         const expanded = toggle.getAttribute('aria-expanded')!=='true';
         toggle.setAttribute('aria-expanded',String(expanded));panel.hidden = !expanded;
-        arrow.textContent = expanded ? '⌃' : '⌄';
       });
       content.append(toggle);row.append(panel);coursePanels.set(course.id,panel);
     } else if (course.status==='active' && course.currentLessons?.length) content.append(text('p',current,'course-current'));
