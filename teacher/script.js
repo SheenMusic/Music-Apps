@@ -1,9 +1,13 @@
 /* V1 is read-only navigation; it neither imports nor edits student records. */
 (() => {
   'use strict';
+  const groups = document.querySelectorAll('.resource-group');
+  window.addEventListener('pageshow',()=>groups.forEach(group=>{group.open=false}));
   const list = document.getElementById('teacherLessons');
   courseCatalog.courses['interval-ear-training'].lessons.filter(item=>item.isFormal)
     .forEach(item=>list.append(courseResourceUI.lessonRow(item,{showType:true})));
+  const theory = document.getElementById('teacherTheory');
+  intervalTheoryResources.lessons.forEach(item=>theory.append(courseResourceUI.lessonRow(item)));
   const extra = document.getElementById('teacherSupplementary');
   courseCatalog.supplementaryExercises.filter(item=>item.isSupplementary)
     .forEach(item=>extra.append(courseResourceUI.supplementaryRow(item)));
