@@ -24,7 +24,7 @@
     const content = document.createElement('div');
     content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',course.title));
     const current = course.currentLessons?.length ? `当前进度：${lessonRange(course.currentLessons)}` : '课程资料';
-    row.append(content,text('span',course.status==='completed' ? '已完成 ✓' : '进行中','status'));
+    row.append(content,text('span',({completed:'已完成 ✓',active:'进行中',previous:'曾参加'})[course.status] || '状态待确认','status'));
     if (course.accessEnabled && course.status!=='completed') {
       row.classList.add('with-resources');
       const panel = document.createElement('div');panel.className = 'course-resources';
@@ -79,6 +79,11 @@
   document.getElementById('periodRange').textContent = `${format(start,false)} — ${format(end,false)}`;
   document.getElementById('periodStart').textContent = format(start,true);
   document.getElementById('periodEnd').textContent = format(end,true);
+  if (studentData.showPeriodDuration) {
+    const duration = document.getElementById('periodDuration');
+    duration.textContent = `学习周期：${(end-start)/86400000}天`;
+    duration.hidden = false;
+  }
   function updatePeriod() {
     const now = Date.now(), remaining = +end-now;
     const state = remaining<=0 ? '本期已到期' : now<+start ? '尚未开始' : remaining<=72*3600000 ? '即将到期' : '有效期内';

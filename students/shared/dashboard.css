@@ -1,4 +1,4 @@
-/* Independent student page; no public navigation or application overrides. */
+/* Shared student pages; no public navigation or application overrides. */
 *{box-sizing:border-box}
 body{margin:0;font:400 15px/1.8 var(--site-font)}
 .dashboard{width:min(calc(100% - 40px),880px);margin-inline:auto;padding:48px 0 40px}
@@ -36,7 +36,7 @@ progress::-moz-progress-bar{background:var(--site-accent)}
 @media(min-width:768px){.dashboard{padding-top:64px}.dashboard-section{margin-top:48px}}
 @media(max-width:480px){.period-panel{padding:20px}.period-dates{grid-template-columns:1fr}.period-range{font-size:18px}.course-row{gap:12px}}
 
-/* Samuel-only course disclosure and inline links; shared teacher styles stay unchanged. */
+/* Shared student course disclosure and inline links; shared teacher styles stay unchanged. */
 .course-row.with-resources{display:grid;grid-template-columns:minmax(0,1fr) auto}
 .course-row.with-resources>div{min-width:0}
 .course-resources{grid-column:1/-1;min-width:0;margin-top:4px}

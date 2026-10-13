@@ -14,6 +14,11 @@
   const students = document.getElementById('studentLinks');
   teacherDirectory.students.forEach(student=>{
     const row = document.createElement('li');row.className = 'resource-row supplementary-row';
+    if (!student.dashboardURL) {
+      const pending = document.createElement('p');pending.className = 'section-note';
+      pending.textContent = `${student.displayName} · 专属入口待权限接入`;
+      row.append(pending);students.append(row);return;
+    }
     const link = document.createElement('a');link.className = 'training-link';
     link.textContent = `${student.displayName} ↗`;link.href = student.dashboardURL;
     link.target = '_blank';link.rel = 'noopener noreferrer';
