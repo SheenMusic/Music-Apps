@@ -9,6 +9,8 @@
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
   <link rel="stylesheet" href="../assets/site-visual.css">
   <link rel="stylesheet" href="./scores.css">
+  <link rel="stylesheet" href="./catalog-categories.css">
+  <script src="./catalog-categories.js" defer></script>
   <script src="../assets/site-analytics.js" defer></script>
 
   <link rel="stylesheet" href="../assets/site-navigation.css">
@@ -42,49 +44,52 @@
 
 <main class="shell scores-catalog">
   <section class="page-heading"><h1 class="public-title">乐铺屋</h1><p class="lead">喜欢的音乐，拿来弹弹。</p></section>
-  <section class="catalog-section" aria-labelledby="freeHeading">
-    <div class="section-heading"><h2 id="freeHeading" class="public-section">免费乐谱 <span lang="en">Free Scores</span></h2></div>
-    <div class="score-card-grid">
-    <a class="score-card" href="./jiangnan/">
+  <div class="score-categories">
+    <details class="score-category" id="free">
+      <summary class="score-category-heading" id="freeHeading" aria-expanded="false" aria-controls="freePanel">
+        <span class="score-category-label"><span class="score-category-title">免费乐谱</span><span class="score-category-subtitle" lang="en">Free Scores</span></span><span class="score-category-indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="score-category-content" id="freePanel" role="region" aria-labelledby="freeHeading"><div class="score-card-grid">
+        <a class="score-card" href="./jiangnan/">
       <span class="eyebrow">FREE</span><h3 class="public-entry">江南</h3>
       <p class="score-card-meta" data-score-label-zh="前奏 · 林俊杰 · 钢琴 · 4 小节" data-score-label-en="Intro · JJ Lin · Piano · 4 bars">前奏 · 林俊杰 · 钢琴 · 4 小节</p>
       <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>
-    <a class="score-card" href="./pugongying-de-yueding/">
+<a class="score-card" href="./pugongying-de-yueding/">
       <span class="eyebrow">FREE</span><h3 class="public-entry">蒲公英的约定</h3>
       <p class="score-card-meta" data-score-label-zh="间奏 · 周杰伦 · 钢琴 · 8 小节" data-score-label-en="Interlude · Jay Chou · Piano · 8 bars">间奏 · 周杰伦 · 钢琴 · 8 小节</p>
       <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>
-    <a class="score-card" href="/works/guo-bu-qu/">
+<a class="score-card" href="/works/guo-bu-qu/">
       <span class="eyebrow">FREE</span><h3 class="public-entry">过不去</h3>
       <p class="score-card-meta" data-score-label-zh="全部段落 · 张惠妹 · 人声和钢琴" data-score-label-en="All sections · A-Mei · Voice &amp; Piano">全部段落 · 张惠妹 · 人声和钢琴</p>
       <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>
-    <a class="score-card" href="/works/shinunoga-ii-wa/">
+<a class="score-card" href="/works/shinunoga-ii-wa/">
       <span class="eyebrow">FREE</span><h3 class="public-entry">死ぬのがいいわ</h3>
       <p class="score-card-meta" data-score-label-zh="全部段落 · 藤井风 · 人声和钢琴" data-score-label-en="All sections · Fujii Kaze · Voice &amp; Piano">全部段落 · 藤井风 · 人声和钢琴</p>
       <span class="score-card-action"><span aria-hidden="true">→</span></span>
     </a>
-    </div>
-  </section>
-  <section class="catalog-section" aria-labelledby="introsHeading">
-    <div class="section-heading"><h2 id="introsHeading" class="public-section">钢琴前奏 <span lang="en">Piano Intros</span></h2></div>
-    <div class="score-card-grid score-card-grid--single">
-    <a class="score-card" href="./piano-intros/">
+      </div></div>
+    </details>
+    <details class="score-category" id="paid">
+      <summary class="score-category-heading" id="paidHeading" aria-expanded="false" aria-controls="paidPanel">
+        <span class="score-category-label"><span class="score-category-title">付费乐谱</span><span class="score-category-subtitle" lang="en">Paid Scores</span></span><span class="score-category-indicator" aria-hidden="true"></span>
+      </summary>
+      <div class="score-category-content" id="paidPanel" role="region" aria-labelledby="paidHeading"><div class="score-card-grid">
+        <a class="score-card" href="./piano-intros/">
       <span class="eyebrow">001–030</span><h3 lang="en" class="public-entry">Piano Intros Vol. 1</h3>
       <p class="score-card-meta">全30首 ¥29 · 单首 ¥2 · 多选自动优惠</p>
       <span class="score-card-action">浏览与选曲 <span aria-hidden="true">→</span></span>
     </a>
-    </div>
-  </section>
-  <section class="catalog-section" aria-labelledby="paidHeading">
-    <div class="section-heading"><h2 id="paidHeading" class="public-section">收费乐谱 <span lang="en">Paid Scores</span></h2></div>
-    <div class="score-card-grid score-card-grid--single"><a class="score-card" href="./pusa-man/">
+<a class="score-card" href="./pusa-man/">
       <span class="eyebrow">PAID</span><h3 class="public-entry">菩萨蛮</h3>
       <p class="score-card-meta">小山重叠金明灭 · 人声与钢琴 · ¥9 CNY</p>
       <span class="score-card-action">查看与购买 <span aria-hidden="true">→</span></span>
-    </a></div>
-  </section>
+    </a>
+      </div></div>
+    </details>
+  </div>
   <section class="catalog-section" aria-labelledby="customHeading">
     <div class="section-heading"><h2 id="customHeading" class="public-section">定制乐谱 <span lang="en">Custom Scores</span></h2></div>
     <div class="publication custom-publication">
