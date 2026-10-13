@@ -18,16 +18,32 @@
   document.title = `${studentData.studentName} · Learning Dashboard`;
   document.getElementById('learningStatus').textContent = studentData.courses.some(c=>c.status==='active') ? '学习中' : '已完成';
   const list = document.getElementById('courseList');
+  const coursePanels = new Map();
   studentData.courses.forEach((course,index)=>{
     const row = text('li','','course-row');
     const content = document.createElement('div');
     content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',course.title));
-    if (course.status==='active' && course.currentLessons?.length) content.append(text('p',`当前进度：${lessonRange(course.currentLessons)}`,'course-current'));
-    row.append(content,text('span',course.status==='completed' ? '已完成 ✓' : '进行中','status'));list.append(row);
+    const current = course.currentLessons?.length ? `当前进度：${lessonRange(course.currentLessons)}` : '课程资料';
+    row.append(content,text('span',course.status==='completed' ? '已完成 ✓' : '进行中','status'));
+    if (course.accessEnabled && course.status!=='completed') {
+      row.classList.add('with-resources');
+      const panel = document.createElement('div');panel.className = 'course-resources';
+      panel.id = `course-access-${course.id}`;panel.hidden = true;
+      const toggle = text('button','','course-current course-toggle');toggle.type = 'button';
+      toggle.setAttribute('aria-expanded','false');toggle.setAttribute('aria-controls',panel.id);
+      const arrow = text('span','⌄','course-toggle-arrow');arrow.setAttribute('aria-hidden','true');
+      toggle.append(text('span',current),arrow);
+      toggle.addEventListener('click',()=>{
+        const expanded = toggle.getAttribute('aria-expanded')!=='true';
+        toggle.setAttribute('aria-expanded',String(expanded));panel.hidden = !expanded;
+        arrow.textContent = expanded ? '⌃' : '⌄';
+      });
+      content.append(toggle);row.append(panel);coursePanels.set(course.id,panel);
+    } else if (course.status==='active' && course.currentLessons?.length) content.append(text('p',current,'course-current'));
+    list.append(row);
   });
-  const access = document.getElementById('courseAccess');
   studentData.courses.filter(c=>c.accessEnabled && c.status!=='completed').forEach(course=>{
-    access.append(text('p',course.title,'access-course'));
+    const access = coursePanels.get(course.id);
     const resources = courseCatalog.courses[course.id];
     const links = text('ul','','resource-list');
     for (const number of course.accessibleLessons || []) {
