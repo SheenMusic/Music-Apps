@@ -1,0 +1,87 @@
+:where(html[data-course="et-quiz"]), :where(html[data-course="et-quiz"]) body { margin:0;min-height:100%;font-family:var(--site-font);background:#f5f3ee;color:#252525 }
+:where(html[data-course="et-quiz"]) .topbar { display:flex;justify-content:space-between;padding:22px 30px;font-size:11px;letter-spacing:.18em;color:#777;border-bottom:1px solid #dedbd4 }
+:where(html[data-course="et-quiz"]) .topbar div:last-child { color:#999 }
+:where(html[data-course="et-quiz"]) main { width:min(680px,calc(100% - 40px));margin:auto;flex:1;display:flex;align-items:center }
+:where(html[data-course="et-quiz"]) .screen { display:none;width:100%;padding:54px 0 }
+:where(html[data-course="et-quiz"]) .screen.active { display:block }
+:where(html[data-course="et-quiz"]) .eyebrow, :where(html[data-course="et-quiz"]) .questionLabel, :where(html[data-course="et-quiz"]) .scoreLabel, :where(html[data-course="et-quiz"]) .modeBadge { font-size:11px;letter-spacing:.16em;color:#8b8983 }
+:where(html[data-course="et-quiz"]) .eyebrow { margin-bottom:24px }
+:where(html[data-course="et-quiz"]) h1 { font-size:52px;line-height:1.12;font-weight:500;letter-spacing:-.04em;margin:0 0 22px }
+:where(html[data-course="et-quiz"]) h1 span { color:#8d8a84 }
+:where(html[data-course="et-quiz"]) p { font-size:15px;line-height:1.9;color:#666;margin:0 0 18px }
+:where(html[data-course="et-quiz"]) .meta { font-size:12px;color:#999;margin-bottom:38px }
+:where(html[data-course="et-quiz"]) .meta span { color:#555 }
+:where(html[data-course="et-quiz"]) .primary { border:0;background:#292929;color:white;padding:15px 25px;font-size:13px;letter-spacing:.04em;cursor:pointer }
+:where(html[data-course="et-quiz"]) .modeGrid { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px }
+:where(html[data-course="et-quiz"]) .modeCard { background:transparent;border:1px solid #d2cfc7;text-align:left;padding:20px 18px;cursor:pointer;min-height:86px }
+:where(html[data-course="et-quiz"]) .modeCard strong { display:block;font-size:14px;font-weight:500;margin-bottom:7px }
+:where(html[data-course="et-quiz"]) .modeCard span { font-size:11px;color:#999 }
+:where(html[data-course="et-quiz"]) .modeCard:hover { border-color:#999 }
+:where(html[data-course="et-quiz"]) .modeBadge { margin-bottom:16px }
+:where(html[data-course="et-quiz"]) .progressText { font-size:12px;color:#888;margin-bottom:9px }
+:where(html[data-course="et-quiz"]) .bar { height:2px;background:#ddd9d1;margin-bottom:48px }
+:where(html[data-course="et-quiz"]) .bar i { display:block;height:100%;width:0;background:#333;transition:width .25s ease }
+:where(html[data-course="et-quiz"]) .audio { text-align:center;border:1px solid #ddd9d1;padding:28px 20px;margin-bottom:46px }
+:where(html[data-course="et-quiz"]) .audio small { display:block;font-size:9px;letter-spacing:.2em;color:#aaa;margin-bottom:17px }
+:where(html[data-course="et-quiz"]) .audio div { font-size:11px;color:#999;margin-top:12px }
+:where(html[data-course="et-quiz"]) .play { width:58px;height:58px;border:1px solid #bbb7ae;border-radius:50%;background:transparent;font-size:18px;cursor:pointer;color:#333 }
+:where(html[data-course="et-quiz"]) .questionLabel { margin-bottom:10px }
+:where(html[data-course="et-quiz"]) h2 { font-size:22px;font-weight:500;margin:0 0 25px;line-height:1.5 }
+:where(html[data-course="et-quiz"]) .options { display:grid;grid-template-columns:1fr 1fr;gap:10px }
+:where(html[data-course="et-quiz"]) .option { background:#faf9f6;border:1px solid #d8d4cc;padding:16px;font-size:14px;cursor:pointer }
+:where(html[data-course="et-quiz"]) .option:hover:not(:disabled) { border-color:#999 }
+:where(html[data-course="et-quiz"]) .option.selected, :where(html[data-course="et-quiz"]) .option.correct, :where(html[data-course="et-quiz"]) .option.wrong, :where(html[data-course="et-quiz"]) .option.answer { font-weight:500 }
+:where(html[data-course="et-quiz"]) .option.correct { border-color:#777;background:#eee }
+:where(html[data-course="et-quiz"]) .option.wrong { border-color:#999;background:#eee;color:#777 }
+:where(html[data-course="et-quiz"]) .option.answer { outline:1px solid #444;outline-offset:-3px }
+:where(html[data-course="et-quiz"]) .feedback { min-height:58px;margin-top:18px;padding:13px 15px;display:flex;flex-direction:column;justify-content:center;gap:3px;visibility:hidden }
+:where(html[data-course="et-quiz"]) .feedback:not(:empty) { visibility:visible }
+:where(html[data-course="et-quiz"]) .feedback strong { font-size:13px;font-weight:500 }
+:where(html[data-course="et-quiz"]) .feedback span { font-size:11px;color:#777 }
+:where(html[data-course="et-quiz"]) .feedback.is-correct { background:#eceae5 }
+:where(html[data-course="et-quiz"]) .feedback.is-wrong { background:#e5e2dc }
+:where(html[data-course="et-quiz"]) .next { width:100%;margin-top:14px;padding:15px;border:0;background:#292929;color:#fff;font-size:13px;cursor:pointer }
+:where(html[data-course="et-quiz"]) .next:disabled { background:#d4d0c8;color:#aaa;cursor:default }
+:where(html[data-course="et-quiz"]) .result { text-align:center }
+:where(html[data-course="et-quiz"]) .scoreLabel { margin-bottom:12px }
+:where(html[data-course="et-quiz"]) .score { font-size:68px;font-weight:300;letter-spacing:-.05em;margin-bottom:15px }
+:where(html[data-course="et-quiz"]) .result #detail { font-size:12px;color:#999;margin-bottom:34px }
+:where(html[data-course="et-quiz"]) .textButton { display:block;margin:16px auto 0;border:0;background:transparent;color:#888;font-size:12px;cursor:pointer }
+:where(html[data-course="et-quiz"]) footer { text-align:center;padding:18px 20px;font-size:10px;letter-spacing:.12em;color:#aaa }
+@media(max-width:560px) {
+:where(html[data-course="et-quiz"]) .topbar { padding:18px 20px }
+:where(html[data-course="et-quiz"]) .topbar div { font-size:9px }
+:where(html[data-course="et-quiz"]) main { width:calc(100% - 28px) }
+:where(html[data-course="et-quiz"]) .screen { padding:34px 0 }
+:where(html[data-course="et-quiz"]) h1 { font-size:40px }
+:where(html[data-course="et-quiz"]) .modeGrid { grid-template-columns:1fr }
+:where(html[data-course="et-quiz"]) .modeCard { min-height:76px }
+:where(html[data-course="et-quiz"]) .bar { margin-bottom:32px }
+:where(html[data-course="et-quiz"]) .audio { margin-bottom:32px;padding:24px 15px }
+:where(html[data-course="et-quiz"]) .options { grid-template-columns:1fr;gap:8px }
+:where(html[data-course="et-quiz"]) .option { padding:17px 14px }
+:where(html[data-course="et-quiz"]) .feedback { margin-top:14px }
+:where(html[data-course="et-quiz"]) .score { font-size:58px }
+}
+:where(html[data-course="et-quiz"]) .quizTop { display:flex;justify-content:space-between;align-items:flex-start;gap:16px }
+:where(html[data-course="et-quiz"]) .quit { border:0;background:transparent;color:#999;font-size:11px;cursor:pointer;padding:2px 0 }
+:where(html[data-course="et-quiz"]) .quit:hover { color:#555 }
+:where(html[data-course="et-quiz"]) .testSummary { display:flex;justify-content:center;gap:42px;margin:26px 0 28px }
+:where(html[data-course="et-quiz"]) .testSummary div { display:flex;flex-direction:column;gap:5px }
+:where(html[data-course="et-quiz"]) .testSummary span { font-size:10px;letter-spacing:.1em;color:#aaa }
+:where(html[data-course="et-quiz"]) .testSummary strong { font-size:20px;font-weight:400 }
+:where(html[data-course="et-quiz"]) .detail { max-height:230px;overflow:auto;border-top:1px solid #ddd9d1;border-bottom:1px solid #ddd9d1;margin:0 auto 26px;padding:5px 0;text-align:left }
+:where(html[data-course="et-quiz"]) .resultRow { display:flex;justify-content:space-between;padding:7px 8px;font-size:12px;color:#777 }
+:where(html[data-course="et-quiz"]) .resultRow strong { font-weight:500 }
+:where(html[data-course="et-quiz"]) .resultRow .ok { color:#555 }
+:where(html[data-course="et-quiz"]) .resultRow .ng { color:#999 }
+:where(html[data-course="et-quiz"]) .resultActions { display:flex;justify-content:center;gap:10px }
+:where(html[data-course="et-quiz"]) .secondary { border:1px solid #d2cfc7;background:transparent;color:#555;padding:14px 20px;font-size:13px;cursor:pointer }
+@media(max-width:560px) {
+:where(html[data-course="et-quiz"]) .quizTop { align-items:flex-end }
+:where(html[data-course="et-quiz"]) .quit { font-size:10px }
+:where(html[data-course="et-quiz"]) .testSummary { gap:28px }
+:where(html[data-course="et-quiz"]) .resultActions { flex-direction:column }
+:where(html[data-course="et-quiz"]) .secondary { width:100% }
+:where(html[data-course="et-quiz"]) .primary { width:100% }
+}
