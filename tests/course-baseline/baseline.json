@@ -79,5 +79,297 @@
       "docs/course-phase1-visual-risk-review.md",
       "tests/course-baseline/phase1-close-results.md"
     ]
+  },
+  "visualUnification": {
+    "startingCommit": "9a4ae6b260feb4f25605bbf2ba335b116241d52a",
+    "courses": [
+      {
+        "path": "ET-Intervals/01-Direction-gn2y3h/index.html",
+        "type": "et-quiz",
+        "htmlBytes": 2922,
+        "cssBytes": 4978,
+        "cssLines": 2,
+        "bodySHA256": "e81da334836a4bdc662ca013b4d8d5378926071b2bcad09066850b1e8f5267ab"
+      },
+      {
+        "path": "ET-Intervals/02-Distance-p65l32/index.html",
+        "type": "et-quiz",
+        "htmlBytes": 3116,
+        "cssBytes": 4978,
+        "cssLines": 2,
+        "bodySHA256": "55f16b2f341a0cfb613b43c8e52b09012911a5b7aa26527eea9754e1cfdc74ab"
+      },
+      {
+        "path": "ET-Intervals/03-EchoSinging-l9ipbz/index.html",
+        "type": "et-sing",
+        "htmlBytes": 31627,
+        "cssBytes": 10264,
+        "cssLines": 505,
+        "bodySHA256": "664fcd637a85b242aaf7f300c6e0c686f49ff4c03e7a9e1e658051e39cdd65f4"
+      },
+      {
+        "path": "ET-Intervals/04-Octave-irx7ar/index.html",
+        "type": "et-sing",
+        "htmlBytes": 37770,
+        "cssBytes": 12313,
+        "cssLines": 572,
+        "bodySHA256": "8dbb79bfb47dcff5660a6f9edd173dde29848fbfd9575a236076ef0447e3915c"
+      },
+      {
+        "path": "ET-Intervals/05-2nd-d7wzes/index.html",
+        "type": "et-sing",
+        "htmlBytes": 32009,
+        "cssBytes": 10744,
+        "cssLines": 141,
+        "bodySHA256": "7f5bc885b18555c8be69f659cfc446dd651d329bc759be098ca44d600ff64e3a"
+      },
+      {
+        "path": "ET-Intervals/06-2nd-9g6ymn/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36423,
+        "cssBytes": 10910,
+        "cssLines": 142,
+        "bodySHA256": "c206b038d90e7cd36abed880da5ebf266ac53146535155be38eb862dccad2390"
+      },
+      {
+        "path": "ET-Intervals/07-7th-wns1er/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36935,
+        "cssBytes": 9118,
+        "cssLines": 129,
+        "bodySHA256": "e24887de71d074acc780513c609d2745bedaf4e451b5bfe5d4258a57559e705e"
+      },
+      {
+        "path": "ET-Intervals/08-7th-f0m7ys/index.html",
+        "type": "et-sing",
+        "htmlBytes": 40538,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "eb83d1ae3cee660766625da6e55ac609fdd8fcb030ab2bea8d1a92f3b056cb17"
+      },
+      {
+        "path": "ET-Intervals/09-3rd-hz86pk/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36850,
+        "cssBytes": 9118,
+        "cssLines": 129,
+        "bodySHA256": "0715087b413324cc7f9dec3ecd38b1ac8cf73d197f0915c67a22fe260e11a6b3"
+      },
+      {
+        "path": "ET-Intervals/10-3rd-9sb0vu/index.html",
+        "type": "et-sing",
+        "htmlBytes": 40441,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "dfe29e8dbd2fc372965daa659253579a4191aa3718c3e279c939b8da0987d4cd"
+      },
+      {
+        "path": "ET-Intervals/11-6th-z79m8y/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36930,
+        "cssBytes": 9118,
+        "cssLines": 129,
+        "bodySHA256": "983d01cf9e790c9a3a061c860eef50b7bda185db4f03f27d64ab1abbea8eac25"
+      },
+      {
+        "path": "ET-Intervals/12-6th-020gcq/index.html",
+        "type": "et-sing",
+        "htmlBytes": 40450,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "354118961b92d2acbbd601ea3fbe0fb9615f19854096a11a3cb7ae954bf1d68f"
+      },
+      {
+        "path": "ET-Intervals/13-4th-fdown4/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36936,
+        "cssBytes": 9118,
+        "cssLines": 129,
+        "bodySHA256": "d52b18bd751b98669e4ac58d395aeb60fa5a8f0829d97b1af39c86cc6c59840e"
+      },
+      {
+        "path": "ET-Intervals/14-4th-gqx79i/index.html",
+        "type": "et-sing",
+        "htmlBytes": 40448,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "4f3b9b4eba6763bf9adf16f230f16df86d9b0a1d98efd7e3f406c5b8d370084a"
+      },
+      {
+        "path": "ET-Intervals/15-5th-4awj58/index.html",
+        "type": "et-sing",
+        "htmlBytes": 36939,
+        "cssBytes": 9118,
+        "cssLines": 129,
+        "bodySHA256": "2017996263e9e6bbba215667333b3bb509ebaa9a0b4e3522fbe6c836beb62957"
+      },
+      {
+        "path": "ET-Intervals/16-5th-1d2mp0/index.html",
+        "type": "et-sing",
+        "htmlBytes": 40448,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "d7bcb56b4d21b5ef9edb89aa6b58091eb7bd926d29f12125eb89107a1bb8bf61"
+      },
+      {
+        "path": "ET-Intervals/17-Compound-be0x3n/index.html",
+        "type": "et-sing",
+        "htmlBytes": 38468,
+        "cssBytes": 9165,
+        "cssLines": 130,
+        "bodySHA256": "4e493f19e1cfa256789897970da2eafc4f22375717292d21680e5cff0b152f1e"
+      },
+      {
+        "path": "ET-Intervals/18-Compound-1qoxm6/index.html",
+        "type": "et-sing",
+        "htmlBytes": 42676,
+        "cssBytes": 9260,
+        "cssLines": 135,
+        "bodySHA256": "813582f7a2d32cec475e577e1ed010ee86814ac18a7b822e23a74c29a911facd"
+      },
+      {
+        "path": "MT-Intervals/lesson01/index.html",
+        "type": "mt-learning",
+        "htmlBytes": 83178,
+        "cssBytes": 34913,
+        "cssLines": 597,
+        "bodySHA256": "4755147c1e7a45d9a3b98af56b2f1bf0b17a0ebcdf04a0f8b36b0b8dab58e285"
+      },
+      {
+        "path": "MT-Intervals/lesson01/practice/index.html",
+        "type": "mt-practice",
+        "htmlBytes": 49962,
+        "cssBytes": 16122,
+        "cssLines": 731,
+        "bodySHA256": "539efc7e4af6a01f0e3069bfb71253fcd1c548c541f290a4dc4ce96333b8638f"
+      },
+      {
+        "path": "MT-Intervals/lesson02/index.html",
+        "type": "mt-learning",
+        "htmlBytes": 103591,
+        "cssBytes": 37021,
+        "cssLines": 643,
+        "bodySHA256": "b555f430b31e54be524680172b38be2d5f399991ae79dc36e4d56439ea61ddf1"
+      },
+      {
+        "path": "MT-Intervals/lesson02/practice/index.html",
+        "type": "mt-practice",
+        "htmlBytes": 52544,
+        "cssBytes": 12547,
+        "cssLines": 660,
+        "bodySHA256": "e317a2602e9c3cae9619e2af4bf6540b5d46160ec0d34a65c01558d6128804b0"
+      },
+      {
+        "path": "MT-Intervals/lesson03/index.html",
+        "type": "mt-practice",
+        "htmlBytes": 35314,
+        "cssBytes": 16203,
+        "cssLines": 587,
+        "bodySHA256": "a73a9f27455a23b2a649dd78834a839ab98a081fecc5dc489b8f08118fa04a4d"
+      },
+      {
+        "path": "MT-Intervals/lesson04-x3n6cu/index.html",
+        "type": "mt-practice",
+        "htmlBytes": 54551,
+        "cssBytes": 13183,
+        "cssLines": 689,
+        "bodySHA256": "19af6475226d6acef996e16353a8dec955725e4005b1d4e1b7ee0dfc4e0bc579"
+      },
+      {
+        "path": "MT-Intervals/lesson05-s2e2f4/index.html",
+        "type": "mt-practice",
+        "htmlBytes": 56106,
+        "cssBytes": 13183,
+        "cssLines": 689,
+        "bodySHA256": "7b562885fce2b57a36ffd9c35b24e3d14f19200edfcaa5c98ccc9809f755a67a"
+      },
+      {
+        "path": "MT-Intervals/lesson06/index.html",
+        "type": "mt-learning",
+        "htmlBytes": 4129,
+        "cssBytes": 6766,
+        "cssLines": 30,
+        "bodySHA256": "500f5f6af1571e205006ee9f1acf64f742c611832e7617d4b6a82b2cd4afe5fd"
+      }
+    ],
+    "allowedChanges": [
+      "ET-Intervals/05-2nd-d7wzes/index.html",
+      "ET-Intervals/06-2nd-9g6ymn/index.html",
+      "MT-Intervals/lesson03/index.html",
+      "assets/course-visual.css",
+      "ET-Intervals/shared/styles/base.css",
+      "MT-Intervals/shared/styles/practice-base.css",
+      "tests/course-baseline/README.md",
+      "tests/course-baseline/baseline.json",
+      "tests/course-baseline/baseline.test.cjs",
+      "tests/course-baseline/harness.cjs",
+      "tests/course-baseline/isolation.test.cjs",
+      "tests/course-baseline/results.md",
+      "tests/course-baseline/visual.test.cjs",
+      "tests/course-baseline/visual-state.cjs",
+      "tests/course-baseline/raster-comparison.cjs",
+      "tests/course-baseline/raster-negative.test.cjs",
+      "tests/course-baseline/visual-review.cjs",
+      "tests/course-baseline/visual-review.test.cjs",
+      "tests/course-baseline/visual-review-decisions.json",
+      "tests/course-baseline/caret.test.cjs",
+      "docs/course-phase1-visual-review/et05-after.png",
+      "docs/course-phase1-visual-review/et06-geometry.json",
+      "docs/course-phase1-visual-review/et05-diagnostic.json",
+      "docs/course-phase1-visual-review/diagnose-et05.cjs",
+      "docs/course-phase1-visual-review/et06-diagnostic.json",
+      "docs/course-phase1-visual-review/caret-probe.json",
+      "docs/course-phase1-visual-review/et06-after.png",
+      "docs/course-phase1-visual-review/manifest.json",
+      "docs/course-phase1-visual-review/et05-reconstruction-diagnostic.json",
+      "docs/course-phase1-visual-review/geometry-et06.cjs",
+      "docs/course-phase1-visual-review/et05-difference-20x.png",
+      "docs/course-phase1-visual-review/et06-difference-20x.png",
+      "docs/course-phase1-visual-review/et05-before.png",
+      "docs/course-phase1-visual-review/caret-probe.cjs",
+      "docs/course-phase1-visual-review/et06-before.png",
+      "docs/course-phase1-visual-risk-review.md",
+      "tests/course-baseline/phase1-close-results.md",
+      "ET-Intervals/01-Direction-gn2y3h/index.html",
+      "ET-Intervals/02-Distance-p65l32/index.html",
+      "ET-Intervals/03-EchoSinging-l9ipbz/index.html",
+      "ET-Intervals/04-Octave-irx7ar/index.html",
+      "ET-Intervals/05-2nd-d7wzes/index.html",
+      "ET-Intervals/06-2nd-9g6ymn/index.html",
+      "ET-Intervals/07-7th-wns1er/index.html",
+      "ET-Intervals/08-7th-f0m7ys/index.html",
+      "ET-Intervals/09-3rd-hz86pk/index.html",
+      "ET-Intervals/10-3rd-9sb0vu/index.html",
+      "ET-Intervals/11-6th-z79m8y/index.html",
+      "ET-Intervals/12-6th-020gcq/index.html",
+      "ET-Intervals/13-4th-fdown4/index.html",
+      "ET-Intervals/14-4th-gqx79i/index.html",
+      "ET-Intervals/15-5th-4awj58/index.html",
+      "ET-Intervals/16-5th-1d2mp0/index.html",
+      "ET-Intervals/17-Compound-be0x3n/index.html",
+      "ET-Intervals/18-Compound-1qoxm6/index.html",
+      "MT-Intervals/lesson01/index.html",
+      "MT-Intervals/lesson01/practice/index.html",
+      "MT-Intervals/lesson02/index.html",
+      "MT-Intervals/lesson02/practice/index.html",
+      "MT-Intervals/lesson03/index.html",
+      "MT-Intervals/lesson04-x3n6cu/index.html",
+      "MT-Intervals/lesson05-s2e2f4/index.html",
+      "MT-Intervals/lesson06/index.html",
+      "ET-Intervals/01-Direction-gn2y3h/style.css",
+      "ET-Intervals/02-Distance-p65l32/style.css",
+      "ET-Intervals/shared/styles/quiz-base.css",
+      "ET-Intervals/shared/styles/base.css",
+      "MT-Intervals/lesson06/lesson.css",
+      "MT-Intervals/shared/styles/practice-base.css",
+      "MT-Intervals/shared/styles/learning-base.css",
+      "tests/course-baseline/baseline.json",
+      "tests/course-baseline/baseline.test.cjs",
+      "tests/course-system/system.test.cjs",
+      "tests/course-system/README.md",
+      "docs/course-design-system.md",
+      "docs/course-visual-unification-results.md",
+      "tests/course-baseline/isolation.test.cjs"
+    ]
   }
 }

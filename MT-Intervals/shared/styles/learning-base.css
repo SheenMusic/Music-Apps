@@ -1,0 +1,453 @@
+:where(html[data-course="mt-learning"]) .meta { display:none }
+:where(html[data-course="mt-learning"]) .hidden { display:none!important }
+:where(html[data-course="mt-learning"]) h1 { font-size:1.55rem;line-height:1.35;margin-bottom:8px }
+:where(html[data-course="mt-learning"]) h2 { font-size:1.25rem;line-height:1.4;margin-bottom:10px }
+:where(html[data-course="mt-learning"]) .subtitle { color:var(--muted);line-height:1.65;font-size:.92rem }
+:where(html[data-course="mt-learning"]) .lead strong { color:var(--text) }
+:where(html[data-course="mt-learning"]) .hero { padding:28px 24px }
+:where(html[data-course="mt-learning"]) .hero-rule { height:1px;background:var(--border);margin:20px 0 }
+:where(html[data-course="mt-learning"]) button, :where(html[data-course="mt-learning"]) .btn-link { font:inherit }
+:where(html[data-course="mt-learning"]) .primary, :where(html[data-course="mt-learning"]) .secondary, :where(html[data-course="mt-learning"]) .ghost, :where(html[data-course="mt-learning"]) .choice, :where(html[data-course="mt-learning"]) .degree-btn { border:0;border-radius:10px;cursor:pointer;transition:.15s;text-decoration:none;text-align:center }
+:where(html[data-course="mt-learning"]) .primary { background:var(--primary);color:#fff;font-weight:750;padding:13px 16px }
+:where(html[data-course="mt-learning"]) .primary:hover { background:var(--primary-hover) }
+:where(html[data-course="mt-learning"]) .secondary { background:#eef2ff;color:var(--primary);font-weight:750;padding:12px 16px }
+:where(html[data-course="mt-learning"]) .secondary:hover, :where(html[data-course="mt-learning"]) .ghost:hover { filter:brightness(.98) }
+:where(html[data-course="mt-learning"]) .step-no { font-size:.76rem;font-weight:800;color:var(--primary);letter-spacing:.08em }
+:where(html[data-course="mt-learning"]) .step-count { font-size:.76rem;color:var(--muted) }
+:where(html[data-course="mt-learning"]) .stage { background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0 }
+:where(html[data-course="mt-learning"]) .staff { width:100%;min-height:145px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden }
+:where(html[data-course="mt-learning"]) .staff.small { min-height:125px }
+:where(html[data-course="mt-learning"]) .audio-row, :where(html[data-course="mt-learning"]) .button-row { display:flex;gap:8px;flex-wrap:wrap;margin-top:12px }
+:where(html[data-course="mt-learning"]) .audio-btn { flex:1;min-width:105px;background:#eef2ff;color:var(--primary);border:0;border-radius:9px;padding:10px;font-weight:700;cursor:pointer }
+:where(html[data-course="mt-learning"]) .interaction-hint { margin:12px 0 8px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:10px;color:#9a3412;font-size:.82rem;font-weight:750 }
+:where(html[data-course="mt-learning"]) .interaction-hint::before { content:"● ";color:#f97316 }
+:where(html[data-course="mt-learning"]) .interactive-control { box-shadow:0 0 0 2px rgba(249,115,22,.12);border-color:#fb923c!important }
+:where(html[data-course="mt-learning"]) .pattern-card { background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px }
+:where(html[data-course="mt-learning"]) .pattern-card h3 { font-size:.94rem;margin-bottom:4px }
+:where(html[data-course="mt-learning"]) .pattern-card .tiny { margin-top:4px }
+:where(html[data-course="mt-learning"]) .pattern-cards { display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px }
+:where(html[data-course="mt-learning"]) .example-chips { display:flex;gap:6px;flex-wrap:wrap;margin-top:9px }
+:where(html[data-course="mt-learning"]) .example-chip { flex:1;min-width:72px;border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:8px;padding:8px 6px;font-weight:750;cursor:pointer }
+:where(html[data-course="mt-learning"]) .example-chip.active { background:var(--primary);color:#fff;border-color:var(--primary) }
+:where(html[data-course="mt-learning"]) .term-box { margin-top:14px;padding:13px 14px;border-left:3px solid var(--primary);background:#f5f3ff;border-radius:0 10px 10px 0;font-size:.9rem;line-height:1.65 }
+:where(html[data-course="mt-learning"]) .rule { margin-top:14px;padding:13px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:10px;font-size:.9rem;line-height:1.65 }
+:where(html[data-course="mt-learning"]) .rule strong { color:var(--primary) }
+:where(html[data-course="mt-learning"]) .choices { display:grid;gap:8px;margin-top:12px }
+:where(html[data-course="mt-learning"]) .choice { background:#fff;border:1px solid var(--border);padding:11px 13px;text-align:left;color:var(--text) }
+:where(html[data-course="mt-learning"]) .choice:hover { border-color:#a5b4fc }
+:where(html[data-course="mt-learning"]) .choice.correct { border-color:#6ee7b7;background:var(--success-bg);color:#047857 }
+:where(html[data-course="mt-learning"]) .choice.wrong { border-color:#fecaca;background:var(--error-bg);color:#b91c1c }
+:where(html[data-course="mt-learning"]) .feedback { min-height:24px;margin-top:9px;font-size:.85rem;font-weight:650 }
+:where(html[data-course="mt-learning"]) .feedback.ok { color:#047857 }
+:where(html[data-course="mt-learning"]) .feedback.bad { color:#b91c1c }
+:where(html[data-course="mt-learning"]) .degree-grid { display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px }
+:where(html[data-course="mt-learning"]) .degree-btn { background:#fff;border:1px solid var(--border);padding:9px 2px;font-weight:700;color:var(--muted) }
+:where(html[data-course="mt-learning"]) .degree-btn.active { background:var(--primary);border-color:var(--primary);color:#fff }
+:where(html[data-course="mt-learning"]) .readout { text-align:center;margin-top:10px;font-weight:800 }
+:where(html[data-course="mt-learning"]) .readout-sub { text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px }
+:where(html[data-course="mt-learning"]) .keyboard-wrap { overflow-x:auto;padding-bottom:4px }
+:where(html[data-course="mt-learning"]) .keyboard { position:relative;height:148px;min-width:455px;margin:6px auto 0;display:flex }
+:where(html[data-course="mt-learning"]) .white-key { position:relative;flex:1;background:#fff;border:1px solid #94a3b8;border-radius:0 0 6px 6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;font-size:.75rem;font-weight:700;color:#475569;cursor:pointer }
+:where(html[data-course="mt-learning"]) .white-key.on { background:#e0e7ff;color:#4338ca }
+:where(html[data-course="mt-learning"]) .black-key { position:absolute;z-index:2;width:7.4%;height:88px;background:#1e293b;border-radius:0 0 5px 5px;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;font-size:.65rem;cursor:pointer;transform:translateX(-50%) }
+:where(html[data-course="mt-learning"]) .black-key.on { background:#6366f1 }
+:where(html[data-course="mt-learning"]) .compare { width:100%;border-collapse:collapse;margin-top:12px;font-size:.85rem }
+:where(html[data-course="mt-learning"]) .compare th, :where(html[data-course="mt-learning"]) .compare td { border-bottom:1px solid var(--border);padding:9px;text-align:center }
+:where(html[data-course="mt-learning"]) .compare th:first-child, :where(html[data-course="mt-learning"]) .compare td:first-child { text-align:left;color:var(--muted) }
+:where(html[data-course="mt-learning"]) .nav { display:flex;gap:10px;margin-top:16px }
+:where(html[data-course="mt-learning"]) .nav>* { flex:1 }
+:where(html[data-course="mt-learning"]) .summary-list { display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0 }
+:where(html[data-course="mt-learning"]) .summary-item { background:#f8fafc;border:1px solid var(--border);border-radius:9px;padding:10px;font-size:.84rem }
+:where(html[data-course="mt-learning"]) .summary-item:before { content:"✓";color:var(--success);font-weight:900;margin-right:6px }
+:where(html[data-course="mt-learning"]) .note-pills { display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:10px }
+:where(html[data-course="mt-learning"]) .pill { font-size:.74rem;background:#eef2ff;color:#4f46e5;padding:5px 8px;border-radius:999px }
+:where(html[data-course="mt-learning"]) .build-area { position:relative }
+:where(html[data-course="mt-learning"]) .build-hint { text-align:center;font-size:.82rem;color:var(--muted);margin-top:8px }
+:where(html[data-course="mt-learning"]) .direction-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px }
+:where(html[data-course="mt-learning"]) .interval-mode-label { text-align:center;font-weight:800;color:var(--primary);font-size:1rem;margin:2px 0 10px;min-height:24px }
+:where(html[data-course="mt-learning"]) .notation-demo { display:grid;grid-template-columns:1fr;gap:14px;align-items:start }
+:where(html[data-course="mt-learning"]) .notation-caption { text-align:center;font-size:.76rem;color:var(--muted);margin-top:6px }
+:where(html[data-course="mt-learning"]) .voice-labels { display:flex;justify-content:center;gap:18px;margin-top:4px;font-size:.72rem;color:var(--muted) }
+:where(html[data-course="mt-learning"]) .direction-grid button { padding:10px 5px }
+:where(html[data-course="mt-learning"]) .two-col { display:grid;grid-template-columns:1fr 1fr;gap:8px }
+:where(html[data-course="mt-learning"]) .status { display:inline-block;font-size:.72rem;font-weight:800;padding:4px 8px;border-radius:999px;background:#ecfdf5;color:#047857;margin-top:8px }
+:where(html[data-course="mt-learning"]) .intro-flow { position:relative }
+:where(html[data-course="mt-learning"]) .intro-scene { padding:4px 0 28px }
+:where(html[data-course="mt-learning"]) .intro-definition { font-size:1.12rem;line-height:2.08;color:#475569;margin:2px 0 18px }
+:where(html[data-course="mt-learning"]) .intro-definition strong { color:var(--text);font-weight:900 }
+:where(html[data-course="mt-learning"]) .intro-role-text strong { font-weight:900;color:var(--text) }
+:where(html[data-course="mt-learning"]) .key-accent { color:var(--primary);font-weight:900 }
+:where(html[data-course="mt-learning"]) .intro-stage { background:transparent;border:0;padding:0;margin:10px 0 0 }
+:where(html[data-course="mt-learning"]) .intro-staff-wrap { position:relative }
+:where(html[data-course="mt-learning"]) .intro-staff-wrap .staff { background:#fff }
+:where(html[data-course="mt-learning"]) .note-role { position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap }
+:where(html[data-course="mt-learning"]) .note-role.visible { opacity:1;transform:translateY(0) }
+:where(html[data-course="mt-learning"]) .note-role.root { left:calc(32% - 5mm);transform:translate(-50%,10px) }
+:where(html[data-course="mt-learning"]) .note-role.crown { left:60%;transform:translate(-50%,10px) }
+:where(html[data-course="mt-learning"]) .note-role.root.visible, :where(html[data-course="mt-learning"]) .note-role.crown.visible { transform:translate(-50%,0) }
+:where(html[data-course="mt-learning"]) .intro-second { padding-top:26px;opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease }
+:where(html[data-course="mt-learning"]) .intro-second.visible { opacity:1;transform:translateY(0) }
+:where(html[data-course="mt-learning"]) .intro-role-text { font-size:1.08rem;line-height:2.08;color:#475569;margin-top:20px }
+:where(html[data-course="mt-learning"]) .magic-ghost { position:fixed;z-index:9999;margin:0;pointer-events:none;font-weight:800;color:var(--text);transition:all .72s cubic-bezier(.22,.8,.2,1),opacity .2s ease .56s;transform-origin:left top }
+:where(html[data-course="mt-learning"]) .step-head>div:first-child { display:none }
+:where(html[data-course="mt-learning"]) .lesson.opening .step-head { display:flex }
+:where(html[data-course="mt-learning"]) .lesson.opening #stepBody { padding-top:2px }
+:where(html[data-course="mt-learning"]) .lesson .nav { position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:50;width:min(500px,calc(100% - 20px));margin:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:rgba(248,250,252,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);border-radius:14px 14px 0 0 }
+:where(html[data-course="mt-learning"]) .degree-explain { font-size:1.08rem;line-height:2.08;color:#475569;margin:2px 0 18px }
+:where(html[data-course="mt-learning"]) .degree-explain strong { font-weight:900;color:var(--text) }
+:where(html[data-course="mt-learning"]) .degree-note-names { display:flex;justify-content:center;gap:clamp(10px,4vw,26px);align-items:center;min-height:145px;font-size:1.12rem;font-weight:800;letter-spacing:.02em;color:var(--text) }
+:where(html[data-course="mt-learning"]) body.lesson-active main { flex:1;min-height:0;display:flex;flex-direction:column }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson.hidden { display:none!important }
+:where(html[data-course="mt-learning"]) .lesson-board:empty { display:none }
+:where(html[data-course="mt-learning"]) .lesson-board .intro-stage { margin:0 }
+:where(html[data-course="mt-learning"]) .lesson-board .staff { min-height:145px }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson .nav { position:static;left:auto;bottom:auto;transform:none;flex:0 0 auto;width:auto;margin:8px 0 0;padding:10px 0 0;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-top:1px solid var(--border);border-radius:0 }
+:where(html[data-course="mt-learning"]) body.lesson-active .step-head { flex:0 0 auto;margin-bottom:8px }
+:where(html[data-course="mt-learning"]) .board-role-wrap { position:relative }
+:where(html[data-course="mt-learning"]) .board-role-wrap .staff { background:#fff }
+:where(html[data-course="mt-learning"]) .board-note-role { position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translate(-50%,10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap }
+:where(html[data-course="mt-learning"]) .board-note-role.visible { opacity:1;transform:translate(-50%,0) }
+:where(html[data-course="mt-learning"]) .board-note-role.root { left:32% }
+:where(html[data-course="mt-learning"]) .board-note-role.crown { left:60% }
+:where(html[data-course="mt-learning"]) .degree-note-names .endpoint { font-size:1.08rem;font-weight:900;color:var(--text) }
+:where(html[data-course="mt-learning"]) .degree-note-names .middle { font-size:.84rem;font-weight:650;color:#94a3b8 }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-board:empty { display:block }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-content { padding:16px 2px 12px;overscroll-behavior:contain }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-footer-zone { display:block;flex:0 0 auto }
+:where(html[data-course="mt-learning"]) .lesson-footer-zone .nav { display:flex;gap:10px;margin:0 0 6px }
+:where(html[data-course="mt-learning"]) .lesson-footer-zone .nav>* { flex:1 }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson .nav { display:none }
+:where(html[data-course="mt-learning"]) .lesson-paragraph { font-size:1.12rem;line-height:2.08;color:#475569;margin:0 }
+:where(html[data-course="mt-learning"]) .lesson-paragraph + .lesson-paragraph { margin-top:1.25em }
+:where(html[data-course="mt-learning"]) .lesson-paragraph strong { font-weight:900;color:var(--text) }
+@media(max-width:400px) {
+:where(html[data-course="mt-learning"]) .pattern-cards { grid-template-columns:1fr }
+:where(html[data-course="mt-learning"]) .degree-grid { grid-template-columns:repeat(4,1fr) }
+:where(html[data-course="mt-learning"]) .summary-list { grid-template-columns:1fr }
+:where(html[data-course="mt-learning"]) .direction-grid { grid-template-columns:1fr }
+:where(html[data-course="mt-learning"]) .two-col { grid-template-columns:1fr }
+}
+:where(html[data-course="mt-learning"]) .degree-sequence-board { height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px }
+:where(html[data-course="mt-learning"]) .degree-sequence-board svg { display:block;width:100%;height:100% }
+:where(html[data-course="mt-learning"]) .degree-list-board { height:100%;display:flex;align-items:center;justify-content:center;padding:0 2px }
+:where(html[data-course="mt-learning"]) .degree-list-board svg { display:block;width:100%;height:100% }
+:where(html[data-course="mt-learning"]) .melodic-board { height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px }
+:where(html[data-course="mt-learning"]) .melodic-board svg { display:block;width:100%;height:100% }
+:where(html[data-course="mt-learning"]) .melodic-board-wrap { position:relative;width:100%;height:100% }
+:where(html[data-course="mt-learning"]) .melodic-callout { position:absolute;top:8px;transform:translateX(-50%);font-size:15px;font-weight:750;color:var(--accent);letter-spacing:.04em;pointer-events:none }
+:where(html[data-course="mt-learning"]) .melodic-leader { position:absolute;height:1.5px;background:var(--accent);transform-origin:0 50%;pointer-events:none;opacity:.85 }
+:where(html[data-course="mt-learning"]) .quiz-block { margin-top:30px;padding-top:24px;border-top:1px solid var(--border) }
+:where(html[data-course="mt-learning"]) .quiz-kicker { font-family:var(--site-font);font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:12px }
+:where(html[data-course="mt-learning"]) .quiz-question { font-size:20px;line-height:1.85;font-weight:650;margin-bottom:16px }
+:where(html[data-course="mt-learning"]) .quiz-options { display:flex;gap:12px;flex-wrap:wrap }
+:where(html[data-course="mt-learning"]) .quiz-option { appearance:none;border:1px solid var(--border);background:#fff;color:var(--ink);border-radius:999px;padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;transition:.18s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent }
+:where(html[data-course="mt-learning"]) .quiz-option.correct { border-color:#34c759;background:#edf9f0;color:#218739 }
+:where(html[data-course="mt-learning"]) .quiz-option.wrong { border-color:#ff3b30;background:#fff0ef;color:#c92a22 }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-board .intro-stage { height:100% }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-board .board-role-wrap { height:100% }
+:where(html[data-course="mt-learning"]) .lesson-footer-zone button, :where(html[data-course="mt-learning"]) .lesson-footer-zone .primary, :where(html[data-course="mt-learning"]) .lesson-footer-zone .ghost { touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none }
+:where(html[data-course="mt-learning"]) .lesson-top { display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0 }
+:where(html[data-course="mt-learning"]) .lesson-top .brand { min-width:0;white-space:nowrap }
+:where(html[data-course="mt-learning"]) .lesson-meta { display:flex;align-items:center;justify-content:flex-end;gap:.5ch;min-width:0;white-space:nowrap }
+:where(html[data-course="mt-learning"]) .lesson-meta .lesson-count { font-size:12px;font-weight:750;color:var(--muted);letter-spacing:.04em }
+:where(html[data-course="mt-learning"]) .lesson-meta .lesson-id { font-size:12px;font-weight:800;letter-spacing:.08em }
+:where(html[data-course="mt-learning"]) #lessonStep { display:none!important }
+:where(html[data-course="mt-learning"]) .lesson-body { scroll-behavior:smooth;overscroll-behavior:contain }
+:where(html[data-course="mt-learning"]) .board svg { max-width:100%;height:auto }
+@media(max-width:520px) {
+:where(html[data-course="mt-learning"]) .lesson-top { gap:8px }
+:where(html[data-course="mt-learning"]) .lesson-top .brand { font-size:clamp(10px,3vw,13px);letter-spacing:.04em }
+:where(html[data-course="mt-learning"]) .lesson-meta { gap:.5ch }
+:where(html[data-course="mt-learning"]) .lesson-meta .lesson-count, :where(html[data-course="mt-learning"]) .lesson-meta .lesson-id { font-size:clamp(9px,2.7vw,12px) }
+}
+@media(max-width:360px) {
+:where(html[data-course="mt-learning"]) .lesson-top .brand { font-size:9px;letter-spacing:.02em }
+:where(html[data-course="mt-learning"]) .lesson-meta { gap:.5ch }
+:where(html[data-course="mt-learning"]) .lesson-meta .lesson-count, :where(html[data-course="mt-learning"]) .lesson-meta .lesson-id { font-size:9px;letter-spacing:0 }
+}
+:where(html[data-course="mt-learning"]) .lesson-shell, :where(html[data-course="mt-learning"]) .lesson-view { max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)) }
+:where(html[data-course="mt-learning"]) .lesson-footer { padding-bottom:max(0px,env(safe-area-inset-bottom)) }
+:where(html[data-course="mt-learning"]) #lessonStep, :where(html[data-course="mt-learning"]) .lesson-step, :where(html[data-course="mt-learning"]) .step-indicator, :where(html[data-course="mt-learning"]) .page-indicator, :where(html[data-course="mt-learning"]) .lesson-progress-text { display:none!important }
+:where(html[data-course="mt-learning"]) #headerLessonCount { display:inline!important }
+:where(html[data-course="mt-learning"]) .compact-keyboard-scroll { width:100%;height:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;display:flex;align-items:center }
+:where(html[data-course="mt-learning"]) .compact-keyboard { position:relative;height:132px;min-width:420px;margin:auto;display:flex;padding:0 8px;box-sizing:border-box }
+:where(html[data-course="mt-learning"]) .compact-keyboard .white-key { position:relative;width:29px;min-width:29px;height:128px;border:1px solid #cfd2d7;border-radius:0 0 5px 5px;background:#fff;box-sizing:border-box }
+:where(html[data-course="mt-learning"]) .compact-keyboard .white-key.active { background:#fff0e8;border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--accent) }
+:where(html[data-course="mt-learning"]) .compact-keyboard .black-key { position:absolute;top:0;width:18px;height:78px;background:#222;border-radius:0 0 4px 4px;z-index:3;transform:translateX(-50%) }
+:where(html[data-course="mt-learning"]) .compact-keyboard .black-key.active { background:#c98763;box-shadow:inset 0 -3px 0 rgba(0,0,0,.16) }
+:where(html[data-course="mt-learning"]) .compact-keyboard .key-label { position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font:700 10px var(--site-font);color:#6e6e73 }
+:where(html[data-course="mt-learning"]) .compact-keyboard .white-key.active .key-label { color:var(--accent) }
+:where(html[data-course="mt-learning"]) .tone-count-board { height:100%;display:flex;align-items:center;justify-content:center;padding:0 4px }
+:where(html[data-course="mt-learning"]) .tone-count-board svg { display:block;width:100%;height:100% }
+:where(html[data-course="mt-learning"]) .topbar-brand { min-width:0;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis; }
+:where(html[data-course="mt-learning"]) .topbar-right { display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:.5ch;
+  flex:0 0 auto;
+  white-space:nowrap; }
+:where(html[data-course="mt-learning"]) .topbar-right .lesson-count { display:inline!important;
+  font-size:inherit; }
+@media(max-width:390px) {
+:where(html[data-course="mt-learning"]) .topbar { font-size:clamp(.58rem,2.7vw,.76rem);letter-spacing:.2px }
+:where(html[data-course="mt-learning"]) .lesson-badge { padding:3px 6px }
+}
+@media(max-width:330px) {
+:where(html[data-course="mt-learning"]) .topbar { font-size:.56rem }
+:where(html[data-course="mt-learning"]) .topbar-brand { letter-spacing:0 }
+:where(html[data-course="mt-learning"]) .lesson-badge { padding:2px 5px }
+}
+:where(html[data-course="mt-learning"]) .lesson-progress, :where(html[data-course="mt-learning"]) .step-indicator, :where(html[data-course="mt-learning"]) #lessonStep, :where(html[data-course="mt-learning"]) .lesson-step, :where(html[data-course="mt-learning"]) .page-indicator, :where(html[data-course="mt-learning"]) .lesson-progress-text { display:none!important }
+:where(html[data-course="mt-learning"]) .lesson-main { padding-top:0!important }
+:where(html[data-course="mt-learning"]) .quiz-options.vertical { display:grid;grid-template-columns:1fr;gap:9px;max-width:220px }
+:where(html[data-course="mt-learning"]) .quiz-options.vertical .quiz-option { text-align:left;width:100% }
+:where(html[data-course="mt-learning"]) .home-course-title h1 { margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text);letter-spacing:-.025em }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) .topbar { font-size:.64rem }
+:where(html[data-course="mt-learning"]) .lesson-badge { padding:2px 6px }
+:where(html[data-course="mt-learning"]) .lesson-card { display:grid!important;
+    grid-template-columns:minmax(280px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    gap:12px!important;
+    min-height:0!important;
+    padding:10px!important; }
+:where(html[data-course="mt-learning"]) .board { grid-column:1!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    align-self:stretch!important; }
+:where(html[data-course="mt-learning"]) .lesson-body { grid-column:2!important;
+    grid-row:1!important;
+    min-height:0!important;
+    height:100%!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 2px 2px!important; }
+:where(html[data-course="mt-learning"]) .lesson-footer { margin-top:5px!important;
+    padding-bottom:0!important; }
+:where(html[data-course="mt-learning"]) .lesson-footer .nav, :where(html[data-course="mt-learning"]) .nav { margin-top:0!important }
+:where(html[data-course="mt-learning"]) footer { font-size:.62rem!important;margin-top:2px!important }
+:where(html[data-course="mt-learning"]) .compact-keyboard { height:100px!important;min-width:420px }
+:where(html[data-course="mt-learning"]) .compact-keyboard .white-key { height:98px!important }
+:where(html[data-course="mt-learning"]) .compact-keyboard .black-key { height:60px!important }
+}
+:where(html[data-course="mt-learning"]) #lessonStep, :where(html[data-course="mt-learning"]) .lesson-step, :where(html[data-course="mt-learning"]) .step-indicator, :where(html[data-course="mt-learning"]) .page-indicator, :where(html[data-course="mt-learning"]) .lesson-progress-text, :where(html[data-course="mt-learning"]) .lesson-card .lesson-count, :where(html[data-course="mt-learning"]) .board .lesson-count { display:none!important }
+:where(html[data-course="mt-learning"]) .step-head, :where(html[data-course="mt-learning"]) #stepCount, :where(html[data-course="mt-learning"]) #lessonStep, :where(html[data-course="mt-learning"]) .lesson-step, :where(html[data-course="mt-learning"]) .step-indicator, :where(html[data-course="mt-learning"]) .page-indicator, :where(html[data-course="mt-learning"]) .lesson-progress-text, :where(html[data-course="mt-learning"]) .lesson-card .lesson-count, :where(html[data-course="mt-learning"]) .board .lesson-count { display:none!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard { margin-top:0!important; }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) body.lesson-active #stepBody { grid-column:2!important;
+    grid-row:1!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:2px 8px 8px 2px!important;
+    overscroll-behavior:contain; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonFooterZone { flex:0 0 auto!important;
+    margin-top:4px!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active .footer { flex:0 0 auto!important;
+    margin-top:2px!important;
+    font-size:.62rem!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active .topbar { font-size:.64rem!important }
+:where(html[data-course="mt-learning"]) body.lesson-active .lesson-badge { padding:2px 6px!important }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard>* { width:100%!important;max-width:100%!important }
+}
+:where(html[data-course="mt-learning"]) body.lesson-active #siteFooter, :where(html[data-course="mt-learning"]) #summary:not(.hidden)~* #siteFooter { display:none }
+:where(html[data-course="mt-learning"]) body:has(#summary:not(.hidden)) #siteFooter { display:none }
+:where(html[data-course="mt-learning"]) .lesson-complete.hidden { display:none!important }
+:where(html[data-course="mt-learning"]) .lesson-complete .kicker { margin-bottom:8px }
+:where(html[data-course="mt-learning"]) .lesson-complete h1 { margin:0 }
+:where(html[data-course="mt-learning"]) .confetti-pop { font-size:48px;line-height:1;margin-top:22px;transform-origin:50% 80%;animation:confettiCelebrate 1.25s ease-in-out infinite }
+@keyframes confettiCelebrate { 0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}
+  35%{transform:translateY(-9px) rotate(7deg) scale(1.12)}
+  65%{transform:translateY(-3px) rotate(-3deg) scale(1.04)} }
+@media(prefers-reduced-motion:reduce) {
+:where(html[data-course="mt-learning"]) .confetti-pop { animation:none }
+}
+:where(html[data-course="mt-learning"]), :where(html[data-course="mt-learning"]) body, :where(html[data-course="mt-learning"]) .app, :where(html[data-course="mt-learning"]) button, :where(html[data-course="mt-learning"]) a, :where(html[data-course="mt-learning"]) .nav, :where(html[data-course="mt-learning"]) #lessonFooterZone { touch-action:manipulation; }
+:where(html[data-course="mt-learning"]) .completion-actions { margin-top:24px;justify-content:center }
+:where(html[data-course="mt-learning"]) #prevBtn, :where(html[data-course="mt-learning"]) #nextBtn { touch-action:manipulation!important; }
+@media (min-width:760px), (orientation:landscape) and (max-height:500px) {
+:where(html[data-course="mt-learning"]) body.lesson-active .app { width:min(1440px,100%)!important;
+    max-width:none!important;
+    margin:0 auto!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active main { width:100%!important;
+    max-width:none!important;
+    min-height:0!important;
+    overflow:hidden!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:18px!important;
+    padding:16px!important;
+    overflow:hidden!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard { grid-column:1!important;
+    grid-row:1!important;
+    width:100%!important;
+    max-width:none!important;
+    height:100%!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    overflow:auto!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard>* { width:100%!important;
+    max-width:100%!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #stepBody { grid-column:2!important;
+    grid-row:1!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch;
+    padding:6px 12px 12px 4px!important; }
+}
+@media (min-width:760px) {
+:where(html[data-course="mt-learning"]) body.lesson-active main { display:flex!important;
+    align-items:center!important;
+    justify-content:center!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { height:auto!important;
+    min-height:min(560px,calc(100dvh - 190px))!important;
+    max-height:calc(100dvh - 150px)!important;
+    align-self:center!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard, :where(html[data-course="mt-learning"]) body.lesson-active #stepBody { align-self:center!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #stepBody { align-self:center!important;
+    justify-self:center!important;
+    width:min(100%,620px)!important;
+    height:auto!important;
+    max-height:100%!important;
+    text-align:left!important;
+    padding:12px 18px!important; }
+}
+:where(html[data-course="mt-learning"]) #lessonBoard svg, :where(html[data-course="mt-learning"]) .tone-count-board svg { display:block;
+  max-width:100%!important;
+  height:auto!important;
+  overflow:visible; }
+@media (max-width:759px) and (orientation:portrait) {
+:where(html[data-course="mt-learning"]) #lessonBoard, :where(html[data-course="mt-learning"]) .tone-count-board, :where(html[data-course="mt-learning"]) #enharmonicToneStaff { width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    overflow:hidden!important; }
+}
+:where(html[data-course="mt-learning"]) .lesson-audio-btn { position:absolute;top:10px;right:10px;z-index:20;
+  width:34px;height:34px;border:0;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.9);color:#007aff;
+  box-shadow:0 1px 5px rgba(0,0,0,.10);
+  cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent }
+:where(html[data-course="mt-learning"]) .lesson-audio-btn svg { width:18px;height:18px;pointer-events:none }
+:where(html[data-course="mt-learning"]) .lesson-audio-btn:active { transform:scale(.94) }
+:where(html[data-course="mt-learning"]) .lesson-audio-btn.playing { background:#eef6ff }
+:where(html[data-course="mt-learning"]) #lessonBoard > .lesson-audio-btn { position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
+  min-height:34px!important;max-height:34px!important;
+  flex:0 0 34px!important;align-self:auto!important;
+  aspect-ratio:1/1!important;border-radius:50%!important; }
+:where(html[data-course="mt-learning"]) #lessonBoard .lesson-audio-btn { position:absolute!important;
+  inset:auto 10px auto auto!important;
+  top:10px!important;
+  box-sizing:border-box!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:none!important;flex-grow:0!important;flex-shrink:0!important;flex-basis:32px!important;
+  align-self:auto!important;justify-self:auto!important;
+  aspect-ratio:1!important;border-radius:999px!important;
+  display:grid!important;place-items:center!important;
+  line-height:1!important;
+  transform:none; }
+:where(html[data-course="mt-learning"]) #lessonBoard .lesson-audio-btn svg { display:block!important;width:17px!important;height:17px!important;
+  min-width:17px!important;max-width:17px!important;
+  flex:none!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard > .lesson-audio-btn { position:absolute!important;
+  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
+  width:32px!important;height:32px!important;
+  min-width:32px!important;max-width:32px!important;
+  min-height:32px!important;max-height:32px!important;
+  padding:0!important;margin:0!important;
+  flex:0 0 32px!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+  display:grid!important;place-items:center!important;
+  z-index:20!important; }
+:where(html[data-course="mt-learning"]) body:not(.lesson-active) #headerLessonCount { display:none!important }
+:where(html[data-course="mt-learning"]) .aux-practice-link { display:block }
+:where(html[data-course="mt-learning"]), :where(html[data-course="mt-learning"]) body { min-height:100%; }
+:where(html[data-course="mt-learning"]) body:not(.lesson-active) { min-height:100dvh;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(10px,env(safe-area-inset-bottom)); }
+:where(html[data-course="mt-learning"]) body:not(.lesson-active) .app { min-height:calc(100dvh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom))); }
+:where(html[data-course="mt-learning"]) body:not(.lesson-active) .footer { margin-top:auto; }
+@media (orientation:portrait) {
+:where(html[data-course="mt-learning"]) body.lesson-active .app { width:100%!important;max-width:520px!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active main { width:100%!important;max-width:none!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:100%!important;padding:16px 24px!important;overflow:hidden!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lessonBoard { width:100%!important;height:178px!important;min-height:178px!important;max-height:178px!important;flex:0 0 178px!important;margin:0!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #stepBody { width:100%!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;padding:16px 2px 12px!important;border-left:0!important; }
+}
+@media (orientation:landscape) and (min-width:600px) {
+:where(html[data-course="mt-learning"]) body.lesson-active .app { width:min(1440px,100%)!important;max-width:none!important;margin:0 auto!important; }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { display:grid!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;grid-template-rows:minmax(0,1fr)!important;column-gap:18px!important; }
+}
+:where(html[data-course="mt-learning"]) header { margin-bottom:16px }
+:where(html[data-course="mt-learning"]) .lesson-badge { background:#eef2ff;color:var(--primary);padding:4px 9px;border-radius:999px }
+:where(html[data-course="mt-learning"]) .progress-wrap { height:8px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:10px }
+:where(html[data-course="mt-learning"]) .progress { height:100%;width:0;background:linear-gradient(90deg,#818cf8,var(--primary));transition:width .3s;border-radius:999px }
+:where(html[data-course="mt-learning"]) .kicker { font-size:.76rem;color:var(--primary);font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px }
+:where(html[data-course="mt-learning"]) .lead { font-size:1.05rem;line-height:1.75;color:#475569 }
+:where(html[data-course="mt-learning"]) .home-actions { display:grid;gap:10px;margin-top:22px }
+:where(html[data-course="mt-learning"]) .ghost { background:#fff;color:var(--muted);border:1px solid var(--border);font-weight:650;padding:11px 15px }
+:where(html[data-course="mt-learning"]) .footer { margin-top:auto;text-align:center;color:#94a3b8;font-size:.75rem;padding:14px 0 2px }
+:where(html[data-course="mt-learning"]) .tiny { font-size:.76rem;color:var(--muted);line-height:1.55;margin-top:10px }
+:where(html[data-course="mt-learning"]) .lesson { padding-bottom:88px }
+:where(html[data-course="mt-learning"]) .lesson-board { flex:0 0 auto;position:relative;min-height:0 }
+:where(html[data-course="mt-learning"]) .lesson-content { flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 2px 18px;scroll-behavior:smooth }
+:where(html[data-course="mt-learning"]) .home-course-title { text-align:center;margin:2px 0 24px }
+:where(html[data-course="mt-learning"]) .home-course-index { font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary);margin-bottom:7px }
+:where(html[data-course="mt-learning"]) .lesson-complete { text-align:center!important;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px }
+:where(html[data-course="mt-learning"]) button, :where(html[data-course="mt-learning"]) a { -webkit-tap-highlight-color:transparent; }
+:where(html[data-course="mt-learning"]) body.lesson-active .footer { flex:0 0 auto;margin-top:0;padding:4px 0 0 }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) body.lesson-active { padding-top:6px!important;padding-bottom:4px!important }
+}
+:where(html[data-course="mt-learning"]) #nextBtn:disabled { background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important }
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:0;margin-bottom:8px;overflow:hidden }
+:where(html[data-course="mt-learning"]) body.lesson-active .app { height:calc(100dvh - 20px);min-height:0 }
+:where(html[data-course="mt-learning"]) body.lesson-active header { flex:0 0 auto;margin-bottom:10px }
+:where(html[data-course="mt-learning"]) .topbar { display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;letter-spacing:.5px;color:var(--muted);margin-bottom:12px }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) body.lesson-active #lesson { height:100%!important;
+    min-height:0!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(250px,44%) minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    column-gap:12px!important;
+    padding:8px 10px!important;
+    overflow:hidden!important; }
+}
+:where(html[data-course="mt-learning"]) body.lesson-active { height:100dvh;overflow:hidden;padding-bottom:10px }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) body.lesson-active main { flex:1 1 auto!important;
+    min-height:0!important;
+    overflow:hidden!important; }
+}
+:where(html[data-course="mt-learning"]) .lesson-footer-zone { display:none }
+@media (orientation:landscape) and (max-height:500px) and (max-width:950px) {
+:where(html[data-course="mt-learning"]) body.lesson-active .app { height:calc(100dvh - 10px)!important }
+:where(html[data-course="mt-learning"]) body.lesson-active header { margin-bottom:5px!important }
+}
+:where(html[data-course="mt-learning"]) .step-head { display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px }

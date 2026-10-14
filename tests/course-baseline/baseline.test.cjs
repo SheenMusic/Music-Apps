@@ -16,14 +16,14 @@ test('Phase 1 scope: source scripts, DOM/content, URLs and all non-pilot tracked
     assert.equal(current.slice(current.indexOf('<body')),baseline.slice(baseline.indexOf('<body')), `${file}: body changed`);
     assert.deepEqual(H.scripts(current),H.scripts(baseline), `${file}: inline scripts changed`);
     for (const js of H.scripts(current)) new vm.Script(js);
-    assert.equal(H.withoutCSS(current),H.withoutCSS(baseline), `${file}: non-CSS markup changed`);
+    assert.equal(H.withoutCSS(current).replace(/\sdata-course="[^"]*"/,''),H.withoutCSS(baseline), `${file}: non-CSS markup changed`);
     const links=[...current.matchAll(/<link\b[^>]*href=["']([^"']+)["'][^>]*>/g)].map(m=>m[1]);
     for (const link of links) assert.ok(fs.existsSync(path.resolve(H.ROOT,path.dirname(file),link)), `Missing CSS: ${link}`);
   }
   // Integration scope is separate from the immutable Phase 0 teaching/visual source.
   const metadata=JSON.parse(fs.readFileSync(path.join(__dirname,'baseline.json'),'utf8'));
-  const scopeBase=metadata.integration?.mainCommit || H.BASE;
-  const allowed=new Set(metadata.integration?.allowedChanges || Object.values(H.COURSES));
+  const scopeBase=metadata.visualUnification?.startingCommit || metadata.integration?.mainCommit || H.BASE;
+  const allowed=new Set(metadata.visualUnification?.allowedChanges || metadata.integration?.allowedChanges || Object.values(H.COURSES));
   execFileSync('git',['merge-base','--is-ancestor',scopeBase,'HEAD'],{cwd:H.ROOT});
   const tree=execFileSync('git',['ls-tree','-r',scopeBase],{cwd:H.ROOT}).toString().trim().split('\n');
   const {createHash}=require('node:crypto');

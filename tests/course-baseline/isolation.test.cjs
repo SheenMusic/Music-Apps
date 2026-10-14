@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const path=require('node:path');
 const {chromium}=require('playwright');
 const H=require('./harness.cjs');
-const files=['assets/course-visual.css','ET-Intervals/shared/styles/base.css','MT-Intervals/shared/styles/practice-base.css'];
+const files=['assets/course-visual.css','ET-Intervals/shared/styles/base.css','ET-Intervals/shared/styles/quiz-base.css','MT-Intervals/shared/styles/practice-base.css','MT-Intervals/shared/styles/learning-base.css'];
 const ready=files.every(f=>fs.existsSync(path.join(H.ROOT,f)));
 test('Phase 1: shared CSS selectors are course-scoped; public pages and both dashboards remain visually isolated',{skip:!ready},async()=>{
   const server=await H.serve();let browser;
@@ -27,11 +27,11 @@ test('Phase 1: shared CSS selectors are course-scoped; public pages and both das
         assert.deepEqual(await snapshot(),expected,`${file} ${colorScheme}: shared CSS leaked`);
         const selectors=await page.evaluate(()=>{
           const result=[];const visit=rules=>{for(const rule of rules){if(rule.selectorText)result.push(rule.selectorText);else if(rule.cssRules)visit(rule.cssRules);}};
-          for(const style of [...document.querySelectorAll('style')].slice(-3))visit(style.sheet.cssRules);
+          for(const style of [...document.querySelectorAll('style')].slice(-5))visit(style.sheet.cssRules);
           return result;
         });
         assert.ok(selectors.length>0);
-        for(const selector of selectors)assert.ok(selector.includes('[data-visual="ear"]')||selector.includes('[data-visual="practice"]'),`Unscoped selector: ${selector}`);
+        for(const selector of selectors)assert.ok(selector.includes('[data-course'),`Unscoped selector: ${selector}`);
         await context.close();
       }
     }

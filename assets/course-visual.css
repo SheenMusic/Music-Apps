@@ -90,3 +90,5 @@ html[data-course="et-sing"] #reportCard .mic-btn {
 html[data-course="et-sing"] .btn-tone.playing { background: var(--site-warning-bg); color: var(--site-warning); border-color: var(--site-warning); }
 html[data-course="et-sing"] :is(.mic-btn.active, .mic-capture-btn.active) { background: var(--site-error-bg); color: var(--site-error); border-color: var(--site-error-border); }
 html[data-course="et-sing"] :is(.mic-capture-btn.locked, .btn-next.unlocked, .btn-finish.unlocked) { background: var(--site-success-bg); color: var(--site-success); border-color: var(--site-success-border); }
+
+html[data-course="mt-learning"] .quiz-option.selected:not(.correct):not(.wrong) { background: var(--site-tint); color: var(--site-tint-text); border-color: var(--site-tint-text); }
