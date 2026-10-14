@@ -63,7 +63,41 @@
     const title = catalog?.courses?.[course.id]?.title;
     return typeof title === 'string' && title.trim() ? title : course.title;
   }
-  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle};
+  function escapeIcsText(value) {
+    return String(value).replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+  }
+  function foldIcsLine(line) {
+    const encoder = new TextEncoder(), lines = [];let current='', bytes=0;
+    for (const character of line) {
+      const size = encoder.encode(character).length;
+      if (bytes+size>75) {lines.push(current);current=' ';bytes=1;}
+      current+=character;bytes+=size;
+    }
+    lines.push(current);return lines.join('\r\n');
+  }
+  function buildIcs({studentName,period,now}) {
+    const validation = validatePeriod(period), time = timestamp(now);
+    if (!validation.valid || !Number.isFinite(time) || typeof studentName!=='string') throw new RangeError('Invalid calendar data');
+    const end = Date.parse(period.end);
+    const utc = value => new Date(value).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}Z$/,'Z');
+    // A short deterministic UTF-8 hash is only a UID discriminator, never a credential.
+    let hash=2166136261;
+    for (const byte of new TextEncoder().encode(studentName)) hash=Math.imul(hash^byte,16777619)>>>0;
+    const uid = `${period.id || 'period'}-${end}-${hash.toString(16).padStart(8,'0')}@student-dashboard`;
+    const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(end));
+    const part = type => parts.find(item=>item.type===type).value;
+    const deadline = `${part('year')}.${part('month')}.${part('day')} ${part('hour')}:${part('minute')}`;
+    const lines = [
+      'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Student Dashboard//Learning Period//ZH','CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',`UID:${escapeIcsText(uid)}`,`DTSTAMP:${utc(time)}`,`DTSTART:${utc(end)}`,`DTEND:${utc(end+30*60000)}`,
+      'SUMMARY:学习有效期截止',`DESCRIPTION:${escapeIcsText(`${studentName} 的学习有效期于北京时间 ${deadline} 截止`)}`,
+      'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:学习有效期即将截止','TRIGGER:-P3D','END:VALARM',
+      'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:学习有效期即将截止','TRIGGER:-P1D','END:VALARM',
+      'END:VEVENT','END:VCALENDAR'
+    ];
+    return lines.map(foldIcsLine).join('\r\n')+'\r\n';
+  }
+  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs};
   globalThis.DashboardLogic = DashboardLogic;
   if (typeof module !== 'undefined') module.exports = DashboardLogic;
 })();

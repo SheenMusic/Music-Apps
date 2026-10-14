@@ -64,4 +64,30 @@ test('catalog title with student-data fallback',()=>{
  assert.equal(L.getCourseTitle({id:'x',title:'legacy'},{courses:{x:{title:'catalog'}}}),'catalog');
  assert.equal(L.getCourseTitle({id:'x',title:'legacy'},{courses:{}}),'legacy');
 });
+
+
+test('ICS UTC event, 30-minute duration, alarms and stable UID',()=>{
+ const options={studentName:'Test',period,now};
+ const ics=L.buildIcs(options), unfolded=ics.replace(/\r\n[ \t]/g,'');
+ assert.ok(unfolded.includes('DTSTART:20261027T080700Z'));
+ assert.ok(unfolded.includes('DTEND:20261027T083700Z'));
+ for (const line of ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:','CALSCALE:GREGORIAN','BEGIN:VEVENT','UID:','DTSTAMP:','SUMMARY:学习有效期截止','TRIGGER:-P3D','TRIGGER:-P1D','END:VEVENT','END:VCALENDAR']) assert.ok(unfolded.includes(line),line);
+ const uid=text=>text.replace(/\r\n[ \t]/g,'').match(/UID:([^\r]+)\r\n/)[1];
+ assert.equal(uid(ics),uid(L.buildIcs({...options,now:now+10000})));
+ assert.notEqual(uid(ics),uid(L.buildIcs({...options,period:{...period,id:'other'}})));
+ assert.notEqual(uid(ics),uid(L.buildIcs({...options,studentName:'Other'})));
+ assert.throws(()=>L.buildIcs({...options,period:{start:null,end:null}}));
+});
+test('ICS escaping and UTF-8 75-byte folding',()=>{
+ const name='中文姓名;逗号,反斜杠\\换行\n'+ '很长的中文名字😀'.repeat(20);
+ const ics=L.buildIcs({studentName:name,period,now});
+ assert.equal(ics.replace(/\r\n/g,'').includes('\n'),false);
+ const lines=ics.split('\r\n');
+ for(const line of lines) {assert.ok(Buffer.byteLength(line,'utf8')<=75);assert.equal(Buffer.from(line,'utf8').toString('utf8'),line);assert.ok(!line.includes('�'));}
+ assert.ok(lines.some(line=>line.startsWith(' ')));
+ const unfolded=ics.replace(/\r\n[ \t]/g,'');
+ const escaped=name.replace(/\\/g,'\\\\').replace(/\r\n|\r|\n/g,'\\n').replace(/;/g,'\\;').replace(/,/g,'\\,');
+ assert.ok(unfolded.includes(`DESCRIPTION:${escaped} 的学习有效期于北京时间 2026.10.27 16:07 截止\r\n`));
+ assert.ok(ics.endsWith('\r\n'));
+});
 console.log(`PASS ${count} groups`);

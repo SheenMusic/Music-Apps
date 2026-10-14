@@ -72,6 +72,21 @@
     const parts = format(date), value = type => parts.find(p=>p.type===type)?.value;
     return `${value('year')}.${value('month')}.${value('day')}${includeTime ? ` ${value('hour')}:${value('minute')}` : ''}`;
   };
+  const calendarButton = text('button','添加到日历','calendar-button');
+  calendarButton.type='button';calendarButton.hidden=true;
+  const calendarNotice = text('p','请在系统浏览器中打开本页后再添加到日历','period-note');calendarNotice.hidden=true;
+  document.querySelector('.period-panel > .period-note:last-child').before(calendarButton,calendarNotice);
+  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+  const canDownload = typeof Blob==='function' && typeof TextEncoder==='function' && typeof URL!=='undefined' && typeof URL.createObjectURL==='function' && typeof URL.revokeObjectURL==='function' && 'download' in document.createElement('a');
+  calendarButton.addEventListener('click',()=>{
+    const now=Date.now(), period=DashboardLogic.pickLatestPeriod(studentData.learningPeriods,now);
+    if (!period || !DashboardLogic.computePeriodState(period,now).notExpired || isWeChat || !canDownload) {updatePeriod();return;}
+    const ics=DashboardLogic.buildIcs({studentName:studentData.studentName,period,now});
+    const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
+    const link=document.createElement('a');link.href=url;link.download='learning-period-end.ics';link.hidden=true;
+    document.body.append(link);
+    try {link.click();} finally {link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  });
   let missingWarned = false;
   function updatePeriod() {
     const now = Date.now();
@@ -79,6 +94,7 @@
     document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,period,now);
     const panel = document.querySelector('.period-panel');panel.hidden = !period;
     if (!period) {
+      calendarButton.hidden=true;calendarNotice.hidden=true;
       if (!missingWarned) {
         const reasons = studentData.learningPeriods.length ? studentData.learningPeriods.map(item=>DashboardLogic.validatePeriod(item).reason) : ['missing-dates'];
         console.warn('学习周期未显示：', [...new Set(reasons)].map(reason=>reasonMessages[reason] || reason).join('；'));
@@ -96,6 +112,8 @@
     document.getElementById('periodStatus').textContent = state.status;
     document.getElementById('remainingTime').textContent = state.remainingText;
     document.getElementById('timeProgress').value = state.progress;
+    calendarButton.hidden = !state.notExpired || isWeChat || !canDownload;
+    calendarNotice.hidden = !state.notExpired || !isWeChat;
   }
   updatePeriod();setInterval(updatePeriod,60000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) updatePeriod()});
