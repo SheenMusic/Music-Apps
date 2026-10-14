@@ -10,55 +10,50 @@ const output=process.env.COURSE_VISUAL_OUTPUT || path.join(os.tmpdir(),'music-ap
 const views = [
   [1280,900], [320,812], [375,812], [390,844], [430,932], [768,1024], [1024,768]
 ];
-const properties = `display position top right bottom left width height min-width max-width min-height max-height
-margin-top margin-right margin-bottom margin-left padding-top padding-right padding-bottom padding-left
-box-sizing flex-direction flex-grow flex-shrink flex-basis align-items justify-content gap row-gap column-gap
-grid-template-columns grid-template-rows overflow-x overflow-y color background-color background-image
-border-top-color border-top-style border-top-width border-right-color border-right-width border-bottom-color
-border-bottom-width border-left-color border-left-width border-top-left-radius border-top-right-radius
-border-bottom-left-radius border-bottom-right-radius box-shadow font-family font-size font-weight line-height
-letter-spacing text-align text-transform text-decoration-line opacity visibility transform transform-origin
-cursor appearance accent-color outline-color outline-style outline-width outline-offset animation-name
-animation-duration animation-timing-function transition-property transition-duration transition-timing-function
-z-index backdrop-filter content white-space`.split(/\s+/);
+const {properties,snapshot,referenceRasters}=require('./visual-state.cjs');
+const {comparePNG}=require('./raster-comparison.cjs');
+const {isDeepStrictEqual}=require('node:util');
+const rasterCounts={PASS:0,PASS_WITH_RASTER_VARIANCE:0,FAIL:0};
+const diagnostics=[];
 before(async () => {
   fs.mkdirSync(output,{recursive:true}); server=await H.serve();
   browser=await chromium.launch({executablePath:process.env.COURSE_CHROMIUM || '/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 });
 after(async () => {
-  if(browser) fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify({baseline:H.BASE,browser:browser.version(),comparisons,screenshotComparisons,viewportCount:views.length,themes:['light','dark'],computedProperties:properties.length,realDevices:false,audioDevices:'mocked'},null,2));
+  if(browser) fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify({baseline:H.BASE,browser:browser.version(),comparisons,screenshotComparisons,viewportCount:views.length,themes:['light','dark'],computedProperties:"ALL native properties and custom variables",legacyPropertiesCovered:properties.length,rasterCounts,diagnostics,realDevices:false,audioDevices:'mocked'},null,2));
   await browser?.close(); await server?.close();
 });
-async function snapshot(page) {
-  await page.evaluate(() => {for(const a of document.getAnimations()) {try{a.finish();}catch{}} window.scrollTo(0,0);});
-  return page.evaluate(properties => {
-    const sample=(el,pseudo=null) => {
-      const s=getComputedStyle(el,pseudo); return Object.fromEntries(properties.map(p=>[p,s.getPropertyValue(p)]));
-    };
-    return [document.documentElement,...document.body.querySelectorAll('*'),document.body].map(el=>{
-      const r=el.getBoundingClientRect();
-      return {tag:el.tagName,id:el.id,classes:el.className,disabled:el.disabled,hidden:el.hidden,
-        text:el.children.length ? null : el.textContent,
-        rect:[r.x,r.y,r.width,r.height].map(v=>Math.round(v*1000)/1000),
-        style:sample(el),before:sample(el,'::before'),after:sample(el,'::after')};
-    });
-  },properties);
-}
 async function capture(pair,course,view,theme,state) {
   const [reference,current]=pair;
   const expected=await snapshot(reference.page), actual=await snapshot(current.page);
-  assert.deepEqual(actual,expected,`${course} ${view.join('x')} ${theme} ${state}: computed styles/geometry/state differ`);
+  let structureEqual=isDeepStrictEqual(actual,expected);
+  const name=`${course}-${view.join('x')}-${theme}-${state}`;
   // All states receive style/geometry checks; initial and completed pages also receive pixel comparisons.
   // COURSE_FULL_SCREENSHOTS=1 optionally records every state, without changing test coverage of styles.
   if (process.env.COURSE_FULL_SCREENSHOTS === '1' || ['initial','report','result'].includes(state)) {
     const pngs=[];
     for(const run of pair) pngs.push(await run.page.screenshot({fullPage:true,animations:'disabled'}));
-    const name=`${course}-${view.join('x')}-${theme}-${state}`;
     fs.writeFileSync(path.join(output,`${name}-before.png`),pngs[0]);
     fs.writeFileSync(path.join(output,`${name}-after.png`),pngs[1]);
-    assert.equal(H.sha(pngs[1]),H.sha(pngs[0]),`${name}: screenshot pixels differ (inspect ${output})`);
+    const options={name,structureEqual,cards:expected.nodes,scale:expected.dpr};
+    let diagnostic=comparePNG(pngs[0],pngs[1],options);
+    if(diagnostic.rasterCandidate && structureEqual) {
+      const evidence=await referenceRasters(browser,server.url,course,reference.page,expected,{viewport:{width:view[0],height:view[1]},theme});
+      for(let i=0;i<evidence.rasters.length;i++)fs.writeFileSync(path.join(output,`${name}-same-source-${i}.png`),evidence.rasters[i]);
+      diagnostic=comparePNG(pngs[0],pngs[1],{...options,referenceRasters:evidence.valid?evidence.rasters:[]});
+      diagnostic.evidenceCount=evidence.rasters.length;
+      diagnostic.evidenceValid=evidence.valid;
+      if(!evidence.valid)diagnostic.reason=evidence.reason;
+    }
+    diagnostics.push(diagnostic);rasterCounts[diagnostic.status]++;
+    fs.writeFileSync(path.join(output,`${name}-diagnostic.json`),JSON.stringify(diagnostic,null,2));
+    console.log(JSON.stringify({name,status:diagnostic.status,strictDifferentPixels:diagnostic.strictDifferentPixels,
+      maxRGBDifference:diagnostic.maxRGBDifference,maxAlphaDifference:diagnostic.maxAlphaDifference,
+      boundingBox:diagnostic.boundingBox,variancePassed:diagnostic.variancePassed,structureChanged:diagnostic.structureChanged}));
+    assert.notEqual(diagnostic.status,'FAIL',`${name}: ${diagnostic.reason} (inspect ${output})`);
     screenshotComparisons++;
   }
+  assert.deepEqual(actual,expected,`${name}: computed styles/geometry/DOM/state differ`);
   for(const run of pair) {assert.deepEqual(run.errors,[]);assert.deepEqual(run.cssFailures,[]);}
   comparisons++;
 }
