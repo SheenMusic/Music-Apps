@@ -110,3 +110,32 @@ PNG 首先逐 RGBA 像素比较，完全一致为 `PASS`。只有结构验证通
 这会增加少数差异用例的成本，也可能保守拒绝无法在固定八次中重现的合法栅格变化。单凭图像无法区分一张合法参考产物与逐字节伪造的同一张图，所以参考证据只允许从只读 Git Phase 0 页面生成。真实 CSS/DOM/变量变化由严格验证拒绝；未经独立重现的人为圆角改色没有几何豁免。
 
 `raster-negative.test.cjs` 覆盖宽高、圆角、位置、背景/文字颜色、内容、按钮状态、变量、伪元素，以及仅改 PNG 的主体和圆角样本。诊断 JSON、同源参考 PNG 和三种状态的独立统计保存在 `COURSE_VISUAL_OUTPUT`，不提交截图。连续三轮可使用不同的输出目录运行同一 `visual.test.cjs`；任何 FAIL 都阻止验收。
+
+## Phase 1 集成作用域
+
+`baseline.json.integration.mainCommit` 固定此次集成起点 `acd294069a670578d8bdb5ef1b0ea752e7ee2d52`，只用于非试点文件保护。`harness.cjs.BASE` 及原始课程基线仍为 `d4936c7ddbae8dfbd963c6880b1be983f2d96110`，不得改用最新 main 的课程截图或脚本。
+
+范围测试对集成起点的非允许文件逐一比较 Git blob 哈希，并检查 Git 差异与未跟踪路径，覆盖新增、删除及未提交改动。明确允许三节试点、三个共享 CSS 和本目录十个测试/说明文件。原样未跟踪的审计报告单独校验其 SHA-256；其余 Dashboard、Catalog、课程、资源与部署配置都必须与此次 main 一致。已有合法 Dashboard 更新不再被旧 Phase 0 全站哈希误判，但也没有删除非试点保护。
+
+CSS 隔离测试开启页面 JavaScript，确认动态学生模板确实生成 `.dashboard`，覆盖 Samuel、周舰及正式/预览教师入口，共八页、十六种 Light/Dark 组合。截图判定、负向测试和独立 Phase 0 栅格证明机制保持不变；任何 FAIL 均阻止部署验收。
+
+
+## Phase 1 收尾：原生光标与人工审核门禁
+
+截图统一使用 `caret: 'initial'`，避免Playwright隐藏光标后留下空style属性；仍在同一时点截图，DOM严格比较没有豁免。三课当前截图状态没有聚焦的文本编辑控件，截图前显式检查此条件；未来若新增可见文本光标，需要单独制定契约，不得用本选项掩盖差异。`caret.test.cjs` 检查三课原生光标截图前后DOM/控件一致、默认光标与原生光标的可见内容无真实差异，并验证ET05固定八次参考还原。
+
+圆角RGB、Alpha、数量、几何、局部连通限制及八次参考采样均不变。只有全部严格检查一致、满足既定圆角候选条件，但独立来源证据不足时，PNG输出 `REVIEW_REQUIRED`。它不计PASS。参考状态重建无效仍FAIL；真实结构、样式、行为或加载错误不能人工豁免。视觉矩阵继续覆盖全部状态，summary分别统计四种结果和automaticFailures；有待审核项时进程非零退出。
+
+`visual-review.cjs` 提供独立视觉门禁，核验完整378状态/84对PNG、自动失败、证据和明确人工记录。它还保留两个历史FAIL的限定审核请求，既有日志/诊断不改写。审核字段为 `runEvidenceSHA256`、`scope`、`caseName`、`phase0Commit`、`integrationCommit`、`sourceAndRulesSHA256`、`beforeSHA256`、`afterSHA256`、`diagnosticSHA256`、`originalDiagnostic`、`reviewer`、`reviewedAt`（ISO时间）、`conclusion`（仅APPROVED/REJECTED）、`reason`。原生PNG SHA-256是文件哈希，不是decoded rasterHash。
+
+`visual-review-decisions.json` 中 decisions 为空，没有预填真实批准。由人工明确审核后才填写记录，不能把单元测试中的合成批准对象复制为真实审批。审核请求写入独立运行目录，提交后再生成以绑定最终HEAD；提交、相关源码/规则、图像/诊断改变都要求重新核验。实际决定须由授权人工提供，校验器只校验完整性和版本匹配，不认证人名。视觉门禁通过也不授权部署，行为、隔离、负向、语法/资源和Git范围检查仍必须成功。
+
+```bash
+COURSE_VISUAL_OUTPUT=/tmp/course-phase1-close/visual node --test tests/course-baseline/visual.test.cjs
+node --test tests/course-baseline/caret.test.cjs tests/course-baseline/visual-review.test.cjs
+node tests/course-baseline/visual-review.cjs /tmp/course-phase1-close/visual tests/course-baseline/visual-review-decisions.json
+```
+
+最后命令在缺少批准时输出BLOCKED并非零退出；REVIEW_REQUIRED不是测试故障被掩盖成通过。旧审核报告及图片原样保留；收尾新结果独立写入 `phase1-close-results.md`。
+
+审核记录的独立提交若只修改 `visual-review-decisions.json`，候选提交仍指向之前已审核代码提交，避免记录引用自身SHA的循环；任何其他提交和源码/规则/证据改动仍重新绑定。此规则有隔离临时Git仓库测试。

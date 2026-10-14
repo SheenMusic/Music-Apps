@@ -1,0 +1,76 @@
+[
+  {
+    "caret": "hide",
+    "before": {
+      "styleAttribute": null,
+      "checked": false,
+      "disabled": false,
+      "value": "on",
+      "focus": "BODY",
+      "computedCaret": "rgb(255, 255, 255)",
+      "card": {
+        "rect": [
+          0,
+          42,
+          390,
+          1344.203125
+        ],
+        "radius": "18px"
+      }
+    },
+    "after": {
+      "styleAttribute": "",
+      "checked": false,
+      "disabled": false,
+      "value": "on",
+      "focus": "BODY",
+      "computedCaret": "rgb(255, 255, 255)",
+      "card": {
+        "rect": [
+          0,
+          42,
+          390,
+          1344.203125
+        ],
+        "radius": "18px"
+      }
+    }
+  },
+  {
+    "caret": "initial",
+    "before": {
+      "styleAttribute": null,
+      "checked": false,
+      "disabled": false,
+      "value": "on",
+      "focus": "BODY",
+      "computedCaret": "rgb(255, 255, 255)",
+      "card": {
+        "rect": [
+          0,
+          42,
+          390,
+          1344.203125
+        ],
+        "radius": "18px"
+      }
+    },
+    "after": {
+      "styleAttribute": null,
+      "checked": false,
+      "disabled": false,
+      "value": "on",
+      "focus": "BODY",
+      "computedCaret": "rgb(255, 255, 255)",
+      "card": {
+        "rect": [
+          0,
+          42,
+          390,
+          1344.203125
+        ],
+        "radius": "18px"
+      }
+    }
+  }
+]

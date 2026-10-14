@@ -1,0 +1,47 @@
+{
+  "browser": "151.0.7922.173",
+  "source": "d4936c7ddbae8dfbd963c6880b1be983f2d96110",
+  "originalComparison": [],
+  "referenceAfterScreenshots": [
+    {
+      "field": "snapshot.dom",
+      "expectedFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\"",
+      "actualFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\" style=\"\"",
+      "offset": 7257,
+      "lengths": [
+        29370,
+        29379
+      ]
+    }
+  ],
+  "attempts": [
+    {
+      "i": 0,
+      "beforeRestore": [],
+      "afterRestore": [
+        {
+          "field": "snapshot.dom",
+          "expectedFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\"",
+          "actualFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\" style=\"\"",
+          "offset": 7257,
+          "lengths": [
+            29370,
+            29379
+          ]
+        }
+      ],
+      "afterValidation": [
+        {
+          "field": "snapshot.dom",
+          "expectedFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\"",
+          "actualFragment": "ne-toggle\">\n        <input type=\"checkbox\" id=\"headphoneCheckbox\" onchange=\"handleHeadphoneToggle()\" style=\"\"",
+          "offset": 7257,
+          "lengths": [
+            29370,
+            29379
+          ]
+        }
+      ]
+    }
+  ]
+}

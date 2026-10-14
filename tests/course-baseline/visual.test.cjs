@@ -1,4 +1,6 @@
-const {test,before,after} = require('node:test');
+const {test:nodeTest,before,after} = require('node:test');
+let automaticFailures=0;
+const test=(name,fn)=>nodeTest(name,async t=>{try{await fn(t);}catch(e){automaticFailures++;throw e;}});
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -13,15 +15,16 @@ const views = [
 const {properties,snapshot,referenceRasters}=require('./visual-state.cjs');
 const {comparePNG}=require('./raster-comparison.cjs');
 const {isDeepStrictEqual}=require('node:util');
-const rasterCounts={PASS:0,PASS_WITH_RASTER_VARIANCE:0,FAIL:0};
+const rasterCounts={PASS:0,PASS_WITH_RASTER_VARIANCE:0,REVIEW_REQUIRED:0,FAIL:0};
 const diagnostics=[];
 before(async () => {
   fs.mkdirSync(output,{recursive:true}); server=await H.serve();
   browser=await chromium.launch({executablePath:process.env.COURSE_CHROMIUM || '/usr/bin/chromium',headless:true,args:['--no-sandbox']});
 });
 after(async () => {
-  if(browser) fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify({baseline:H.BASE,browser:browser.version(),comparisons,screenshotComparisons,viewportCount:views.length,themes:['light','dark'],computedProperties:"ALL native properties and custom variables",legacyPropertiesCovered:properties.length,rasterCounts,diagnostics,realDevices:false,audioDevices:'mocked'},null,2));
+  if(browser) fs.writeFileSync(path.join(output,'summary.json'),JSON.stringify({baseline:H.BASE,browser:browser.version(),automaticFailures,comparisons,screenshotComparisons,viewportCount:views.length,themes:['light','dark'],computedProperties:"ALL native properties and custom variables",legacyPropertiesCovered:properties.length,rasterCounts,diagnostics,realDevices:false,audioDevices:'mocked'},null,2));
   await browser?.close(); await server?.close();
+  if(rasterCounts.REVIEW_REQUIRED){console.log('DEPLOYMENT_BLOCKED: unapproved REVIEW_REQUIRED');process.exitCode=1;}
 });
 async function capture(pair,course,view,theme,state) {
   const [reference,current]=pair;
@@ -32,7 +35,8 @@ async function capture(pair,course,view,theme,state) {
   // COURSE_FULL_SCREENSHOTS=1 optionally records every state, without changing test coverage of styles.
   if (process.env.COURSE_FULL_SCREENSHOTS === '1' || ['initial','report','result'].includes(state)) {
     const pngs=[];
-    for(const run of pair) pngs.push(await run.page.screenshot({fullPage:true,animations:'disabled'}));
+    for(const run of pair)assert.equal(await run.page.evaluate(()=>document.activeElement.matches('input:not([type=checkbox]):not([type=radio]),textarea,[contenteditable]')),false,'Focused editable caret requires a separate visual contract');
+    for(const run of pair) pngs.push(await run.page.screenshot({fullPage:true,animations:'disabled',caret:'initial'}));
     fs.writeFileSync(path.join(output,`${name}-before.png`),pngs[0]);
     fs.writeFileSync(path.join(output,`${name}-after.png`),pngs[1]);
     const options={name,structureEqual,cards:expected.nodes,scale:expected.dpr};
@@ -43,8 +47,9 @@ async function capture(pair,course,view,theme,state) {
       diagnostic=comparePNG(pngs[0],pngs[1],{...options,referenceRasters:evidence.valid?evidence.rasters:[]});
       diagnostic.evidenceCount=evidence.rasters.length;
       diagnostic.evidenceValid=evidence.valid;
-      if(!evidence.valid)diagnostic.reason=evidence.reason;
+      if(!evidence.valid){diagnostic.status='FAIL';diagnostic.reason=evidence.reason;}
     }
+    diagnostic.beforeSHA256=H.sha(pngs[0]);diagnostic.afterSHA256=H.sha(pngs[1]);
     diagnostics.push(diagnostic);rasterCounts[diagnostic.status]++;
     fs.writeFileSync(path.join(output,`${name}-diagnostic.json`),JSON.stringify(diagnostic,null,2));
     console.log(JSON.stringify({name,status:diagnostic.status,strictDifferentPixels:diagnostic.strictDifferentPixels,

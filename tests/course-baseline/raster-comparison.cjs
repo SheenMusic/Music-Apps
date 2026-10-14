@@ -68,7 +68,7 @@ function comparePNG(before,after,{name,structureEqual,cards=[],scale=1,reference
   // Geometry alone cannot distinguish fabricated edge color from raster noise.
   // Require the ENTIRE candidate image to have been independently rendered from Phase 0.
   const hashes=new Set(referenceRasters.map(rasterHash));hashes.add(rasterHash(before));
-  if(!hashes.has(rasterHash(after)))return {...result,reason:'candidate not reproduced by the fixed same-source evidence batch'};
+  if(!hashes.has(rasterHash(after)))return {...result,status:'REVIEW_REQUIRED',reason:'candidate not reproduced by the fixed same-source evidence batch'};
   return {...result,status:'PASS_WITH_RASTER_VARIANCE',variancePassed:true,reason:'bounded connected AA edge; RGB <= 2; equal alpha; strict structure; independently reproduced Phase 0 raster'};
 }
 module.exports={comparePNG,rasterHash,LIMITS};

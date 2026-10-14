@@ -20,14 +20,29 @@ test('Phase 1 scope: source scripts, DOM/content, URLs and all non-pilot tracked
     const links=[...current.matchAll(/<link\b[^>]*href=["']([^"']+)["'][^>]*>/g)].map(m=>m[1]);
     for (const link of links) assert.ok(fs.existsSync(path.resolve(H.ROOT,path.dirname(file),link)), `Missing CSS: ${link}`);
   }
-  const tree=execFileSync('git',['ls-tree','-r',H.BASE],{cwd:H.ROOT}).toString().trim().split('\n');
+  // Integration scope is separate from the immutable Phase 0 teaching/visual source.
+  const metadata=JSON.parse(fs.readFileSync(path.join(__dirname,'baseline.json'),'utf8'));
+  const scopeBase=metadata.integration?.mainCommit || H.BASE;
+  const allowed=new Set(metadata.integration?.allowedChanges || Object.values(H.COURSES));
+  execFileSync('git',['merge-base','--is-ancestor',scopeBase,'HEAD'],{cwd:H.ROOT});
+  const tree=execFileSync('git',['ls-tree','-r',scopeBase],{cwd:H.ROOT}).toString().trim().split('\n');
   const {createHash}=require('node:crypto');
   for (const entry of tree) {
     const [meta,file]=entry.split('\t');
-    if (Object.values(H.COURSES).includes(file)) continue;
+    if (allowed.has(file)) continue;
     const bytes=fs.readFileSync(path.join(H.ROOT,file));
     const objectHash=createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
     assert.equal(objectHash,meta.split(' ')[2], `Out of scope: ${file}`);
+  }
+  // Include added/deleted paths and working-tree edits, not only files in the old tree.
+  const changed=execFileSync('git',['diff','--name-only','--no-renames','-z',scopeBase],{cwd:H.ROOT}).toString().split('\0').filter(Boolean);
+  const untracked=execFileSync('git',['ls-files','--others','--exclude-standard','-z'],{cwd:H.ROOT}).toString().split('\0').filter(Boolean);
+  for (const file of [...changed,...untracked]) {
+    if (file===metadata.auditReport && untracked.includes(file)) {
+      assert.equal(createHash('sha256').update(fs.readFileSync(path.join(H.ROOT,file))).digest('hex'),metadata.auditReportSHA256,'Protected audit report changed');
+      continue;
+    }
+    assert.ok(allowed.has(file), `Integration introduced out-of-scope path: ${file}`);
   }
 });
 

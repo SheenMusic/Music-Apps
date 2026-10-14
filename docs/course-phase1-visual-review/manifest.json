@@ -1,0 +1,38 @@
+{
+  "et05-before.png": "648ae84bd42e0b37810150159999cdb209d0d1da3c398c9b2951a1381420b623",
+  "et05-after.png": "b78197b2d30954a14870fa2423dcdb82d1cf4275251c8234fabb5a48d15bb570",
+  "et05-diagnostic.json": "b5b5c42a8da1ce5db22eb6256b8ef69f1582b9e2e5df18ae68cbd41642041902",
+  "et05-difference-20x.png": "58dc67bdf1d66e726c8c14028d13a66d6e281907b26138d8253b47f2353cab75",
+  "et06-before.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+  "et06-after.png": "132eb900ea8421bac98dbd17c83557cdff74db4d9ebdd3903bec214548e467bd",
+  "et06-diagnostic.json": "c79c3127c0fa9eaeff181d9dedbf2abe7cc3e5af82c287c474782a73d74841ba",
+  "et06-difference-20x.png": "8a013c19f920b754ed7a0aeea4aecd474a14a877ae9e4eb8e61ca6088ff3f2a1",
+  "originalVisualLogSHA256": "cb3a0394fa0e56557bd7d0c2e7c61511c2d8f53e5f6daed796385c738d4d263f",
+  "resultsSHA256": "bfc72f17f9c80aa95abae700fa8b52d1782a6d084bc45bea08904515abac463f",
+  "et06FixedReferenceRasters": {
+    "ET06-430x932-light-report-same-source-7.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-6.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-5.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-4.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-3.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-2.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-1.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8",
+    "ET06-430x932-light-report-same-source-0.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8"
+  },
+  "reviewArtifacts": {
+    "et05-after.png": "b78197b2d30954a14870fa2423dcdb82d1cf4275251c8234fabb5a48d15bb570",
+    "et06-geometry.json": "9964799af5c108a94215e4f95548d50f2f7f0f02883359a8a82e01c135d12af1",
+    "et05-diagnostic.json": "b5b5c42a8da1ce5db22eb6256b8ef69f1582b9e2e5df18ae68cbd41642041902",
+    "diagnose-et05.cjs": "adee951f1d0f61d8f6cc8df492f206f6a84553145b68488ddb4080f28307d0fc",
+    "et06-diagnostic.json": "c79c3127c0fa9eaeff181d9dedbf2abe7cc3e5af82c287c474782a73d74841ba",
+    "caret-probe.json": "b9a48314029a5bbc7b99f9015643cbb8a9ef80a59780b6b35862262a594a2ae4",
+    "et06-after.png": "132eb900ea8421bac98dbd17c83557cdff74db4d9ebdd3903bec214548e467bd",
+    "et05-reconstruction-diagnostic.json": "2e966602e0779453d4aefef93d3b239381b16f9d426767b662bbd300f5492b7b",
+    "geometry-et06.cjs": "682b442923fef618fa6183b385527f61013ffa4dededc4b54b3f2def4c62cc12",
+    "et05-difference-20x.png": "58dc67bdf1d66e726c8c14028d13a66d6e281907b26138d8253b47f2353cab75",
+    "et06-difference-20x.png": "8a013c19f920b754ed7a0aeea4aecd474a14a877ae9e4eb8e61ca6088ff3f2a1",
+    "et05-before.png": "648ae84bd42e0b37810150159999cdb209d0d1da3c398c9b2951a1381420b623",
+    "caret-probe.cjs": "14833c823ece8796dcbf389b938e627d28aae58388811d78fc086d985dd0c7b0",
+    "et06-before.png": "cc103b91afc9ec4a198266e975babbb89560c167fc4841f811ff313dc03c3df8"
+  }
+}

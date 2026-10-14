@@ -1,0 +1,220 @@
+{
+  "name": "ET06-430x932-light-report",
+  "status": "FAIL",
+  "strictDifferentPixels": 11,
+  "maxRGBDifference": 2,
+  "maxAlphaDifference": 0,
+  "boundingBox": [
+    427,
+    622,
+    430,
+    629
+  ],
+  "variancePassed": false,
+  "structureChanged": false,
+  "dimensions": [
+    [
+      430,
+      932
+    ],
+    [
+      430,
+      932
+    ]
+  ],
+  "pixels": [
+    {
+      "x": 428,
+      "y": 622,
+      "before": [
+        254,
+        254,
+        254,
+        255
+      ],
+      "after": [
+        253,
+        253,
+        253,
+        255
+      ]
+    },
+    {
+      "x": 429,
+      "y": 622,
+      "before": [
+        221,
+        226,
+        232,
+        255
+      ],
+      "after": [
+        221,
+        226,
+        231,
+        255
+      ]
+    },
+    {
+      "x": 428,
+      "y": 623,
+      "before": [
+        250,
+        251,
+        252,
+        255
+      ],
+      "after": [
+        249,
+        250,
+        251,
+        255
+      ]
+    },
+    {
+      "x": 429,
+      "y": 623,
+      "before": [
+        225,
+        229,
+        234,
+        255
+      ],
+      "after": [
+        224,
+        228,
+        233,
+        255
+      ]
+    },
+    {
+      "x": 428,
+      "y": 624,
+      "before": [
+        246,
+        248,
+        249,
+        255
+      ],
+      "after": [
+        246,
+        247,
+        249,
+        255
+      ]
+    },
+    {
+      "x": 429,
+      "y": 624,
+      "before": [
+        228,
+        231,
+        236,
+        255
+      ],
+      "after": [
+        227,
+        231,
+        235,
+        255
+      ]
+    },
+    {
+      "x": 428,
+      "y": 625,
+      "before": [
+        243,
+        246,
+        247,
+        255
+      ],
+      "after": [
+        243,
+        244,
+        246,
+        255
+      ]
+    },
+    {
+      "x": 429,
+      "y": 625,
+      "before": [
+        233,
+        236,
+        239,
+        255
+      ],
+      "after": [
+        232,
+        235,
+        238,
+        255
+      ]
+    },
+    {
+      "x": 428,
+      "y": 626,
+      "before": [
+        231,
+        234,
+        239,
+        255
+      ],
+      "after": [
+        230,
+        234,
+        238,
+        255
+      ]
+    },
+    {
+      "x": 429,
+      "y": 627,
+      "before": [
+        249,
+        249,
+        249,
+        255
+      ],
+      "after": [
+        248,
+        248,
+        248,
+        255
+      ]
+    },
+    {
+      "x": 427,
+      "y": 628,
+      "before": [
+        245,
+        247,
+        249,
+        255
+      ],
+      "after": [
+        245,
+        247,
+        248,
+        255
+      ]
+    }
+  ],
+  "regions": [
+    {
+      "element": "reportCard",
+      "corner": "bottom-right",
+      "boundingBox": [
+        427,
+        622,
+        430,
+        629
+      ],
+      "pixels": 11
+    }
+  ],
+  "rasterCandidate": true,
+  "reason": "candidate not reproduced by the fixed same-source evidence batch",
+  "evidenceCount": 8,
+  "evidenceValid": true
+}

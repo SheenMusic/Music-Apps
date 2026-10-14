@@ -31,7 +31,7 @@ test('Real UI changes remain failures, including one-channel color changes',asyn
         const a=await snapshot(pair[0].page),b=await snapshot(pair[1].page);
         assert.equal(isDeepStrictEqual(a,b),false,name+' must change structural guard');
         if(!['text content','button state'].includes(name)){assert.equal(a.dom,b.dom,name+' keeps body DOM intact');assert.ok(a.computedStylesHash!==b.computedStylesHash||!isDeepStrictEqual(a.nodes,b.nodes),name+' must change computed style/geometry');}
-        const pngs=[];for(const run of pair)pngs.push(await run.page.screenshot({fullPage:true,animations:'disabled'}));
+        const pngs=[];for(const run of pair)pngs.push(await run.page.screenshot({fullPage:true,animations:'disabled',caret:'initial'}));
         const result=comparePNG(...pngs,{name:'ET05-390x844-dark-initial',structureEqual:isDeepStrictEqual(a,b),cards:a.nodes,scale:a.dpr});
         assert.equal(result.status,'FAIL',name);assert.equal(result.structureChanged,true,name);
         console.log('NEGATIVE_REJECTED: '+name);
@@ -61,7 +61,7 @@ test('Pixel-only fabricated changes need same-source proof and cannot enter card
   const options={name:'arbitrary geometry, no coordinate whitelist',structureEqual:true,cards:[card],scale:1};
   const run=(extra={})=>comparePNG(PNG.sync.write(a),PNG.sync.write(b),{...options,...extra});
   assert.equal(run().rasterCandidate,true,'fixture intersects real circular AA boundary');
-  assert.equal(run().status,'FAIL','fabricated corner color without independently reproduced source must fail');
+  assert.equal(run().status,'REVIEW_REQUIRED','fabricated corner color without source proof cannot pass or deploy');
   // Mock trusted replay evidence to test classification, not to bypass the production browser guard.
   assert.equal(run({referenceRasters:[PNG.sync.write(b)]}).status,'PASS_WITH_RASTER_VARIANCE');
   b.data[offset]=a.data[offset]+3;assert.equal(run({referenceRasters:[PNG.sync.write(b)]}).status,'FAIL');

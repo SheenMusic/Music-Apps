@@ -37,5 +37,47 @@
         "0105b26afd8adca9416904c6dcd86665005335252640fb7fa4e045c73fe6b5b8"
       ]
     }
+  },
+  "integration": {
+    "mainCommit": "acd294069a670578d8bdb5ef1b0ea752e7ee2d52",
+    "allowedChanges": [
+      "ET-Intervals/05-2nd-d7wzes/index.html",
+      "ET-Intervals/06-2nd-9g6ymn/index.html",
+      "MT-Intervals/lesson03/index.html",
+      "assets/course-visual.css",
+      "ET-Intervals/shared/styles/base.css",
+      "MT-Intervals/shared/styles/practice-base.css",
+      "tests/course-baseline/README.md",
+      "tests/course-baseline/baseline.json",
+      "tests/course-baseline/baseline.test.cjs",
+      "tests/course-baseline/harness.cjs",
+      "tests/course-baseline/isolation.test.cjs",
+      "tests/course-baseline/results.md",
+      "tests/course-baseline/visual.test.cjs",
+      "tests/course-baseline/visual-state.cjs",
+      "tests/course-baseline/raster-comparison.cjs",
+      "tests/course-baseline/raster-negative.test.cjs",
+      "tests/course-baseline/visual-review.cjs",
+      "tests/course-baseline/visual-review.test.cjs",
+      "tests/course-baseline/visual-review-decisions.json",
+      "tests/course-baseline/caret.test.cjs",
+      "docs/course-phase1-visual-review/et05-after.png",
+      "docs/course-phase1-visual-review/et06-geometry.json",
+      "docs/course-phase1-visual-review/et05-diagnostic.json",
+      "docs/course-phase1-visual-review/diagnose-et05.cjs",
+      "docs/course-phase1-visual-review/et06-diagnostic.json",
+      "docs/course-phase1-visual-review/caret-probe.json",
+      "docs/course-phase1-visual-review/et06-after.png",
+      "docs/course-phase1-visual-review/manifest.json",
+      "docs/course-phase1-visual-review/et05-reconstruction-diagnostic.json",
+      "docs/course-phase1-visual-review/geometry-et06.cjs",
+      "docs/course-phase1-visual-review/et05-difference-20x.png",
+      "docs/course-phase1-visual-review/et06-difference-20x.png",
+      "docs/course-phase1-visual-review/et05-before.png",
+      "docs/course-phase1-visual-review/caret-probe.cjs",
+      "docs/course-phase1-visual-review/et06-before.png",
+      "docs/course-phase1-visual-risk-review.md",
+      "tests/course-baseline/phase1-close-results.md"
+    ]
   }
 }

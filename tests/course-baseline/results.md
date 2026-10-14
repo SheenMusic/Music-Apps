@@ -111,3 +111,42 @@ CSS只有三个试点加载；所有非试点原文件通过Git对象哈希保�
 限制：固定采样不能保证任何未来栅格模式都可重现，证据不足保守失败。图像无法鉴别逐字节复制的合法基线图与其原产物，因此来源验证必须始终只由只读Phase 0生成，不能接受调用方提供的当前图作为参考。真实CSS/DOM/变量变化另由严格检查拒绝。音频/麦克风仍使用测试替身，本次结果不替代既定真机/Safari验收。
 
 建议恢复Phase 1部署准备及与最新main的集成复测；本次仅授权提交测试，不实施部署。
+
+
+## Phase 1 集成预部署验证（2026-10-14）：BLOCKED
+
+- 起始分支 `work`，HEAD `66b57095e11abd6a9601bf62fe564c01b25861dc`；仅未跟踪审计报告，无其他未提交开发工作。报告 SHA-256 仍为 `6bd32d6fa65cd4af7496db744ec4e52247a4275ce4c9078114f1d0f6de1ddeaa`，未纳入提交。
+- 同步最新 `origin/main`：`acd294069a670578d8bdb5ef1b0ea752e7ee2d52`；结束前只读核对远程 main 未再变化。
+- 本地分支 `integration/course-phase1`，HEAD `4ba6b9d3800eaa2f9e07640bd0195545b7bae9e4`；无远程上游绑定，未推送、未创建 PR、未合并、未触发部署。
+- 按顺序 cherry-pick：`59c7a6d→8d5123c`、`d62e50d→aa189b7`、`ca01afc→ea8de1c`、`becf610→bd58186`、`66b5709→4ba6b9d`。无冲突，无 squash，原 work 分支保留。
+- 兼容调整限于本目录：baseline.json 增加独立 main 作用域基准和明确允许清单；baseline.test.cjs 对 main 非试点做哈希/新增/删除/工作树保护；isolation.test.cjs 开启真实动态 Dashboard，增加周舰及教师预览页；README/results 记录。因完整视觉回归失败，这些调整保留为未提交状态。
+- `harness.cjs.BASE` 仍是原始 Phase 0 提交 `d4936c7ddbae8dfbd963c6880b1be983f2d96110`。视觉状态、判定器、负向测试、三课 JavaScript/教学 body/题库以及六个课程/CSS 文件均与原 Phase 1 分支相同。Dashboard、Catalog、公共视觉系统、部署配置及其他课程与集成 main 保持逐文件一致。
+
+### 自动化结果
+
+| 检查 | 结果 |
+|---|---|
+| Phase 0 行为/范围兼容 | 5 PASS、0 FAIL、3 既有 TODO；TODO 不计通过 |
+| 完整视觉运行 | 43 tests：41 PASS、2 FAIL、0 skip；370 状态成功比较 |
+| PNG | 81 PASS、0 PASS_WITH_RASTER_VARIANCE、2 FAIL；83 对已尝试，失败初始用例的报告未执行，因此不是完整 84 对通过 |
+| CSS 隔离 | PASS；8 页 × Light/Dark，动态学生模板存在，样式/几何不受共享 CSS 影响 |
+| 栅格负向 | 2 tests PASS；11 个真实 UI/变量变化均拒绝，伪造 PNG 的主体/圆角/Alpha/通道样本按既有规则拒绝 |
+| 语法与路径 | 43 个外部 JS/CJS/MJS、8 个关键页面的 5 个内联脚本通过；57 个大小写敏感资源引用与 10 个 CSS 文件检查通过 |
+| 本地浏览器加载 | 三课、两学生页、正式/预览教师页、Catalog 共 8 页：0 资源 404、0 pageerror；外部请求拦截，不是线上资源验收 |
+| main 自带 Dashboard 工具 | 8 组逻辑 PASS、工具测试 PASS、生成器 --check 两页一致、学生验证 0 Error/1 原有历史周期过期 Warning（不影响访问） |
+| Git diff / 审计保护 | diff --check PASS；非试点相对 main 无改动；审计报告哈希不变 |
+
+### 两项阻塞及证据
+
+1. ET05，390×844 Dark 初始页：9 像素，RGB 最大差 1、Alpha 一致，差异框 `[388,54,390,60]`（右/下界不含），`practiceCard` 右上圆角。结构/计算样式/几何一致；独立参考重建未通过状态一致性校验，证据数量为 0，不能放行。诊断原因 `same-source replay changed DOM/style/variables/geometry/state`。额外只读的单次 Phase 0 重建诊断未复现状态差异（0 差异），不能替代失败当时的证据。
+2. ET06，430×932 Light 报告页：11 像素，RGB 最大差 2、Alpha 一致，差异框 `[427,622,430,629]`，圆角区域。结构一致；八次独立 Phase 0 重建状态全部有效，但没有一张完整栅格与当前产物匹配。原因 `candidate not reproduced by the fixed same-source evidence batch`。
+
+证据位于临时目录 `/tmp/course-phase1-integration/visual/`：原始 before/after PNG、对应 `*-diagnostic.json`、ET06 八张 `*-same-source-*.png`、完整 `summary.json`。完整运行日志 `/tmp/course-phase1-integration-visual.log`；其他检查 `/tmp/course-phase1-integration-checks.log`、静态 `/tmp/course-phase1-integration-static.log`、加载 `/tmp/course-phase1-integration-smoke.log`、独立诊断 `/tmp/course-phase1-integration/replay-state-diff.json`。不提交图片，不扩大容差，不用后续重跑覆盖本次失败。已完成全套测试文件运行，但失败会中止对应状态用例，未完成的状态不能计为通过。
+
+### GitHub Pages 与发布风险
+
+有效部署流程由 `.github/workflows/pages.yml` 和最新 main 的成功运行共同确认：push main / workflow_dispatch，Actions 上传仓库根目录，再 deploy-pages。只读查询到运行 `38521896265`，SHA 与本次 main 一致，Setup Pages、Upload artifact、Deploy to GitHub Pages 全部成功： https://github.com/SheenMusic/Music-Apps/actions/runs/38521896265 。直接 Pages Settings API 被环境网络策略拒绝，后台 build_type/source 字段未能独立读取；没有修改配置。
+
+新 CSS 的相对路径在本地 HTTP 与大小写敏感 Git 清单检查中全部有效；发布将打包现存页面及新 CSS，课程 URL 保持不变。缓存仍有未版本化 CSS 的新旧混用风险，本次不改全站策略。若确认需要处理，最小方案是仅给三课共享 CSS 链接增加同一发布版本查询参数，另行审核；发布后应分别检查普通缓存/强制刷新时 CSS 200、Light/Dark 与 iPhone/iPad、真实麦克风/音频/剪贴板。
+
+未发现课程教学行为或 Dashboard/Catalog 的实际代码回归；但两项视觉 FAIL 尚未满足既定独立栅格证据规则，不能宣称视觉验收或部署条件通过。必须先解决或解释失败证据并再次完成验收，再单独提交测试兼容调整；本次停止，不进入 Phase 2。

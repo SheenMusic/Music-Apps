@@ -55,7 +55,7 @@ async function referenceRasters(browser,url,course,reference,expected,options) {
       const state=await snapshot(run.page);
       if(!isDeepStrictEqual(state,expected))return {rasters,valid:false,reason:'same-source replay changed DOM/style/variables/geometry/state'};
       if(run.errors.length||run.cssFailures.length)return {rasters,valid:false,reason:'same-source replay had loading errors'};
-      rasters.push(await run.page.screenshot({fullPage:true,animations:'disabled'}));
+      rasters.push(await run.page.screenshot({fullPage:true,animations:'disabled',caret:'initial'}));
     } finally {await run.context.close();}
   }
   return {rasters,valid:true};
