@@ -1,0 +1,41 @@
+{
+  "startingCommit": "d4936c7ddbae8dfbd963c6880b1be983f2d96110",
+  "auditReport": "docs/course-architecture-audit.md",
+  "auditReportSHA256": "6bd32d6fa65cd4af7496db744ec4e52247a4275ce4c9078114f1d0f6de1ddeaa",
+  "courses": {
+    "ET05": {
+      "path": "ET-Intervals/05-2nd-d7wzes/index.html",
+      "bytes": 36548,
+      "lines": 788,
+      "inlineCSSBytes": 9118,
+      "inlineCSSLines": 129,
+      "inlineCSSSHA256": "8cd8a87e8dc66bd8898fe6b58a3b04ca73864bdb6a23e26d69b92820ecd40b2c",
+      "scriptsSHA256": [
+        "b7492e2cc60b7d935b1ffee881ad738232f5cac4964a42b38d20943df30f5604"
+      ]
+    },
+    "ET06": {
+      "path": "ET-Intervals/06-2nd-9g6ymn/index.html",
+      "bytes": 41017,
+      "lines": 921,
+      "inlineCSSBytes": 9339,
+      "inlineCSSLines": 137,
+      "inlineCSSSHA256": "e5bf984961980043176519f557877be34ca7fc34fb226d6f1177fd3a924c5003",
+      "scriptsSHA256": [
+        "ddd7efec0cc8cc7fac175cd895a93cef00ee342d8b3db879b568d5de9163ab97"
+      ]
+    },
+    "MT03": {
+      "path": "MT-Intervals/lesson03/index.html",
+      "bytes": 46284,
+      "lines": 1709,
+      "inlineCSSBytes": 12507,
+      "inlineCSSLines": 656,
+      "inlineCSSSHA256": "deaab5c6e6bf6df2049f2f1468b4963858b8a6f89924d31c085bb0b0634bc34a",
+      "scriptsSHA256": [
+        "4a80f353826f0aedf3d84166fc21d045831e13ff1cd3f3c314c986417401c8c8",
+        "0105b26afd8adca9416904c6dcd86665005335252640fb7fa4e045c73fe6b5b8"
+      ]
+    }
+  }
+}
