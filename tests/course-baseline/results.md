@@ -30,3 +30,12 @@
 - 共享CSS隔离：1通过、0失败；首页、商店、Catalog、Student Profile、学生Dashboard、Teacher Dashboard各Light/Dark，共12页面对比，native计算样式/几何不变。各新选择器均限定课程；没有新keyframes或新!important补丁（MT基础的.hidden important是原规则迁移）。
 - 修正隔离测试的样式注入方式：应用JavaScript禁用时采用同步插入style，避免Playwright addStyleTag等待load回调。仅改测试助手，不改课程行为。
 - 截图/summary：`/tmp/music-apps-phase1-et05`。未迁移ET06/MT03及其他页面仍用原样式。
+
+## Phase 1B：ET06接入
+
+- 仅ET06接入已有course-visual/ET base，未改共享文件。移出同样37个顶层CSS块；双音target布局、low/high采集按钮、锁定状态、全局meter和七列报告保持本地。
+- ET06内联CSS由9,339 B降到4,622 B；HTML由921行/41,017 B降到855行/36,423 B。
+- 行为套件：5通过、0失败、3TODO。ET05/ET06两种教学逻辑及MT03原脚本/题库不变。
+- ET06视觉及动画：15通过、0失败；126状态、28对PNG一致；无CSS 404/页面JavaScript错误。
+- 共享CSS未再改变；之前ET05的98状态及12个公共/Dashboard隔离结果仍适用于最终共享文件。
+- 截图/summary：`/tmp/music-apps-phase1-et06`。
