@@ -109,9 +109,10 @@
     const duration = document.getElementById('periodDuration');duration.hidden = !studentData.showPeriodDuration;
     if (studentData.showPeriodDuration) duration.textContent = DashboardLogic.formatDuration(period.start,period.end);
     const state = DashboardLogic.computePeriodState(period,now);
+    const expired = state.status==='本期已到期';
     document.getElementById('periodStatus').textContent = state.status;
-    document.getElementById('remainingTime').textContent = state.remainingText;
-    document.getElementById('timeProgress').value = state.progress;
+    document.getElementById('periodStatus').hidden = expired;
+    document.getElementById('remainingTime').textContent = expired ? '本期到期' : state.remainingText;
     calendarButton.hidden = !state.notExpired || isWeChat || !canDownload;
     calendarNotice.hidden = !state.notExpired || !isWeChat;
   }

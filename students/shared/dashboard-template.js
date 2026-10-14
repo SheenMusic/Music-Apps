@@ -5,7 +5,7 @@
   template.innerHTML = `
 <main class="dashboard">
   <header class="dashboard-heading">
-    <div><p class="eyebrow">Learning Dashboard</p><h1 class="public-title" id="studentName"></h1><p class="muted">你的学习进度与课程资料</p></div>
+    <div><p class="eyebrow">Learning Dashboard</p><h1 class="public-title" id="studentName"></h1><p class="muted">学习进度与课程资料</p></div>
     <span class="status" id="learningStatus">学习中</span>
   </header>
   <section class="dashboard-section" aria-labelledby="progressHeading">
@@ -18,8 +18,6 @@
     <dl class="period-dates"><div><dt>开始时间</dt><dd id="periodStart"></dd></div><div><dt>截止时间</dt><dd id="periodEnd"></dd></div></dl>
     <p class="period-note" id="periodDuration" hidden></p>
     <div class="period-summary"><p id="remainingTime"></p><span class="status" id="periodStatus"></span></div>
-    <label class="muted" for="timeProgress">学习有效期的时间消耗（非课程完成进度）</label>
-    <progress id="timeProgress" max="100" value="0"></progress>
     <p class="period-note">所有时间均以北京时间（UTC+8）为准</p>
   </section>
   <noscript><p>请启用 JavaScript 以显示最新学习进度、课程资料与有效期。</p></noscript>
