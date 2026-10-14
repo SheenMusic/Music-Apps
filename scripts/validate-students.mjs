@@ -30,7 +30,10 @@ for (const directory of studentDirectories()) {
   for (const course of data.courses) {
     if (!course || typeof course!=='object' || typeof course.id!=='string' || !course.id.trim()) {report('ERROR',relative,'课程结构或 ID 无效');continue;}
     if (ids.has(course.id)) report('ERROR',relative,`课程 ID 重复：${course.id}`);ids.add(course.id);
-    if (!['completed','active','previous'].includes(course.status)) report('ERROR',relative,`status 无效：${course.id}`);
+    if (!['completed','active','previous','pending'].includes(course.status)) report('ERROR',relative,`status 无效：${course.id}`);
+    if (course.enrollmentTitle!==undefined && (typeof course.enrollmentTitle!=='string' || !course.enrollmentTitle.trim())) report('ERROR',relative,`enrollmentTitle 无效：${course.id}`);
+    if (course.paymentStatus!==undefined && !['paid','unpaid'].includes(course.paymentStatus)) report('ERROR',relative,`paymentStatus 无效：${course.id}`);
+    if (course.status==='pending' && course.accessEnabled) report('ERROR',relative,`待开课课程不能开放入口：${course.id}`);
     if (typeof course.title!=='string' || !course.title.trim()) report('ERROR',relative,`title 无效：${course.id}`);
     if (typeof course.accessEnabled!=='boolean') report('ERROR',relative,`accessEnabled 无效：${course.id}`);
     for (const field of ['currentLessons','accessibleLessons']) {
@@ -43,7 +46,7 @@ for (const directory of studentDirectories()) {
     if (catalog && !catalogResource && !enrollmentIDs.has(course.id)) report('ERROR',relative,`课程 ID 不存在于 Catalog：${course.id}`);
     if (resource) {
       if (!catalogResource && course.accessEnabled && accessible.length) report('WARNING',relative,`在线资源存在，但现有 Dashboard 不映射此报名课程，将显示资源待补充：${course.id}`);
-      if (catalogResource?.title && course.title!==catalogResource.title) report('WARNING',relative,`课程标题与 Catalog 不一致：${course.id}`);
+      if (!course.enrollmentTitle && catalogResource?.title && course.title!==catalogResource.title) report('WARNING',relative,`课程标题与 Catalog 不一致：${course.id}`);
       for (const number of accessible) {
         const lesson=resource.lessons?.find(item=>item.number===number);
         if (!lesson) report('WARNING',relative,`正式课时不存在，将显示资源待补充：${course.id}/${number}`);

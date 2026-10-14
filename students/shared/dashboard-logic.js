@@ -33,7 +33,7 @@
   function computeLearningStatus(courses,period,now) {
     const list = Array.isArray(courses) ? courses : [];
     if (list.length && list.every(course=>course.status==='completed')) return '已完成';
-    if (!list.some(course=>course.status==='active')) return '暂无进行中课程';
+    if (!list.some(course=>course.status==='active')) return list.some(course=>course.status==='pending') ? '尚未开始' : '暂无进行中课程';
     if (!validatePeriod(period).valid) return '学习中';
     const time = timestamp(now);
     if (time<Date.parse(period.start)) return '尚未开始';
@@ -60,6 +60,7 @@
     };
   }
   function getCourseTitle(course,catalog) {
+    if (typeof course.enrollmentTitle === 'string' && course.enrollmentTitle.trim()) return course.enrollmentTitle;
     const title = catalog?.courses?.[course.id]?.title;
     return typeof title === 'string' && title.trim() ? title : course.title;
   }

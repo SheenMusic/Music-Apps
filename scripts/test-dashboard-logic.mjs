@@ -91,3 +91,10 @@ test('ICS escaping and UTF-8 75-byte folding',()=>{
  assert.ok(ics.endsWith('\r\n'));
 });
 console.log(`PASS ${count} groups`);
+test('paid pending enrollment is not active and formal enrollment title is optional',()=>{
+ const pending={id:'chord-theory',status:'pending',paymentStatus:'paid',accessEnabled:false};
+ assert.equal(L.computeLearningStatus([{status:'completed'},pending],null,now),'尚未开始');
+ const catalog={courses:{ear:{title:'音程听力训练'}}};
+ assert.equal(L.getCourseTitle({id:'ear',title:'旧名称'},catalog),'音程听力训练');
+ assert.equal(L.getCourseTitle({id:'ear',title:'旧名称',enrollmentTitle:'音程听力训练课'},catalog),'音程听力训练课');
+});

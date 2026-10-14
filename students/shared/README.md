@@ -83,3 +83,9 @@ zip -r students.zip students \
 ## 已发送地址的兼容例外
 
 Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与校验器明确接受这一项例外，Teacher 入口同步使用该地址。其他现有及新增学员继续采用32位随机十六进制目录，新建命令不受影响。
+
+### 待开课与报名名称
+
+`status: "pending"` 表示待开课；可独立记录 `paymentStatus: "paid"`，显示“已付款 · 待开课”。此状态必须关闭 `accessEnabled`，未确认日期时保持 `learningPeriods: []`。付款不代表学习开始。
+
+报名记录可提供 `enrollmentTitle` 作为正式课程显示名；未提供时沿用原有 Catalog / title 回退规则，已有学员不受影响。在线资源集合名称不必与报名产品名称完全一致。教师页与教师预览共用 `teacher/teacher-data.js` 学生入口列表。背景调查资料不应存入公开静态数据。
