@@ -19,5 +19,5 @@ export function readConfig(file,name) {
 }
 export function studentDirectories() {
   return fs.readdirSync(path.join(root,'students'),{withFileTypes:true}).filter(entry=>entry.isDirectory() && entry.name!=='shared')
-    .map(entry=>path.join(root,'students',entry.name)).filter(directory=>fs.existsSync(path.join(directory,'student-data.js'))).sort();
+    .map(entry=>path.join(root,'students',entry.name)).sort();
 }
