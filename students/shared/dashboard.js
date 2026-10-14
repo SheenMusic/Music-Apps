@@ -16,7 +16,7 @@
   };
   document.getElementById('studentName').textContent = studentData.studentName;
   document.title = `${studentData.studentName} · Learning Dashboard`;
-  document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,DashboardLogic.pickLatestPeriod(studentData.learningPeriods,Date.now()),Date.now());
+  document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,DashboardLogic.pickLatestPeriod(studentData.learningPeriods,Date.now()),Date.now(),studentData.learningState);
   const list = document.getElementById('courseList');
   const coursePanels = new Map();
   studentData.courses.forEach((course,index)=>{
@@ -91,7 +91,7 @@
   function updatePeriod() {
     const now = Date.now();
     const period = DashboardLogic.pickLatestPeriod(studentData.learningPeriods,now);
-    document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,period,now);
+    document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,period,now,studentData.learningState);
     const panel = document.querySelector('.period-panel');panel.hidden = !period;
     if (!period) {
       calendarButton.hidden=true;calendarNotice.hidden=true;

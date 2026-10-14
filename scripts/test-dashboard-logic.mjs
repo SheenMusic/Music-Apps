@@ -98,3 +98,12 @@ test('paid pending enrollment is not active and formal enrollment title is optio
  assert.equal(L.getCourseTitle({id:'ear',title:'旧名称'},catalog),'音程听力训练');
  assert.equal(L.getCourseTitle({id:'ear',title:'旧名称',enrollmentTitle:'音程听力训练课'},catalog),'音程听力训练课');
 });
+
+test('explicit paused student state overrides inferred status without changing records',()=>{
+ const courses=[{status:'completed'},{status:'pending',paymentStatus:'paid'}];
+ const original=JSON.stringify(courses);
+ assert.equal(L.computeLearningStatus(courses,null,now,'paused'),'暂停中');
+ assert.equal(L.computeLearningStatus(courses,null,now),'尚未开始');
+ assert.equal(L.computeLearningStatus([{status:'active'}],period,now,'paused'),'暂停中');
+ assert.equal(JSON.stringify(courses),original);
+});

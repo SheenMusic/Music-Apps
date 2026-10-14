@@ -24,6 +24,7 @@ for (const directory of studentDirectories()) {
   try {data=readConfig(path.join(directory,'student-data.js'),'studentData');}
   catch(error) {report('ERROR',relative,error.message);continue;}
   if (typeof data.studentName!=='string' || !data.studentName.trim()) report('ERROR',relative,'studentName 必须为非空字符串');
+  if (data.learningState!==undefined && data.learningState!=='paused') report('ERROR',relative,'learningState 仅支持 paused；省略时自动计算状态');
   if (data.showPeriodDuration!==undefined && typeof data.showPeriodDuration!=='boolean') report('ERROR',relative,'showPeriodDuration 必须为布尔值');
   if (!Array.isArray(data.courses) || !Array.isArray(data.learningPeriods)) {report('ERROR',relative,'courses 和 learningPeriods 必须为数组');continue;}
   const ids=new Set();

@@ -91,3 +91,5 @@ Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与�
 报名记录可提供 `enrollmentTitle` 作为正式课程显示名；未提供时沿用原有 Catalog / title 回退规则，已有学员不受影响。在线资源集合名称不必与报名产品名称完全一致。教师页与教师预览共用 `teacher/teacher-data.js` 学生入口列表。背景调查资料不应存入公开静态数据。
 
 学生入口也接受 `姓名slug-16位随机十六进制后缀`，现有入口保持不变。`accessEnabled` 与完成状态独立：已完成课程可继续开放其 `accessibleLessons` 和 `accessibleSupplementary`。补充训练属于音程听力课程内部，不是独立课程；学生只显示明确开放的资源。
+
+暂停学习的学员可设置 `learningState: "paused"`，右上角统一显示“暂停中”。该字段不改变单门课程状态、有效期或已开放资源；恢复学习时移除此字段，重新按现有规则计算整体状态。

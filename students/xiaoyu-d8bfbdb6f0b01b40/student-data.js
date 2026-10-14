@@ -1,5 +1,6 @@
 const studentData = {
   "studentName": "小羽",
+  "learningState": "paused",
   "courses": [
     {
       "id": "interval-theory",

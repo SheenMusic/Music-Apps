@@ -30,7 +30,8 @@
     if (future.length) return future[0].period;
     return valid.sort((a,b)=>b.end-a.end)[0]?.period || null;
   }
-  function computeLearningStatus(courses,period,now) {
+  function computeLearningStatus(courses,period,now,learningState) {
+    if (learningState==='paused') return '暂停中';
     const list = Array.isArray(courses) ? courses : [];
     if (list.length && list.every(course=>course.status==='completed')) return '已完成';
     if (!list.some(course=>course.status==='active')) return list.some(course=>course.status==='pending') ? '尚未开始' : '暂无进行中课程';
