@@ -1,22 +1,92 @@
-/* Course-only aliases and existing family dimensions. No theme overrides,
-   global resets, focus rules or changes to teaching state colors.
-   site-visual.css remains the authority for --site-* and Dark Mode. */
-:where(html[data-visual="ear"], html[data-visual="practice"]) {
-  --course-font: var(--site-font);
-  --course-focus: var(--site-focus);
-  --course-success-text: var(--site-success);
-  --course-error-text: var(--site-error);
-  --course-border: var(--site-border);
+/* Level 1: opt-in course contract. site-visual.css owns the only theme. */
+html[data-course] {
+  --course-content-width: 640px;
+  --course-card-radius: var(--site-card-radius);
+  --course-control-radius: var(--site-card-radius);
+  --course-page-padding: clamp(12px, 3vw, 24px);
+  --course-card-padding: clamp(16px, 3vw, 24px);
+  --course-control-height: 44px;
+  --course-gap: 16px;
+  --course-motion-duration: 160ms;
+  --primary: var(--site-accent);
+  --primary-color: var(--site-accent);
+  --primary-hover: var(--site-text);
+  --radius-lg: var(--course-card-radius);
+  --radius-md: var(--course-control-radius);
+  color-scheme: light dark;
+  -webkit-text-size-adjust: 100%;
 }
-:where(html[data-visual="ear"]) {
-  --course-content-width: 480px;
-  --course-card-radius: 18px;
-  --course-button-radius: 11px;
-  --course-button-min-height: 46px;
+html[data-course] *, html[data-course] *::before, html[data-course] *::after { box-sizing: border-box; }
+html[data-course] body {
+  margin: 0; min-height: 100svh; display: flex; flex-direction: column;
+  padding: max(var(--course-page-padding), env(safe-area-inset-top)) max(var(--course-page-padding), env(safe-area-inset-right)) max(var(--course-page-padding), env(safe-area-inset-bottom)) max(var(--course-page-padding), env(safe-area-inset-left));
+  background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); font-size: 15px; font-weight: 400; line-height: 1.6;
 }
-:where(html[data-visual="practice"]) {
-  --course-content-width: 520px;
-  --course-card-radius: 16px;
-  --course-button-radius: 16px;
-  --course-option-radius: 10px;
+html[data-course] :is(.app, .app-container, .main-wrapper, .top-header) { width: 100%; max-width: var(--course-content-width); margin-inline: auto; min-width: 0; }
+html[data-course] :is(.app, .main-wrapper) { flex: 1; }
+html[data-course] :is(.card, .card-container) { padding: var(--course-card-padding); border: 1px solid var(--site-border); border-radius: var(--course-card-radius); background: var(--site-panel); box-shadow: var(--site-shadow); min-width: 0; }
+html[data-course] :is(h1, .main-title) { font-size: clamp(24px, 4vw, 32px); font-weight: 700; line-height: 1.3; letter-spacing: -.025em; overflow-wrap: anywhere; }
+html[data-course] :is(.main-desc, .lead, .start-info, .tiny, .explanation-text) { line-height: 1.7; }
+html[data-course] :is(.main-desc, .start-info, .tiny, .app-footer, .footer-bar, .footer) { color: var(--site-muted); }
+html[data-course] :is(button, .btn-link):not(:where(.lesson-board *, .keyboard *, .compact-keyboard *, .staff-question *, .staff *, .stage *)) {
+  min-height: var(--course-control-height); border: 1px solid var(--site-border); border-radius: var(--course-control-radius); padding: 10px 16px;
+  font-family: var(--site-font); font-size: 14px; font-weight: 500; line-height: 1.5; cursor: pointer; touch-action: manipulation;
+  transition: background-color var(--course-motion-duration), color var(--course-motion-duration); max-width: 100%; white-space: normal; overflow-wrap: anywhere;
 }
+html[data-course] :is(.btn, .primary-btn, .secondary-btn, .option-btn, .primary, .secondary, .ghost, .btn-link) { display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; }
+html[data-course] :is(.btn, .primary-btn, .secondary-btn) { width: 100%; }
+html[data-course] :is(.primary-btn, .primary, .next) { background: var(--site-accent); color: var(--site-on-accent); border: 1px solid var(--site-accent); }
+html[data-course] :is(.secondary-btn, .secondary, .ghost, .history-toggle-btn, .textButton, .quit) { background: var(--site-soft); color: var(--site-text); border: 1px solid var(--site-border); }
+html[data-course] :is(button, .btn-link):focus-visible { outline: 2px solid var(--site-focus); outline-offset: 3px; }
+html[data-course] button:disabled { cursor: not-allowed; }
+html[data-course] :is(.primary-btn, .secondary-btn, .primary, .next, .btn-finish):disabled { background: var(--site-soft); color: var(--site-muted); border-color: var(--site-border); }
+html[data-course] :is(select, input[type="number"], input[type="text"]) { min-height: var(--course-control-height); max-width: 100%; border: 1px solid var(--site-border); border-radius: var(--course-control-radius); padding: 8px; background: var(--site-panel); color: var(--site-text); font: inherit; }
+html[data-course] :is(.progress-wrap, .progress-bar-container, .bar) { height: 6px; border-radius: 999px; background: var(--site-border); overflow: hidden; }
+html[data-course] :is(.progress, .progress-bar, .bar i) { height: 100%; border-radius: inherit; background: var(--site-accent); transition: width var(--course-motion-duration); }
+html[data-course] :is(.option.correct, .option-btn.correct, .quiz-option.correct, .choice.correct, .feedback.is-correct, .feedback-box.correct-bg) { background: var(--site-success-bg); color: var(--site-success); border-color: var(--site-success-border); }
+html[data-course] :is(.option.wrong, .option-btn.wrong, .quiz-option.wrong, .choice.wrong, .feedback.is-wrong, .feedback-box.wrong-bg) { background: var(--site-error-bg); color: var(--site-error); border-color: var(--site-error-border); }
+html[data-course] :is(.report-table, .detail-list, .history-list) { max-width: 100%; }
+html[data-course] :is(.top-header, .app-header, .topbar) { margin-bottom: var(--course-gap); }
+html[data-course] .hidden { display: none; }
+html[data-course="et-sing"] * { margin: 0; padding: 0; }
+html[data-course="et-sing"] .top-header { display: flex; justify-content: space-between; gap: 12px; padding-block: 8px; font-size: 11px; color: var(--site-muted); }
+html[data-course="et-sing"] .main-wrapper { display: flex; flex-direction: column; }
+html[data-course="et-sing"] .header-section { text-align: center; margin-bottom: 24px; }
+html[data-course="et-sing"] .main-title { margin-bottom: 8px; }
+html[data-course="et-sing"] :is(.btn, select) { padding: 10px 16px; }
+html[data-course="et-sing"] .footer-bar { text-align: center; padding-block: 16px; font-size: 12px; }
+html[data-course="et-quiz"] main { width: 100%; max-width: var(--course-content-width); margin: auto; }
+html[data-course="et-quiz"] .screen { padding-block: 24px; }
+html[data-course="et-quiz"] :is(.audio, .modeCard, .option) { border-radius: var(--course-card-radius); }
+html[data-course="et-quiz"] .play { width: 52px; height: 52px; }
+html[data-course="mt-practice"] .app-container { padding: 0; }
+html[data-course="mt-practice"] .question-nav-btn { padding: 4px; min-width: 44px; }
+html[data-course="mt-practice"] :is(.option-btn, .question-nav-toggle) { justify-content: flex-start; text-align: left; }
+html[data-course="mt-practice"] :is(.stat-card, .start-info, .feedback-box, .modal-card, .history-card-item) { border-radius: var(--course-card-radius); }
+html[data-course="mt-practice"] .modal-card { width: min(640px, calc(100% - 24px)); }
+html[data-course="mt-learning"] { --course-content-width: 720px; }
+html[data-course="mt-learning"] .app { min-height: 0; padding: 0; }
+html[data-course="mt-learning"] :is(.home-actions, .completion-actions) { display: grid; gap: 12px; }
+@media (min-width: 900px) and (orientation: landscape) {
+  html[data-course="mt-learning"] { --course-content-width: 1120px; }
+}
+@media (max-width: 430px) {
+  html[data-course] :is(.header-top-bar, .topbar) { flex-wrap: wrap; gap: 8px; }
+  html[data-course] :is(.header-right-group, .topbar-right) { flex-wrap: wrap; gap: 8px; }
+  html[data-course] .header-title-right { white-space: normal; }
+  html[data-course] .action-row { gap: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-course] *, html[data-course] *::before, html[data-course] *::after { animation-duration: 0s; animation-delay: 0s; transition-duration: 0s; scroll-behavior: auto; }
+}
+
+/* The original report actions have static inline background/color declarations.
+   Override only those ordinary UI actions; preserve their DOM/JS contract. */
+html[data-course="et-sing"] #reportCard .mic-btn {
+  background: var(--site-accent) !important;
+  color: var(--site-on-accent) !important;
+}
+/* UI state colors share the site semantics; pitch meters remain untouched. */
+html[data-course="et-sing"] .btn-tone.playing { background: var(--site-warning-bg); color: var(--site-warning); border-color: var(--site-warning); }
+html[data-course="et-sing"] :is(.mic-btn.active, .mic-capture-btn.active) { background: var(--site-error-bg); color: var(--site-error); border-color: var(--site-error-border); }
+html[data-course="et-sing"] :is(.mic-capture-btn.locked, .btn-next.unlocked, .btn-finish.unlocked) { background: var(--site-success-bg); color: var(--site-success); border-color: var(--site-success-border); }
