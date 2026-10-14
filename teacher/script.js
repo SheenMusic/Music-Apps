@@ -5,7 +5,7 @@
   window.addEventListener('pageshow',()=>groups.forEach(group=>{group.open=false}));
   const list = document.getElementById('teacherLessons');
   courseCatalog.courses['interval-ear-training'].lessons.filter(item=>item.isFormal)
-    .forEach(item=>list.append(courseResourceUI.lessonRow(item,{showType:true})));
+    .forEach(item=>list.append(courseResourceUI.lessonRow(item)));
   const theory = document.getElementById('teacherTheory');
   intervalTheoryResources.lessons.forEach(item=>theory.append(courseResourceUI.lessonRow(item)));
   const extra = document.getElementById('teacherSupplementary');

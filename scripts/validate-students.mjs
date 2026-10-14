@@ -19,7 +19,7 @@ catch(error) {report('WARNING','MT resources',`资源映射未加载：${error.m
 const now=Date.now();
 for (const directory of studentDirectories()) {
   const relative=path.relative(root,directory), name=path.basename(directory);
-  if (!isStudentDirectoryName(name) && !legacy) report('ERROR',relative,'目录必须为32位随机十六进制字符串');
+  if (!isStudentDirectoryName(name) && !legacy) report('ERROR',relative,'目录必须为32位随机ID或姓名slug加16位随机后缀');
   let data;
   try {data=readConfig(path.join(directory,'student-data.js'),'studentData');}
   catch(error) {report('ERROR',relative,error.message);continue;}

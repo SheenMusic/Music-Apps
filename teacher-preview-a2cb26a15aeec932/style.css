@@ -30,3 +30,7 @@ body{margin:0;font:400 15px/1.8 var(--site-font)}
 .teacher-menu .resource-list a.training-link{font-size:13px;font-weight:500;min-height:44px;padding:8px 4px;margin:0 2px;border:0;border-radius:0;background:none;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1px;text-underline-offset:4px}
 .teacher-menu .resource-list a.training-link:hover{background:none;text-decoration-style:solid}
 .teacher-menu .resource-type{font-size:11px}
+
+/* Supplementary exercises belong inside the ear-training disclosure. */
+.supplementary-access{margin-top:24px}
+.supplementary-access h3{margin:0 0 12px;font-size:16px;font-weight:500;color:var(--site-muted)}

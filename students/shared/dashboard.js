@@ -25,7 +25,7 @@
     content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',DashboardLogic.getCourseTitle(course,courseCatalog)));
     const current = course.currentLessons?.length ? `当前进度：${lessonRange(course.currentLessons)}` : '课程资料';
     row.append(content,text('span',({completed:'已完成 ✓',active:'进行中',previous:'曾参加',pending:course.paymentStatus==='paid' ? '已付款 · 待开课' : '待开课'})[course.status] || '状态待确认','status'));
-    if (course.accessEnabled && course.status!=='completed') {
+    if (course.accessEnabled) {
       row.classList.add('with-resources');
       const panel = document.createElement('div');panel.className = 'course-resources';
       panel.id = `course-access-${course.id}`;panel.hidden = true;
@@ -41,7 +41,7 @@
     } else if (course.status==='active' && course.currentLessons?.length) content.append(text('p',current,'course-current'));
     list.append(row);
   });
-  studentData.courses.filter(c=>c.accessEnabled && c.status!=='completed').forEach(course=>{
+  studentData.courses.filter(c=>c.accessEnabled).forEach(course=>{
     const access = coursePanels.get(course.id);
     const resources = courseCatalog.courses[course.id];
     const links = text('ul','','resource-list');

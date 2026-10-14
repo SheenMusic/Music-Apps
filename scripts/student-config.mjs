@@ -24,5 +24,5 @@ export function studentDirectories() {
 
 // One explicitly preserved, previously shared address; all new students remain random.
 export function isStudentDirectoryName(name) {
-  return /^[0-9a-f]{32}$/.test(name) || name === 'samuel-b5def80cdaa55d42';
+  return /^(?:[0-9a-f]{32}|[a-z]+-[0-9a-f]{16})$/.test(name) || name === 'samuel-b5def80cdaa55d42';
 }
