@@ -32,4 +32,12 @@
   ]) {
     document.getElementById(target).append(...Array.from(document.getElementById(source).children,row=>row.cloneNode(true)));
   }
+  // Add after resource population/cloning, so each disclosure owns its close action.
+  document.querySelectorAll('.resource-group, .teacher-menu details').forEach(group=>{
+    if (!group.querySelector('[data-lesson]')) return;
+    const summary = group.querySelector(':scope > summary');
+    group.append(courseResourceUI.collapseButton(()=>{
+      group.open=false;summary.focus();
+    },`收起${summary.textContent}课程资料`));
+  });
 })();

@@ -60,6 +60,10 @@
       supplements.forEach(item=>extra.append(courseResourceUI.supplementaryRow(item)));
       section.append(extra);access.append(section);
     }
+    const toggle = document.querySelector(`[aria-controls="${access.id}"]`);
+    access.append(courseResourceUI.collapseButton(()=>{
+      access.hidden = true;toggle.setAttribute('aria-expanded','false');toggle.focus();
+    },`收起${DashboardLogic.getCourseTitle(course,courseCatalog)}课程资料`));
   });
   const reasonMessages = {
     'missing-dates':'未设置周期（包括日期为空的历史记录）',

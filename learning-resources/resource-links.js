@@ -36,5 +36,13 @@
     const row = text('li','','resource-row supplementary-row');row.dataset.resource = resource.id;
     row.append(link(resource.title,resource.url,resource.title));return row;
   }
-  window.courseResourceUI = {lessonRow,supplementaryRow};
+  function collapseButton(onCollapse,accessibleName='收起课程资料') {
+    const button = text('button','','resource-collapse');button.type = 'button';
+    button.setAttribute('aria-label',accessibleName);
+    const arrow = text('span','','resource-collapse-arrow');arrow.setAttribute('aria-hidden','true');
+    button.append(arrow,document.createTextNode('收起'));
+    button.addEventListener('click',onCollapse);
+    return button;
+  }
+  window.courseResourceUI = {lessonRow,supplementaryRow,collapseButton};
 })();
