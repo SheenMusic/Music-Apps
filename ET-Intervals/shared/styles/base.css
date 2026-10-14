@@ -1,0 +1,73 @@
+/* Phase 1 ET05/ET06 ordinary UI foundation. Zero-specificity scope preserves
+   the original selector weights. Teaching targets, meters, mic states and
+   report schemas stay in each lesson. Load before local CSS and site-visual.css. */
+:where(html[data-visual="ear"], html[data-visual="ear"] *) { box-sizing: border-box; margin: 0; padding: 0; }
+html:where([data-visual="ear"]) { -webkit-text-size-adjust: 100%; }
+:where(html[data-visual="ear"]) body {
+      font-family:var(--site-font);
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+:where(html[data-visual="ear"]) button, :where(html[data-visual="ear"]) select, :where(html[data-visual="ear"]) input { font: inherit; }
+:where(html[data-visual="ear"]) button { -webkit-tap-highlight-color: transparent; }
+:where(html[data-visual="ear"]) .top-header {
+      width: 100%; max-width: var(--course-content-width, 480px); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-muted); padding: 8px 2px 18px; text-transform: uppercase;
+    }
+:where(html[data-visual="ear"]) .main-wrapper { width: 100%; max-width: var(--course-content-width, 480px); margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+:where(html[data-visual="ear"]) .card {
+      background: var(--card-bg); border-radius: var(--course-card-radius, 18px); padding: 24px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.025), 0 8px 24px rgba(0,0,0,0.035);
+      border: 1px solid rgba(209,209,214,0.65);
+    }
+:where(html[data-visual="ear"]) .header-section { margin-bottom: 18px; }
+:where(html[data-visual="ear"]) .sub-title-top { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; margin-bottom: 6px; }
+:where(html[data-visual="ear"]) .main-title { font-size: 30px; font-weight: 600; color: var(--text-main); line-height: 1.18; letter-spacing: 0.01em; margin-bottom: 7px; }
+:where(html[data-visual="ear"]) .main-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+:where(html[data-visual="ear"]) .settings-details { background: var(--surface-secondary); border-radius: 13px; margin-bottom: 18px; overflow: hidden; border: 1px solid rgba(209,209,214,0.8); }
+:where(html[data-visual="ear"]) .settings-summary {
+      padding: 12px 15px; font-size: 13px; font-weight: 500; color: var(--text-main);
+      cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;
+      letter-spacing: 0.01em; list-style: none;
+    }
+:where(html[data-visual="ear"]) .settings-summary::-webkit-details-marker { display: none; }
+:where(html[data-visual="ear"]) .settings-summary::after { content: "⌄"; font-size: 15px; line-height: 1; color: var(--text-muted); transition: transform 0.2s ease; }
+:where(html[data-visual="ear"]) .settings-details[open] .settings-summary::after { transform: rotate(180deg); }
+:where(html[data-visual="ear"]) .collapsed-content { padding: 0 15px 15px; }
+:where(html[data-visual="ear"]) .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+:where(html[data-visual="ear"]) label { font-size: 11px; color: var(--text-secondary); font-weight: 500; display: block; margin-bottom: 5px; letter-spacing: 0.01em; }
+:where(html[data-visual="ear"]) select { width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 9px; background: #fff; font-size: 13px; color: var(--text-main); outline: none; appearance: auto; }
+:where(html[data-visual="ear"]) select:focus { border-color: #8e8e93; }
+:where(html[data-visual="ear"]) .btn {
+      width: 100%; padding: 13px; border: none; border-radius: var(--course-button-radius, 11px); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease, transform 0.08s ease, opacity 0.18s ease;
+      display: flex; justify-content: center; align-items: center; gap: 6px; min-height: var(--course-button-min-height, 46px);
+    }
+:where(html[data-visual="ear"]) .btn:active:not(:disabled) { transform: scale(0.985); }
+:where(html[data-visual="ear"]) .btn-tone { background: #e5e5ea; color: var(--text-main); }
+:where(html[data-visual="ear"]) .btn-tone:hover:not(:disabled) { background: #dcdce1; }
+:where(html[data-visual="ear"]) .headphone-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin: 12px 0; cursor: pointer; font-weight: 400; }
+:where(html[data-visual="ear"]) .headphone-toggle input { width: 15px; height: 15px; accent-color: #1c1c1e; margin: 0; }
+:where(html[data-visual="ear"]) .progress-text { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 10px; font-weight: 400; }
+:where(html[data-visual="ear"]) .btn-next { background: #e5e5ea; color: #aeaeb2; cursor: not-allowed; margin-bottom: 10px; }
+:where(html[data-visual="ear"]) .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+:where(html[data-visual="ear"]) .btn-restart { background: var(--surface-secondary); color: var(--text-secondary); }
+:where(html[data-visual="ear"]) .btn-restart:hover:not(:disabled) { background: #e5e5ea; }
+:where(html[data-visual="ear"]) .btn-finish { background: var(--surface-secondary); color: var(--text-tertiary); cursor: not-allowed; }
+:where(html[data-visual="ear"]) .hidden { display: none; }
+:where(html[data-visual="ear"]) .footer-bar { text-align: center; font-size: 11px; color: var(--text-tertiary); padding: 17px 0 8px; font-weight: 400; letter-spacing: 0.04em; }
+@media (max-width: 380px) {
+  :where(html[data-visual="ear"]) body { padding-left: 12px; padding-right: 12px; }
+  :where(html[data-visual="ear"]) .card { padding: 20px 17px; border-radius: 16px; }
+  :where(html[data-visual="ear"]) .main-title { font-size: 28px; }
+  :where(html[data-visual="ear"]) .config-grid { gap: 9px; }
+}

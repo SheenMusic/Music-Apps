@@ -20,3 +20,13 @@
 ## 已知缺陷
 
 未修复音区越界、麦克风流保留、ET06播放/录音竞争、MT03返回首页缺失、题号刷新延迟及原教学文案差异。三个TODO不表示期望行为已实现。它们的现状兼容性观察只适用于本次CSS迁移。
+
+## Phase 1A：共享基础 + ET05
+
+- 新增三个计划中的共享CSS；ET05引用顺序为course-visual → ET base → 本课内联CSS → 原site-visual。作用域使用现有data-visual及`:where`，不改DOM结构、不增加选择器权重。
+- ET05移出37个顶层CSS块（36个常规规则及1个窄屏media组），目标、meter、录音/成功状态、报告和教学提示保留本地。内联CSS由9,118 B降到4,456 B；HTML由788行/36,548 B降到729行/32,009 B。
+- 行为套件：5通过、0失败、3TODO；试点之外文件哈希、试点DOM/脚本保护通过。
+- ET05视觉及动画：15通过、0失败；98状态、28对PNG一致，CSS响应无404、无页面JavaScript错误。
+- 共享CSS隔离：1通过、0失败；首页、商店、Catalog、Student Profile、学生Dashboard、Teacher Dashboard各Light/Dark，共12页面对比，native计算样式/几何不变。各新选择器均限定课程；没有新keyframes或新!important补丁（MT基础的.hidden important是原规则迁移）。
+- 修正隔离测试的样式注入方式：应用JavaScript禁用时采用同步插入style，避免Playwright addStyleTag等待load回调。仅改测试助手，不改课程行为。
+- 截图/summary：`/tmp/music-apps-phase1-et05`。未迁移ET06/MT03及其他页面仍用原样式。

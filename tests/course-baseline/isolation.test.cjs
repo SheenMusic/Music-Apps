@@ -20,7 +20,9 @@ test('Phase 1: shared CSS selectors are course-scoped; public pages and both das
           const s=getComputedStyle(el),r=el.getBoundingClientRect();return {tag:el.tagName,id:el.id,rect:[r.x,r.y,r.width,r.height],style:[...s].filter(p=>!p.startsWith('--')).map(p=>[p,s.getPropertyValue(p)])};
         }));
         const expected=await snapshot();
-        for(const css of files)await page.addStyleTag({content:fs.readFileSync(path.join(H.ROOT,css),'utf8')});
+        // Direct synchronous insertion also works when application JavaScript is disabled.
+        // Playwright's addStyleTag waits for a style load callback in this mode.
+        await page.evaluate(contents=>{for(const css of contents){const style=document.createElement('style');style.textContent=css;document.head.appendChild(style);}},files.map(css=>fs.readFileSync(path.join(H.ROOT,css),'utf8')));
         assert.deepEqual(await snapshot(),expected,`${file} ${colorScheme}: shared CSS leaked`);
         const selectors=await page.evaluate(()=>{
           const result=[];const visit=rules=>{for(const rule of rules){if(rule.selectorText)result.push(rule.selectorText);else if(rule.cssRules)visit(rule.cssRules);}};
