@@ -31,7 +31,7 @@ for (const directory of studentDirectories()) {
   for (const course of data.courses) {
     if (!course || typeof course!=='object' || typeof course.id!=='string' || !course.id.trim()) {report('ERROR',relative,'课程结构或 ID 无效');continue;}
     if (ids.has(course.id)) report('ERROR',relative,`课程 ID 重复：${course.id}`);ids.add(course.id);
-    if (!['completed','active','previous','pending'].includes(course.status)) report('ERROR',relative,`status 无效：${course.id}`);
+    if (!['completed','active','previous','pending','paused'].includes(course.status)) report('ERROR',relative,`status 无效：${course.id}`);
     if (course.enrollmentTitle!==undefined && (typeof course.enrollmentTitle!=='string' || !course.enrollmentTitle.trim())) report('ERROR',relative,`enrollmentTitle 无效：${course.id}`);
     if (course.paymentStatus!==undefined && !['paid','unpaid'].includes(course.paymentStatus)) report('ERROR',relative,`paymentStatus 无效：${course.id}`);
     if (course.status==='pending' && course.accessEnabled) report('ERROR',relative,`待开课课程不能开放入口：${course.id}`);

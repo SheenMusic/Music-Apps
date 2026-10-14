@@ -44,7 +44,7 @@ const studentData = {
       "id": "chord-theory",
       "title": "和弦记号理论训练课",
       "enrollmentTitle": "和弦记号理论训练课",
-      "status": "pending",
+      "status": "paused",
       "accessEnabled": false,
       "paymentStatus": "paid"
     }
