@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createRequire} from 'node:module';
-import {root,readConfig,studentDirectories} from './student-config.mjs';
+import {root,readConfig,studentDirectories,isStudentDirectoryName} from './student-config.mjs';
 const L = createRequire(import.meta.url)('../students/shared/dashboard-logic.js');
 const args=process.argv.slice(2);
 if (args.some(arg=>arg!=='--allow-legacy-directories')) {console.error('Unknown argument');process.exit(1);}
@@ -19,7 +19,7 @@ catch(error) {report('WARNING','MT resources',`资源映射未加载：${error.m
 const now=Date.now();
 for (const directory of studentDirectories()) {
   const relative=path.relative(root,directory), name=path.basename(directory);
-  if (!/^[0-9a-f]{32}$/.test(name) && !legacy) report('ERROR',relative,'目录必须为32位随机十六进制字符串');
+  if (!isStudentDirectoryName(name) && !legacy) report('ERROR',relative,'目录必须为32位随机十六进制字符串');
   let data;
   try {data=readConfig(path.join(directory,'student-data.js'),'studentData');}
   catch(error) {report('ERROR',relative,error.message);continue;}

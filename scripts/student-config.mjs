@@ -21,3 +21,8 @@ export function studentDirectories() {
   return fs.readdirSync(path.join(root,'students'),{withFileTypes:true}).filter(entry=>entry.isDirectory() && entry.name!=='shared')
     .map(entry=>path.join(root,'students',entry.name)).sort();
 }
+
+// One explicitly preserved, previously shared address; all new students remain random.
+export function isStudentDirectoryName(name) {
+  return /^[0-9a-f]{32}$/.test(name) || name === 'samuel-b5def80cdaa55d42';
+}
