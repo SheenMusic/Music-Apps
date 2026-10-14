@@ -16,13 +16,13 @@
   };
   document.getElementById('studentName').textContent = studentData.studentName;
   document.title = `${studentData.studentName} · Learning Dashboard`;
-  document.getElementById('learningStatus').textContent = studentData.courses.some(c=>c.status==='active') ? '学习中' : '已完成';
+  document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,DashboardLogic.pickLatestPeriod(studentData.learningPeriods,Date.now()),Date.now());
   const list = document.getElementById('courseList');
   const coursePanels = new Map();
   studentData.courses.forEach((course,index)=>{
     const row = text('li','','course-row');
     const content = document.createElement('div');
-    content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',course.title));
+    content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',DashboardLogic.getCourseTitle(course,courseCatalog)));
     const current = course.currentLessons?.length ? `当前进度：${lessonRange(course.currentLessons)}` : '课程资料';
     row.append(content,text('span',({completed:'已完成 ✓',active:'进行中',previous:'曾参加'})[course.status] || '状态待确认','status'));
     if (course.accessEnabled && course.status!=='completed') {
@@ -61,35 +61,41 @@
       section.append(extra);access.append(section);
     }
   });
-  // Historical periods with unknown dates remain in configuration without invented dates.
-  const period = studentData.learningPeriods.filter(p=>p.start && p.end).at(-1);
-  const format = (date, includeTime) => {
-    const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',...(includeTime ? {hour:'2-digit',minute:'2-digit',hourCycle:'h23'} : {})}).formatToParts(date);
-    const value = type => parts.find(p=>p.type===type)?.value;
+  const reasonMessages = {
+    'missing-dates':'未设置周期（包括日期为空的历史记录）',
+    'invalid-date':'日期无法解析',
+    'invalid-range':'周期结束时间不晚于开始时间',
+    'missing-timezone':'缺少明确时区'
+  };
+  const format = date => new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(date));
+  const displayDate = (date,includeTime) => {
+    const parts = format(date), value = type => parts.find(p=>p.type===type)?.value;
     return `${value('year')}.${value('month')}.${value('day')}${includeTime ? ` ${value('hour')}:${value('minute')}` : ''}`;
   };
-  if (!period) {
-    document.getElementById('periodStatus').textContent = '尚未设置有效期';return;
-  }
-  const start = new Date(period.start), end = new Date(period.end);
-  if (!Number.isFinite(+start) || !Number.isFinite(+end) || end<=start) {
-    document.getElementById('periodStatus').textContent = '有效期配置需要确认';return;
-  }
-  document.getElementById('periodRange').textContent = `${format(start,false)} — ${format(end,false)}`;
-  document.getElementById('periodStart').textContent = format(start,true);
-  document.getElementById('periodEnd').textContent = format(end,true);
-  if (studentData.showPeriodDuration) {
-    const duration = document.getElementById('periodDuration');
-    duration.textContent = `学习周期：${(end-start)/86400000}天`;
-    duration.hidden = false;
-  }
+  let missingWarned = false;
   function updatePeriod() {
-    const now = Date.now(), remaining = +end-now;
-    const state = remaining<=0 ? '本期已到期' : now<+start ? '尚未开始' : remaining<=72*3600000 ? '即将到期' : '有效期内';
-    document.getElementById('periodStatus').textContent = state;
-    const hours = Math.ceil(Math.max(remaining,0)/3600000);
-    document.getElementById('remainingTime').textContent = remaining<=0 ? '本期已到期' : now<+start ? '本期尚未开始' : `剩余 ${Math.floor(hours/24)}天 ${hours%24}小时`;
-    document.getElementById('timeProgress').value = Math.min(100,Math.max(0,(now-start)/(end-start)*100));
+    const now = Date.now();
+    const period = DashboardLogic.pickLatestPeriod(studentData.learningPeriods,now);
+    document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,period,now);
+    const panel = document.querySelector('.period-panel');panel.hidden = !period;
+    if (!period) {
+      if (!missingWarned) {
+        const reasons = studentData.learningPeriods.length ? studentData.learningPeriods.map(item=>DashboardLogic.validatePeriod(item).reason) : ['missing-dates'];
+        console.warn('学习周期未显示：', [...new Set(reasons)].map(reason=>reasonMessages[reason] || reason).join('；'));
+        missingWarned = true;
+      }
+      return;
+    }
+    missingWarned = false;
+    document.getElementById('periodRange').textContent = `${displayDate(period.start,false)} — ${displayDate(period.end,false)}`;
+    document.getElementById('periodStart').textContent = displayDate(period.start,true);
+    document.getElementById('periodEnd').textContent = displayDate(period.end,true);
+    const duration = document.getElementById('periodDuration');duration.hidden = !studentData.showPeriodDuration;
+    if (studentData.showPeriodDuration) duration.textContent = DashboardLogic.formatDuration(period.start,period.end);
+    const state = DashboardLogic.computePeriodState(period,now);
+    document.getElementById('periodStatus').textContent = state.status;
+    document.getElementById('remainingTime').textContent = state.remainingText;
+    document.getElementById('timeProgress').value = state.progress;
   }
   updatePeriod();setInterval(updatePeriod,60000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden) updatePeriod()});

@@ -16,7 +16,7 @@ const studentData = {
     }
   ],
   learningPeriods:[
-    {id:'period-01', status:'expired', start:null, end:null},
+    {id:'period-01', start:null, end:null},
     {id:'period-02', start:'2026-10-13T16:07:00+08:00', end:'2026-10-27T16:07:00+08:00'}
   ]
 };
