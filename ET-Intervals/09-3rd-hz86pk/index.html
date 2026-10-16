@@ -269,6 +269,7 @@
 
   <footer class="footer-bar">©Sheen · Ear Training</footer>
 
+<script src="../../assets/practice-report.js"></script>
 <script>
   const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
@@ -765,13 +766,10 @@
     const minMidi = parseInt(document.getElementById('minNoteSelect').value);
     const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
     const exName = EXERCISES[document.getElementById('exerciseSelect').value].name;
-    let text = `【第九课 三度旋律音程构唱 练习报告】
-练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)} | 练习模式：${exName} | 总耗时：${totalTime} 秒
-----------------------------------
-`;
-    questionHistory.slice(-10).forEach((q, i) => {
-      text += `${i+1}: ${q.refNote} → ${q.targetNote}(${q.interval}) | ${q.actualNote} | ${q.cents}ct | ${q.time}s
-`;
+    const text = window.PracticeReport.generate({
+      type: 'construction', code: 'ET09', title: '三度旋律音程构唱',
+      settings: [`练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)}`, `练习模式：${exName}`],
+      seconds: Number(totalTime), records: questionHistory.slice(-10)
     });
     navigator.clipboard.writeText(text).then(() => {
       alert("练习报告已成功复制到剪贴板，现在就发送给老师吧！");

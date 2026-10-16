@@ -633,6 +633,7 @@
     ©Sheen · Ear Training
   </footer>
 
+<script src="../../assets/practice-report.js"></script>
 <script>
   const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
   
@@ -1084,13 +1085,10 @@
 
   function copyReport() {
     const totalTime = document.getElementById('totalTimeText').textContent;
-    let text = `【自然音程听觉训练 · 第三课 模唱练习报告】
-连续通过：10 题 | 总耗时：${totalTime} 秒
-----------------------------------
-`;
-    questionHistory.slice(-10).forEach((q, i) => {
-      text += `第${i+1}题: 示范[${q.targetNote}] | 演唱[${q.actualNote}] | 偏差[${q.cents}cents] | 耗时[${q.time}s]
-`;
+    const text = window.PracticeReport.generate({
+      type: 'singing', code: 'ET03', title: '单音模唱',
+      settings: [],
+      seconds: Number(totalTime), records: questionHistory.slice(-10)
     });
     navigator.clipboard.writeText(text).then(() => {
       alert("练习报告已成功复制到剪贴板，现在就发送给老师吧！");

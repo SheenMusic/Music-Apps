@@ -304,15 +304,11 @@ function result(){
       </div>`
     ).join("");
 
-  window.lastTestText=
-`Ear Training · 音的宽窄
-测验成绩：${score}/20（${p}%）
-用时：${time(elapsed)}
-
-答题结果：
-${testResults.map((r,i)=>
-  `第${i+1}题：${r.correct?"正确":"错误"}`
-).join("\n")}`;
+  window.lastTestText=window.PracticeReport.generate({
+    type: 'listening', code: 'ET02', title: '音程宽窄听辨',
+    seconds: Math.max(0, Math.round(elapsed / 1000)),
+    correct: score, total: 20, accuracy: p, records: testResults
+  });
 
   screen("result");
 }

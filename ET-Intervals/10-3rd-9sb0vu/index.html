@@ -284,6 +284,7 @@
 
   <footer class="footer-bar">©Sheen · Ear Training</footer>
 
+<script src="../../assets/practice-report.js"></script>
 <script>
   const NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
@@ -881,14 +882,10 @@
     const minMidi = parseInt(document.getElementById('minNoteSelect').value);
     const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
     const modeName = EXERCISES[document.getElementById('exerciseSelect').value].name;
-    let text = `【第十课 三度和声模唱 练习报告】
-练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)} | 练习模式：${modeName}
-连续通过：10 题 | 总耗时：${totalTime} 秒
-----------------------------------
-`;
-    questionHistory.slice(-10).forEach((q, i) => {
-      text += `第${i+1}题: [${q.type}] 标准低(${q.lowTarget})/高(${q.highTarget}) | 演唱低[${q.lowCapturedText}] 高[${q.highCapturedText}] | 耗时[${q.time}s]
-`;
+    const text = window.PracticeReport.generate({
+      type: 'harmonic', code: 'ET10', title: '三度和声模唱',
+      settings: [`练习音区：${midiToNoteName(minMidi)}–${midiToNoteName(maxMidi)}`, `练习模式：${modeName}`],
+      seconds: Number(totalTime), records: questionHistory.slice(-10)
     });
     navigator.clipboard.writeText(text).then(() => {
       alert("练习报告已成功复制到剪贴板，快发送给老师检查吧！");

@@ -1365,6 +1365,7 @@ const practiceData = {
 };
 
 </script>
+<script src="../../../assets/practice-report.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   let questions = practiceData.questions;
@@ -1782,33 +1783,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalSeconds = Math.round((overallEndTime - overallStartTime) / 1000);
     const accuracyPercent = ((questions.length / totalAttempts) * 100).toFixed(1);
 
-    const problemItems = questionStats
-      .map((stat, idx) => ({ stat, idx }))
-      .filter(({ stat }) => stat.wrongChoices.length > 0);
-
-    let issueSection = "";
-    if (problemItems.length === 0) {
-      issueSection = `✓ ${questions.length} 题全部一次通过`;
-    } else {
-      const issueLines = problemItems.map(({ stat, idx }) => {
-        const wrongChoices = stat.wrongChoices.map((choice) => choice.join("、")).join(" | ");
-        return `第 ${String(idx + 1).padStart(2, "0")} 题｜尝试 ${stat.attempts} 次｜错选：${wrongChoices}`;
-      }).join("\n");
-      const cleanCount = questions.length - problemItems.length;
-      const cleanSummary = cleanCount > 0 ? `\n\n其余 ${cleanCount} 题均一次通过。` : "";
-      issueSection = `【需要关注】\n${issueLines}${cleanSummary}`;
-    }
-
-    const reportText = `【练习结果报告】
-MUSIC THEORY · INTERVAL · LESSON 02
-音程的性质与自然音程
-
-用时：${formatTime(totalSeconds)}
-作答准确率：${accuracyPercent}%（${questions.length} / ${totalAttempts}）
-
-${issueSection}
-
-©Sheen · Music Theory`;
+    const reportText = window.PracticeReport.generate({
+      type: 'mt', code: 'MT02', title: '音程的性质与自然音程',
+      seconds: totalSeconds, accuracy: accuracyPercent, records: questionStats
+    });
 
     copyTextToClipboard(reportText).then(() => {
       alert("答题结果已成功复制到剪贴板，快去分享给你的老师吧！");

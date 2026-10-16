@@ -205,13 +205,11 @@ function showResult(){
     `<div class="resultRow"><span>第 ${i+1} 题</span><strong class="${r.correct?'ok':'ng'}">${r.correct?'正确':'错误'}</strong></div>`
   ).join('');
 
-  window.lastTestText=
-    `Ear Training · 第一课
-测验成绩：${score}/20（${p}%）
-用时：${formatTime(elapsed)}
-
-答题结果：
-${testResults.map((r,i)=>`第${i+1}题：${r.correct?'正确':'错误'}`).join('\n')}`;
+  window.lastTestText=window.PracticeReport.generate({
+    type: 'listening', code: 'ET01', title: '音高方向听辨',
+    seconds: Math.max(0, Math.round(elapsed / 1000)),
+    correct: score, total: questions.length, accuracy: p, records: testResults
+  });
 
   screen('result');
 }
