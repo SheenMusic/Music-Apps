@@ -1468,6 +1468,7 @@ const practiceData = {
 };
 
 </script>
+<script src="../shared/utils/format-time.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   let questions = practiceData.questions;
@@ -1909,7 +1910,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const accuracyPercent = ((questions.length / totalAttempts) * 100).toFixed(1);
 
     resAccuracy.textContent = `${accuracyPercent}%`;
-    resTotalTime.textContent = formatTime(totalSeconds);
+    resTotalTime.textContent = window.MTFormatTime(totalSeconds);
     resTotalAttempts.textContent = `${totalAttempts}次`;
 
     // Render Detail List
@@ -1940,7 +1941,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const record = {
       timestamp: new Date().toLocaleTimeString(),
       accuracy: accuracyPercent,
-      totalTime: formatTime(totalSeconds),
+      totalTime: window.MTFormatTime(totalSeconds),
       totalAttempts: totalAttempts,
       stats: JSON.parse(JSON.stringify(questionStats))
     };
@@ -1996,7 +1997,7 @@ document.addEventListener("DOMContentLoaded", () => {
 MUSIC THEORY · INTERVAL · LESSON 04
 单音程与复音程
 
-用时：${formatTime(totalSeconds)}
+用时：${window.MTFormatTime(totalSeconds)}
 作答准确率：${accuracyPercent}%（${questions.length} / ${totalAttempts}）
 
 ${issueSection}
@@ -2049,11 +2050,6 @@ ${issueSection}
     return sorted1.every((val, index) => val === sorted2[index]);
   }
 
-  function formatTime(seconds) {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${String(mins).padStart(2, "0")}分${String(secs).padStart(2, "0")}秒`;
-  }
 });
 
 </script>
