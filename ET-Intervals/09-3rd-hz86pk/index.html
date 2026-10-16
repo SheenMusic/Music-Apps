@@ -1,27 +1,142 @@
 <!DOCTYPE html>
-<html data-course="et-sing" data-visual="ear" lang="zh-CN">
+<html data-visual="ear" lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Ear Training · 第九课</title>
-
+  <style>
+    :root {
+      --primary: #1c1c1e;
+      --primary-hover: #000000;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+      --bg: #f2f2f7;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-secondary: #6e6e73;
+      --text-muted: #8e8e93;
+      --text-tertiary: #aeaeb2;
+      --border: #d1d1d6;
+      --surface-secondary: #f2f2f7;
+      --blue-soft: #e5e5ea;
+      --green-soft: rgba(52, 199, 89, 0.12);
+      --orange-soft: rgba(255, 159, 10, 0.12);
+      --red-soft: rgba(255, 59, 48, 0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family:var(--site-font);
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 12px) env(safe-area-inset-right, 16px) env(safe-area-inset-bottom, 16px) env(safe-area-inset-left, 16px);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    button, select, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .top-header {
+      width: 100%; max-width: 480px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-muted); padding: 8px 2px 18px; text-transform: uppercase;
+    }
+    .main-wrapper { width: 100%; max-width: 480px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; }
+    .card {
+      background: var(--card-bg); border-radius: 18px; padding: 24px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.025), 0 8px 24px rgba(0,0,0,0.035);
+      border: 1px solid rgba(209,209,214,0.65);
+    }
+    .header-section { margin-bottom: 18px; }
+    .sub-title-top { font-size: 13px; font-weight: 500; color: var(--text-secondary); letter-spacing: 0.02em; margin-bottom: 6px; }
+    .main-title { font-size: 30px; font-weight: 600; color: var(--text-main); line-height: 1.18; letter-spacing: 0.01em; margin-bottom: 7px; }
+    .main-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+    .settings-details { background: var(--surface-secondary); border-radius: 13px; margin-bottom: 18px; overflow: hidden; border: 1px solid rgba(209,209,214,0.8); }
+    .settings-summary {
+      padding: 12px 15px; font-size: 13px; font-weight: 500; color: var(--text-main);
+      cursor: pointer; user-select: none; display: flex; justify-content: space-between; align-items: center;
+      letter-spacing: 0.01em; list-style: none;
+    }
+    .settings-summary::-webkit-details-marker { display: none; }
+    .settings-summary::after { content: "⌄"; font-size: 15px; line-height: 1; color: var(--text-muted); transition: transform 0.2s ease; }
+    .settings-details[open] .settings-summary::after { transform: rotate(180deg); }
+    .collapsed-content { padding: 0 15px 15px; }
+    .rule-box-inner {
+      background: var(--orange-soft); border: 1px solid rgba(255,159,10,0.25);
+      border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #8a5a00; margin-bottom: 13px; line-height: 1.55;
+    }
+    .rule-box-inner strong { font-weight: 600; }
+    .register-line {
+      font-size: 12px; color: var(--text-secondary); background: var(--blue-soft);
+      border-radius: 9px; padding: 9px 11px; margin-bottom: 13px; text-align: center; letter-spacing: 0.01em;
+    }
+    .register-line strong { color: var(--text-main); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { font-size: 11px; color: var(--text-secondary); font-weight: 500; display: block; margin-bottom: 5px; letter-spacing: 0.01em; }
+    select { width: 100%; padding: 9px 10px; border: 1px solid var(--border); border-radius: 9px; background: #fff; font-size: 13px; color: var(--text-main); outline: none; appearance: auto; }
+    select:focus { border-color: #8e8e93; }
+    .target-card { background: var(--surface-secondary); border: 1px solid rgba(209,209,214,0.8); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 17px; }
+    .target-pair { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .target-half { text-align: center; padding: 6px 4px; }
+    .target-half.highlight { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); }
+    .target-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
+    .target-note { font-size: 32px; font-weight: 600; color: var(--text-main); line-height: 1.08; letter-spacing: -0.02em; margin: 5px 0 3px; font-variant-numeric: tabular-nums; }
+    .target-half.highlight .target-note { color: var(--success); }
+    .target-freq { font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .target-arrow { font-size: 24px; color: var(--text-muted); font-weight: 300; line-height: 1; }
+    .interval-text { font-size: 12px; color: var(--text-secondary); margin-bottom: 13px; font-weight: 500; letter-spacing: 0.01em; }
+    .btn {
+      width: 100%; padding: 13px; border: none; border-radius: 11px; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: background-color 0.18s ease, color 0.18s ease, transform 0.08s ease, opacity 0.18s ease;
+      display: flex; justify-content: center; align-items: center; gap: 6px; min-height: 46px;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.985); }
+    .btn-tone { background: #e5e5ea; color: var(--text-main); }
+    .btn-tone:hover:not(:disabled) { background: #dcdce1; }
+    .btn-tone.playing { background: var(--warning); color: white; }
+    .mic-btn { background: var(--text-main); color: white; margin-top: 12px; }
+    .mic-btn:hover:not(:disabled) { background: #000000; }
+    .mic-btn.active { background: var(--danger); }
+    .headphone-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: var(--text-secondary); margin: 12px 0; cursor: pointer; font-weight: 400; }
+    .headphone-toggle input { width: 15px; height: 15px; accent-color: #1c1c1e; margin: 0; }
+    .status-box { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: 15px; padding: 17px 16px; margin: 17px 0; }
+    .pitch-val { font-size: 26px; font-weight: 600; margin: 7px 0; color: var(--text-main); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+    .meter-bar { height: 8px; background: #e5e5ea; border-radius: 999px; position: relative; margin: 15px 0; overflow: hidden; }
+    .meter-pointer { width: 5px; height: 100%; background: #8e8e93; position: absolute; left: 50%; transform: translateX(-50%); transition: left 0.08s ease-out, background-color 0.15s ease; border-radius: 999px; z-index: 2; }
+    .meter-target-zone { position: absolute; top: 0; height: 100%; background: rgba(52,199,89,0.24); left: 50%; transform: translateX(-50%); border-radius: 999px; }
+    .progress-text { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 10px; font-weight: 400; }
+    .btn-next { background: #e5e5ea; color: #aeaeb2; cursor: not-allowed; margin-bottom: 10px; }
+    .btn-next.unlocked { background: var(--success); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(52,199,89,0.16); }
+    .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .btn-restart { background: var(--surface-secondary); color: var(--text-secondary); }
+    .btn-restart:hover:not(:disabled) { background: #e5e5ea; }
+    .btn-finish { background: var(--surface-secondary); color: var(--text-tertiary); cursor: not-allowed; }
+    .btn-finish.unlocked { background: var(--red-soft); color: var(--danger); cursor: pointer; }
+    .report-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 14px; font-size: 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; }
+    .report-table th, .report-table td { border: none; border-bottom: 1px solid #e5e5ea; padding: 9px 4px; text-align: center; }
+    .report-table th { background: var(--surface-secondary); color: var(--text-secondary); font-weight: 500; }
+    .report-table tr:last-child td { border-bottom: none; }
+    .report-table td { color: var(--text-main); font-variant-numeric: tabular-nums; }
+    .hidden { display: none; }
+    .footer-bar { text-align: center; font-size: 11px; color: var(--text-tertiary); padding: 17px 0 8px; font-weight: 400; letter-spacing: 0.04em; }
+    @media (max-width: 380px) {
+      body { padding-left: 12px; padding-right: 12px; }
+      .card { padding: 20px 17px; border-radius: 16px; }
+      .main-title { font-size: 28px; }
+      .target-note { font-size: 26px; }
+      .config-grid { gap: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
-  <link rel="stylesheet" href="../shared/styles/base.css">
   <link rel="stylesheet" href="../../assets/site-visual.css">
   <script src="../../assets/site-analytics.js" defer></script>
-<style>:where(html[data-course="et-sing"]) { --success: #34c759; --warning: #ff9f0a; --danger: #ff3b30; --surface-secondary: #f2f2f7; --blue-soft: #e5e5ea; --green-soft: rgba(52, 199, 89, 0.12); --orange-soft: rgba(255, 159, 10, 0.12); --red-soft: rgba(255, 59, 48, 0.10) }
-:where(html[data-course="et-sing"]) { -webkit-text-size-adjust: 100% }
-:where(html[data-course="et-sing"]) .target-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
-:where(html[data-course="et-sing"]) .target-note { font-size: 32px; font-weight: 600; color: var(--text-main); line-height: 1.08; letter-spacing: -0.02em; margin: 5px 0 3px; font-variant-numeric: tabular-nums; }
-:where(html[data-course="et-sing"]) .target-freq { font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
-:where(html[data-course="et-sing"]) .pitch-val { font-size: 26px; font-weight: 600; margin: 7px 0; color: var(--text-main); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
-:where(html[data-course="et-sing"]) .meter-bar { height: 8px; background: #e5e5ea; border-radius: 999px; position: relative; margin: 15px 0; overflow: hidden; }
-@media (max-width: 380px) {
-:where(html[data-course="et-sing"]) .target-note { font-size: 26px; }
-}
-</style>
-  <link rel="stylesheet" href="../../assets/course-visual.css">
 </head>
 <body>
 
