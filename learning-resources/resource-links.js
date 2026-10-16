@@ -20,8 +20,9 @@
     const title = text('p','','resource-title');
     if (!resource.listeningURL) title.append(link(resource.title,resource.practiceURL,`${number} ${resource.title}`));
     else {
-      // Preserve the official title's text order, linking only its training words.
-      for (const part of resource.title.split(/(听辨|模唱|构唱)/)) {
+      // Dashboard display order is singing first, listening second; keep catalog data intact.
+      const displayTitle = resource.title.replace(/听辨与(模唱|构唱)/g,'$1与听辨');
+      for (const part of displayTitle.split(/(听辨|模唱|构唱)/)) {
         if (part === '听辨') title.append(link(part,resource.listeningURL,`${number} ${resource.title}，听辨训练`));
         else if (part === resource.trainingType) title.append(link(part,resource.practiceURL,`${number} ${resource.title}，${part}训练`));
         else title.append(document.createTextNode(part));
