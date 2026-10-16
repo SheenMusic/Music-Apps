@@ -13,6 +13,7 @@ html[data-visual] {
   --site-disclosure-gap: 12px;
   --site-disclosure-right: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M4 2l4 4-4 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   --site-disclosure-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --site-disclosure-up: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 8l4-4 4 4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   --site-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
     "PingFang SC", "Noto Sans SC", "Noto Sans CJK SC", "Microsoft YaHei",
     "Helvetica Neue", Arial, sans-serif;
@@ -410,8 +411,7 @@ html[data-visual] :is(.training-indicator, .category-indicator, .score-category-
 html[data-visual] :is(.training-indicator, .category-indicator, .score-category-indicator)::before,
 html[data-visual] :is(.training-indicator, .category-indicator, .score-category-indicator)::after { content: none; }
 html[data-visual] details[open] > summary :is(.training-indicator, .category-indicator, .score-category-indicator),
-html[data-visual] [aria-expanded="true"] :is(.site-collapse-arrow, .course-toggle-arrow, .question-nav-toggle-icon),
-html[data-visual] .resource-collapse-arrow {
+html[data-visual] [aria-expanded="true"] :is(.site-collapse-arrow, .course-toggle-arrow, .question-nav-toggle-icon) {
   -webkit-mask-image: var(--site-disclosure-down); mask-image: var(--site-disclosure-down);
 }
 html[data-visual] details[open] > :is(.settings-summary, .teacher-menu summary, .resource-group > summary, .checkout-tracks > summary)::after {
@@ -420,3 +420,8 @@ html[data-visual] details[open] > :is(.settings-summary, .teacher-menu summary, 
 /* Early listening controls had square defaults, rather than radius declarations. */
 html[data-visual="ear-simple"] :is(.primary, .secondary, .next, .option) { border-radius: var(--site-radius-control); }
 html[data-visual="ear-simple"] :is(.modeCard, .audio, .feedback) { border-radius: var(--site-radius-card); }
+
+/* A dedicated collapse action points up; disclosure headings retain right/down. */
+html[data-visual] .resource-collapse-arrow {
+  -webkit-mask-image: var(--site-disclosure-up); mask-image: var(--site-disclosure-up);
+}
