@@ -96,7 +96,7 @@
 
     .card {
       background: var(--card-bg);
-      border-radius: 18px;
+      border-radius: var(--site-radius-card);
       padding: 24px;
       box-shadow:
         0 1px 2px rgba(0, 0, 0, 0.025),
@@ -135,7 +135,7 @@
     /* Settings */
     .settings-details {
       background: var(--surface-secondary);
-      border-radius: 13px;
+      border-radius: var(--site-radius-card);
       margin-bottom: 18px;
       overflow: hidden;
       border: 1px solid rgba(209, 209, 214, 0.8);
@@ -159,17 +159,8 @@
       display: none;
     }
 
-    .settings-summary::after {
-      content: "⌄";
-      font-size: 15px;
-      line-height: 1;
-      color: var(--text-muted);
-      transition: transform 0.2s ease;
-    }
 
-    .settings-details[open] .settings-summary::after {
-      transform: rotate(180deg);
-    }
+
 
     .collapsed-content {
       padding: 0 15px 15px;
@@ -178,7 +169,7 @@
     .rule-box-inner {
       background: var(--orange-soft);
       border: 1px solid rgba(255, 159, 10, 0.25);
-      border-radius: 10px;
+      border-radius: var(--site-radius-card);
       padding: 10px 12px;
       font-size: 12px;
       color: #8a5a00;
@@ -209,7 +200,7 @@
       width: 100%;
       padding: 9px 10px;
       border: 1px solid var(--border);
-      border-radius: 9px;
+      border-radius: var(--site-radius-control);
       background: #fff;
       font-size: 13px;
       color: var(--text-main);
@@ -225,7 +216,7 @@
     .target-card {
       background: var(--surface-secondary);
       border: 1px solid rgba(209, 209, 214, 0.8);
-      border-radius: 15px;
+      border-radius: var(--site-radius-card);
       padding: 20px;
       text-align: center;
       margin-bottom: 17px;
@@ -259,7 +250,7 @@
       width: 100%;
       padding: 13px;
       border: none;
-      border-radius: 11px;
+      border-radius: var(--site-radius-control);
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0;
@@ -332,7 +323,7 @@
       text-align: center;
       background: #fff;
       border: 1px solid rgba(209, 209, 214, 0.9);
-      border-radius: 15px;
+      border-radius: var(--site-radius-card);
       padding: 17px 16px;
       margin: 17px 0;
     }
@@ -438,7 +429,7 @@
       font-size: 12px;
       overflow: hidden;
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: var(--site-radius-card);
     }
 
     .report-table th,
@@ -485,7 +476,7 @@
 
       .card {
         padding: 20px 17px;
-        border-radius: 16px;
+        border-radius: var(--site-radius-card);
       }
 
       .main-title {
@@ -508,7 +499,7 @@
         transition: none !important;
       }
     }
-  </style>
+</style>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="../../assets/site-visual.css">

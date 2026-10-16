@@ -23,8 +23,8 @@
   --error-color: #ef4444;
   --error-bg: #fef2f2;
   --error-border: #fecaca;
-  --radius-lg: 16px;
-  --radius-md: 10px;
+  --radius-lg:var(--site-radius-card);
+  --radius-md:var(--site-radius-control);
   --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
 }
 
@@ -46,7 +46,7 @@
 .feedback-box {
   margin-bottom: 20px;
   padding: 14px 16px;
-  border-radius: var(--radius-md);
+  border-radius: var(--site-radius-card);
   animation: fadeIn 0.3s ease;
 }
 

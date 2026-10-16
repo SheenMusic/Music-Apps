@@ -29,18 +29,18 @@
 
     .rule-box-inner {
       background: var(--orange-soft); border: 1px solid rgba(255,159,10,0.25);
-      border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #8a5a00; margin-bottom: 13px; line-height: 1.55;
+      border-radius: var(--site-radius-card); padding: 10px 12px; font-size: 12px; color: #8a5a00; margin-bottom: 13px; line-height: 1.55;
     }
     .rule-box-inner strong { font-weight: 600; }
     .register-line {
       font-size: 12px; color: var(--text-secondary); background: var(--blue-soft);
-      border-radius: 9px; padding: 9px 11px; margin-bottom: 13px; text-align: center; letter-spacing: 0.01em;
+      border-radius: var(--site-radius-small); padding: 9px 11px; margin-bottom: 13px; text-align: center; letter-spacing: 0.01em;
     }
     .register-line strong { color: var(--text-main); font-weight: 600; font-variant-numeric: tabular-nums; }
 
-    .target-card { background: var(--surface-secondary); border: 1px solid rgba(209,209,214,0.8); border-radius: 15px; padding: 20px; text-align: center; margin-bottom: 17px; }
+    .target-card { background: var(--surface-secondary); border: 1px solid rgba(209,209,214,0.8); border-radius: var(--site-radius-card); padding: 20px; text-align: center; margin-bottom: 17px; }
     .target-pair-dual { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-    .target-half-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); text-align: center; }
+    .target-half-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--site-radius-card); padding: 12px 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.03); text-align: center; }
     .target-label { font-size: 11px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.02em; }
     .target-note { font-size: 26px; font-weight: 600; color: var(--text-main); line-height: 1.08; letter-spacing: -0.02em; margin: 5px 0 3px; font-variant-numeric: tabular-nums; }
     .target-freq { font-size: 12px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
@@ -50,7 +50,7 @@
 
     /* 双音采集区域样式 */
     .dual-status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 17px 0 10px; }
-    .status-box-dual { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: 15px; padding: 15px 12px; }
+    .status-box-dual { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: var(--site-radius-card); padding: 15px 12px; }
     .pitch-val { font-size: 20px; font-weight: 600; margin: 5px 0; color: var(--text-main); font-variant-numeric: tabular-nums; }
     .mic-capture-btn { background: var(--text-main); color: white; margin-top: 8px; font-size: 12px; padding: 8px; min-height: 36px; }
     .mic-capture-btn:hover:not(:disabled) { background: #000000; }
@@ -58,7 +58,7 @@
     .mic-capture-btn.locked { background: var(--success); cursor: default; }
 
     /* 实时音高偏差滑块显示区 */
-    .status-box-global { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: 15px; padding: 14px 16px; margin-bottom: 14px; }
+    .status-box-global { text-align: center; background: #fff; border: 1px solid rgba(209,209,214,0.9); border-radius: var(--site-radius-card); padding: 14px 16px; margin-bottom: 14px; }
     .meter-bar { height: 8px; background: #e5e5ea; border-radius: 999px; position: relative; margin: 12px 0 8px; overflow: hidden; }
     .meter-pointer { width: 5px; height: 100%; background: #8e8e93; position: absolute; left: 50%; transform: translateX(-50%); transition: left 0.08s ease-out, background-color 0.15s ease; border-radius: 999px; z-index: 2; }
     .meter-target-zone { position: absolute; top: 0; height: 100%; background: rgba(52,199,89,0.24); left: 50%; transform: translateX(-50%); border-radius: 999px; }
@@ -66,15 +66,15 @@
     .btn-next.unlocked { background: var(--success); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(52,199,89,0.16); }
 
     .btn-finish.unlocked { background: var(--red-soft); color: var(--danger); cursor: pointer; }
-    
-    .report-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 14px; font-size: 11px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; }
+
+    .report-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 14px; font-size: 11px; overflow: hidden; border: 1px solid var(--border); border-radius: var(--site-radius-card); }
     .report-table th, .report-table td { border: none; border-bottom: 1px solid #e5e5ea; padding: 8px 3px; text-align: center; }
     .report-table th { background: var(--surface-secondary); color: var(--text-secondary); font-weight: 500; }
     .report-table tr:last-child td { border-bottom: none; }
     .report-table td { color: var(--text-main); font-variant-numeric: tabular-nums; }
 
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
-  </style>
+</style>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="../../assets/site-visual.css">

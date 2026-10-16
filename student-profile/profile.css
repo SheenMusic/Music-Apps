@@ -13,7 +13,7 @@ form{margin-top:36px}
 .choices{display:grid;gap:4px}
 .choice{display:flex;align-items:flex-start;gap:12px;min-height:44px;padding:10px 0;cursor:pointer}
 .choice input{flex:none;width:18px;height:18px;margin:4px 0 0;accent-color:var(--site-accent)}
-input[type=text],textarea{display:block;width:100%;padding:12px 16px;border:1px solid var(--site-border);border-radius:16px;background:var(--site-panel);color:var(--site-text);font:inherit}
+input[type=text],textarea{display:block;width:100%;padding:12px 16px;border:1px solid var(--site-border);border-radius:var(--site-radius-control);background:var(--site-panel);color:var(--site-text);font:inherit}
 input::placeholder{color:var(--site-muted)}
 textarea{resize:vertical;min-height:120px}
 .supplement-label{display:block;margin:12px 0 6px;color:var(--site-muted);font-size:13px}
@@ -21,7 +21,7 @@ textarea{resize:vertical;min-height:120px}
 .related-question+.related-question{margin-top:16px}
 .related-question legend{padding:0;font-size:15px}
 .privacy{margin-bottom:18px}
-#submitProfile{display:inline-flex;align-items:center;gap:18px;min-height:48px;padding:10px 26px;border:1px solid var(--site-accent);border-radius:999px;font:500 14px/1.5 var(--site-font);background:var(--site-accent);color:var(--site-on-accent);cursor:pointer}
+#submitProfile{display:inline-flex;align-items:center;gap:18px;min-height:48px;padding:10px 26px;border:1px solid var(--site-accent);border-radius:var(--site-radius-pill);font:500 14px/1.5 var(--site-font);background:var(--site-accent);color:var(--site-on-accent);cursor:pointer}
 #submitProfile:hover:not(:disabled){background:var(--site-text)}
 #submitProfile:disabled{opacity:.55;cursor:wait}
 .submission-status{margin:16px 0 0;min-height:1.8em;font-size:14px}

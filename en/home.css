@@ -87,7 +87,7 @@
       min-height:52px;
       padding:0 26px;
       border:1px solid var(--line);
-      border-radius:999px;
+      border-radius:var(--site-radius-pill);
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -202,7 +202,7 @@
     .consultation{
       width:100%;max-width:360px;
       padding:16px;
-      border-radius:24px;
+      border-radius:var(--site-radius-panel);
       background:color-mix(in srgb,var(--site-soft) 65%,transparent);
     }
     .consultation-fields{display:grid;gap:10px}
@@ -215,7 +215,7 @@
       display:block;width:100%;min-width:0;
       padding:10px 12px;
       border:1px solid color-mix(in srgb,var(--site-border) 75%,transparent);
-      border-radius:18px;
+      border-radius:var(--site-radius-control);
       background:color-mix(in srgb,var(--site-bg) 70%,transparent);
       color:var(--site-text);
       font:400 15px/1.5 var(--site-font);
@@ -223,7 +223,7 @@
     }
     .consultation :is(input,textarea)::placeholder{color:color-mix(in srgb,var(--site-text) 65%,var(--site-bg));opacity:1;font-weight:300}
     .consultation textarea{resize:vertical;min-height:84px}
-    .consultation .button{min-height:38px;padding:0 20px;margin-top:12px;cursor:pointer;font-size:13px;font-weight:500;border-radius:999px}
+    .consultation .button{min-height:38px;padding:0 20px;margin-top:12px;cursor:pointer;font-size:13px;font-weight:500;border-radius:var(--site-radius-pill)}
     .consultation .button:disabled{cursor:default;opacity:.65}
     .consultation-status{min-height:40px;margin:8px 0 0;font-size:12px;line-height:1.65;color:var(--site-muted)}
     .consultation-status[data-state="error"]{color:var(--site-error)}
@@ -391,7 +391,7 @@
       html{scroll-behavior:auto}
       *{transition:none!important}
     }
-  
+
 /* English-only typesetting. The Chinese homepage remains untouched. */
 .hero h1{font-size:clamp(60px,5.7vw,80px);letter-spacing:-.045em}
 .hero .intro{max-width:31em}

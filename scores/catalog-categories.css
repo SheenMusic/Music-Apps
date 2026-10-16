@@ -1,17 +1,17 @@
 /* Disclosure layout used only by /scores/; product styles stay unchanged. */
 .scores-catalog .score-categories{display:grid;gap:16px}
-.scores-catalog .score-category{min-width:0;border:1px solid var(--site-border);border-radius:var(--site-card-radius);scroll-margin-top:24px}
+.scores-catalog .score-category{min-width:0;border:1px solid var(--site-border);border-radius:var(--site-radius-card);scroll-margin-top:24px}
 .scores-catalog .score-category-heading{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 30px;list-style:none;cursor:pointer;min-height:100px;border-radius:inherit}
 .scores-catalog .score-category-heading::-webkit-details-marker{display:none}
 .scores-catalog .score-category-heading:hover{background:var(--site-soft)}
 .scores-catalog .score-category-label{display:grid;gap:8px;min-width:0}
 .scores-catalog .score-category-title{font-size:24px;line-height:1.5;font-weight:500}
 .scores-catalog .score-category-subtitle{font-size:12px;line-height:1.6;letter-spacing:.06em;color:var(--site-muted)}
-.scores-catalog .score-category-indicator{position:relative;width:18px;height:18px;flex:none;color:var(--site-muted)}
-.scores-catalog .score-category-indicator::before,.scores-catalog .score-category-indicator::after{content:"";position:absolute;top:8px;left:1px;width:16px;height:1px;background:currentColor}
-.scores-catalog .score-category-indicator::after{transform:rotate(90deg);transition:transform .16s ease}
-.scores-catalog .score-category[open] .score-category-indicator::after{transform:rotate(0)}
+
+
+
+
 .scores-catalog .score-category-content{padding:8px 30px 30px}
 .scores-catalog .score-category-content .score-card{background:var(--site-bg)}
 @media(max-width:599px){.scores-catalog .score-categories{gap:12px}.scores-catalog .score-category-heading{padding:22px 20px;min-height:96px}.scores-catalog .score-category-title{font-size:21px}.scores-catalog .score-category-content{padding:4px 16px 20px}}
-@media(prefers-reduced-motion:reduce){.scores-catalog .score-category-indicator::after{transition:none}}
+@media(prefers-reduced-motion:reduce){}
