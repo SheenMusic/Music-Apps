@@ -1,6 +1,6 @@
 # Music-Apps 课程通用设计与维护规范
 
-状态：现行规范，2026-10-17 修订。MT Learning 的专项教学规范（v1.1.0，按人工预览反馈修订全课排版与交互）见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
+状态：现行规范，2026-10-17 修订。MT Learning 的专项教学规范（v1.1.1，按人工预览反馈统一排版、垂直居中与渐进滚动）见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
 
 ## 权威来源与边界
 

@@ -67,7 +67,7 @@
     byID('compoundPair').textContent = `${compoundDegree} 度 − 7 → ${names[compoundDegree - 9]}度`;
     byID('lessonBoard').querySelectorAll('[data-degree]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.degree)===compoundDegree)));
   }
-  const explanationTemplate = byID('lessonContent').innerHTML;
+  const explanationTemplate = byID('reviewExplanation').innerHTML;
   function renderModuleContent() {
       const module = modules[current];
       byID('moduleNumber').textContent = `复习 ${String(current+1).padStart(2,'0')}`;
@@ -83,7 +83,7 @@
         link.append(text,arrow);return link;
       }));
   }
-  const lessonView = TheoryLesson.create({board:byID('lessonBoard'),explanation:byID('lessonContent')});
+  const lessonView = TheoryLesson.create({board:byID('lessonBoard'),explanation:byID('reviewExplanation'),viewport:byID('lessonContent')});
   const moduleSteps = modules.map(module=>({
     id:`review-${module.group}`,kind:'new-concept',groupId:module.group,
     boardKey:module.group,size:'expanded',

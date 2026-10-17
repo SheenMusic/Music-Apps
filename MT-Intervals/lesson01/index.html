@@ -30,7 +30,7 @@
 
 <section class="card lesson hidden" id="lesson">
  <div id="lessonBoard" class="lesson-board"></div>
- <div id="stepBody" class="lesson-content"></div>
+ <div id="stepBody" class="lesson-content"><div id="stepExplanation" class="theory-explanation"></div></div>
 </section>
 
 <section class="card hidden lesson-complete" id="summary">
@@ -50,7 +50,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
 <script src="../shared/learning/theory-lesson.js"></script>
 <script>
-const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepBody'),board=$('#lessonBoard');
+const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepExplanation'),board=$('#lessonBoard');
 let current=0, audioCtx=null;
 const learningState={q2:null,q3:null,q4:null,flat4:false,degree5:0,odd5:'ll',even5:'ls',build6:null,mode7:'up',example8:null,pitch8:null,example9a:'e4',example9b:'fs4'};
 const noteFreq={c4:261.626,cs4:277.183,d4:293.665,ds4:311.127,e4:329.628,f4:349.228,fs4:369.994,g4:391.995,gs4:415.305,a4:440,as4:466.164,b4:493.883,c5:523.251,d5:587.33,e5:659.255,f5:698.456,g5:783.991};
@@ -685,7 +685,7 @@ const steps=[
  explanation(){return `<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的度数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-degree-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-degree-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-degree-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-degree-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-degree-answer="6" type="button">〇&nbsp; 6</button></div></div>`;},
  mount(){bindChoiceQuiz('6','data-degree-answer');}}
 ];
-const lessonView=TheoryLesson.create({board,explanation:body});
+const lessonView=TheoryLesson.create({board,explanation:body,viewport:$('#stepBody')});
 TheoryLesson.progress(0,steps.length,'教学步骤');
 updateHeaderLessonCount(-1);
 new ResizeObserver(alignBoardRoleLabels).observe(board);

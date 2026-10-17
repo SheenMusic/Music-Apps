@@ -170,23 +170,23 @@ test('explicit continuation appends existing nodes; text-only steps retain board
  try{
   const c=await open(browser,server.url,files[0]),p=c.page;
   await p.locator('#startLearning').click();
-  await p.evaluate(()=>{window.__first=document.querySelector('#stepBody').firstElementChild;});
+  await p.evaluate(()=>{window.__first=document.querySelector('#stepExplanation').firstElementChild;});
   await p.locator('#nextBtn').click();await settle(p);
-  assert.equal(await p.evaluate(()=>__first===document.querySelector('#stepBody').firstElementChild),true,'keep existing paragraph node');
+  assert.equal(await p.evaluate(()=>__first===document.querySelector('#stepExplanation').firstElementChild),true,'keep existing paragraph node');
   assert.equal(await p.locator('#stepBody p').count(),2);
   await p.locator('#prevBtn').click();assert.equal(await p.locator('#stepBody p').count(),1,'no unrevealed future text');
   await p.evaluate(()=>showStep(9,false));await settle(p);
-  await p.evaluate(()=>{window.__svg=document.querySelector('#lessonBoard svg');window.__first=document.querySelector('#stepBody').firstElementChild;});
+  await p.evaluate(()=>{window.__svg=document.querySelector('#lessonBoard svg');window.__first=document.querySelector('#stepExplanation').firstElementChild;});
   await p.locator('#nextBtn').click();await settle(p);
   assert.equal(await p.evaluate(()=>__svg===document.querySelector('#lessonBoard svg')),true,'text-only continuation must retain VexFlow');
-  assert.equal(await p.evaluate(()=>__first===document.querySelector('#stepBody').firstElementChild),true);
+  assert.equal(await p.evaluate(()=>__first===document.querySelector('#stepExplanation').firstElementChild),true);
   // Explicit knowledge switch resets the cumulative text, not every Next.
   await p.evaluate(()=>showStep(14,false));assert.equal(await p.locator('#stepBody p').count(),1);
   const geometry=await p.locator('#lessonBoard').boundingBox();
   await p.evaluate(()=>{window.__scrollCalls=[];const e=document.querySelector('#stepBody');e.scrollTo=function(o){__scrollCalls.push(o);HTMLElement.prototype.scrollTo.call(this,o)};});
   for(let i=15;i<=20;i++){await p.locator('#nextBtn').click();await settle(p);}
   const result=await p.evaluate(()=>{
-   const e=document.querySelector('#stepBody'),last=e.lastElementChild,r=last.getBoundingClientRect(),v=e.getBoundingClientRect();
+   const e=document.querySelector('#stepBody'),last=e.firstElementChild.lastElementChild,r=last.getBoundingClientRect(),v=e.getBoundingClientRect();
    return {top:e.scrollTop,calls:__scrollCalls,bottom:r.bottom,visibleBottom:v.bottom,window:scrollY,animation:getComputedStyle(last).animationName};
   });
   assert(result.top>0);assert(result.calls.every(c=>c.behavior==='instant'));assert(result.bottom<=result.visibleBottom+1);assert.equal(result.window,0);assert.equal(result.animation,'none');
@@ -212,11 +212,13 @@ test('responsive full content, fixed regions, typography, themes, real VexFlow a
     const exp=document.querySelector('.lesson-content'),board=document.querySelector('#lessonBoard'),nav=document.querySelector('.lesson-nav');
     return {pageWidth:document.documentElement.scrollWidth,viewport:innerWidth,window:scrollY,board:r(board),exp:r(exp),nav:r(nav),expWidth:exp.scrollWidth,bodySize:getComputedStyle(exp).fontSize,leading:getComputedStyle(exp).lineHeight,
      bg:getComputedStyle(document.body).backgroundColor,text:getComputedStyle(exp).color,cardRadius:getComputedStyle(document.querySelector('#lesson')).borderRadius,bodyPad:getComputedStyle(document.body).paddingTop,
-     height:innerHeight,boardScroll:board.scrollHeight,boardClient:board.clientHeight};
+     inner:r(exp.firstElementChild),scroll:exp.scrollTop,client:exp.clientHeight,height:innerHeight,boardScroll:board.scrollHeight,boardClient:board.clientHeight};
    });
    assert(d.pageWidth<=width,JSON.stringify(d));assert(d.exp.height>=60,'reading area too short '+JSON.stringify(d));
    assert(d.nav.bottom<=height&&d.nav.y>=d.exp.bottom-1,'navigation overlaps explanation '+JSON.stringify(d));
    assert(d.expWidth<=d.exp.width+1,'explanation horizontal overflow '+JSON.stringify(d));
+   if(d.inner.height<=d.client+.5)assert(Math.abs(d.inner.y+d.inner.height/2-d.exp.y-d.exp.height/2)<1,'short content must be vertically centered '+JSON.stringify(d));
+   else {const start=d.inner.y-d.exp.y+d.scroll;assert(Math.abs(start)<1,'overflow must start at reachable offset zero '+JSON.stringify(d));}
    assert.equal(d.bodySize,'16px');assert.equal(d.cardRadius,'14px');assert.equal(d.window,0);assert.equal(d.bodyPad,'10px');
    assert(!/谱例暂时无法显示|五线谱组件未载入/.test(await p.locator('#lessonBoard').textContent()),'notation renderer fallback');
    const header=await p.locator('.topbar').evaluate(e=>{const a=e.firstElementChild.getBoundingClientRect(),b=e.lastElementChild.getBoundingClientRect();return {left:a.right,right:b.left};});
@@ -338,11 +340,12 @@ test('preview feedback: actual smooth continuation, manual takeover, cached retu
     const e=document.querySelector('.lesson-content'),samples=[];
     for(let i=start+1;i<=end;i++){
      showStep(i);const step=[];
-     for(let j=0;j<35;j++){await new Promise(r=>requestAnimationFrame(r));const last=e.lastElementChild;step.push({time:performance.now(),scroll:e.scrollTop,firstTop:e.firstElementChild.getBoundingClientRect().top,opacity:getComputedStyle(last).opacity,pending:last.classList.contains('theory-pending'),lastBottom:last.getBoundingClientRect().bottom,regionBottom:e.getBoundingClientRect().bottom,window:scrollY});}
+     for(let j=0;j<35;j++){await new Promise(r=>requestAnimationFrame(r));const last=e.firstElementChild.lastElementChild;step.push({time:performance.now(),scroll:e.scrollTop,firstTop:e.firstElementChild.firstElementChild.getBoundingClientRect().top,opacity:getComputedStyle(last).opacity,pending:last.classList.contains('theory-pending'),lastBottom:last.getBoundingClientRect().bottom,regionBottom:e.getBoundingClientRect().bottom,window:scrollY});}
      samples.push(step);
     }
     return samples;
    },{start,end});
+   evidence.push({lesson:l+1,frames});
    assert(frames.flat().some(f=>Number(f.opacity)>0&&Number(f.opacity)<1),'must observe real reveal frames');
    assert(frames.some(step=>new Set(step.map(s=>s.scroll.toFixed(1))).size>3),'must observe multiple intermediate scroll positions');
    assert(frames.flat().every(f=>f.window===0));assert.deepEqual(await p.locator('#lessonBoard').boundingBox(),fixed);assert.deepEqual(await p.locator('.lesson-content').boundingBox(),center);
@@ -350,10 +353,10 @@ test('preview feedback: actual smooth continuation, manual takeover, cached retu
     assert(step.at(-1).lastBottom<=step.at(-1).regionBottom+1,'new paragraph remains clipped after smooth motion');
     for(let i=1;i<step.length;i++){
      assert(step[i].scroll>=step[i-1].scroll-1,'scroll should move continuously forward');
-     assert(Math.abs(step[i].firstTop+step[i].scroll-step[0].firstTop-step[0].scroll)<1,'old text must move only with container scrolling');
+     assert(step[i].firstTop<=step[i-1].firstTop+1,'old text must move continuously upward with centering and scrolling');
     }
    }
-   await p.screenshot({path:path.join(OUT,`feedback-mt0${l+1}-smooth-end.png`),caret:'initial'});evidence.push({lesson:l+1,frames});
+   await p.screenshot({path:path.join(OUT,`feedback-mt0${l+1}-smooth-end.png`),caret:'initial'});
    // A wheel gesture before the queued positioning runs must expose the new
    // text, cancel auto-positioning and leave the reader's chosen offset alone.
    await p.reload();await settle(p);
@@ -383,6 +386,7 @@ test('preview feedback: shared arrow navigation, touch hint detection and native
    await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),true);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'hint must not shift navigation');
    await p.keyboard.press('ArrowUp');assert.equal(await id(),first);
    await p.keyboard.press('ArrowDown');assert.notEqual(await id(),first);await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
+   await p.locator('.lesson-content').focus();await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first,'focused reading region must retain left/right step navigation');await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
    if(l<2){await p.evaluate(l=>showStep(l===0?13:3,false),l);const quiz=await id();await p.locator('.quiz-option').first().focus();await p.keyboard.press('ArrowRight');assert.equal(await id(),quiz);assert.equal(await p.locator('#nextBtn').isDisabled(),true);}
    else{await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();const stage=await id();await p.locator('#invertButton').focus();await p.keyboard.press('ArrowLeft');assert.equal(await id(),stage);await p.keyboard.press('Space');assert.equal(await p.locator('#invertButton').getAttribute('aria-pressed'),'true');}
    await p.evaluate(()=>{const x=document.createElement('input');x.id='key-test-input';document.querySelector('.lesson-content').append(x);x.focus();});const before=await id();await p.keyboard.press('ArrowRight');assert.equal(await id(),before);await p.keyboard.type('text');assert.equal(await p.locator('#key-test-input').inputValue(),'text');
@@ -403,6 +407,109 @@ test('preview feedback: real VexFlow standalone start bars hidden, meaningful in
    const dividers=await p.locator('#lessonBoard svg line').evaluateAll(lines=>lines.filter(e=>e.getAttribute('x1')===e.getAttribute('x2')).length);assert(l===0?dividers>0:await p.locator('#lessonBoard .vf-barnote').count()>0,'course-specific structural measure divider remains');
    await p.screenshot({path:path.join(OUT,`feedback-mt0${l+1}-structural-bars.png`),caret:'initial'});
    assert.deepEqual(c.errors,[]);
+  }finally{await c.context.close();}
+ }}finally{await browser.close();await server.close();}
+});
+
+test('vertical reading: requested screenshots and continuous real-time FLIP frames',async()=>{
+ fs.mkdirSync(OUT,{recursive:true});const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const evidence=[];
+ try{
+  for(const [l,width,height,indices] of [[0,1280,900,[0,4,8]],[1,1280,900,[0,2]],[0,390,844,[0]],[0,844,390,[0]]]){
+   const c=await open(browser,server.url,files[l],{width,height,touch:width<1100}),p=c.page;
+   try{for(const i of indices){await p.evaluate(i=>showStep(i,false),i);await settle(p);await p.screenshot({path:path.join(OUT,`vertical-mt0${l+1}-step${i+1}-${width}x${height}.png`),caret:'initial'});}}finally{await c.context.close();}
+  }
+  for(const l of [0,1]){
+   const c=await open(browser,server.url,files[l],{width:1280,height:900,motion:'no-preference'}),p=c.page;
+   try{
+    const begin=l===0?5:0,end=l===0?8:2;
+    await p.evaluate(i=>showStep(i,false),begin);await settle(p);
+    const framesDir=path.join(OUT,`mt0${l+1}-continuous-frames`);fs.mkdirSync(framesDir,{recursive:true});
+    const client=await c.context.newCDPSession(p),captures=[];
+    client.on('Page.screencastFrame',event=>{
+     const file=path.join(framesDir,`${String(captures.length).padStart(4,'0')}.png`);
+     fs.writeFileSync(file,Buffer.from(event.data,'base64'));captures.push({file,time:event.metadata.timestamp});
+     void client.send('Page.screencastFrameAck',{sessionId:event.sessionId});
+    });
+    await client.send('Page.startScreencast',{format:'png',maxWidth:1280,maxHeight:900,everyNthFrame:1});
+    const samples=await p.evaluate(async({begin,end})=>{
+     const viewport=document.querySelector('.lesson-content'),inner=viewport.firstElementChild,results=[];
+     for(let i=begin+1;i<=end;i++){
+      const retained=inner.firstElementChild,previousY=retained.getBoundingClientRect().top;showStep(i);const initialY=retained.getBoundingClientRect().top,frames=[];
+      for(let n=0;n<32;n++){await new Promise(r=>requestAnimationFrame(r));frames.push({time:performance.now(),top:retained.getBoundingClientRect().top,scroll:viewport.scrollTop,opacity:getComputedStyle(inner.lastElementChild).opacity,page:scrollY});}
+      results.push({step:i+1,previousY,initialY,frames});
+     }return results;
+    },{begin,end});
+    await client.send('Page.stopScreencast');await client.detach();
+    evidence.push({lesson:l+1,samples,captures});
+    for(const step of samples){
+     const ys=step.frames.map(f=>f.top),last=ys.at(-1);
+     assert(Math.abs(step.initialY-step.previousY)<.6,'layout commit must preserve old text position before motion');
+     assert(step.previousY-last>10,'old text must actually move upward');
+     assert(new Set(ys.filter(y=>y>last+.5&&y<step.previousY-.5).map(y=>y.toFixed(1))).size>=4,'must observe multiple intermediate FLIP positions');
+     assert(step.frames.every(f=>f.scroll===0&&f.page===0),'fitting paragraphs must move without scrolling either viewport or page');
+     assert(step.frames.some(f=>Number(f.opacity)>0&&Number(f.opacity)<1));
+    }
+    assert(captures.length>8,'capture actual animation frames');
+    const concat=captures.map((f,i)=>`file '${f.file}'\nduration ${Math.max(.001,(captures[i+1]?.time||f.time+.04)-f.time)}`).join('\n');
+    const manifest=path.join(framesDir,'timing.txt');fs.writeFileSync(manifest,concat+'\n');
+    cp.execFileSync('/usr/bin/ffmpeg',['-hide_banner','-loglevel','error','-y','-f','concat','-safe','0','-i',manifest,'-vsync','vfr','-c:v','libvpx-vp9','-pix_fmt','yuv420p',path.join(OUT,`mt0${l+1}-continuous.webm`)]);
+    assert.deepEqual(c.errors,[]);assert.deepEqual(c.missing,[]);
+   }finally{await c.context.close();}
+  }
+ }finally{fs.writeFileSync(path.join(OUT,'vertical-motion.json'),JSON.stringify(evidence,null,2));await browser.close();await server.close();}
+});
+test('vertical reading: threshold, oversized paragraph, snapshot return, keyboard takeover and reduced motion',async()=>{
+ const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(const motion of ['no-preference','reduce']){
+  const c=await open(browser,server.url,files[0],{width:1280,height:900,motion}),p=c.page;
+  try{
+   await p.locator('#startLearning').click();
+   // Deterministic test-only content: fixed viewport, exact fit, slight overflow,
+   // then a paragraph taller than the viewport. Production course text is untouched.
+   await p.evaluate(()=>{
+    const viewport=document.querySelector('.lesson-content'),inner=viewport.firstElementChild;
+    viewport.style.height='220px';viewport.style.flex='none';viewport.style.alignSelf='center';
+    window.__view=TheoryLesson.create({board:document.querySelector('#lessonBoard'),explanation:inner,viewport});
+    const paragraph=(n,height)=>`<p data-fixture="${n}" style="height:${height}px;margin:0">测试段落 ${n}</p>`;
+    window.__fixtureSteps=[
+     {id:'short',kind:'new-concept',explanation:()=>paragraph(1,80)},
+     {id:'fit',kind:'continuation',explanation:()=>paragraph(1,80)+paragraph(2,120)},
+     {id:'overflow',kind:'continuation',explanation:()=>paragraph(1,80)+paragraph(2,120)+paragraph(3,45)},
+     {id:'long',kind:'continuation',explanation:()=>paragraph(1,80)+paragraph(2,120)+paragraph(3,45)+paragraph(4,400)}
+    ].map(s=>({...s,groupId:'test',boardKey:'test',size:'compact'}));
+    __view.show(__fixtureSteps[0]);
+   });
+   const measurements=()=>p.locator('.lesson-content').evaluate(e=>({top:e.firstElementChild.getBoundingClientRect().top-e.getBoundingClientRect().top,height:e.firstElementChild.getBoundingClientRect().height,viewport:e.clientHeight,scroll:e.scrollTop,max:e.scrollHeight-e.clientHeight}));
+   assert.equal((await measurements()).top,70);
+   const frames=await p.evaluate(async()=>{
+    const e=document.querySelector('.lesson-content'),inner=e.firstElementChild,frames=[];
+    __view.show(__fixtureSteps[1],{forward:true});await new Promise(r=>setTimeout(r,500));
+    const previous=inner.firstElementChild.getBoundingClientRect().top;
+    __view.show(__fixtureSteps[2],{forward:true});const initial=inner.firstElementChild.getBoundingClientRect().top;
+    for(let i=0;i<36;i++){await new Promise(r=>requestAnimationFrame(r));frames.push({top:inner.firstElementChild.getBoundingClientRect().top,previous,initial,scroll:e.scrollTop});}return frames;
+   });
+   if(motion==='no-preference'){
+    assert(Math.abs(frames[0].initial-frames[0].previous)<.6,'threshold must preserve old text before motion '+JSON.stringify(frames[0]));
+    assert(new Set(frames.map(f=>f.top.toFixed(2))).size>5,'threshold must animate continuously');
+   }else assert.equal(await p.locator('.theory-explanation').evaluate(e=>e.getAnimations().length),0);
+   let m=await measurements();assert.equal(m.height,245);assert.equal(m.max,25);assert(Math.abs(m.top+m.scroll)<1);
+   // A real reader chooses an offset, moves back twice into centered content,
+   // then forward again. Snapshots must retain both node count and scroll.
+   await p.locator('.lesson-content').evaluate(e=>e.scrollTop=12);
+   await p.evaluate(()=>__view.show(__fixtureSteps[1]));m=await measurements();assert.equal(m.top,10);assert.equal(m.scroll,0);
+   await p.evaluate(()=>__view.show(__fixtureSteps[0]));assert.equal((await measurements()).top,70);assert.equal(await p.locator('[data-fixture]').count(),1);
+   await p.evaluate(()=>__view.show(__fixtureSteps[1],{forward:true}));assert.equal((await measurements()).top,10);
+   await p.evaluate(()=>__view.show(__fixtureSteps[2],{forward:true}));assert.equal((await measurements()).scroll,12);assert.equal(await p.locator('[data-fixture]').count(),3);
+   await p.evaluate(()=>__view.show(__fixtureSteps[3],{forward:true}));await p.waitForTimeout(650);
+   const long=await p.locator('[data-fixture="4"]').boundingBox(),viewport=await p.locator('.lesson-content').boundingBox();
+   assert(long.y>=viewport.y-1&&long.y<=viewport.y+7,'oversized paragraph must start at its top, not its bottom');
+   await p.locator('.lesson-content').evaluate(e=>e.scrollTop=e.scrollHeight);m=await measurements();assert.equal(m.scroll,m.max);
+   await p.locator('.lesson-content').focus();const id=await p.locator('.lesson-content').getAttribute('data-step-id');
+   await p.keyboard.press('Home');await p.waitForTimeout(400);assert.equal((await measurements()).scroll,0);assert.equal(await p.locator('.lesson-content').getAttribute('data-step-id'),id,'reading keys must not navigate');
+   await p.evaluate(()=>{__view.show({...__fixtureSteps[3],id:'fresh-long'},{forward:true});document.querySelector('.lesson-content').dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));document.querySelector('.lesson-content').scrollTop=19;});
+   await p.waitForTimeout(650);assert.equal((await measurements()).scroll,19,'keyboard takeover must cancel queued auto-positioning');
+   assert.deepEqual(c.errors,[]);assert.deepEqual(c.missing,[]);
   }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}
 });

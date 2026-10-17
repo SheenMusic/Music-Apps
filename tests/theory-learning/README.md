@@ -1,6 +1,6 @@
 # MT Learning 共享框架：实施与验证记录
 
-> 首次实施记录截至 `23dd0b6`；当前人工预览修订见文末 v1.1.0。下述首次字号、规模与测试数量属于当时结果。
+> 首次实施记录截至 `23dd0b6`；当前人工预览修订见文末 v1.1.0/v1.1.1。下述首次字号、规模与测试数量属于当时结果。
 
 日期：2026-10-17。起点：最新远程 main `3eae716095bd2941f4508184ff074d5df51dd18b`，本地最初为干净的 `work@73d6884`；远程只新增了本任务必读专项规范。独立工作分支 `refactor/mt-learning-framework`，不推送、不合并、不部署。
 
@@ -97,3 +97,37 @@ git diff --check
 本轮最终结果：Learning整套57项通过、0失败；另以触控设备模拟复核三课×五视口的层级、水平中心和演示按钮触达（1项测试、15场景）通过。连续帧验证覆盖新文渐显、滚动中间位置、旧文仅随容器移动，以及真实 wheel 对已开始平滑滚动的接管。Practice报告35项、相关UI18项、既有行为4项通过（另3项既有TODO）；Dashboard逻辑8组和学生工具检查通过。JavaScript语法、资源路径和git diff检查通过。未修改非目标页面。
 
 日志：`/tmp/mt-learning-v1.1-accepted.log`、`/tmp/mt-learning-v1.1-touch.log`、`/tmp/mt-learning-practice-regression.log`、`/tmp/mt-learning-behavior-regression.log`、`/tmp/mt-learning-ui-regression.log`。首轮谱表专项测试误把 MT02 的 BarNote 内部分隔当成手绘 SVG line，已按实际组件类型校正断言；未因此修改或删除原结构线。首轮日志仍保留在 `/tmp/mt-learning-feedback.log`，不把它改写为通过。
+
+## v1.1.1：垂直居中与渐进滚动修正（2026-10-17）
+
+实施起点为干净的 `refactor/mt-learning-framework@58c42f5de00dc8afadd798a56e793e9c33bf5e50`。本次仅修改三课的内容包装层接入、共享显示 CSS/运行时、规范和相关测试；保留16px/1.85及已有层级、34rem阅读宽度、全部原文/Quiz/谱例/音频参数。
+
+### 布局及状态契约
+
+- `.lesson-content` 是固定的、可聚焦的滚动视口，内部新增 `.theory-explanation`。外层纵向 flex、内层 `flex:none; margin-block:auto`：空间足够时上下等分，溢出时自动外边距归零，首行从滚动起点可达。无需每帧 JavaScript 改写 top/margin，也不在滚动视口上使用强制 center。
+- 原 `body` 内容操作仍指向内部文字/Quiz 容器；快照保留内部节点与外层滚动位置。短内容返回、溢出返回及再次前进均由同一 CSS 恢复居中或顶部模式。
+- continuation 提交前后记录内容层位置，以240ms Web Animations FLIP 平滑移动旧文字，新段落轻微渐显。定位只滚讲解视口，并在变换前测量、限制自然滚动范围；过长新段优先显示段首。
+- 滚轮/触摸/指针/键盘阅读取消等待或执行中的自动定位。聚焦溢出阅读区时上/下方向键用于原生滚动，左/右仍能导航；减少动态模式不创建过渡动画。清理动画 class 时恢复原本无 class 的属性状态，避免前缀匹配失败而重建旧段落。
+
+### 本轮验证与证据
+
+复核命令：
+
+```sh
+THEORY_ARTIFACT_DIR=/tmp/mt-learning-vertical-final node --test tests/theory-learning/learning.test.cjs
+node --test tests/practice-report/*.test.cjs
+node --test --test-name-pattern='ET05:|ET06:|MT03:|Known defects:|Desired ' tests/course-baseline/baseline.test.cjs
+UI_CASES=teacher,student,practice,settings node --test --test-name-pattern='desktop/mobile|five live' tests/ui-components/ui.test.cjs
+node scripts/test-dashboard-logic.mjs
+node scripts/test-student-tools.mjs
+```
+
+- Learning：完整59项通过、0失败；随后针对最终键盘焦点规则及源码保护的定向复核2项通过。原有49个教学步骤与固定原课程的文本、音符、键盘高亮、门槛及音频映射仍严格对照；完整23/26步及MT06四模块、Quiz答错/恢复、真实音频资源解码、谱表起始/内部/结束小节线均验证。
+- 原有42个视口/主题场景（3课 × 7视口 × Light/Dark）遍历53个教学步骤，共742个逐步布局检查；新增每步内容高度与中心/顶部可达性断言。触控模拟另测三课×五视口。
+- 新增可控临界案例：80px/200px内容在220px视口分别留70px/10px顶部空隙；245px内容转为25px滚动范围。继续追加400px单段，验证段首可见及末尾可达；多次返回、重新前进恢复原节点数与12px手动滚动位置，键盘接管取消延迟定位；同场景覆盖减少动态。
+- 首次全套运行与其他浏览器回归并发时有2项动效采样失败（旧文字单调移动、中间帧数），原始日志 `/tmp/mt-vertical-full.log` 保留。未放宽断言；定向复核通过，其他回归完成后独立串行执行全套59项通过，最终日志 `/tmp/mt-vertical-full-final.log`。
+- 新增真实 Chromium RAF 连续帧记录及 CDP PNG 帧录制，使用系统已有 ffmpeg 按真实时间戳生成 MT01/02 的 WebM；未放慢课程动画或注入替代动效。记录包含旧段落初始/中间/最终Y、scrollTop、新段透明度及整页滚动。帧数断言需避免与其他浏览器测试并发，防止重负载丢帧。
+- 指定截图位于 `/tmp/mt-learning-vertical-final/vertical-mt01-step{1,5,9}-1280x900.png`、`vertical-mt02-step{1,3}-1280x900.png`、`vertical-mt01-step1-{390x844,844x390}.png`。手机截图使用触控模拟；`mt01-continuous.webm` / `mt02-continuous.webm`、对应 `*-continuous-frames/` 与 `vertical-motion.json` 提供实际连续动画证据，`smooth-motion.json` 提供独立溢出滚动证据。
+- 报告回归35项、相关UI18项、既有行为4项通过，另3项既有TODO（ET音区、麦克风生命周期、MT03返回首页）保持未实现。Dashboard逻辑8组和学生工具测试通过。源码、语法、资源引用及非目标CSS隔离检查通过。
+
+浏览器为本机 Chromium，视口/触控模拟不等于真实 iPhone/iPad Safari；真实安全区、VoiceOver和实际扬声器听感仍未验证。截图、视频、临时日志仅在 `/tmp`，不提交到正式网站；未新增依赖。此前测试记录和历史证据保留。本次只推送功能分支并更新 Draft PR #1，不合并 main，不部署。
