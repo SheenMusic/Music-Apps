@@ -1,5 +1,7 @@
 # 全课程视觉与CSS统一完成报告
 
+> 历史记录：以下保留当时的实施与测试结论，不代表现行课程设计要求。当前 MT Learning 规范见 `interactive-theory-lesson-standard.md`；全课程通用边界见 `course-design-system.md`。
+
 ## 版本与范围
 
 从集成提交 `9a4ae6b260feb4f25605bbf2ba335b116241d52a` 建立本地分支 `refactor/course-visual-system`。原未跟踪审计报告原样保留，SHA-256为 `6bd32d6fa65cd4af7496db744ec4e52247a4275ce4c9078114f1d0f6de1ddeaa`；历史Phase0/1视觉、栅格与审批材料未删除或覆盖。没有推送、合并或部署。

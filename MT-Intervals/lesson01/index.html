@@ -1,616 +1,20 @@
 <!DOCTYPE html>
-<html data-visual="learning" lang="zh-CN">
+<html data-visual="learning" data-theory-lesson lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>乐理 · 音程 01｜互动学习</title>
-<style>
-:root{--primary:#6366f1;--primary-hover:#4f46e5;--bg:#f8fafc;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--success:#10b981;--success-bg:#ecfdf5;--error:#ef4444;--error-bg:#fef2f2;--radius-lg:var(--site-radius-card);--radius-md:var(--site-radius-control);--shadow:0 10px 25px -5px rgba(0,0,0,.05),0 8px 10px -6px rgba(0,0,0,.01)}
-*{box-sizing:border-box;margin:0;padding:0} body{background:var(--bg);color:var(--text);font-family:var(--site-font);font-weight:300;display:flex;justify-content:center;min-height:100vh;padding:20px 10px}.app{width:100%;max-width:520px;display:flex;flex-direction:column;min-height:calc(100vh - 40px)}
-header{margin-bottom:16px}.topbar{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;letter-spacing:.5px;color:var(--muted);margin-bottom:12px}.lesson-badge{background:#eef2ff;color:var(--primary);padding:4px 9px;border-radius:var(--site-radius-pill)}.progress-wrap{height:8px;background:#e2e8f0;border-radius:var(--site-radius-pill);overflow:hidden;margin-bottom:10px}.progress{height:100%;width:0;background:linear-gradient(90deg,#818cf8,var(--primary));transition:width .3s;border-radius:var(--site-radius-pill)}.meta{display:none}.card{background:var(--card);border:1px solid var(--border);border-radius:var(--site-radius-card);box-shadow:var(--shadow);padding:24px;margin-bottom:14px}.hidden{display:none!important}.kicker{font-size:.76rem;color:var(--primary);font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:8px}h1{font-size:1.55rem;line-height:1.35;margin-bottom:8px}h2{font-size:1.25rem;line-height:1.4;margin-bottom:10px}.subtitle{color:var(--muted);line-height:1.65;font-size:.92rem}.lead{font-size:1.05rem;line-height:1.75;color:#475569}.lead strong{color:var(--text)}
-.hero{padding:28px 24px}.hero-rule{height:1px;background:var(--border);margin:20px 0}.home-actions{display:grid;gap:10px;margin-top:22px}button,.btn-link{font:inherit}.primary,.secondary,.ghost,.choice,.degree-btn{border:0;border-radius:var(--site-radius-control);cursor:pointer;transition:.15s;text-decoration:none;text-align:center}.primary{background:var(--primary);color:#fff;font-weight:750;padding:13px 16px}.primary:hover{background:var(--primary-hover)}.secondary{background:#eef2ff;color:var(--primary);font-weight:750;padding:12px 16px}.ghost{background:#fff;color:var(--muted);border:1px solid var(--border);font-weight:650;padding:11px 15px}.secondary:hover,.ghost:hover{filter:brightness(.98)}
-.step-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:16px}.step-no{font-size:.76rem;font-weight:800;color:var(--primary);letter-spacing:.08em}.step-count{font-size:.76rem;color:var(--muted)}.stage{background:#f8fafc;border:1px solid var(--border);border-radius:14px;padding:16px;margin:16px 0}.staff{width:100%;min-height:145px;background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden}.staff.small{min-height:125px}.audio-row,.button-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.audio-btn{flex:1;min-width:105px;background:#eef2ff;color:var(--primary);border:0;border-radius:var(--site-radius-control);padding:10px;font-weight:700;cursor:pointer}.interaction-hint{margin:12px 0 8px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:var(--site-radius-card);color:#9a3412;font-size:.82rem;font-weight:750}.interaction-hint::before{content:"● ";color:#f97316}.interactive-control{box-shadow:0 0 0 2px rgba(249,115,22,.12);border-color:#fb923c!important}.pattern-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px}.pattern-card h3{font-size:.94rem;margin-bottom:4px}.pattern-card .tiny{margin-top:4px}.pattern-cards{display:grid;grid-template-columns:1fr;gap:12px;margin-top:14px}.example-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.example-chip{flex:1;min-width:72px;border:1px solid #c7d2fe;background:#eef2ff;color:#4338ca;border-radius:var(--site-radius-control);padding:8px 6px;font-weight:750;cursor:pointer}.example-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}.term-box{margin-top:14px;padding:13px 14px;border-left:3px solid var(--primary);background:#f5f3ff;border-radius:0 10px 10px 0;font-size:.9rem;line-height:1.65}.rule{margin-top:14px;padding:13px 14px;background:#f8fafc;border:1px solid var(--border);border-radius:var(--site-radius-card);font-size:.9rem;line-height:1.65}.rule strong{color:var(--primary)}
-.choices{display:grid;gap:8px;margin-top:12px}.choice{background:#fff;border:1px solid var(--border);padding:11px 13px;text-align:left;color:var(--text)}.choice:hover{border-color:#a5b4fc}.choice.correct{border-color:#6ee7b7;background:var(--success-bg);color:#047857}.choice.wrong{border-color:#fecaca;background:var(--error-bg);color:#b91c1c}.feedback{min-height:24px;margin-top:9px;font-size:.85rem;font-weight:650}.feedback.ok{color:#047857}.feedback.bad{color:#b91c1c}.degree-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px}.degree-btn{background:#fff;border:1px solid var(--border);padding:9px 2px;font-weight:700;color:var(--muted)}.degree-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}.readout{text-align:center;margin-top:10px;font-weight:800}.readout-sub{text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px}
-.keyboard-wrap{overflow-x:auto;padding-bottom:4px}.keyboard{position:relative;height:148px;min-width:455px;margin:6px auto 0;display:flex}.white-key{position:relative;flex:1;background:#fff;border:1px solid #94a3b8;border-radius:0 0 6px 6px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:9px;font-size:.75rem;font-weight:700;color:#475569;cursor:pointer}.white-key.on{background:#e0e7ff;color:#4338ca}.black-key{position:absolute;z-index:2;width:7.4%;height:88px;background:#1e293b;border-radius:0 0 5px 5px;color:#fff;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;font-size:.65rem;cursor:pointer;transform:translateX(-50%)}.black-key.on{background:#6366f1}.compare{width:100%;border-collapse:collapse;margin-top:12px;font-size:.85rem}.compare th,.compare td{border-bottom:1px solid var(--border);padding:9px;text-align:center}.compare th:first-child,.compare td:first-child{text-align:left;color:var(--muted)}
-.nav{display:flex;gap:10px;margin-top:16px}.nav>*{flex:1}.summary-list{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.summary-item{background:#f8fafc;border:1px solid var(--border);border-radius:var(--site-radius-card);padding:10px;font-size:.84rem}.summary-item:before{content:"✓";color:var(--success);font-weight:900;margin-right:6px}.footer{margin-top:auto;text-align:center;color:#94a3b8;font-size:.75rem;padding:14px 0 2px}.tiny{font-size:.76rem;color:var(--muted);line-height:1.55;margin-top:10px}.note-pills{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:10px}.pill{font-size:.74rem;background:#eef2ff;color:#4f46e5;padding:5px 8px;border-radius:var(--site-radius-pill)}.build-area{position:relative}.build-hint{text-align:center;font-size:.82rem;color:var(--muted);margin-top:8px}.direction-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.interval-mode-label{text-align:center;font-weight:800;color:var(--primary);font-size:1rem;margin:2px 0 10px;min-height:24px}.notation-demo{display:grid;grid-template-columns:1fr;gap:14px;align-items:start}.notation-caption{text-align:center;font-size:.76rem;color:var(--muted);margin-top:6px}.voice-labels{display:flex;justify-content:center;gap:18px;margin-top:4px;font-size:.72rem;color:var(--muted)}.direction-grid button{padding:10px 5px}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:8px}.status{display:inline-block;font-size:.72rem;font-weight:800;padding:4px 8px;border-radius:var(--site-radius-pill);background:#ecfdf5;color:#047857;margin-top:8px}
-/* Lesson 01 opening sequence */
-.intro-flow{position:relative}.intro-scene{padding:4px 0 28px}.intro-definition{font-size:1.12rem;line-height:2.08;color:#475569;margin:2px 0 18px}.intro-definition strong{color:var(--text);font-weight:900}.intro-role-text strong{font-weight:900;color:var(--text)}.key-accent{color:var(--primary);font-weight:900}.intro-stage{background:transparent;border:0;padding:0;margin:10px 0 0}.intro-staff-wrap{position:relative}.intro-staff-wrap .staff{background:#fff}.note-role{position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translateY(10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}.note-role.visible{opacity:1;transform:translateY(0)}.note-role.root{left:calc(32% - 5mm);transform:translate(-50%,10px)}.note-role.crown{left:60%;transform:translate(-50%,10px)}.note-role.root.visible,.note-role.crown.visible{transform:translate(-50%,0)}.intro-second{padding-top:26px;opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}.intro-second.visible{opacity:1;transform:translateY(0)}.intro-role-text{font-size:1.08rem;line-height:2.08;color:#475569;margin-top:20px}.magic-ghost{position:fixed;z-index:9999;margin:0;pointer-events:none;font-weight:800;color:var(--text);transition:all .72s cubic-bezier(.22,.8,.2,1),opacity .2s ease .56s;transform-origin:left top}.step-head{justify-content:flex-end;margin-bottom:12px}.step-head>div:first-child{display:none}.lesson.opening .step-head{display:flex}.lesson.opening #stepBody{padding-top:2px}.lesson{padding-bottom:88px}.lesson .nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);z-index:50;width:min(500px,calc(100% - 20px));margin:0;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:rgba(248,250,252,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--border);border-radius:14px 14px 0 0}.degree-explain{font-size:1.08rem;line-height:2.08;color:#475569;margin:2px 0 18px}.degree-explain strong{font-weight:900;color:var(--text)}.degree-note-names{display:flex;justify-content:center;gap:clamp(10px,4vw,26px);align-items:center;min-height:145px;font-size:1.12rem;font-weight:800;letter-spacing:.02em;color:var(--text)}
-/* Fixed lesson workspace: header / blackboard / scrollable text / controls */
-body.lesson-active{height:100dvh;overflow:hidden;padding-bottom:10px}
-body.lesson-active .app{height:calc(100dvh - 20px);min-height:0}
-body.lesson-active header{flex:0 0 auto;margin-bottom:10px}
-body.lesson-active main{flex:1;min-height:0;display:flex;flex-direction:column}
-body.lesson-active #lesson{flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:0;margin-bottom:8px;overflow:hidden}
-body.lesson-active #lesson.hidden{display:none!important}
-.lesson-board{flex:0 0 auto;position:relative;min-height:0}
-.lesson-board:empty{display:none}
-.lesson-board .intro-stage{margin:0}
-.lesson-board .staff{min-height:145px}
-.lesson-content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 2px 18px;scroll-behavior:smooth}
-body.lesson-active .lesson .nav{position:static;left:auto;bottom:auto;transform:none;flex:0 0 auto;width:auto;margin:8px 0 0;padding:10px 0 0;background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none;border-top:1px solid var(--border);border-radius:0}
-body.lesson-active .footer{flex:0 0 auto;margin-top:0;padding:4px 0 0}
-body.lesson-active .step-head{flex:0 0 auto;margin-bottom:8px}
-.board-role-wrap{position:relative}.board-role-wrap .staff{background:#fff}
-.board-note-role{position:absolute;top:8px;z-index:3;font-size:.78rem;font-weight:900;color:var(--primary);opacity:0;transform:translate(-50%,10px);transition:opacity .55s ease,transform .55s ease;pointer-events:none;white-space:nowrap}
-.board-note-role.visible{opacity:1;transform:translate(-50%,0)}
-.board-note-role.root{left:32%}.board-note-role.crown{left:60%}
-.degree-note-names .endpoint{font-size:1.08rem;font-weight:900;color:var(--text)}
-.degree-note-names .middle{font-size:.84rem;font-weight:650;color:#94a3b8}
-
-/* Stable lesson frame v3 */
-body.lesson-active #lesson{padding:20px 24px;margin-bottom:10px}
-body.lesson-active .lesson-board{height:178px;min-height:178px;max-height:178px;flex:0 0 178px;overflow:hidden;margin:0}
-body.lesson-active .lesson-board:empty{display:block}
-body.lesson-active .lesson-board .staff{height:176px;min-height:176px}
-body.lesson-active .lesson-content{padding:16px 2px 12px;overscroll-behavior:contain}
-.lesson-footer-zone{display:none}
-body.lesson-active .lesson-footer-zone{display:block;flex:0 0 auto}
-.lesson-footer-zone .nav{display:flex;gap:10px;margin:0 0 6px}
-.lesson-footer-zone .nav>*{flex:1}
-body.lesson-active #lesson .nav{display:none}
-body.lesson-active .footer{padding:2px 0 0}
-.lesson-paragraph{font-size:1.12rem;line-height:2.08;color:#475569;margin:0}
-.lesson-paragraph + .lesson-paragraph{margin-top:1.25em}
-.lesson-paragraph strong{font-weight:900;color:var(--text)}
-@media(max-width:400px){.card{padding:20px 17px}.pattern-cards{grid-template-columns:1fr}.degree-grid{grid-template-columns:repeat(4,1fr)}.summary-list{grid-template-columns:1fr}.direction-grid{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
-
-/* Degree sequence boards */
-.degree-sequence-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
-.degree-sequence-board svg{display:block;width:100%;height:100%}
-.degree-list-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 2px}
-.degree-list-board svg{display:block;width:100%;height:100%}
-
-/* Melodic interval boards */
-.melodic-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 6px}
-.melodic-board svg{display:block;width:100%;height:100%}
-.melodic-board-wrap{position:relative;width:100%;height:100%}
-.melodic-callout{position:absolute;top:8px;transform:translateX(-50%);font-size:15px;font-weight:750;color:var(--accent);letter-spacing:.04em;pointer-events:none}
-.melodic-leader{position:absolute;height:1.5px;background:var(--accent);transform-origin:0 50%;pointer-events:none;opacity:.85}
-
-/* Inline lesson quiz */
-.quiz-block{margin-top:30px;padding-top:24px;border-top:1px solid var(--border)}
-.quiz-kicker{font-family:var(--site-font);font-size:14px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
-.quiz-question{font-size:20px;line-height:1.85;font-weight:650;margin-bottom:16px}
-.quiz-options{display:flex;gap:12px;flex-wrap:wrap}
-.quiz-option{appearance:none;border:1px solid var(--border);background:#fff;color:var(--ink);border-radius:var(--site-radius-pill);padding:10px 20px;font:inherit;font-weight:700;cursor:pointer;transition:.18s ease;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.quiz-option.correct{border-color:#34c759;background:#edf9f0;color:#218739}
-.quiz-option.wrong{border-color:#ff3b30;background:#fff0ef;color:#c92a22}
-
-/* Stable frame fixes v4 */
-body.lesson-active{overflow:hidden;padding-top:10px;padding-bottom:10px}
-body.lesson-active header{display:block!important;visibility:visible!important;opacity:1!important;position:relative;z-index:20}
-body.lesson-active .lesson-board{border:1px solid var(--border);border-radius:12px;background:#fff}
-body.lesson-active .lesson-board .staff{border:0;border-radius:11px}
-body.lesson-active .lesson-board .intro-stage{height:100%}
-body.lesson-active .lesson-board .board-role-wrap{height:100%}
-.lesson-footer-zone button,.lesson-footer-zone .primary,.lesson-footer-zone .ghost{touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
-.lesson-footer-zone{touch-action:manipulation}
-
-/* Responsive lesson frame */
-.lesson-top{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0}
-.lesson-top .brand{min-width:0;white-space:nowrap}
-.lesson-meta{display:flex;align-items:center;justify-content:flex-end;gap:.5ch;min-width:0;white-space:nowrap}
-.lesson-meta .lesson-count{font-size:12px;font-weight:750;color:var(--muted);letter-spacing:.04em}
-.lesson-meta .lesson-id{font-size:12px;font-weight:800;letter-spacing:.08em}
-#lessonStep{display:none!important}
-.lesson-body{scroll-behavior:smooth;overscroll-behavior:contain}
-.board{overflow:hidden}
-.board svg{max-width:100%;height:auto}
-@media(max-width:520px){
-  .lesson-top{gap:8px}
-  .lesson-top .brand{font-size:clamp(10px,3vw,13px);letter-spacing:.04em}
-  .lesson-meta{gap:.5ch}
-  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:clamp(9px,2.7vw,12px)}
-}
-@media(max-width:360px){
-  .lesson-top .brand{font-size:9px;letter-spacing:.02em}
-  .lesson-meta{gap:.5ch}
-  .lesson-meta .lesson-count,.lesson-meta .lesson-id{font-size:9px;letter-spacing:0}
-}
-
-
-/* iPhone safe-area protection */
-body{padding-top:env(safe-area-inset-top);padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
-.lesson-shell,.lesson-view{max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
-.lesson-footer{padding-bottom:max(0px,env(safe-area-inset-bottom))}
-
-
-#lessonStep,.lesson-step,.step-indicator,.page-indicator,.lesson-progress-text{display:none!important}
-#headerLessonCount{display:inline!important}
-
-
-/* Compact two-octave keyboard for pages 15–18 */
-.compact-keyboard-scroll{width:100%;height:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;display:flex;align-items:center}
-.compact-keyboard{position:relative;height:132px;min-width:420px;margin:auto;display:flex;padding:0 8px;box-sizing:border-box}
-.compact-keyboard .white-key{position:relative;width:29px;min-width:29px;height:128px;border:1px solid #cfd2d7;border-radius:0 0 5px 5px;background:#fff;box-sizing:border-box}
-.compact-keyboard .white-key.active{background:#fff0e8;border-color:var(--accent);box-shadow:inset 0 -4px 0 var(--accent)}
-.compact-keyboard .black-key{position:absolute;top:0;width:18px;height:78px;background:#222;border-radius:0 0 4px 4px;z-index:3;transform:translateX(-50%)}
-.compact-keyboard .black-key.active{background:#c98763;box-shadow:inset 0 -3px 0 rgba(0,0,0,.16)}
-.compact-keyboard .key-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font:700 10px var(--site-font);color:#6e6e73}
-.compact-keyboard .white-key.active .key-label{color:var(--accent)}
-.tone-count-board{height:100%;display:flex;align-items:center;justify-content:center;padding:0 4px}
-.tone-count-board svg{display:block;width:100%;height:100%}
-
-
-/* === Authoritative iOS header / safe-area fix ===
-   Keep this block last: earlier lesson-active rules used padding-top:10px,
-   which overrode body{padding-top:env(safe-area-inset-top)} by specificity. */
-html{height:100%;background:var(--bg)}
-body{
-  min-height:100dvh;
-  padding-left:max(10px,env(safe-area-inset-left));
-  padding-right:max(10px,env(safe-area-inset-right));
-}
-body.lesson-active{
-  height:100dvh;
-  min-height:100dvh;
-  overflow:hidden;
-  padding-top:max(10px,env(safe-area-inset-top))!important;
-  padding-bottom:max(10px,env(safe-area-inset-bottom))!important;
-}
-body.lesson-active .app{
-  height:calc(100dvh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom)))!important;
-  min-height:0;
-}
-body.lesson-active header{
-  position:relative!important;
-  top:auto!important;
-  flex:0 0 auto;
-  z-index:100;
-  margin-bottom:10px;
-  transform:none!important;
-}
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  min-width:0;
-}
-.topbar-brand{
-  min-width:0;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.topbar-right{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:.5ch;
-  flex:0 0 auto;
-  white-space:nowrap;
-}
-.topbar-right .lesson-count{
-  display:inline!important;
-  font-size:inherit;
-}
-@media(max-width:390px){
-  .topbar{font-size:clamp(.58rem,2.7vw,.76rem);letter-spacing:.2px}
-  .lesson-badge{padding:3px 6px}
-}
-@media(max-width:330px){
-  .topbar{font-size:.56rem}
-  .topbar-brand{letter-spacing:0}
-  .lesson-badge{padding:2px 5px}
-}
-
-
-/* Final lesson-space cleanup */
-.lesson-progress,.step-indicator,#lessonStep,.lesson-step,.page-indicator,.lesson-progress-text{display:none!important}
-.lesson-main{padding-top:0!important}
-.board{margin-top:0!important}
-
-
-.quiz-options.vertical{display:grid;grid-template-columns:1fr;gap:9px;max-width:220px}
-.quiz-options.vertical .quiz-option{text-align:left;width:100%}
-
-
-/* Home title aligned with Practice naming */
-.home-course-title{text-align:center;margin:2px 0 24px}
-.home-course-index{font-size:.92rem;line-height:1.4;font-weight:800;letter-spacing:.06em;color:var(--primary);margin-bottom:7px}
-.home-course-title h1{margin:0;font-size:clamp(1.42rem,5vw,2rem);line-height:1.35;font-weight:900;color:var(--text);letter-spacing:-.025em}
-
-
-/* Mobile landscape lesson mode: left board / right text */
-@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
-  body.lesson-active{padding-top:6px!important;padding-bottom:4px!important}
-  body.lesson-active .app{height:calc(100dvh - 10px)!important}
-  body.lesson-active header{margin-bottom:5px!important}
-  .topbar{font-size:.64rem}
-  .lesson-badge{padding:2px 6px}
-  .lesson-card{
-    display:grid!important;
-    grid-template-columns:minmax(280px,44%) minmax(0,1fr)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    gap:12px!important;
-    min-height:0!important;
-    padding:10px!important;
-  }
-  .board{
-    grid-column:1!important;
-    grid-row:1!important;
-    height:100%!important;
-    min-height:0!important;
-    align-self:stretch!important;
-  }
-  .lesson-body{
-    grid-column:2!important;
-    grid-row:1!important;
-    min-height:0!important;
-    height:100%!important;
-    overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch;
-    padding:2px 8px 2px 2px!important;
-  }
-  .lesson-footer{
-    margin-top:5px!important;
-    padding-bottom:0!important;
-  }
-  .lesson-footer .nav,.nav{margin-top:0!important}
-  footer{font-size:.62rem!important;margin-top:2px!important}
-  .compact-keyboard{height:100px!important;min-width:420px}
-  .compact-keyboard .white-key{height:98px!important}
-  .compact-keyboard .black-key{height:60px!important}
-}
-
-
-/* Only the header count is allowed */
-#lessonStep,.lesson-step,.step-indicator,.page-indicator,.lesson-progress-text,
-.lesson-card .lesson-count,.board .lesson-count{display:none!important}
-#headerLessonCount{display:inline!important}
-
-
-/* ===== CLEAN BUILD: authoritative lesson layout ===== */
-
-/* There is exactly one page count: #headerLessonCount in the global header. */
-.step-head,#stepCount,#lessonStep,.lesson-step,.step-indicator,.page-indicator,
-.lesson-progress-text,.lesson-card .lesson-count,.board .lesson-count{
-  display:none!important;
-}
-#headerLessonCount{display:inline!important}
-
-/* Reclaim the old step-header space. */
-body.lesson-active #lesson{
-  padding-top:14px!important;
-}
-body.lesson-active #lessonBoard{
-  margin-top:0!important;
-}
-
-/* Phone landscape: actual DOM is #lesson > #lessonBoard + #stepBody. */
-@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
-  body.lesson-active{
-    overflow:hidden!important;
-    padding-top:6px!important;
-    padding-bottom:4px!important;
-  }
-  body.lesson-active .app{
-    height:calc(100dvh - 10px)!important;
-    min-height:0!important;
-  }
-  body.lesson-active header{
-    flex:0 0 auto!important;
-    margin-bottom:5px!important;
-  }
-  body.lesson-active main{
-    flex:1 1 auto!important;
-    min-height:0!important;
-    overflow:hidden!important;
-  }
-  body.lesson-active #lesson{
-    height:100%!important;
-    min-height:0!important;
-    box-sizing:border-box!important;
-    display:grid!important;
-    grid-template-columns:minmax(250px,44%) minmax(0,1fr)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    column-gap:12px!important;
-    padding:8px 10px!important;
-    overflow:hidden!important;
-  }
-  body.lesson-active #lessonBoard{
-    grid-column:1!important;
-    grid-row:1!important;
-    height:100%!important;
-    min-height:0!important;
-    margin:0!important;
-    overflow:auto!important;
-  }
-  body.lesson-active #stepBody{
-    grid-column:2!important;
-    grid-row:1!important;
-    height:100%!important;
-    min-height:0!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch;
-    padding:2px 8px 8px 2px!important;
-    overscroll-behavior:contain;
-  }
-  body.lesson-active #lessonFooterZone{
-    flex:0 0 auto!important;
-    margin-top:4px!important;
-  }
-  body.lesson-active .footer{
-    flex:0 0 auto!important;
-    margin-top:2px!important;
-    font-size:.62rem!important;
-  }
-  body.lesson-active .topbar{font-size:.64rem!important}
-  body.lesson-active .lesson-badge{padding:2px 6px!important}
-}
-
-
-@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
- body.lesson-active .app{width:100%!important;max-width:none!important;margin:0!important;padding:0 6px!important}
- body.lesson-active main{width:100%!important;max-width:none!important;margin:0!important}
- body.lesson-active #lesson{width:100%!important;max-width:none!important;margin:0!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;column-gap:8px!important;border-radius:12px!important}
- body.lesson-active #lessonBoard{width:100%!important;max-width:none!important;height:100%!important;display:flex!important;align-items:stretch!important;justify-content:stretch!important;padding:0!important}
- body.lesson-active #lessonBoard>*{width:100%!important;max-width:100%!important}
-}
-
-
-/* Final home/footer + completion treatment */
-body.lesson-active #siteFooter,#summary:not(.hidden)~* #siteFooter{display:none}
-body:has(#summary:not(.hidden)) #siteFooter{display:none}
-.lesson-complete{text-align:center!important;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px}
-.lesson-complete.hidden{display:none!important}
-.lesson-complete .kicker{margin-bottom:8px}
-.lesson-complete h1{margin:0}
-.confetti-pop{font-size:48px;line-height:1;margin-top:22px;transform-origin:50% 80%;animation:confettiCelebrate 1.25s ease-in-out infinite}
-@keyframes confettiCelebrate{
-  0%,100%{transform:translateY(0) rotate(-5deg) scale(1)}
-  35%{transform:translateY(-9px) rotate(7deg) scale(1.12)}
-  65%{transform:translateY(-3px) rotate(-3deg) scale(1.04)}
-}
-@media(prefers-reduced-motion:reduce){.confetti-pop{animation:none}}
-
-
-/* Touch policy: suppress double-tap zoom, preserve two-finger pinch zoom. */
-html,body,.app,button,a,.nav,#lessonFooterZone{
-  touch-action:manipulation;
-}
-button,a{
-  -webkit-tap-highlight-color:transparent;
-}
-.completion-actions{margin-top:24px;justify-content:center}
-
-/* iOS fallback: keep rapid repeated taps on fixed navigation from becoming a zoom gesture. */
-#prevBtn,#nextBtn{
-  touch-action:manipulation!important;
-}
-
-
-/* ===== Unified lesson layout =====
-   Narrow portrait: board above text.
-   Wide screens and short landscape: board left, text right. */
-
-@media (min-width:760px), (orientation:landscape) and (max-height:500px){
-  body.lesson-active .app{
-    width:min(1440px,100%)!important;
-    max-width:none!important;
-    margin:0 auto!important;
-  }
-  body.lesson-active main{
-    width:100%!important;
-    max-width:none!important;
-    min-height:0!important;
-    overflow:hidden!important;
-  }
-  body.lesson-active #lesson{
-    width:100%!important;
-    max-width:none!important;
-    height:100%!important;
-    min-height:0!important;
-    margin:0!important;
-    box-sizing:border-box!important;
-    display:grid!important;
-    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
-    grid-template-rows:minmax(0,1fr)!important;
-    column-gap:18px!important;
-    padding:16px!important;
-    overflow:hidden!important;
-  }
-  body.lesson-active #lessonBoard{
-    grid-column:1!important;
-    grid-row:1!important;
-    width:100%!important;
-    max-width:none!important;
-    height:100%!important;
-    min-height:0!important;
-    margin:0!important;
-    padding:0!important;
-    display:flex!important;
-    align-items:center!important;
-    justify-content:center!important;
-    overflow:auto!important;
-  }
-  body.lesson-active #lessonBoard>*{
-    width:100%!important;
-    max-width:100%!important;
-  }
-  body.lesson-active #stepBody{
-    grid-column:2!important;
-    grid-row:1!important;
-    width:100%!important;
-    height:100%!important;
-    min-height:0!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
-    -webkit-overflow-scrolling:touch;
-    padding:6px 12px 12px 4px!important;
-  }
-}
-
-/* Phone landscape gets tighter gutters but the same left-board/right-text model. */
-@media (orientation:landscape) and (max-height:500px) and (max-width:950px){
-  body.lesson-active .app{width:100%!important;padding:0 6px!important}
-  body.lesson-active #lesson{
-    grid-template-columns:minmax(0,48%) minmax(0,52%)!important;
-    column-gap:8px!important;
-    padding:8px 10px!important;
-  }
-}
-
-
-/* ===== Wide-screen refinement ===== */
-@media (min-width:760px){
-  body.lesson-active main{
-    display:flex!important;
-    align-items:center!important;
-    justify-content:center!important;
-  }
-  body.lesson-active #lesson{
-    /* Use the available viewport instead of pinning the card to its top edge. */
-    height:auto!important;
-    min-height:min(560px,calc(100dvh - 190px))!important;
-    max-height:calc(100dvh - 150px)!important;
-    align-self:center!important;
-  }
-  body.lesson-active #lessonBoard,
-  body.lesson-active #stepBody{
-    align-self:center!important;
-  }
-}
-
-
-@media (min-width:760px){
-  body.lesson-active #stepBody{
-    align-self:center!important;
-    justify-self:center!important;
-    width:min(100%,620px)!important;
-    height:auto!important;
-    max-height:100%!important;
-    text-align:left!important;
-    padding:12px 18px!important;
-  }
-}
-
-
-/* Keep notation responsive on narrow portrait screens. */
-#lessonBoard svg,.tone-count-board svg{
-  display:block;
-  max-width:100%!important;
-  height:auto!important;
-  overflow:visible;
-}
-@media (max-width:759px) and (orientation:portrait){
-  #lessonBoard,.tone-count-board,#enharmonicToneStaff{
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    overflow:hidden!important;
-  }
-}
-
-
-#nextBtn:disabled{background:#d1d1d6!important;border-color:#d1d1d6!important;color:#8e8e93!important;cursor:default!important;opacity:1!important;box-shadow:none!important}
-
-/* Lesson example audio */
-#lessonBoard{position:relative}
-.lesson-audio-btn{
-  position:absolute;top:10px;right:10px;z-index:20;
-  width:34px;height:34px;border:0;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.9);color:#007aff;
-  box-shadow:0 1px 5px rgba(0,0,0,.10);
-  cursor:pointer;padding:0;-webkit-tap-highlight-color:transparent
-}
-.lesson-audio-btn svg{width:18px;height:18px;pointer-events:none}
-.lesson-audio-btn:active{transform:scale(.94)}
-.lesson-audio-btn.playing{background:#eef6ff}
-
-
-/* Keep the speaker control circular even when the blackboard becomes a wide-screen flex/grid item. */
-#lessonBoard > .lesson-audio-btn{
-  position:absolute!important;
-  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
-  width:34px!important;height:34px!important;min-width:34px!important;max-width:34px!important;
-  min-height:34px!important;max-height:34px!important;
-  flex:0 0 34px!important;align-self:auto!important;
-  aspect-ratio:1/1!important;border-radius:50%!important;
-}
-
-
-/* Final audio control geometry: never participate in wide-screen flex/grid sizing. */
-#lessonBoard{position:relative!important}
-#lessonBoard .lesson-audio-btn{
-  position:absolute!important;
-  inset:auto 10px auto auto!important;
-  top:10px!important;
-  box-sizing:border-box!important;
-  width:32px!important;height:32px!important;
-  min-width:32px!important;max-width:32px!important;
-  min-height:32px!important;max-height:32px!important;
-  padding:0!important;margin:0!important;
-  flex:none!important;flex-grow:0!important;flex-shrink:0!important;flex-basis:32px!important;
-  align-self:auto!important;justify-self:auto!important;
-  aspect-ratio:1!important;border-radius:999px!important;
-  display:grid!important;place-items:center!important;
-  line-height:1!important;
-  transform:none;
-}
-#lessonBoard .lesson-audio-btn svg{
-  display:block!important;width:17px!important;height:17px!important;
-  min-width:17px!important;max-width:17px!important;
-  flex:none!important;
-}
-
-/* Audio button: override the wide-screen rule that stretches all direct board children. */
-body.lesson-active #lessonBoard > .lesson-audio-btn{
-  position:absolute!important;
-  top:10px!important;right:10px!important;left:auto!important;bottom:auto!important;
-  width:32px!important;height:32px!important;
-  min-width:32px!important;max-width:32px!important;
-  min-height:32px!important;max-height:32px!important;
-  padding:0!important;margin:0!important;
-  flex:0 0 32px!important;
-  aspect-ratio:1 / 1!important;
-  border-radius:50%!important;
-  display:grid!important;place-items:center!important;
-  z-index:20!important;
-}
-
-
-/* Home header: page count begins only after Learning starts. */
-body:not(.lesson-active) #headerLessonCount{display:none!important}
-
-/* Auxiliary practice link uses the existing secondary button language. */
-.aux-practice-link{display:block}
-
-
-/* === Final viewport/orientation layout override === */
-html,body{min-height:100%;}
-body:not(.lesson-active){min-height:100dvh;padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(10px,env(safe-area-inset-bottom));}
-body:not(.lesson-active) .app{min-height:calc(100dvh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom)));}
-body:not(.lesson-active) .footer{margin-top:auto;}
-/* Learning split is determined by orientation, not device width. Portrait always stacks. */
-@media (orientation:portrait){
- body.lesson-active .app{width:100%!important;max-width:520px!important;}
- body.lesson-active main{width:100%!important;max-width:none!important;}
- body.lesson-active #lesson{display:flex!important;flex-direction:column!important;width:100%!important;max-width:none!important;height:100%!important;padding:16px 24px!important;overflow:hidden!important;}
- body.lesson-active #lessonBoard{width:100%!important;height:178px!important;min-height:178px!important;max-height:178px!important;flex:0 0 178px!important;margin:0!important;}
- body.lesson-active #stepBody{width:100%!important;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;padding:16px 2px 12px!important;border-left:0!important;}
-}
-/* Landscape uses side-by-side layout whenever there is enough usable width. */
-@media (orientation:landscape) and (min-width:600px){
- body.lesson-active .app{width:min(1440px,100%)!important;max-width:none!important;margin:0 auto!important;}
- body.lesson-active #lesson{display:grid!important;grid-template-columns:minmax(0,48%) minmax(0,52%)!important;grid-template-rows:minmax(0,1fr)!important;column-gap:18px!important;}
-}
-
-
-
-</style>
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../shared/styles/learning-base.css">
+  <link rel="stylesheet" href="../shared/styles/learning-components.css">
   <script src="../../assets/site-analytics.js" defer></script>
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">1 / 23</span><span class="lesson-badge">LESSON 01</span></span></div>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">开始</span><span class="lesson-badge">LESSON 01</span></span></div>
   <div class="progress-wrap"><div class="progress" id="progress"></div></div>
   </header>
 <main>
@@ -624,7 +28,7 @@ body:not(.lesson-active) .footer{margin-top:auto;}
   </div>
 </section>
 
-<section class="card hidden" id="lesson">
+<section class="card lesson hidden" id="lesson">
  <div id="lessonBoard" class="lesson-board"></div>
  <div id="stepBody" class="lesson-content"></div>
 </section>
@@ -640,10 +44,11 @@ body:not(.lesson-active) .footer{margin-top:auto;}
   </div>
 </section>
 </main>
-<div class="lesson-footer-zone" id="lessonFooterZone"><div class="nav"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></div></div>
+<nav class="lesson-footer-zone lesson-nav" id="lessonFooterZone" aria-label="教学步骤"><button class="ghost" id="prevBtn">← 上一步</button><button class="primary" id="nextBtn">继续 →</button></nav>
 <div class="footer" id="siteFooter">©Sheen · Music Theory</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
+<script src="../shared/learning/theory-lesson.js"></script>
 <script>
 const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepBody'),board=$('#lessonBoard');
 let current=0, audioCtx=null;
@@ -658,9 +63,8 @@ function play(note,d=.72,delay=0){wakeAudio();synth(note,d,delay)}
 function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);if(ia<0||ib<0)return [];if(ia>ib)[ia,ib]=[ib,ia];return chromatic.slice(ia,ib+1)}
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
-function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
+function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
 function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
-let openingSecondRevealed=false;
 function alignBoardRoleLabels(){
   const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
   if(!wrap||!staff)return;
@@ -703,7 +107,7 @@ function drawUnisonMeasures(el,{accidentals=false}={}){
     const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
     new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
-  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+  }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function drawSecondMeasures(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
@@ -724,7 +128,7 @@ function drawSecondMeasures(el){
     const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
     new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
-  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+  }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function drawIntervalOverview(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
@@ -744,7 +148,7 @@ function drawIntervalOverview(el){
     const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
     new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
-  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+  }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function renderDegreeSequenceBoard(mode){
   board.innerHTML='<div class="degree-sequence-board"><div id="degreeSequenceStaff" style="width:100%;height:100%"></div></div>';
@@ -808,7 +212,7 @@ function drawMelodicBoard(el,mode='ascending'){
         makeLeader(wrap,centers[2].x,centers[2].y-5,downX,labelY+22);
       });
     }
-  }catch(e){ el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
+  }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function renderMelodicBoard(mode){
   board.innerHTML='<div class="melodic-board-wrap"><div class="melodic-board"><div id="melodicStaff" style="width:100%;height:100%"></div></div></div>';
@@ -835,7 +239,7 @@ function drawHarmonicBoard(el){
     const lower=new VF.Voice({num_beats:4,beat_value:4}).addTickables([e4,f4]);
     new VF.Formatter().joinVoices([upper,lower]).formatToStave([upper,lower],st,{align_rests:false});
     upper.draw(ctx,st); lower.draw(ctx,st);
-  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+  }catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
 }
 function renderHarmonicBoard(){
   board.innerHTML='<div class="melodic-board"><div id="harmonicStaff" style="width:100%;height:100%"></div></div>';
@@ -912,7 +316,7 @@ function drawToneCountStaff(el){
       t.setAttribute('font-family','PingFang SC,Arial,sans-serif');t.setAttribute('font-size',w<380?'9':'11');
       t.setAttribute('font-weight','700');t.setAttribute('fill','#6e6e73');t.textContent='音数';svg.appendChild(t);
     }
-  }catch(e){el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
+  }catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
 }
 
 
@@ -1053,7 +457,7 @@ function drawEnharmonicToneStaff(el){
     label.textContent='音数';svg.appendChild(label);
   }catch(e){
     console.error('Page 21 SVG-notehead render failed:',e);
-    el.innerHTML='<div class="tiny" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
+    el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>';
   }
 }
 function renderEnharmonicToneBoard(){
@@ -1148,6 +552,7 @@ function playLessonAudio(pageNumber){
 }
 function installLessonAudio(pageNumber){
   const boardEl=document.getElementById('lessonBoard'),spec=LESSON_AUDIO[pageNumber];
+  boardEl?.querySelectorAll('.lesson-audio-btn').forEach(btn=>btn.remove());
   if(!boardEl||!spec)return;
   const btn=document.createElement('button');
   btn.type='button';btn.className='lesson-audio-btn';btn.setAttribute('aria-label','播放谱例');btn.title='播放谱例';
@@ -1165,7 +570,7 @@ function installLessonAudio(pageNumber){
     playLessonAudio(pageNumber);
   };
 }
-function refreshLessonAudioForPage(pageIndex){
+function refreshLessonAudioForPage(pageIndex,autoplay=true){
   const pageNumber=pageIndex+1,token=++audioNavigationToken;
   const nextSpec=LESSON_AUDIO[pageNumber];
   const currentFile=lessonAudio?.getAttribute('src') || null;
@@ -1182,7 +587,7 @@ function refreshLessonAudioForPage(pageIndex){
 
     // Auto-play only when entering a genuinely new audio file.
     // Moving inside a shared-audio group must not restart an existing recording.
-    if(nextSpec?.auto && !sameFile) playLessonAudio(pageNumber);
+    if(autoplay && nextSpec?.auto && !sameFile) playLessonAudio(pageNumber);
   });
 }
 
@@ -1193,103 +598,129 @@ function clearBoard(){
   board.removeAttribute('data-audio-page');
   board.innerHTML='';
 }
-function renderOpening(showSecond){
-  openingSecondRevealed=showSecond;
-  renderMainBoard(showSecond?'roles':'plain');
-  body.innerHTML=`<p class="intro-definition lesson-paragraph" style="margin-top:0"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>${showSecond?`<p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>`:''}`;
-}
 
 function startLesson(){
-  openingSecondRevealed=false;
   showStep(0,false);
 }
 
 function updateHeaderLessonCount(i){
   const el=document.getElementById('headerLessonCount');
-  if(el) el.textContent=(i+1)+' / '+steps.length;
-}
-function revealNewestLessonText(){
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    const scroller=body;
-    if(!scroller)return;
-    const paras=scroller.querySelectorAll('.lesson-paragraph,.quiz-block');
-    const last=paras[paras.length-1];
-    if(!last)return;
-    const visibleBottom=scroller.scrollTop+scroller.clientHeight;
-    const targetBottom=last.offsetTop+last.offsetHeight+12;
-    if(targetBottom>visibleBottom){
-      scroller.scrollTo({top:Math.max(0,targetBottom-scroller.clientHeight),behavior:'smooth'});
-    }
-  }));
+  if(el) el.textContent=i<0?'开始':(i+1)+' / '+steps.length;
 }
 function responsiveStaffWidth(el,min=280,max=760){
   return Math.max(180,Math.min(max,el.clientWidth||430));
 }
 
 const steps=[
-{title:'什么是音程？',render(){renderOpening(false)}},
-{title:'根音与冠音',render(){renderOpening(true)}},
-{title:'度',render(){renderMainBoard('plain');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`}},
-{title:'谱表位置与度数',render(){renderMainBoard('degree');body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`}},
-{title:'音名与度数',render(){renderNameBoard();body.innerHTML=`<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过<span class="key-accent">音名</span>来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`}},
-{title:'一度',render(){renderDegreeSequenceBoard('unison');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p>`}},
-{title:'一度与变音记号',render(){renderDegreeSequenceBoard('altered-unison');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p>`}},
-{title:'二度',render(){renderDegreeSequenceBoard('second');body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p>`}},
-{title:'一度到八度',render(){renderIntervalOverviewBoard();body.innerHTML=`<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p><p class="lesson-paragraph">两个音的相对位置进一步扩大，就会得到<strong>三度</strong>（3rd）、<strong>四度</strong>（4th）、<strong>五度</strong>（5th）、<strong>六度</strong>（6th）、<strong>七度</strong>（7th）、<strong>八度</strong>（octave）。</p>`}},
-{title:'旋律音程',render(){renderMelodicBoard('ascending');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p>`}},
-{title:'上行旋律音程',render(){renderMelodicBoard('ascending');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p>`}},
-{title:'下行旋律音程',render(){renderMelodicBoard('both');body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p>`}},
-{title:'和声音程',render(){renderHarmonicBoard();body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p>`}},
-{title:'Quiz',render(){renderHarmonicBoard();body.innerHTML=`<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p><div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">度数和音符的变音记号无关。（判断题）</div><div class="quiz-options"><button class="quiz-option" id="quizCorrect" type="button">〇&nbsp; 正确</button><button class="quiz-option" id="quizWrong" type="button">〇&nbsp; 错误</button></div></div>`;bindDegreeQuiz()}},
-{title:'音数',render(){renderCompactKeyboard([]);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p>`}},
-{title:'全音',render(){renderCompactKeyboard(['C4','D4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p>`}},
-{title:'半音',render(){renderCompactKeyboard(['E4','F4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p>`}},
-{title:'C 到 F',render(){renderCompactKeyboard(['C4','F4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p>`}},
-{title:'C 到 F♯',render(){renderCompactKeyboard(['C4','F#4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p>`}},
-{title:'音数与度数',render(){renderCompactKeyboard(['C4','F#4']);body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p><p class="lesson-paragraph">音数反映的是两个音之间实际相隔多少个半音，而<span class="key-accent">不是</span>音程的度数。</p>`}},
-{title:'同音数，不同度数',render(){renderEnharmonicToneBoard();body.innerHTML=`<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p><p class="lesson-paragraph">音数反映的是两个音之间实际相隔多少个半音，而<span class="key-accent">不是</span>音程的度数。</p><p class="lesson-paragraph">所以音数相同的音程，度数不一定相同。</p>`}},
-{title:'Quiz · 音数',render(){renderCompactKeyboard(['E4','C5']);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的音数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-tone-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-tone-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-tone-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-tone-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-tone-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindToneNumberQuiz()}},
-{title:'Quiz · 度数',render(){renderCompactKeyboard(['E4','C5']);body.innerHTML=`<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的度数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-degree-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-degree-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-degree-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-degree-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-degree-answer="6" type="button">〇&nbsp; 6</button></div></div>`;bindChoiceQuiz('6','data-degree-answer')}}
+{id:"mt01-01",kind:"new-concept",groupId:"interval",title:"什么是音程？",boardKey:"interval-plain",size:'compact',
+ board(){renderMainBoard('plain');},
+ explanation(){return `<p class="intro-definition lesson-paragraph" style="margin-top:0"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>${false?`<p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>`:''}`;}},
+{id:"mt01-02",kind:"continuation",groupId:"interval",title:"根音与冠音",boardKey:"interval-roles",size:'compact',
+ board(){renderMainBoard('roles');},
+ explanation(){return `<p class="intro-definition lesson-paragraph" style="margin-top:0"><strong id="lessonIntervalWord">音程</strong>是<span class="key-accent">两</span>个音高之间的距离关系，用来描述它们在音高上的<span class="key-accent">相对</span>位置。</p>${true?`<p class="intro-role-text lesson-paragraph">音程中相对高的音叫<strong>冠音（或高音）</strong>，<br>相对低的音叫<strong>根音（或低音）</strong>。</p>`:''}`;}},
+{id:"mt01-03",kind:"new-concept",groupId:"degree",title:"度",boardKey:"interval-plain",size:'compact',
+ board(){renderMainBoard('plain');},
+ explanation(){return `<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p>`;}},
+{id:"mt01-04",kind:"continuation",groupId:"degree",title:"谱表位置与度数",boardKey:"degree-staff",size:'compact',
+ board(){renderMainBoard('degree');},
+ explanation(){return `<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p>`;}},
+{id:"mt01-05",kind:"continuation",groupId:"degree",title:"音名与度数",boardKey:"degree-names",size:'compact',
+ board(){renderNameBoard();},
+ explanation(){return `<p class="lesson-paragraph">表示音程距离的<span class="key-accent">单位</span>叫<strong>度</strong>。</p><p class="lesson-paragraph">度数可以通过音符在<span class="key-accent">谱表上的位置</span>来确定。<br>谱例中的两个音符分别位于<span class="key-accent">下加一线</span>和<span class="key-accent">第二线</span>，他们之间相距 5 个音符的位置，度数为<strong>五度</strong>。</p><p class="lesson-paragraph">音程的度数也可以通过<span class="key-accent">音名</span>来确定。<br>从 C4 到 G4，一共有 C、D、E、F、G 五个音，所以度数是<strong>五度</strong>。</p>`;}},
+{id:"mt01-06",kind:"new-concept",groupId:"sequence",title:"一度",boardKey:"unison",size:'compact',
+ board(){renderDegreeSequenceBoard('unison');},
+ explanation(){return `<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p>`;}},
+{id:"mt01-07",kind:"continuation",groupId:"sequence",title:"一度与变音记号",boardKey:"altered-unison",size:'compact',
+ board(){renderDegreeSequenceBoard('altered-unison');},
+ explanation(){return `<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p>`;}},
+{id:"mt01-08",kind:"continuation",groupId:"sequence",title:"二度",boardKey:"second",size:'compact',
+ board(){renderDegreeSequenceBoard('second');},
+ explanation(){return `<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p>`;}},
+{id:"mt01-09",kind:"continuation",groupId:"sequence",title:"一度到八度",boardKey:"degree-overview",size:'compact',
+ board(){renderIntervalOverviewBoard();},
+ explanation(){return `<p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相同位置</span>的音，音名相同，叫做<strong>一度（unison）</strong>。</p><p class="lesson-paragraph"><span class="key-accent"><strong>注意</strong></span>：变音记号<span class="key-accent"><strong>不</strong></span>影响音程的度数。即使其中一个音发生变化，一度仍然是一度。</p><p class="lesson-paragraph">两个处于谱表中<span class="key-accent">相邻位置</span>的音，叫做<strong>二度</strong>（2nd）。</p><p class="lesson-paragraph">两个音的相对位置进一步扩大，就会得到<strong>三度</strong>（3rd）、<strong>四度</strong>（4th）、<strong>五度</strong>（5th）、<strong>六度</strong>（6th）、<strong>七度</strong>（7th）、<strong>八度</strong>（octave）。</p>`;}},
+{id:"mt01-10",kind:"new-concept",groupId:"interval-mode",title:"旋律音程",boardKey:"melodic-up",size:'compact',
+ board(){renderMelodicBoard('ascending');},
+ explanation(){return `<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p>`;}},
+{id:"mt01-11",kind:"continuation",groupId:"interval-mode",title:"上行旋律音程",boardKey:"melodic-up",size:'compact',
+ board(){renderMelodicBoard('ascending');},
+ explanation(){return `<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p>`;}},
+{id:"mt01-12",kind:"continuation",groupId:"interval-mode",title:"下行旋律音程",boardKey:"melodic-directions",size:'compact',
+ board(){renderMelodicBoard('both');},
+ explanation(){return `<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p>`;}},
+{id:"mt01-13",kind:"continuation",groupId:"interval-mode",title:"和声音程",boardKey:"harmonic",size:'compact',
+ board(){renderHarmonicBoard();},
+ explanation(){return `<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p>`;}},
+{id:"mt01-14",kind:"check",groupId:"interval-mode",title:"Quiz",boardKey:"harmonic",size:'compact',
+ board(){renderHarmonicBoard();},
+ explanation(){return `<p class="lesson-paragraph">两个<span class="key-accent">先后出现</span>的音，叫做<strong>旋律音程</strong>（melodic interval）。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">高</span>的旋律音程，叫<span class="key-accent">上行旋律音程</span>。</p><p class="lesson-paragraph">第二个音比第一个音<span class="key-accent">低</span>的旋律音程，叫<span class="key-accent">下行旋律音程</span>。</p><p class="lesson-paragraph">两个同时出现的音，叫做<strong>和声音程</strong>（harmonic interval）。</p><div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">度数和音符的变音记号无关。（判断题）</div><div class="quiz-options"><button class="quiz-option" id="quizCorrect" type="button">〇&nbsp; 正确</button><button class="quiz-option" id="quizWrong" type="button">〇&nbsp; 错误</button></div></div>`;},
+ mount(){bindDegreeQuiz();}},
+{id:"mt01-15",kind:"new-concept",groupId:"tone",title:"音数",boardKey:"keyboard-natural",size:'compact',
+ board(){renderCompactKeyboard([]);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p>`;}},
+{id:"mt01-16",kind:"continuation",groupId:"tone",title:"全音",boardKey:"keyboard-C4-D4",size:'compact',
+ board(){renderCompactKeyboard(['C4','D4']);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p>`;}},
+{id:"mt01-17",kind:"continuation",groupId:"tone",title:"半音",boardKey:"keyboard-E4-F4",size:'compact',
+ board(){renderCompactKeyboard(['E4','F4']);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p>`;}},
+{id:"mt01-18",kind:"continuation",groupId:"tone",title:"C 到 F",boardKey:"keyboard-C4-F4",size:'compact',
+ board(){renderCompactKeyboard(['C4','F4']);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p>`;}},
+{id:"mt01-19",kind:"continuation",groupId:"tone",title:"C 到 F♯",boardKey:"keyboard-C4-Fsharp4",size:'compact',
+ board(){renderCompactKeyboard(['C4','F#4']);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p>`;}},
+{id:"mt01-20",kind:"continuation",groupId:"tone",title:"音数与度数",boardKey:"keyboard-C4-Fsharp4",size:'compact',
+ board(){renderCompactKeyboard(['C4','F#4']);},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p><p class="lesson-paragraph">音数反映的是两个音之间实际相隔多少个半音，而<span class="key-accent">不是</span>音程的度数。</p>`;}},
+{id:"mt01-21",kind:"continuation",groupId:"tone",title:"同音数，不同度数",boardKey:"enharmonic-tones",size:'compact',
+ board(){renderEnharmonicToneBoard();},
+ explanation(){return `<p class="lesson-paragraph">音程中所包含的<strong>全音</strong>和<strong>半音</strong>的数量叫<strong>音数</strong>。</p><p class="lesson-paragraph">一个全音的音数为 1，比如 C–D。</p><p class="lesson-paragraph">一个半音的音数为 0.5，比如 E–F。</p><p class="lesson-paragraph">C 到 F 的音数就是 2.5（C–D 第一个全音，D–E 第二个全音，E–F 半音）。</p><p class="lesson-paragraph">C 到 F♯ 的音数就是 3。</p><p class="lesson-paragraph">音数反映的是两个音之间实际相隔多少个半音，而<span class="key-accent">不是</span>音程的度数。</p><p class="lesson-paragraph">所以音数相同的音程，度数不一定相同。</p>`;}},
+{id:"mt01-22",kind:"check",groupId:"tone-check",title:"Quiz · 音数",boardKey:"keyboard-E4-C5",size:'compact',
+ board(){renderCompactKeyboard(['E4','C5']);},
+ explanation(){return `<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的音数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-tone-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-tone-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-tone-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-tone-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-tone-answer="6" type="button">〇&nbsp; 6</button></div></div>`;},
+ mount(){bindToneNumberQuiz();}},
+{id:"mt01-23",kind:"check",groupId:"tone-check",title:"Quiz · 度数",boardKey:"keyboard-E4-C5",size:'compact',
+ board(){renderCompactKeyboard(['E4','C5']);},
+ explanation(){return `<div class="quiz-block"><div class="quiz-kicker">Quiz</div><div class="quiz-question">E4 到 C5 的度数为：</div><div class="quiz-options vertical"><button class="quiz-option" data-degree-answer="4" type="button">〇&nbsp; 4</button><button class="quiz-option" data-degree-answer="4.5" type="button">〇&nbsp; 4.5</button><button class="quiz-option" data-degree-answer="5" type="button">〇&nbsp; 5</button><button class="quiz-option" data-degree-answer="5.5" type="button">〇&nbsp; 5.5</button><button class="quiz-option" data-degree-answer="6" type="button">〇&nbsp; 6</button></div></div>`;},
+ mount(){bindChoiceQuiz('6','data-degree-answer');}}
 ];
+const lessonView=TheoryLesson.create({board,explanation:body});
+TheoryLesson.progress(0,steps.length,'教学步骤');
+updateHeaderLessonCount(-1);
+new ResizeObserver(alignBoardRoleLabels).observe(board);
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){
   const previous=current;
-  $('#siteFooter').style.display='none';
+  $('#siteFooter').style.display='';
   current=i;
-  document.body.classList.add('lesson-active');
+  document.body.classList.add('lesson-active','theory-active');
   home.classList.add('hidden');
   summary.classList.add('hidden');
   lesson.classList.remove('hidden');
-  lesson.classList.toggle('opening',i<2);
-  $('#progress').style.width=((i+1)/steps.length*100)+'%';
+  TheoryLesson.progress(i+1,steps.length,'教学步骤');
   $('#prevBtn').textContent=i===0?'返回首页':'← 上一步';
   $('#nextBtn').textContent=i===steps.length-1?'完成学习':'继续 →';
   setQuizContinueEnabled(![13,21,22].includes(i) || passedQuizzes.has(i));
-  steps[i].render();
-  refreshLessonAudioForPage(i);
+  const view=lessonView.show(steps[i],{forward:doScroll && i>previous});
+  refreshLessonAudioForPage(i,doScroll && i>previous && !view.restored);
   updateHeaderLessonCount(i);
-  revealNewestLessonText();
-  if(doScroll){
-    requestAnimationFrame(()=>{
-      if(i>previous) revealNewestLessonText();
-      else body.scrollTo({top:0,behavior:'smooth'});
-    });
-  }
+
 }
 
 
 
 
 $('#startLearning').onclick=startLesson;
-$('#prevBtn').onclick=()=>{if(current===0)goHome();else if(current===1){openingSecondRevealed=false;showStep(0)}else showStep(current-1)};
+$('#prevBtn').onclick=()=>{if(current===0)goHome();else showStep(current-1)};
 $('#nextBtn').onclick=()=>{
   if(current<steps.length-1)showStep(current+1);
   else showSummary();
 };
 $('#backHome').onclick=goHome;
-function goHome(){openingSecondRevealed=false;current=0;document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';$('#progress').style.width='0%';window.scrollTo({top:0,behavior:'smooth'})}
-function showSummary(){document.body.classList.remove('lesson-active');clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='none';$('#progress').style.width='100%';window.scrollTo({top:0,behavior:'smooth'})}
-// 页面切换时重新渲染谱例；不在 resize 时重置当前互动状态。
+function goHome(){current=0;document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(0,steps.length,'教学步骤');updateHeaderLessonCount(-1);window.scrollTo({top:0,behavior:'instant'})}
+function showSummary(){document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(steps.length,steps.length,'教学步骤');window.scrollTo({top:0,behavior:'instant'})}
+// Shared display runtime preserves diagram and check state across navigation.
 
 (function(){
   let lastTouchEnd=0;

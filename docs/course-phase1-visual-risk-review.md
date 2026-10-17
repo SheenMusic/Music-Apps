@@ -1,5 +1,7 @@
 # Phase 1 最终视觉风险审核材料
 
+> 历史记录：以下保留当时的实施与测试结论，不代表现行课程设计要求。当前 MT Learning 规范见 `interactive-theory-lesson-standard.md`；全课程通用边界见 `course-design-system.md`。
+
 状态：**人工审核材料已准备；原自动化结果仍为 FAIL / BLOCKED。没有人工批准记录。** 本报告不实施 REVIEW_REQUIRED，不提交或部署。
 
 ## 1. 版本、范围与证据完整性
