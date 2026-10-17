@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>乐理 · 音程 02｜互动学习</title>
 <style>
-.lesson02-second-board{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-.lesson02-second-board svg{display:block;width:100%;height:100%;max-width:100%}
+/* Shared notation layout is defined in learning-components.css. */
 
 
 
@@ -211,14 +210,14 @@ function drawMelodicBoard(el,mode='ascending'){
     new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
     if(mode==='both'){
-      requestAnimationFrame(()=>{
+      const align=()=>{
         const wrap=el.closest('.melodic-board-wrap'); if(!wrap)return;
         wrap.querySelectorAll('.melodic-callout,.melodic-leader').forEach(n=>n.remove());
         const svg=el.querySelector('svg'), sr=svg?.getBoundingClientRect(), wr=wrap.getBoundingClientRect();
         if(!sr)return;
         const centers=notes.map(n=>{
           const bb=n.getBoundingBox?.();
-          if(bb)return {x:sr.left-wr.left+bb.getX()+bb.getW()/2,y:sr.top-wr.top+bb.getY()+bb.getH()/2};
+          if(bb){const point=new DOMPoint(bb.getX()+bb.getW()/2,bb.getY()+bb.getH()/2).matrixTransform(svg.getScreenCTM());return {x:point.x-wr.left,y:point.y-wr.top};}
           return {x:wr.width/2,y:wr.height/2};
         });
         const upX=(centers[0].x+centers[1].x)/2, downX=(centers[1].x+centers[2].x)/2, labelY=10;
@@ -229,12 +228,16 @@ function drawMelodicBoard(el,mode='ascending'){
         makeLeader(wrap,centers[1].x,centers[1].y-5,upX,labelY+22);
         makeLeader(wrap,centers[1].x,centers[1].y+3,downX,labelY+22);
         makeLeader(wrap,centers[2].x,centers[2].y-5,downX,labelY+22);
-      });
+      };
+      el.dataset.theoryLayout='';
+      el.addEventListener('theory-board-layout',align);
+      requestAnimationFrame(align);
     }
   }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function renderMelodicBoard(mode){
   board.innerHTML='<div class="melodic-board-wrap"><div class="melodic-board"><div id="melodicStaff" style="width:100%;height:100%"></div></div></div>';
+  board.querySelector('.melodic-board-wrap').classList.toggle('with-callouts',mode==='both');
   drawMelodicBoard($('#melodicStaff'),mode);
 }
 
@@ -1019,7 +1022,7 @@ const steps=[
 const lessonView=TheoryLesson.create({board,explanation:body,viewport:$('#stepBody')});
 TheoryLesson.progress(0,steps.length,'教学步骤');
 updateHeaderLessonCount(-1);
-new ResizeObserver(alignBoardRoleLabels).observe(board);
+board.addEventListener('theory-board-layout',alignBoardRoleLabels);
 function highlightKeys(ns){document.querySelectorAll('#kb [data-note]').forEach(k=>k.classList.toggle('on',ns.includes(k.dataset.note)))}
 function showStep(i,doScroll=true){
   const previous=current;

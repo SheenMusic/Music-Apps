@@ -65,9 +65,30 @@ async function choose(page,lesson,i,wrong=false){
  }
  await page.locator(lesson===1?answers[i]:`.quiz-option[data-a="${answers[i]}"]`).first().click();
 }
-// Only the explicitly authorized initial-bar configuration is normalized.
-const withoutStartBar = s => s.replaceAll('.setBegBarType(VF.Barline.type.NONE)','');
+// Normalize only the authorized initial bar and display-coordinate/callout
+// adaptation; note generation, voices, pitches and course handlers remain exact.
+const withoutStartBar = s => s
+ .replace('      const align=()=>{','      requestAnimationFrame(()=>{')
+ .replace("      };\n      el.dataset.theoryLayout='';\n      el.addEventListener('theory-board-layout',align);\n      requestAnimationFrame(align);",'      });')
+ .replaceAll('.setBegBarType(VF.Barline.type.NONE)','')
+ .replace("if(bb){const point=new DOMPoint(bb.getX()+bb.getW()/2,bb.getY()+bb.getH()/2).matrixTransform(svg.getScreenCTM());return {x:point.x-wr.left,y:point.y-wr.top};}","if(bb)return {x:sr.left-wr.left+bb.getX()+bb.getW()/2,y:sr.top-wr.top+bb.getY()+bb.getH()/2};")
+ .replace("  board.querySelector('.melodic-board-wrap').classList.toggle('with-callouts',mode==='both');\n",'');
 function syntax(source,name){new (require('node:vm').Script)(source,{filename:name});}
+function musicGeometry() {
+ const board=document.querySelector('#lessonBoard'),frame=board.querySelector('.theory-board-content'),b=board.getBoundingClientRect(),rects=[];
+ const visible=e=>{for(let n=e;n&&n!==board;n=n.parentElement){const s=getComputedStyle(n);if(s.display==='none'||s.visibility==='hidden'||Number(s.opacity)===0)return false;}return true;};
+ const paint=c=>c!=='none'&&c!=='transparent'&&!/rgba\(.*,[ ]*0\)$/.test(c);
+ for(const node of frame.querySelectorAll('svg path,svg line,svg rect,svg circle,svg ellipse,svg polygon,svg polyline,svg text,svg use')){
+  if(node.closest('defs,clipPath,mask')||!visible(node))continue;
+  const s=getComputedStyle(node),fill=node.tagName.toLowerCase()!=='line'&&paint(s.fill)&&Number(s.fillOpacity)>0,stroke=paint(s.stroke)&&Number(s.strokeOpacity)>0&&parseFloat(s.strokeWidth)>0;
+  if(fill||stroke)rects.push(node.getBoundingClientRect());
+ }
+ const walker=document.createTreeWalker(frame,NodeFilter.SHOW_TEXT);
+ for(let text;text=walker.nextNode();){if(!text.textContent.trim()||text.parentElement.closest('svg')||!visible(text.parentElement))continue;const range=document.createRange();range.selectNodeContents(text);rects.push(...range.getClientRects());}
+ for(const node of frame.querySelectorAll('button,.white-key,.black-key,.melodic-leader,.board-divider'))if(visible(node)){const s=getComputedStyle(node);if(paint(s.backgroundColor)||node.tagName==='BUTTON')rects.push(node.getBoundingClientRect());}
+ const boxes=rects.filter(r=>r.width||r.height),top=Math.min(...boxes.map(r=>r.top)),bottom=Math.max(...boxes.map(r=>r.bottom));
+ return {top,bottom,height:bottom-top,center:(top+bottom)/2,boardCenter:b.top+b.height/2,delta:(top+bottom)/2-b.top-b.height/2,usable:board.clientHeight-parseFloat(getComputedStyle(board).paddingTop)-parseFloat(getComputedStyle(board).paddingBottom),scroll:board.scrollTop,max:board.scrollHeight-board.clientHeight,boardTop:b.top,boardBottom:b.bottom};
+}
 test('syntax, fixed baseline teaching/rendering/check/audio code, links and unrelated files protected',()=>{
  for(const f of files.slice(0,2)){
   const now=fs.readFileSync(path.join(ROOT,f),'utf8'),old=original(f).toString();
@@ -86,6 +107,8 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
   'MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css',
   'docs/course-design-system.md','docs/interactive-theory-lesson-standard.md','docs/course-visual-unification-results.md','docs/course-phase1-visual-risk-review.md',
   'tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
+ const evidenceNames=['README.md','measurements.json','mt01-continuous.webm','mt02-continuous.webm',...['mt01-step1-1280x900','mt01-step9-1280x900','mt02-step1-1280x900','mt02-step3-1280x900','mt01-step1-390x844','mt02-step1-390x844','mt01-step1-844x390','mt01-step1-768x1024','mt01-step1-1024x768'].map(n=>n+'.png')];
+ for(const name of evidenceNames)allowed.add('tests/theory-learning/alignment-evidence/'+name);
  for(const f of changed)assert(allowed.has(f),'unexpected changed file '+f);
  const now=fs.readFileSync(path.join(ROOT,'MT-Intervals/lesson06/lesson.js'),'utf8'),old=original('MT-Intervals/lesson06/lesson.js').toString();
  assert.equal(now.slice(now.indexOf('  const exercises'),now.indexOf('  const byID')),old.slice(old.indexOf('  const exercises'),old.indexOf('  const byID')),'review copy and exercise configurations');
@@ -212,18 +235,20 @@ test('responsive full content, fixed regions, typography, themes, real VexFlow a
     const exp=document.querySelector('.lesson-content'),board=document.querySelector('#lessonBoard'),nav=document.querySelector('.lesson-nav');
     return {pageWidth:document.documentElement.scrollWidth,viewport:innerWidth,window:scrollY,board:r(board),exp:r(exp),nav:r(nav),expWidth:exp.scrollWidth,bodySize:getComputedStyle(exp).fontSize,leading:getComputedStyle(exp).lineHeight,
      bg:getComputedStyle(document.body).backgroundColor,text:getComputedStyle(exp).color,cardRadius:getComputedStyle(document.querySelector('#lesson')).borderRadius,bodyPad:getComputedStyle(document.body).paddingTop,
-     inner:r(exp.firstElementChild),scroll:exp.scrollTop,client:exp.clientHeight,height:innerHeight,boardScroll:board.scrollHeight,boardClient:board.clientHeight};
+     mode:getComputedStyle(exp.parentElement).display,inner:r(exp.firstElementChild),scroll:exp.scrollTop,client:exp.clientHeight,height:innerHeight,boardScroll:board.scrollHeight,boardClient:board.clientHeight};
    });
    assert(d.pageWidth<=width,JSON.stringify(d));assert(d.exp.height>=60,'reading area too short '+JSON.stringify(d));
    assert(d.nav.bottom<=height&&d.nav.y>=d.exp.bottom-1,'navigation overlaps explanation '+JSON.stringify(d));
    assert(d.expWidth<=d.exp.width+1,'explanation horizontal overflow '+JSON.stringify(d));
-   if(d.inner.height<=d.client+.5)assert(Math.abs(d.inner.y+d.inner.height/2-d.exp.y-d.exp.height/2)<1,'short content must be vertically centered '+JSON.stringify(d));
+   if(d.mode==='grid'&&d.inner.height<=d.client+.5)assert(Math.abs(d.inner.y+d.inner.height/2-d.exp.y-d.exp.height/2)<1,'short content must be vertically centered '+JSON.stringify(d));
    else {const start=d.inner.y-d.exp.y+d.scroll;assert(Math.abs(start)<1,'overflow must start at reachable offset zero '+JSON.stringify(d));}
    assert.equal(d.bodySize,'16px');assert.equal(d.cardRadius,'14px');assert.equal(d.window,0);assert.equal(d.bodyPad,'10px');
    assert(!/谱例暂时无法显示|五线谱组件未载入/.test(await p.locator('#lessonBoard').textContent()),'notation renderer fallback');
    const header=await p.locator('.topbar').evaluate(e=>{const a=e.firstElementChild.getBoundingClientRect(),b=e.lastElementChild.getBoundingClientRect();return {left:a.right,right:b.left};});
    assert(header.left<=header.right+1,'header overlap');
-   return d;
+   const music=await p.evaluate(musicGeometry);
+   if(music.height<=music.usable+.5)assert(Math.abs(music.delta)<=8,'painted music must be centered '+JSON.stringify({lesson:l,width,height,music}));
+   return {...d,music};
   };
   try{
    await p.screenshot({path:path.join(OUT,`mt${l===2?'06':'0'+(l+1)}-${width}-${theme}-home.png`),fullPage:true,caret:'initial'});
@@ -510,6 +535,74 @@ test('vertical reading: threshold, oversized paragraph, snapshot return, keyboar
    await p.evaluate(()=>{__view.show({...__fixtureSteps[3],id:'fresh-long'},{forward:true});document.querySelector('.lesson-content').dispatchEvent(new KeyboardEvent('keydown',{key:'Home',bubbles:true}));document.querySelector('.lesson-content').scrollTop=19;});
    await p.waitForTimeout(650);assert.equal((await measurements()).scroll,19,'keyboard takeover must cancel queued auto-positioning');
    assert.deepEqual(c.errors,[]);assert.deepEqual(c.missing,[]);
+  }finally{await c.context.close();}
+ }}finally{await browser.close();await server.close();}
+});
+
+test('independent alignment: actual painted bounds, requested screenshots and orientation restoration',async()=>{
+ fs.mkdirSync(OUT,{recursive:true});const records=[],server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ const targets=[[0,0,1280,900],[0,8,1280,900],[1,0,1280,900],[1,2,1280,900],[0,0,390,844],[1,0,390,844],[0,0,844,390],[0,0,768,1024],[0,0,1024,768]];
+ try{
+  for(const [l,i,width,height] of targets){
+   const c=await open(browser,server.url,files[l],{width,height,touch:width<1100}),p=c.page;
+   try{
+    await p.evaluate(i=>showStep(i,false),i);await settle(p);
+    const music=await p.evaluate(musicGeometry),text=await p.locator('.lesson-content').evaluate(e=>{const r=e.getBoundingClientRect(),n=e.firstElementChild.getBoundingClientRect();return {mode:getComputedStyle(e.parentElement).display,top:n.top-r.top,delta:n.top+n.height/2-r.top-r.height/2,overflow:n.height>e.clientHeight};});
+    assert(Math.abs(music.delta)<=8,JSON.stringify(music));assert.equal(music.scroll,0);
+    if(text.mode==='grid'&&!text.overflow)assert(Math.abs(text.delta)<1);else assert(Math.abs(text.top)<1);
+    const name=`mt0${l+1}-step${i+1}-${width}x${height}.png`;await p.screenshot({path:path.join(OUT,name),caret:'initial'});
+    records.push({lesson:l+1,step:i+1,width,height,music,text,screenshot:name});
+    // Layout changes reflow the same drawing/content nodes, never recreate the
+    // notation to achieve centering. Portrait always reads from its own top.
+    await p.evaluate(()=>{window.__score=document.querySelector('.theory-board-content svg');window.__copy=document.querySelector('.theory-explanation').firstElementChild;});
+    for(const size of [{width:390,height:844},{width:844,height:390},{width,height}]){
+     await p.setViewportSize(size);await settle(p);
+     assert.equal(await p.evaluate(()=>__score===document.querySelector('.theory-board-content svg')&&__copy===document.querySelector('.theory-explanation').firstElementChild),true);
+     const g=await p.evaluate(musicGeometry);if(g.height<=g.usable+.5)assert(Math.abs(g.delta)<=8,JSON.stringify(g));
+     const a=await p.locator('.lesson-content').evaluate(e=>({mode:getComputedStyle(e.parentElement).display,top:e.firstElementChild.getBoundingClientRect().top-e.getBoundingClientRect().top+e.scrollTop}));
+     if(a.mode!=='grid')assert(Math.abs(a.top)<1,'stacked explanation must stay top-aligned after rotation');
+    }
+    assert.deepEqual(c.errors,[]);assert.deepEqual(c.missing,[]);
+   }finally{await c.context.close();}
+  }
+  // Absolute role labels and melodic leaders belong to the music group too.
+  const c=await open(browser,server.url,files[0],{width:1280,height:900}),p=c.page;
+  try{
+   for(const i of [1,11]){
+    await p.evaluate(i=>showStep(i,false),i);await settle(p);
+    const anchor=await p.evaluate(()=>{const line=document.querySelector('.melodic-leader');if(!line)return null;const wrap=line.parentElement.getBoundingClientRect(),svg=document.querySelector('#melodicStaff svg');return new DOMPoint(wrap.left+parseFloat(line.style.left),wrap.top+parseFloat(line.style.top)+5).matrixTransform(svg.getScreenCTM().inverse()).toJSON();});
+    for(const size of [{width:390,height:844},{width:844,height:390},{width:1280,height:900}]){
+     await p.setViewportSize(size);await settle(p);const g=await p.evaluate(musicGeometry);if(g.height<=g.usable+.5)assert(Math.abs(g.delta)<=8,'labels/leaders must share centered bounds after rotation '+JSON.stringify(g));
+     const delta=await p.evaluate(anchor=>{
+      if(anchor){const line=document.querySelector('.melodic-leader'),wrap=line.parentElement.getBoundingClientRect(),svg=document.querySelector('#melodicStaff svg'),expected=new DOMPoint(anchor.x,anchor.y).matrixTransform(svg.getScreenCTM());return Math.max(Math.abs(parseFloat(line.style.left)+wrap.left-expected.x),Math.abs(parseFloat(line.style.top)+wrap.top+5-expected.y));}
+      const labels=[...document.querySelectorAll('.board-note-role.visible')],notes=[...document.querySelectorAll('#mainBoardStaff .vf-stavenote')];return Math.max(...labels.map((label,n)=>{const a=label.getBoundingClientRect(),b=notes[n?notes.length-1:0].getBoundingClientRect();return Math.abs(a.left+a.width/2-b.left-b.width/2);}));
+     },anchor);assert(delta<1,'HTML annotations must remain attached to the music after rotation');
+    }
+   }
+   await p.evaluate(()=>showStep(1,false));await settle(p);assert(Math.abs((await p.evaluate(musicGeometry)).delta)<=8,'cached label group must relayout on restore');
+   await p.evaluate(()=>showStep(11,false));await settle(p);
+   const frame=p.locator('.theory-board-content'),b=await p.locator('#lessonBoard').boundingBox();
+   await frame.evaluate(e=>e.style.minHeight='950px');await frame.evaluate(e=>{const x=document.createElement('p');x.textContent='测试用溢出内容';x.style.marginTop='900px';e.append(x);});
+   await p.locator('#lessonBoard').evaluate(e=>e.scrollTop=0);const start=await frame.boundingBox();assert(start.y>=b.y,'overflow must retain an accessible start');
+   await p.locator('#lessonBoard').evaluate(e=>e.scrollTop=e.scrollHeight);const last=await frame.locator('p').last().boundingBox();assert(last.y+last.height<=b.y+b.height+1,'complex board bottom must be reachable');
+  }finally{await c.context.close();}
+ }finally{fs.writeFileSync(path.join(OUT,'alignment-targets.json'),JSON.stringify(records,null,2));await browser.close();await server.close();}
+});
+test('independent alignment: stacked continuations fade without moving retained text before overflow',async()=>{
+ const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(const l of [0,1]){
+  const c=await open(browser,server.url,files[l],{width:768,height:1024,motion:'no-preference',touch:true}),p=c.page;
+  try{
+   await p.locator('#startLearning').click();await settle(p);
+   const samples=await p.evaluate(async()=>{
+    const inner=document.querySelector('.theory-explanation'),viewport=inner.parentElement,first=inner.firstElementChild,start=first.getBoundingClientRect().top;
+    showStep(1);const frames=[];
+    for(let i=0;i<30;i++){await new Promise(r=>requestAnimationFrame(r));frames.push({top:first.getBoundingClientRect().top,scroll:viewport.scrollTop,transform:getComputedStyle(inner).transform,opacity:getComputedStyle(inner.lastElementChild).opacity,page:scrollY});}
+    return {start,frames};
+   });
+   assert(samples.frames.every(f=>Math.abs(f.top-samples.start)<1&&f.scroll===0&&f.page===0&&f.transform==='none'),'stacked content must not drift');
+   assert(samples.frames.some(f=>Number(f.opacity)>0&&Number(f.opacity)<1),'new text must still fade in');
+   const board=await p.evaluate(musicGeometry);await p.locator('#prevBtn').click();await p.locator('#nextBtn').click();await settle(p);const after=await p.evaluate(musicGeometry);assert(Math.abs(after.delta-board.delta)<1,'explanation navigation must not move the retained music');
   }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}
 });
