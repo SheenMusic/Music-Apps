@@ -1,0 +1,1551 @@
+[
+  {
+    "code": "MT01",
+    "path": "MT-Intervals/lesson01/practice/index.html",
+    "type": "mt",
+    "count": 15,
+    "expected": "【MT01 · 度数、音数、旋律音程与和声音程】\n\n完成：15/15题 · 用时：2分03秒\n准确率：93.8% · 一次通过：14题\n\n需要关注：03\n\n© Sheen · Music Theory"
+  },
+  {
+    "code": "MT02",
+    "path": "MT-Intervals/lesson02/practice/index.html",
+    "type": "mt",
+    "count": 20,
+    "expected": "【MT02 · 音程的性质与自然音程】\n\n完成：20/20题 · 用时：2分03秒\n准确率：95.2% · 一次通过：19题\n\n需要关注：03\n\n© Sheen · Music Theory"
+  },
+  {
+    "code": "MT03",
+    "path": "MT-Intervals/lesson03/index.html",
+    "type": "mt",
+    "count": 15,
+    "expected": "【MT03 · 变化音程与等音程】\n\n完成：15/15题 · 用时：2分03秒\n准确率：93.8% · 一次通过：14题\n\n需要关注：03\n\n© Sheen · Music Theory"
+  },
+  {
+    "code": "MT04",
+    "path": "MT-Intervals/lesson04-x3n6cu/index.html",
+    "type": "mt",
+    "count": 20,
+    "expected": "【MT04 · 单音程与复音程】\n\n完成：20/20题 · 用时：2分03秒\n准确率：95.2% · 一次通过：19题\n\n需要关注：03\n\n© Sheen · Music Theory"
+  },
+  {
+    "code": "MT05",
+    "path": "MT-Intervals/lesson05-s2e2f4/index.html",
+    "type": "mt",
+    "count": 20,
+    "expected": "【MT05 · 原位音程与转位音程】\n\n完成：20/20题 · 用时：2分03秒\n准确率：95.2% · 一次通过：19题\n\n需要关注：03\n\n© Sheen · Music Theory"
+  },
+  {
+    "code": "ET01",
+    "path": "ET-Intervals/01-Direction-gn2y3h/index.html",
+    "type": "listening",
+    "records": [
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      }
+    ],
+    "expected": "【ET01 · 音高方向听辨】\n\n完成：20题 · 用时：2分15秒\n正确：17/20 · 正确率：85%\n\n需要关注：04、09、16\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET02",
+    "path": "ET-Intervals/02-Distance-p65l32/index.html",
+    "type": "listening",
+    "records": [
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": false
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      },
+      {
+        "correct": true
+      }
+    ],
+    "expected": "【ET02 · 音程宽窄听辨】\n\n完成：20题 · 用时：2分15秒\n正确：17/20 · 正确率：85%\n\n需要关注：04、09、16\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET03",
+    "path": "ET-Intervals/03-EchoSinging-l9ipbz/index.html",
+    "type": "singing",
+    "records": [
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      },
+      {
+        "targetNote": "C4",
+        "actualNote": "C4",
+        "cents": "-8.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET03 · 单音模唱】\n\n连续达标：10题 · 用时：1分00秒\n\n01  C4 / C4  -8¢\n02  C4 / C4  -8¢\n03  C4 / C4  -8¢\n04  C4 / C4  -8¢\n05  C4 / C4  -8¢\n06  C4 / C4  -8¢\n07  C4 / C4  -8¢\n08  C4 / C4  -8¢\n09  C4 / C4  -8¢\n10  C4 / C4  -8¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET04",
+    "path": "ET-Intervals/04-Octave-irx7ar/index.html",
+    "type": "singing",
+    "records": [
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      },
+      {
+        "targetNote": "C3",
+        "actualNote": "C3",
+        "cents": "-8.0",
+        "time": "3.5",
+        "refNote": "C4"
+      }
+    ],
+    "expected": "【ET04 · 指定八度模唱】\n\n声部：男高音（C3–B3）\n练习类型：把高音移低八度唱\n\n连续达标：10题 · 用时：1分00秒\n\n01  C4 → C3 / C3  -8¢\n02  C4 → C3 / C3  -8¢\n03  C4 → C3 / C3  -8¢\n04  C4 → C3 / C3  -8¢\n05  C4 → C3 / C3  -8¢\n06  C4 → C3 / C3  -8¢\n07  C4 → C3 / C3  -8¢\n08  C4 → C3 / C3  -8¢\n09  C4 → C3 / C3  -8¢\n10  C4 → C3 / C3  -8¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET05",
+    "path": "ET-Intervals/05-2nd-d7wzes/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大二度",
+        "refNote": "C4",
+        "targetNote": "D4",
+        "actualNote": "D4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET05 · 二度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  M2  C4 → D4 / D4  +12¢\n02  M2  C4 → D4 / D4  +12¢\n03  M2  C4 → D4 / D4  +12¢\n04  M2  C4 → D4 / D4  +12¢\n05  M2  C4 → D4 / D4  +12¢\n06  M2  C4 → D4 / D4  +12¢\n07  M2  C4 → D4 / D4  +12¢\n08  M2  C4 → D4 / D4  +12¢\n09  M2  C4 → D4 / D4  +12¢\n10  M2  C4 → D4 / D4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET06",
+    "path": "ET-Intervals/06-2nd-9g6ymn/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小二度",
+        "lowTarget": "G3",
+        "highTarget": "Ab3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "G#2 (103.8Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET06 · 二度和声音程模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  m2  G3–Ab3 → G2–G#2\n02  m2  G3–Ab3 → G2–G#2\n03  m2  G3–Ab3 → G2–G#2\n04  m2  G3–Ab3 → G2–G#2\n05  m2  G3–Ab3 → G2–G#2\n06  m2  G3–Ab3 → G2–G#2\n07  m2  G3–Ab3 → G2–G#2\n08  m2  G3–Ab3 → G2–G#2\n09  m2  G3–Ab3 → G2–G#2\n10  m2  G3–Ab3 → G2–G#2\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET07",
+    "path": "ET-Intervals/07-7th-wns1er/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大七度",
+        "refNote": "C4",
+        "targetNote": "B4",
+        "actualNote": "B4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET07 · 七度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  M7  C4 → B4 / B4  +12¢\n02  M7  C4 → B4 / B4  +12¢\n03  M7  C4 → B4 / B4  +12¢\n04  M7  C4 → B4 / B4  +12¢\n05  M7  C4 → B4 / B4  +12¢\n06  M7  C4 → B4 / B4  +12¢\n07  M7  C4 → B4 / B4  +12¢\n08  M7  C4 → B4 / B4  +12¢\n09  M7  C4 → B4 / B4  +12¢\n10  M7  C4 → B4 / B4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET08",
+    "path": "ET-Intervals/08-7th-f0m7ys/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小七度",
+        "lowTarget": "G3",
+        "highTarget": "F4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "F3 (174.6Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET08 · 七度和声模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  m7  G3–F4 → G2–F3\n02  m7  G3–F4 → G2–F3\n03  m7  G3–F4 → G2–F3\n04  m7  G3–F4 → G2–F3\n05  m7  G3–F4 → G2–F3\n06  m7  G3–F4 → G2–F3\n07  m7  G3–F4 → G2–F3\n08  m7  G3–F4 → G2–F3\n09  m7  G3–F4 → G2–F3\n10  m7  G3–F4 → G2–F3\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET09",
+    "path": "ET-Intervals/09-3rd-hz86pk/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大三度",
+        "refNote": "C4",
+        "targetNote": "E4",
+        "actualNote": "E4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET09 · 三度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  M3  C4 → E4 / E4  +12¢\n02  M3  C4 → E4 / E4  +12¢\n03  M3  C4 → E4 / E4  +12¢\n04  M3  C4 → E4 / E4  +12¢\n05  M3  C4 → E4 / E4  +12¢\n06  M3  C4 → E4 / E4  +12¢\n07  M3  C4 → E4 / E4  +12¢\n08  M3  C4 → E4 / E4  +12¢\n09  M3  C4 → E4 / E4  +12¢\n10  M3  C4 → E4 / E4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET10",
+    "path": "ET-Intervals/10-3rd-9sb0vu/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小三度",
+        "lowTarget": "G3",
+        "highTarget": "Bb3",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "A#2 (116.5Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET10 · 三度和声模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  m3  G3–Bb3 → G2–A#2\n02  m3  G3–Bb3 → G2–A#2\n03  m3  G3–Bb3 → G2–A#2\n04  m3  G3–Bb3 → G2–A#2\n05  m3  G3–Bb3 → G2–A#2\n06  m3  G3–Bb3 → G2–A#2\n07  m3  G3–Bb3 → G2–A#2\n08  m3  G3–Bb3 → G2–A#2\n09  m3  G3–Bb3 → G2–A#2\n10  m3  G3–Bb3 → G2–A#2\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET11",
+    "path": "ET-Intervals/11-6th-z79m8y/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方大六度",
+        "refNote": "C4",
+        "targetNote": "A4",
+        "actualNote": "A4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET11 · 六度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  M6  C4 → A4 / A4  +12¢\n02  M6  C4 → A4 / A4  +12¢\n03  M6  C4 → A4 / A4  +12¢\n04  M6  C4 → A4 / A4  +12¢\n05  M6  C4 → A4 / A4  +12¢\n06  M6  C4 → A4 / A4  +12¢\n07  M6  C4 → A4 / A4  +12¢\n08  M6  C4 → A4 / A4  +12¢\n09  M6  C4 → A4 / A4  +12¢\n10  M6  C4 → A4 / A4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET12",
+    "path": "ET-Intervals/12-6th-020gcq/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "小六度",
+        "lowTarget": "G3",
+        "highTarget": "Eb4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "D#3 (155.6Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET12 · 六度和声模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  m6  G3–Eb4 → G2–D#3\n02  m6  G3–Eb4 → G2–D#3\n03  m6  G3–Eb4 → G2–D#3\n04  m6  G3–Eb4 → G2–D#3\n05  m6  G3–Eb4 → G2–D#3\n06  m6  G3–Eb4 → G2–D#3\n07  m6  G3–Eb4 → G2–D#3\n08  m6  G3–Eb4 → G2–D#3\n09  m6  G3–Eb4 → G2–D#3\n10  m6  G3–Eb4 → G2–D#3\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET13",
+    "path": "ET-Intervals/13-4th-fdown4/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方增四度",
+        "refNote": "C4",
+        "targetNote": "F#4",
+        "actualNote": "F#4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET13 · 四度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  A4  C4 → F#4 / F#4  +12¢\n02  A4  C4 → F#4 / F#4  +12¢\n03  A4  C4 → F#4 / F#4  +12¢\n04  A4  C4 → F#4 / F#4  +12¢\n05  A4  C4 → F#4 / F#4  +12¢\n06  A4  C4 → F#4 / F#4  +12¢\n07  A4  C4 → F#4 / F#4  +12¢\n08  A4  C4 → F#4 / F#4  +12¢\n09  A4  C4 → F#4 / F#4  +12¢\n10  A4  C4 → F#4 / F#4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET14",
+    "path": "ET-Intervals/14-4th-gqx79i/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "增四度",
+        "lowTarget": "G3",
+        "highTarget": "C#4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET14 · 四度和声模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  A4  G3–C#4 → G2–C#3\n02  A4  G3–C#4 → G2–C#3\n03  A4  G3–C#4 → G2–C#3\n04  A4  G3–C#4 → G2–C#3\n05  A4  G3–C#4 → G2–C#3\n06  A4  G3–C#4 → G2–C#3\n07  A4  G3–C#4 → G2–C#3\n08  A4  G3–C#4 → G2–C#3\n09  A4  G3–C#4 → G2–C#3\n10  A4  G3–C#4 → G2–C#3\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET15",
+    "path": "ET-Intervals/15-5th-4awj58/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "上方减五度",
+        "refNote": "C4",
+        "targetNote": "Gb4",
+        "actualNote": "Gb4",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET15 · 五度旋律音程构唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  d5  C4 → Gb4 / Gb4  +12¢\n02  d5  C4 → Gb4 / Gb4  +12¢\n03  d5  C4 → Gb4 / Gb4  +12¢\n04  d5  C4 → Gb4 / Gb4  +12¢\n05  d5  C4 → Gb4 / Gb4  +12¢\n06  d5  C4 → Gb4 / Gb4  +12¢\n07  d5  C4 → Gb4 / Gb4  +12¢\n08  d5  C4 → Gb4 / Gb4  +12¢\n09  d5  C4 → Gb4 / Gb4  +12¢\n10  d5  C4 → Gb4 / Gb4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET16",
+    "path": "ET-Intervals/16-5th-1d2mp0/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减五度",
+        "lowTarget": "G3",
+        "highTarget": "Db4",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#3 (138.6Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET16 · 五度和声模唱】\n\n练习音区：C3–C5\n练习模式：随机混合\n\n连续达标：10题 · 用时：1分00秒\n\n01  d5  G3–Db4 → G2–C#3\n02  d5  G3–Db4 → G2–C#3\n03  d5  G3–Db4 → G2–C#3\n04  d5  G3–Db4 → G2–C#3\n05  d5  G3–Db4 → G2–C#3\n06  d5  G3–Db4 → G2–C#3\n07  d5  G3–Db4 → G2–C#3\n08  d5  G3–Db4 → G2–C#3\n09  d5  G3–Db4 → G2–C#3\n10  d5  G3–Db4 → G2–C#3\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET17",
+    "path": "ET-Intervals/17-Compound-be0x3n/index.html",
+    "type": "construction",
+    "records": [
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      },
+      {
+        "interval": "减十二度",
+        "refNote": "C4",
+        "targetNote": "Gb5",
+        "actualNote": "Gb5",
+        "cents": "12.0",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET17 · 复音程旋律音程构唱】\n\n练习音区：C3–C5\n\n连续达标：10题 · 用时：1分00秒\n\n01  d12  C4 → Gb5 / Gb5  +12¢\n02  d12  C4 → Gb5 / Gb5  +12¢\n03  d12  C4 → Gb5 / Gb5  +12¢\n04  d12  C4 → Gb5 / Gb5  +12¢\n05  d12  C4 → Gb5 / Gb5  +12¢\n06  d12  C4 → Gb5 / Gb5  +12¢\n07  d12  C4 → Gb5 / Gb5  +12¢\n08  d12  C4 → Gb5 / Gb5  +12¢\n09  d12  C4 → Gb5 / Gb5  +12¢\n10  d12  C4 → Gb5 / Gb5  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "code": "ET18",
+    "path": "ET-Intervals/18-Compound-1qoxm6/index.html",
+    "type": "harmonic",
+    "records": [
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      },
+      {
+        "type": "减十二度",
+        "lowTarget": "G3",
+        "highTarget": "Db5",
+        "lowCapturedText": "G2 (98.0Hz)",
+        "highCapturedText": "C#4 (277.2Hz)",
+        "time": "3.5"
+      }
+    ],
+    "expected": "【ET18 · 复音程和声模唱】\n\n练习音区：C3–C5\n练习模式：混合模式\n\n连续达标：10题 · 用时：1分00秒\n\n01  d12  G3–Db5 → G2–C#4\n02  d12  G3–Db5 → G2–C#4\n03  d12  G3–Db5 → G2–C#4\n04  d12  G3–Db5 → G2–C#4\n05  d12  G3–Db5 → G2–C#4\n06  d12  G3–Db5 → G2–C#4\n07  d12  G3–Db5 → G2–C#4\n08  d12  G3–Db5 → G2–C#4\n09  d12  G3–Db5 → G2–C#4\n10  d12  G3–Db5 → G2–C#4\n\n© Sheen · Ear Training"
+  }
+]

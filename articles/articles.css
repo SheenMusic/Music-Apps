@@ -46,7 +46,7 @@ a{color:inherit;text-decoration:none}
 .markdown-body blockquote p:last-child{margin-bottom:0}
 .markdown-body img{display:block;max-width:100%;height:auto;margin:28px auto}
 .markdown-body :is(pre,code){font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.9em}
-.markdown-body pre{max-width:100%;overflow:auto;padding:16px;background:var(--site-soft);border-radius:8px;line-height:1.6}
+.markdown-body pre{max-width:100%;overflow:auto;padding:16px;background:var(--site-soft);border-radius:var(--site-radius-card);line-height:1.6}
 .markdown-body hr{border:0;border-top:1px solid var(--site-border);margin:2em 0}
 .page-footer{flex:none}
 @media(min-width:861px){

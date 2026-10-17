@@ -10,13 +10,13 @@
 }
 :where(html[data-visual="ear"]) {
   --course-content-width: 480px;
-  --course-card-radius: 18px;
-  --course-button-radius: 11px;
+  --course-card-radius:var(--site-radius-card);
+  --course-button-radius:var(--site-radius-control);
   --course-button-min-height: 46px;
 }
 :where(html[data-visual="practice"]) {
   --course-content-width: 520px;
-  --course-card-radius: 16px;
-  --course-button-radius: 16px;
-  --course-option-radius: 10px;
+  --course-card-radius:var(--site-radius-card);
+  --course-button-radius:var(--site-radius-control);
+  --course-option-radius:var(--site-radius-control);
 }

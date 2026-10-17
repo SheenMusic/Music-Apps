@@ -1,0 +1,469 @@
+[
+  {
+    "name": "MT exact complete snapshot",
+    "input": {
+      "type": "mt",
+      "code": "MT03",
+      "title": "变化音程与等音程",
+      "seconds": 169,
+      "accuracy": "100.0",
+      "records": [
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        }
+      ]
+    },
+    "expected": "【MT03 · 变化音程与等音程】\n\n完成：15/15题 · 用时：2分49秒\n准确率：100.0% · 一次通过：15题\n\n✓ 全部一次通过\n\n© Sheen · Music Theory"
+  },
+  {
+    "name": "MT retry snapshot",
+    "input": {
+      "type": "mt",
+      "code": "MT03",
+      "title": "变化音程与等音程",
+      "seconds": 206,
+      "accuracy": "83.3",
+      "records": [
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 2,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 2,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 2,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        },
+        {
+          "attempts": 1,
+          "isSolved": true
+        }
+      ]
+    },
+    "expected": "【MT03 · 变化音程与等音程】\n\n完成：15/15题 · 用时：3分26秒\n准确率：83.3% · 一次通过：12题\n\n需要关注：03、08、11\n\n© Sheen · Music Theory"
+  },
+  {
+    "name": "ET listening snapshot",
+    "input": {
+      "type": "listening",
+      "code": "ET01",
+      "title": "音高方向听辨",
+      "seconds": 135,
+      "correct": 17,
+      "total": 20,
+      "accuracy": 85,
+      "records": [
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": false
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": false
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": false
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        },
+        {
+          "correct": true
+        }
+      ]
+    },
+    "expected": "【ET01 · 音高方向听辨】\n\n完成：20题 · 用时：2分15秒\n正确：17/20 · 正确率：85%\n\n需要关注：04、09、16\n\n© Sheen · Ear Training"
+  },
+  {
+    "name": "singing ten-record snapshot",
+    "input": {
+      "type": "singing",
+      "code": "ET04",
+      "title": "指定八度模唱",
+      "seconds": 60,
+      "records": [
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        },
+        {
+          "refNote": "C5",
+          "targetNote": "C4",
+          "actualNote": "C4",
+          "cents": "-8.0"
+        }
+      ]
+    },
+    "expected": "【ET04 · 指定八度模唱】\n\n连续达标：10题 · 用时：1分00秒\n\n01  C5 → C4 / C4  -8¢\n02  C5 → C4 / C4  -8¢\n03  C5 → C4 / C4  -8¢\n04  C5 → C4 / C4  -8¢\n05  C5 → C4 / C4  -8¢\n06  C5 → C4 / C4  -8¢\n07  C5 → C4 / C4  -8¢\n08  C5 → C4 / C4  -8¢\n09  C5 → C4 / C4  -8¢\n10  C5 → C4 / C4  -8¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "name": "construction ten-record snapshot",
+    "input": {
+      "type": "construction",
+      "code": "ET09",
+      "title": "三度旋律音程构唱",
+      "seconds": 60,
+      "records": [
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        },
+        {
+          "interval": "上方大三度",
+          "refNote": "C4",
+          "targetNote": "E4",
+          "actualNote": "E4",
+          "cents": "12.0"
+        }
+      ]
+    },
+    "expected": "【ET09 · 三度旋律音程构唱】\n\n连续达标：10题 · 用时：1分00秒\n\n01  M3  C4 → E4 / E4  +12¢\n02  M3  C4 → E4 / E4  +12¢\n03  M3  C4 → E4 / E4  +12¢\n04  M3  C4 → E4 / E4  +12¢\n05  M3  C4 → E4 / E4  +12¢\n06  M3  C4 → E4 / E4  +12¢\n07  M3  C4 → E4 / E4  +12¢\n08  M3  C4 → E4 / E4  +12¢\n09  M3  C4 → E4 / E4  +12¢\n10  M3  C4 → E4 / E4  +12¢\n\n© Sheen · Ear Training"
+  },
+  {
+    "name": "harmonic ten-record snapshot",
+    "input": {
+      "type": "harmonic",
+      "code": "ET10",
+      "title": "三度和声模唱",
+      "seconds": 60,
+      "records": [
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        },
+        {
+          "type": "小三度",
+          "lowTarget": "G3",
+          "highTarget": "Bb3",
+          "lowCapturedText": "G2 (98.0Hz)",
+          "highCapturedText": "A#2 (116.5Hz)",
+          "time": "9.0"
+        }
+      ]
+    },
+    "expected": "【ET10 · 三度和声模唱】\n\n连续达标：10题 · 用时：1分00秒\n\n01  m3  G3–Bb3 → G2–A#2\n02  m3  G3–Bb3 → G2–A#2\n03  m3  G3–Bb3 → G2–A#2\n04  m3  G3–Bb3 → G2–A#2\n05  m3  G3–Bb3 → G2–A#2\n06  m3  G3–Bb3 → G2–A#2\n07  m3  G3–Bb3 → G2–A#2\n08  m3  G3–Bb3 → G2–A#2\n09  m3  G3–Bb3 → G2–A#2\n10  m3  G3–Bb3 → G2–A#2\n\n© Sheen · Ear Training"
+  }
+]
