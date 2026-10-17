@@ -67,21 +67,10 @@
     byID('compoundPair').textContent = `${compoundDegree} 度 − 7 → ${names[compoundDegree - 9]}度`;
     byID('lessonBoard').querySelectorAll('[data-degree]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.degree)===compoundDegree)));
   }
-  function setStage(stage) {
-    current = stage;
-    const reviewing = stage >= 0 && stage < modules.length;
-    byID('home').hidden = stage !== -1;
-    byID('lesson').hidden = !reviewing;
-    byID('summary').hidden = stage !== modules.length;
-    byID('lessonNav').hidden = !reviewing;
-    document.body.classList.toggle('review-active',reviewing);
-    const completed = stage < 0 ? 0 : Math.min(stage, modules.length);
-    byID('progress').style.width = `${completed / modules.length * 100}%`;
-    document.querySelector('.progress-wrap').setAttribute('aria-valuenow',String(completed));
-    byID('stepCount').textContent = stage === -1 ? '开始' : reviewing ? `${stage+1} / 4` : '完成';
-    if(reviewing) {
-      const module = modules[stage];
-      byID('moduleNumber').textContent = `复习 ${String(stage+1).padStart(2,'0')}`;
+  const explanationTemplate = byID('reviewExplanation').innerHTML;
+  function renderModuleContent() {
+      const module = modules[current];
+      byID('moduleNumber').textContent = `复习 ${String(current+1).padStart(2,'0')}`;
       byID('moduleTitle').textContent = module.title;
       byID('moduleCopy').innerHTML = module.copy;
       byID('exerciseLinks').replaceChildren(...exercises[module.group].map(([title,config])=>{
@@ -93,10 +82,31 @@
         const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
         link.append(text,arrow);return link;
       }));
-      renderBoard();
+  }
+  const lessonView = TheoryLesson.create({board:byID('lessonBoard'),explanation:byID('reviewExplanation'),viewport:byID('lessonContent')});
+  const moduleSteps = modules.map(module=>({
+    id:`review-${module.group}`,kind:'new-concept',groupId:module.group,
+    boardKey:module.group,size:'expanded',
+    board:renderBoard,explanation:()=>explanationTemplate,mount:renderModuleContent
+  }));
+  function setStage(stage) {
+    const previous=current;
+    if(stage<0 || stage>=modules.length) lessonView.leave();
+    current = stage;
+    const reviewing = stage >= 0 && stage < modules.length;
+    byID('home').hidden = stage !== -1;
+    byID('lesson').hidden = !reviewing;
+    byID('summary').hidden = stage !== modules.length;
+    byID('lessonNav').hidden = !reviewing;
+    document.body.classList.toggle('review-active',reviewing);
+    document.body.classList.toggle('theory-active',reviewing);
+    const completed = stage < 0 ? 0 : Math.min(stage, modules.length);
+    TheoryLesson.progress(completed,modules.length,'复习模块');
+    byID('stepCount').textContent = stage === -1 ? '开始' : reviewing ? `${stage+1} / 4` : '完成';
+    if(reviewing) {
+      lessonView.show(moduleSteps[stage],{forward:stage>previous});
       byID('prevBtn').textContent = stage === 0 ? '返回首页' : '← 上一步';
       byID('nextBtn').textContent = stage === modules.length-1 ? '完成复习' : '继续 →';
-      byID('lessonContent').scrollTop=0;byID('lessonBoard').scrollTop=0;
     }
     window.scrollTo({top:0,behavior:'instant'});
     byID(reviewing ? 'moduleTitle' : stage === -1 ? 'homeTitle' : 'summaryTitle').focus({preventScroll:true});
