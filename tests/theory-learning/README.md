@@ -1,5 +1,7 @@
 # MT Learning 共享框架：实施与验证记录
 
+> 首次实施记录截至 `23dd0b6`；当前人工预览修订见文末 v1.1.0。下述首次字号、规模与测试数量属于当时结果。
+
 日期：2026-10-17。起点：最新远程 main `3eae716095bd2941f4508184ff074d5df51dd18b`，本地最初为干净的 `work@73d6884`；远程只新增了本任务必读专项规范。独立工作分支 `refactor/mt-learning-framework`，不推送、不合并、不部署。
 
 ## 范围与共享边界
@@ -77,3 +79,21 @@ git diff --check
 ```
 
 真实 iPhone/iPad Safari、设备刘海/地址栏动态高度、VoiceOver、物理音频输出/听感和外部 MusicTheory.net 完整练习未验证；外部 URL、noopener、新窗口、原PDF文件存在性已核实，未向外部服务提交答案。没有发现需重新确认的教学内容变更；新页面框架与上述设备限制需在实际设备使用时观察。
+
+## v1.1.0：人工预览反馈修订
+
+继续在同一功能分支修正，不重新开发教学框架。规范已按实际人工反馈升为 v1.1.0，旧1.12rem/2.08不再是正文门禁。
+
+- 全课统一层级：模块24px/1.4（短横屏21px）、小标题17px/1.5、正文16px/1.85、列表15px/1.85、注释/操作13px/1.75、演示标签13px/1.6、参考说明14px/1.7、Quiz题干18px/1.65。共享 token 位于 learning-base.css，MT06 没有独立正文覆盖。
+- 阅读区最大34rem、水平居中、段内左对齐；对称 padding 与 stable both-edges 滚动条占位保证追加前后中心不跳动。原谱面外壳内部对齐修正，音乐图形比例仍独立维护。
+- 延伸先无位移测量，再240ms渐显/6px轻微进入，同步最小原生平滑滚动；overflow-anchor:none 避免浏览器锚定竞争。手动操作取消等待及正在执行的定位，不留隐藏文字；减少动态/返回位置/原 Quiz 门槛保留。
+- MT01/02 独立谱表用 VexFlow setBegBarType(NONE) 隐藏左起始线；结构性 BarNote、手绘中间分隔线和结束线保留。原函数保护断言只规范化这一个获授权配置调用，不能掩盖音符、答案或其他逻辑变化。
+- 三课共用方向键导航，排除输入/编辑、Quiz、演示按钮及其原生操作；保留 Enter/Space，禁用的继续按钮仍不能被绕过。精确指针默认显示提示，触屏使用框架方向键后显示，固定提示行避免导航移动。
+
+新增预览反馈检查覆盖三课×五类视口的层级/居中、连续多个延伸步骤的真实逐帧 opacity/scroll/旧文位置、读者滚轮中止正在执行的原生平滑滚动、返回、触屏提示、Quiz/音乐按钮/输入的键盘排除，以及真实 VexFlow 起始/内部/结束线。
+
+最终验证结果、截图和限制随本次提交一并记录；原始首轮实施结果与历史失败报告保持不变。新的截图目录为 `/tmp/mt-learning-v1.1-accepted/`，连续动作逐帧证据为 `smooth-motion.json`；不上传临时截图或运行缓存。真机 Safari、安全区动态变化、VoiceOver 和实际听感仍未验证。
+
+本轮最终结果：Learning整套57项通过、0失败；另以触控设备模拟复核三课×五视口的层级、水平中心和演示按钮触达（1项测试、15场景）通过。连续帧验证覆盖新文渐显、滚动中间位置、旧文仅随容器移动，以及真实 wheel 对已开始平滑滚动的接管。Practice报告35项、相关UI18项、既有行为4项通过（另3项既有TODO）；Dashboard逻辑8组和学生工具检查通过。JavaScript语法、资源路径和git diff检查通过。未修改非目标页面。
+
+日志：`/tmp/mt-learning-v1.1-accepted.log`、`/tmp/mt-learning-v1.1-touch.log`、`/tmp/mt-learning-practice-regression.log`、`/tmp/mt-learning-behavior-regression.log`、`/tmp/mt-learning-ui-regression.log`。首轮谱表专项测试误把 MT02 的 BarNote 内部分隔当成手绘 SVG line，已按实际组件类型校正断言；未因此修改或删除原结构线。首轮日志仍保留在 `/tmp/mt-learning-feedback.log`，不把它改写为通过。

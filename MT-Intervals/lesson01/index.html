@@ -63,8 +63,8 @@ function play(note,d=.72,delay=0){wakeAudio();synth(note,d,delay)}
 function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);if(ia<0||ib<0)return [];if(ia>ib)[ia,ib]=[ib,ia];return chromatic.slice(ia,ib+1)}
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
-function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
-function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
+function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24).setBegBarType(VF.Barline.type.NONE);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
+function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24).setBegBarType(VF.Barline.type.NONE);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
 function alignBoardRoleLabels(){
   const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
   if(!wrap||!staff)return;
@@ -92,7 +92,7 @@ function drawUnisonMeasures(el,{accidentals=false}={}){
     const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','f4'],['g4','g4']]:[['f4','f4'],['g4','g4'],['a4','a4']];
-    const st=new VF.Stave(8,38,w-16);
+    const st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').setContext(ctx).draw();
     const tickables=[];
     groups.forEach((pair,gi)=>{
@@ -115,7 +115,7 @@ function drawSecondMeasures(el){
     const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','g4'],['g4','a4']]:[['f4','g4'],['g4','a4'],['a4','b4']];
-    const st=new VF.Stave(8,38,w-16);
+    const st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').setContext(ctx).draw();
     const tickables=[];
     groups.forEach((pair,gi)=>{
@@ -134,7 +134,7 @@ function drawIntervalOverview(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
     const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').setContext(ctx).draw();
     const uppers=['f4','g4','a4','b4','c5','d5','e5','f5'];
     const labels=['uni.','2nd','3rd','4th','5th','6th','7th','oct.'];
@@ -173,7 +173,7 @@ function drawMelodicBoard(el,mode='ascending'){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
     const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
     let notes;
     if(mode==='ascending'){
@@ -224,7 +224,7 @@ function drawHarmonicBoard(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
     const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16);
+    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
 
     // Preserve the page-12 melodic positions: C5, D5, G4.
@@ -294,7 +294,7 @@ function drawToneCountStaff(el){
     const labelY=151, ns='http://www.w3.org/2000/svg';
     groups.forEach((g,i)=>{
       const st=new VF.Stave(left+i*(sw+gap),34,sw);
-      if(i===0)st.addClef('treble');
+      if(i===0)st.setBegBarType(VF.Barline.type.NONE).addClef('treble');
       st.setContext(ctx).draw();
       const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
       if(g.acc)note.addModifier(new VF.Accidental(g.acc),1);
@@ -327,7 +327,7 @@ function drawEnharmonicToneStaff(el){
     const w=responsiveStaffWidth(el,220,760),h=176;
     const r=new VF.Renderer(el,VF.Renderer.Backends.SVG); r.resize(w,h);
     const ctx=r.getContext(),left=8,right=8,staffW=w-left-right,staveY=38;
-    const st=new VF.Stave(left,staveY,staffW);
+    const st=new VF.Stave(left,staveY,staffW).setBegBarType(VF.Barline.type.NONE);
     st.addClef('treble').setContext(ctx).draw();
 
     const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
@@ -734,25 +734,6 @@ function showSummary(){document.body.classList.remove('lesson-active','theory-ac
   },{passive:false});
 })();
 
-
-/* Desktop keyboard navigation.
-   ArrowLeft / ArrowUp  = Previous
-   ArrowRight / ArrowDown = Continue
-   Touch/click navigation remains unchanged. */
-document.addEventListener('keydown',function(e){
-  if(!document.body.classList.contains('lesson-active')) return;
-  if(e.metaKey||e.ctrlKey||e.altKey) return;
-  const target=e.target;
-  if(target && (target.matches?.('input,textarea,select') || target.isContentEditable)) return;
-
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){
-    e.preventDefault();
-    document.getElementById('prevBtn')?.click();
-  }else if(e.key==='ArrowRight'||e.key==='ArrowDown'){
-    e.preventDefault();
-    document.getElementById('nextBtn')?.click();
-  }
-});
 
 </script>
 </body></html>

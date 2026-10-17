@@ -14,7 +14,7 @@ html[data-theory-lesson] .board-controls button{min-width:44px;min-height:44px;b
 html[data-theory-lesson] .board-controls button[aria-pressed="true"]{background:#6366f1;color:#fff;border-color:#6366f1}
 html[data-theory-lesson] .staff-example{width:100%;height:auto;display:block}
 html[data-theory-lesson] .staff-examples{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-html[data-theory-lesson] .staff-examples figcaption{font-size:13px;color:#475569;line-height:1.6}
+html[data-theory-lesson] .staff-examples figcaption{font-size:var(--theory-text-label-size);color:#475569;line-height:1.6}
 html[data-theory-lesson] .staff-example line{stroke:#64748b;stroke-width:1}
 html[data-theory-lesson] .staff-example ellipse{fill:#1e293b}
 html[data-theory-lesson] .staff-example text{fill:#475569;font-family:var(--site-font);font-size:14px}

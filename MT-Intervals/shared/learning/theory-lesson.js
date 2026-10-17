@@ -1,7 +1,32 @@
 /* Display-only Learning runtime. Courses own their content, checks and audio. */
 (() => {
   'use strict';
+  let navigationInstalled = false;
+  function installNavigation() {
+    if (navigationInstalled) return;
+    navigationInstalled = true;
+    const hint = document.createElement('p');
+    hint.className = 'theory-keyboard-hint';
+    hint.textContent = '方向键：← ↑ 上一步 · → ↓ 继续';
+    document.querySelector('.footer')?.append(hint);
+    document.getElementById('prevBtn')?.setAttribute('aria-keyshortcuts','ArrowLeft ArrowUp');
+    document.getElementById('nextBtn')?.setAttribute('aria-keyshortcuts','ArrowRight ArrowDown');
+    document.addEventListener('keydown', event => {
+      if (event.defaultPrevented || !document.body.classList.contains('theory-active') || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+      const previous = ['ArrowLeft','ArrowUp'].includes(event.key);
+      if (!previous && !['ArrowRight','ArrowDown'].includes(event.key)) return;
+      const target = event.target;
+      const control = target.closest?.('input,textarea,select,button,a,[role=slider],[role=combobox],[role=listbox],[role=spinbutton],[role=tablist]');
+      if (target.isContentEditable || target.closest?.('.lesson-board,.quiz-block') || (control && !control.closest('.lesson-nav'))) return;
+      event.preventDefault();
+      document.documentElement.classList.add('theory-keyboard-used');
+      if (event.repeat) return;
+      const button = document.getElementById(previous ? 'prevBtn' : 'nextBtn');
+      if (button && !button.disabled && button.getAttribute('aria-disabled') !== 'true') button.click();
+    });
+  }
   function create({board, explanation}) {
+    installNavigation();
     board.setAttribute('role','region');
     board.setAttribute('aria-label','音乐演示');
     explanation.setAttribute('role','region');
@@ -14,23 +39,33 @@
       snapshots.set(active.id, {nodes: [...explanation.childNodes], scroll: explanation.scrollTop});
       if (boardKey !== null) boards.set(boardKey, {nodes: [...board.childNodes].filter(n => !n.classList?.contains('lesson-audio-btn')), scroll: board.scrollTop, click: board.onclick});
     };
-    // A new navigation or a manual reading gesture cancels queued positioning.
-    for (const event of ['wheel','touchstart','pointerdown']) explanation.addEventListener(event, () => ++revision, {passive:true});
+    const clearReveal = () => explanation.querySelectorAll('.theory-new,.theory-pending').forEach(n => n.classList.remove('theory-new','theory-pending'));
+    function cancelPositioning() {
+      ++revision;
+      explanation.scrollTo({top:explanation.scrollTop,behavior:'instant'});
+      clearReveal();
+    }
+    // Cancel both queued and in-flight motion when the reader takes control.
+    for (const event of ['wheel','touchstart','pointerdown']) explanation.addEventListener(event, cancelPositioning, {passive:true});
     function locate(node, token) {
       requestAnimationFrame(() => requestAnimationFrame(() => {
         if (revision !== token || !node?.isConnected) return;
         const container = explanation.getBoundingClientRect(), target = node.getBoundingClientRect();
         const available = explanation.clientHeight - 12;
-        if (target.bottom <= container.top + explanation.clientHeight - 6) return;
-        // A paragraph larger than the viewport starts at its top; the reader
-        // can then scroll through it. Never jump past the start of long text.
-        const delta = target.height > available ? target.top - container.top - 6 : target.bottom - container.top - explanation.clientHeight + 6;
-        explanation.scrollTo({top: explanation.scrollTop + Math.max(0,delta), behavior: reduced() ? 'instant' : 'smooth'});
+        // Measure the untransformed layout before the small reveal starts.
+        const delta = target.bottom <= container.top + explanation.clientHeight - 6 ? 0 :
+          target.height > available ? target.top - container.top - 6 : target.bottom - container.top - explanation.clientHeight + 6;
+        node.classList.remove('theory-pending');
+        if (!reduced()) {
+          node.classList.add('theory-new');
+          node.addEventListener('animationend', () => node.classList.remove('theory-new'), {once:true});
+        }
+        if (delta > 0) explanation.scrollTo({top: explanation.scrollTop + delta, behavior: reduced() ? 'instant' : 'smooth'});
       }));
     }
     function show(step, {forward = false} = {}) {
       if (!step.id || !step.groupId || !['new-concept','continuation','check'].includes(step.kind)) throw new Error('Explicit Theory Lesson step metadata required');
-      explanation.querySelectorAll('.theory-new').forEach(n => n.classList.remove('theory-new'));
+      clearReveal();
       explanation.scrollTo({top:explanation.scrollTop,behavior:'instant'});
       const previous = active, oldNodes = [...explanation.childNodes];
       save();
@@ -67,6 +102,7 @@
           newest = explanation.lastElementChild;
         }
         step.mount?.(); // Existing course quiz handlers, never shared judging.
+        if (step.kind === 'check') newest = explanation.lastElementChild;
         newest ||= explanation.lastElementChild;
       }
       active = step;
@@ -74,13 +110,12 @@
       explanation.dataset.stepKind = step.kind;
       explanation.dataset.groupId = step.groupId;
       if (forward && !cached && newest && step.kind !== 'new-concept') {
-        if (!reduced()) newest.classList.add('theory-new');
-        newest.addEventListener('animationend', () => newest.classList.remove('theory-new'), {once:true});
+        if (!reduced()) newest.classList.add('theory-pending');
         locate(newest, token);
       }
       return {restored: !!cached, boardKey};
     }
-    function leave() { save(); active = null; boardKey = null; ++revision; }
+    function leave() { cancelPositioning(); save(); active = null; boardKey = null; ++revision; }
     return {show, leave};
   }
   function progress(value, total, unit) {

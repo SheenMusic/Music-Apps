@@ -1,12 +1,12 @@
 # Music-Apps 课程通用设计与维护规范
 
-状态：现行规范，2026-10-17 修订。MT Learning 的专项教学规范见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
+状态：现行规范，2026-10-17 修订。MT Learning 的专项教学规范（v1.1.0，按人工预览反馈修订全课排版与交互）见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
 
 ## 权威来源与边界
 
 1. 全站主题、字体、圆角和折叠图标：`assets/site-visual.css` 与 `assets/VISUAL-SYSTEM.md`。五档圆角为 small/control/card/panel/pill（6/10/14/18/999px），保留兼容别名；普通面板右/下箭头，独立“收起”动作向上。不得另建主题或复制这些变量。
 2. 本文规定课程分类、共享层、资源加载、教学保护和维护要求，不规定所有课程相同的宽度、排版或业务行为。
-3. MT Learning 的 T/I/V/F/P/S 条款、具体排版与滚动，以专项规范为准；不得在本文重复维护数值。
+3. MT Learning 的 T/I/V/F/P/S 条款、具体排版与滚动，以专项规范为准；不得在本文重复维护数值。三课与未来 Learning 使用同一套层级，不再把旧1.12rem/2.08当作冻结标准，也不允许为 MT06 单列正文体系。
 4. 五线谱、琴键、音高仪表和其他音乐教学图形允许有明确的课程专用几何、颜色和非对称圆角。它们是教学内容，不能机械套用普通 UI。
 
 ## 当前共享架构

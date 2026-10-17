@@ -10,8 +10,8 @@ const VEX=process.env.VEXFLOW_TEST_FILE || '/tmp/vexflow.js';
 const original=file=>cp.execFileSync('git',['show',`${BASE}:${file}`],{cwd:ROOT,maxBuffer:8*1024*1024});
 const files=['MT-Intervals/lesson01/index.html','MT-Intervals/lesson02/index.html','MT-Intervals/lesson06/index.html'];
 const cache=new Map();
-async function open(browser,url,file,{before=false,width=390,height=844,theme='light',motion='reduce',audioMock=true}={}) {
- const context=await browser.newContext({viewport:{width,height},colorScheme:theme,reducedMotion:motion});
+async function open(browser,url,file,{before=false,width=390,height=844,theme='light',motion='reduce',audioMock=true,touch=false}={}) {
+ const context=await browser.newContext({viewport:{width,height},colorScheme:theme,reducedMotion:motion,hasTouch:touch,isMobile:touch});
  if(audioMock)await context.addInitScript(()=>{
   window.__plays=[];
   window.Audio=class extends EventTarget {
@@ -65,6 +65,8 @@ async function choose(page,lesson,i,wrong=false){
  }
  await page.locator(lesson===1?answers[i]:`.quiz-option[data-a="${answers[i]}"]`).first().click();
 }
+// Only the explicitly authorized initial-bar configuration is normalized.
+const withoutStartBar = s => s.replaceAll('.setBegBarType(VF.Barline.type.NONE)','');
 function syntax(source,name){new (require('node:vm').Script)(source,{filename:name});}
 test('syntax, fixed baseline teaching/rendering/check/audio code, links and unrelated files protected',()=>{
  for(const f of files.slice(0,2)){
@@ -76,7 +78,7 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
   // The full contents of all original render/check/audio functions remain in
   // place except documented navigation/audio-button integration functions.
   const names=[...old.matchAll(/function ((?:draw|render|bind|parseNote|play|stop|l2|confirmL2)\w*)\(/g)].map(m=>m[1]).filter(n=>!['renderOpening'].includes(n));
-  for(const name of names){const a=extractFunctions(scripts(old).join('\n'),[name])[name],b=extractFunctions(scripts(now).join('\n'),[name])[name];assert.equal(b,a,f+' protected function '+name);}
+  for(const name of names){const a=extractFunctions(scripts(old).join('\n'),[name])[name],b=extractFunctions(scripts(now).join('\n'),[name])[name];assert.equal(withoutStartBar(b),withoutStartBar(a),f+' protected function '+name);}
  }
  for(const f of ['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/lesson06/lesson.js'])syntax(fs.readFileSync(path.join(ROOT,f),'utf8'),f);
  const changed=cp.execFileSync('git',['diff',BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
@@ -215,7 +217,7 @@ test('responsive full content, fixed regions, typography, themes, real VexFlow a
    assert(d.pageWidth<=width,JSON.stringify(d));assert(d.exp.height>=60,'reading area too short '+JSON.stringify(d));
    assert(d.nav.bottom<=height&&d.nav.y>=d.exp.bottom-1,'navigation overlaps explanation '+JSON.stringify(d));
    assert(d.expWidth<=d.exp.width+1,'explanation horizontal overflow '+JSON.stringify(d));
-   assert.equal(d.bodySize,'17.92px');assert.equal(d.cardRadius,'14px');assert.equal(d.window,0);assert.equal(d.bodyPad,'10px');
+   assert.equal(d.bodySize,'16px');assert.equal(d.cardRadius,'14px');assert.equal(d.window,0);assert.equal(d.bodyPad,'10px');
    assert(!/谱例暂时无法显示|五线谱组件未载入/.test(await p.locator('#lessonBoard').textContent()),'notation renderer fallback');
    const header=await p.locator('.topbar').evaluate(e=>{const a=e.firstElementChild.getBoundingClientRect(),b=e.lastElementChild.getBoundingClientRect();return {left:a.right,right:b.left};});
    assert(header.left<=header.right+1,'header overlap');
@@ -293,5 +295,114 @@ test('shared styles are isolated from Practice, ET, Dashboard and Catalog',async
  try{for(const f of targets)for(const theme of ['light','dark']){
   const c=await open(browser,server.url,f,{theme});
   try{const before=await snapshot(c.page);await c.page.addStyleTag({content:styles});assert.deepEqual(await snapshot(c.page),before,f+' '+theme+' CSS isolation');}finally{await c.context.close();}
+ }}finally{await browser.close();await server.close();}
+});
+test('preview feedback: hierarchy tokens and stable centered reading regions across continuation and scrollbar states',async()=>{
+ const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(const l of [0,1,2])for(const [width,height] of [[390,844],[844,390],[768,1024],[1024,768],[1280,900]]){
+  const c=await open(browser,server.url,files[l],{width,height,touch:width<1100}),p=c.page;
+  try{
+   await p.locator(l===2?'#startReview':'#startLearning').click();await settle(p);
+   const box=()=>p.locator('.lesson-content').evaluate(e=>{
+    const r=e.getBoundingClientRect(),parent=e.parentElement,s=getComputedStyle(parent),b=parent.getBoundingClientRect(),cols=s.display==='grid'?2:1;
+    const left=b.left+parseFloat(s.paddingLeft),right=b.right-parseFloat(s.paddingRight),gap=parseFloat(s.columnGap)||0;
+    const cellLeft=cols===2?left+(right-left-gap)/2+gap:left;
+    const st=getComputedStyle(e);return {center:r.left+r.width/2,expected:(cellLeft+right)/2,width:r.width,align:st.textAlign,gutter:st.scrollbarGutter,body:st.fontSize};
+   });
+   const start=await box();assert(Math.abs(start.center-start.expected)<.6,JSON.stringify(start));assert.equal(start.align,'left');assert.equal(start.gutter,'stable both-edges');assert.equal(start.body,'16px');
+   fs.mkdirSync(OUT,{recursive:true});await p.screenshot({path:path.join(OUT,`hierarchy-mt${l===2?'06':'0'+(l+1)}-${width}.png`),caret:'initial'});
+   if(l<2){for(const i of l===0?[1,4,8,12,20]:[1,2,6,13,22]){await p.evaluate(i=>showStep(i),i);await settle(p);const next=await box();assert(Math.abs(next.center-start.center)<.6,'horizontal reading center moved');assert.equal(next.width,start.width);}}
+   else{
+    const sizes=await p.evaluate(()=>Object.fromEntries(['#moduleTitle','#moduleCopy h2','#moduleCopy ul','#moduleCopy p','.theory-note','.board-label','.reference-caption'].map(sel=>{const e=document.querySelector(sel),s=getComputedStyle(e);return [sel,{size:s.fontSize,leading:s.lineHeight}];})));
+    assert.equal(sizes['#moduleTitle'].size,height<=500?'21px':'24px');assert.equal(sizes['#moduleCopy h2'].size,'17px');assert.equal(sizes['#moduleCopy ul'].size,'15px');assert.equal(sizes['#moduleCopy p'].size,'16px');assert.equal(sizes['.theory-note'].size,'13px');assert.equal(sizes['.board-label'].size,'13px');assert.equal(sizes['.reference-caption'].size,'14px');
+    const content=p.locator('.lesson-content');await content.evaluate(e=>e.scrollTop=e.scrollHeight);const end=await content.evaluate(e=>({max:e.scrollHeight-e.clientHeight,top:e.scrollTop}));assert(Math.abs(end.max-end.top)<1);
+    // Short landscape boards may scroll internally; all original controls and
+    // their captions must remain reachable without moving the page/navigation.
+    await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();
+    const nav=await p.locator('.lesson-nav').boundingBox();
+    for(const n of [15,9]){await p.locator(`[data-degree="${n}"]`).click();assert.equal(await p.locator(`[data-degree="${n}"]`).getAttribute('aria-pressed'),'true');}
+    assert.equal(await p.evaluate(()=>scrollY),0);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav);
+
+   }
+  }finally{await c.context.close();}
+ }}finally{await browser.close();await server.close();}
+});
+test('preview feedback: actual smooth continuation, manual takeover, cached return and reduced motion',async()=>{
+ fs.mkdirSync(OUT,{recursive:true});const evidence=[];const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(const [l,start,end] of [[0,14,20],[1,18,22]]){
+  const c=await open(browser,server.url,files[l],{width:390,height:640,motion:'no-preference'}),p=c.page;
+  try{
+   await p.evaluate(i=>showStep(i,false),start);await settle(p);
+   const fixed=await p.locator('#lessonBoard').boundingBox(),center=await p.locator('.lesson-content').boundingBox();
+   const frames=await p.evaluate(async({start,end})=>{
+    const e=document.querySelector('.lesson-content'),samples=[];
+    for(let i=start+1;i<=end;i++){
+     showStep(i);const step=[];
+     for(let j=0;j<35;j++){await new Promise(r=>requestAnimationFrame(r));const last=e.lastElementChild;step.push({time:performance.now(),scroll:e.scrollTop,firstTop:e.firstElementChild.getBoundingClientRect().top,opacity:getComputedStyle(last).opacity,pending:last.classList.contains('theory-pending'),lastBottom:last.getBoundingClientRect().bottom,regionBottom:e.getBoundingClientRect().bottom,window:scrollY});}
+     samples.push(step);
+    }
+    return samples;
+   },{start,end});
+   assert(frames.flat().some(f=>Number(f.opacity)>0&&Number(f.opacity)<1),'must observe real reveal frames');
+   assert(frames.some(step=>new Set(step.map(s=>s.scroll.toFixed(1))).size>3),'must observe multiple intermediate scroll positions');
+   assert(frames.flat().every(f=>f.window===0));assert.deepEqual(await p.locator('#lessonBoard').boundingBox(),fixed);assert.deepEqual(await p.locator('.lesson-content').boundingBox(),center);
+   for(const step of frames){
+    assert(step.at(-1).lastBottom<=step.at(-1).regionBottom+1,'new paragraph remains clipped after smooth motion');
+    for(let i=1;i<step.length;i++){
+     assert(step[i].scroll>=step[i-1].scroll-1,'scroll should move continuously forward');
+     assert(Math.abs(step[i].firstTop+step[i].scroll-step[0].firstTop-step[0].scroll)<1,'old text must move only with container scrolling');
+    }
+   }
+   await p.screenshot({path:path.join(OUT,`feedback-mt0${l+1}-smooth-end.png`),caret:'initial'});evidence.push({lesson:l+1,frames});
+   // A wheel gesture before the queued positioning runs must expose the new
+   // text, cancel auto-positioning and leave the reader's chosen offset alone.
+   await p.reload();await settle(p);
+   await p.evaluate(({start,end})=>{showStep(start,false);const e=document.querySelector('.lesson-content');e.scrollTop=0;showStep(end-1,false);showStep(end);e.dispatchEvent(new WheelEvent('wheel'));e.scrollTop=19;window.__manualTop=e.scrollTop;},{start,end});
+   await p.waitForTimeout(650);
+   assert.equal(await p.locator('.lesson-content').evaluate(e=>e.scrollTop),await p.evaluate(()=>__manualTop));assert.equal(await p.locator('.theory-pending').count(),0);
+   await p.locator('#prevBtn').click();await p.locator('#nextBtn').click();await settle(p);assert.equal(await p.locator('.lesson-content').evaluate(e=>e.scrollTop),await p.evaluate(()=>__manualTop));
+   // An actual wheel event also cancels smooth motion already in flight.
+   await p.reload();await settle(p);
+   await p.evaluate(end=>{showStep(end-1,false);showStep(end);},end);
+   await p.waitForFunction(()=>document.querySelector('.lesson-content').scrollTop>3);
+   await p.locator('.lesson-content').hover();await p.mouse.wheel(0,-35);await settle(p);
+   const wheelTop=await p.locator('.lesson-content').evaluate(e=>e.scrollTop);
+   await p.waitForTimeout(650);assert.equal(await p.locator('.lesson-content').evaluate(e=>e.scrollTop),wheelTop,'wheel takeover must stop ongoing smooth motion');
+
+  }finally{await c.context.close();}
+ }}finally{fs.writeFileSync(path.join(OUT,'smooth-motion.json'),JSON.stringify(evidence,null,2));await browser.close();await server.close();}
+});
+test('preview feedback: shared arrow navigation, touch hint detection and native control exclusions',async()=>{
+ const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(const l of [0,1,2])for(const touch of [false,true]){
+  const c=await open(browser,server.url,files[l],{touch}),p=c.page;
+  try{
+   assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),!touch);
+   await p.locator(l===2?'#startReview':'#startLearning').click();await p.locator('body').click({position:{x:1,y:1}});
+   const id=()=>p.locator('.lesson-content').getAttribute('data-step-id');const first=await id();const nav=await p.locator('.lesson-nav').boundingBox();
+   await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),true);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'hint must not shift navigation');
+   await p.keyboard.press('ArrowUp');assert.equal(await id(),first);
+   await p.keyboard.press('ArrowDown');assert.notEqual(await id(),first);await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
+   if(l<2){await p.evaluate(l=>showStep(l===0?13:3,false),l);const quiz=await id();await p.locator('.quiz-option').first().focus();await p.keyboard.press('ArrowRight');assert.equal(await id(),quiz);assert.equal(await p.locator('#nextBtn').isDisabled(),true);}
+   else{await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();const stage=await id();await p.locator('#invertButton').focus();await p.keyboard.press('ArrowLeft');assert.equal(await id(),stage);await p.keyboard.press('Space');assert.equal(await p.locator('#invertButton').getAttribute('aria-pressed'),'true');}
+   await p.evaluate(()=>{const x=document.createElement('input');x.id='key-test-input';document.querySelector('.lesson-content').append(x);x.focus();});const before=await id();await p.keyboard.press('ArrowRight');assert.equal(await id(),before);await p.keyboard.type('text');assert.equal(await p.locator('#key-test-input').inputValue(),'text');
+   assert.deepEqual(c.errors,[]);
+  }finally{await c.context.close();}
+ }}finally{await browser.close();await server.close();}
+});
+test('preview feedback: real VexFlow standalone start bars hidden, meaningful internal/end bars preserved',async()=>{
+ const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
+ try{for(let l=0;l<2;l++){
+  const c=await open(browser,server.url,files[l]),p=c.page;
+  try{
+   await p.evaluate(()=>{window.__barTypes=[];const VF=vf(),draw=VF.Stave.prototype.draw;VF.Stave.prototype.draw=function(...args){const m=this.getModifiers();__barTypes.push({begin:m.find(x=>x.getCategory()==='Barline'&&x.getPosition()===VF.StaveModifier.Position.BEGIN)?.getType(),end:m.find(x=>x.getCategory()==='Barline'&&x.getPosition()===VF.StaveModifier.Position.END)?.getType()});return draw.apply(this,args);};});
+   for(let i=0;i<(l===0?23:26);i++){await p.evaluate(i=>showStep(i,false),i);await settle(p);}
+   const bars=await p.evaluate(()=>__barTypes);assert(bars.length>5);assert(bars.every(b=>b.begin===7),'standalone staves must use Barline.NONE at start');assert(bars.every(b=>b.end===1),'meaningful end bars retain original SINGLE type');
+   await p.evaluate(()=>showStep(5,false));assert(await p.locator('#lessonBoard .vf-barnote').count()>0,'internal VexFlow BarNotes must remain');
+   await p.evaluate(i=>showStep(i,false),l===0?20:9);await settle(p);
+   const dividers=await p.locator('#lessonBoard svg line').evaluateAll(lines=>lines.filter(e=>e.getAttribute('x1')===e.getAttribute('x2')).length);assert(l===0?dividers>0:await p.locator('#lessonBoard .vf-barnote').count()>0,'course-specific structural measure divider remains');
+   await p.screenshot({path:path.join(OUT,`feedback-mt0${l+1}-structural-bars.png`),caret:'initial'});
+   assert.deepEqual(c.errors,[]);
+  }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}
 });
