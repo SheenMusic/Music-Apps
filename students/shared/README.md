@@ -38,7 +38,7 @@ node scripts/test-student-tools.mjs
 
 生成器对标题中的姓名进行 HTML 转义，数据脚本 URL 带文件 SHA1 内容摘要前8位；不会把其他学习数据嵌入 HTML。相同输入输出一致，检查模式只比较不写入。普通模式拒绝覆盖未标记的既有页面。一次性 `--migrate` 只接收与原共享入口结构完全一致的未标记页面，并在仓库外保存原 HTML 备份；有差异必须人工检查。`--allow-legacy-directories` 仅是迁移期目录校验开关，不是课程分类。
 
-如果更新了显示名或数据，必须重新运行生成器。需要新增教师页入口时，在 `teacher/teacher-data.js` 添加显示名与 Dashboard URL，不加入背景调查信息。当前只读 Teacher 页面没有鉴权；入口展示不代表授权管理。
+本地修改显示名或数据后，发布前运行生成器；GitHub 上直接提交 `student-data.js` 到 main 时，Pages Actions 会自动执行校验、重新生成入口、检查哈希及相关测试，然后上传生成后的工作区。Actions 不自动回写生成文件到仓库，所以仓库中的 index.html 可能暂时带旧哈希，实际部署使用本次生成结果。校验或生成失败时不会上传和部署。需要新增教师页入口时，在 `teacher/teacher-data.js` 添加显示名与 Dashboard URL，不加入背景调查信息。当前只读 Teacher 页面没有鉴权；入口展示不代表授权管理。
 
 ## 数据与课程资源
 
@@ -78,7 +78,7 @@ zip -r students.zip students \
   -x "*.DS_Store" "*/._*" "__MACOSX/*"
 ```
 
-`__MACOSX` 不是网站资源，不应部署。本轮分阶段本地提交，不自动推送。
+`__MACOSX` 不是网站资源，不应部署。是否推送和部署按当前维护任务的授权执行。
 
 ## 已发送地址的兼容例外
 
@@ -88,8 +88,42 @@ Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与�
 
 `status: "pending"` 表示待开课；可独立记录 `paymentStatus: "paid"`，显示“已付款 · 待开课”。此状态必须关闭 `accessEnabled`，未确认日期时保持 `learningPeriods: []`。付款不代表学习开始。
 
-报名记录可提供 `enrollmentTitle` 作为正式课程显示名；未提供时沿用原有 Catalog / title 回退规则，已有学员不受影响。在线资源集合名称不必与报名产品名称完全一致。教师页与教师预览共用 `teacher/teacher-data.js` 学生入口列表。背景调查资料不应存入公开静态数据。
+报名记录可提供 `enrollmentTitle` 作为正式课程显示名；未提供时沿用原有 Catalog / title 回退规则，已有学员不受影响。在线资源集合名称不必与报名产品名称完全一致。教师页使用 `teacher/teacher-data.js` 学生入口列表。背景调查资料不应存入公开静态数据。
 
 学生入口也接受 `姓名slug-16位随机十六进制后缀`，现有入口保持不变。`accessEnabled` 与完成状态独立：已完成课程可继续开放其 `accessibleLessons` 和 `accessibleSupplementary`。补充训练属于音程听力课程内部，不是独立课程；学生只显示明确开放的资源。
 
 暂停学习的学员可设置 `learningState: "paused"`，右上角统一显示“暂停中”。该字段不改变单门课程状态、有效期或已开放资源；恢复学习时移除此字段，重新按现有规则计算整体状态。
+
+## 在 GitHub 手动维护学员
+
+1. 打开对应 `students/<学员目录>/student-data.js`，点击编辑，不需要修改自动生成的 `index.html`。
+2. 修改课程的 `currentLessons` 和 `accessibleLessons`：例如当前第5课、开放1–5课，分别填写 `[5]` 与 `[1,2,3,4,5]`。当前课次必须已开放。
+3. 按需调整状态或有效期，保留未知记录，不补写未确认的日期、成绩或完成记录。
+4. 提交到 main，打开 Actions → Deploy static site to GitHub Pages，等待成功后刷新学员页面。若提交到其他分支，需要先将修改合并到 main 才部署。
+5. 失败时查看 “Validate and generate student dashboards” 日志并修正数据。无需手工更新哈希、无需自动提交生成文件。
+
+| 字段 | 维护规则 |
+| --- | --- |
+| `studentName` | 页面显示名，非公开背景调查资料 |
+| `learningState` | 仅支持 `"paused"`，令顶部显示暂停中；恢复或结课时移除此字段，不填写 `active` 或 `completed` |
+| `courses` | 报名课程数组，课程 ID 不重复 |
+| `courses[].id` | `interval-ear-training`、`interval-theory`、`chord-theory`；报名课程不等于在线资源集合 |
+| `title` / `enrollmentTitle` | 必填课程名称 / 可选正式报名显示名；后者优先于资源标题，不必改写旧学员标题 |
+| `status` | 单门课程：`active` 进行中、`completed` 已完成、`pending` 待开课、`paused` 暂停中、`previous` 曾参加 |
+| `paymentStatus` | 可选 `paid` / `unpaid`，与开课和学习状态分开记录 |
+| `accessEnabled` | 是否显示该课程资料入口，和完成状态独立；`pending` 必须为 false |
+| `currentLessons` | 正整数数组，当前课次，必须为已开放课次的子集 |
+| `accessibleLessons` | 正整数数组，只显示明确开放的课次；不会推断这些课程已完成 |
+| `accessibleSupplementary` | 明确开放的补充训练 ID；两项为 `harmonic-fourths-fifths`、`harmonic-simple-intervals`，空数组不显示补充训练 |
+| `learningPeriods` | 周期数组，记录唯一 `id` 和带时区的 `start` / `end`；结束须晚于开始，可保留双方均 null 的未知历史；无周期时 `[]` |
+| `showPeriodDuration` | 可选布尔值，控制是否显示周期长度，不改变时间和课程权限 |
+
+顶部“学习中”要求至少一门 `active` 且当前日期在所选有效期内；`learningState: "paused"` 显示“暂停中”；移除该字段且所有课程为 `completed` 显示“已完成”。截止前72小时内，时间卡显示“即将到期”；到期后顶部显示“已过期”，已开放资料仍可访问。不要把付款、状态、开放范围和日期当作同一个字段。
+
+## 功能测试学员
+
+目录：`students/d1d8e0bc370afd6ebfea47a334a1eb4e/`。仅含虚拟数据，使用正式共享模板，不复制真实学员记录。初始听力进度第4课、开放1–4课及两项补充训练；三门报名课程均 active，未映射在线资源的报名课程关闭资料入口。
+
+示例周期为北京时间 `2026-10-18 09:00` 至 `2026-11-01 09:00`。测试其他有效期状态时直接调整其日期，不修改真实学员。暂停时增加 `learningState: "paused"`；完成时移除它并将三门 status 都设为 completed。进度与资源、完成状态与日期始终独立。
+
+正式学员检查结论：Samuel、周舰、小羽的结构、状态、课程 ID、进度/开放范围和日期格式均兼容当前校验器；缩进、单双引号和换行仅属排版差异，本次未修改其数据。以后建议新增配置采用两空格缩进、每门课程独立对象、明确时区和稳定字段名，不必为格式重写历史文件。

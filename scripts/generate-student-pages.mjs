@@ -34,7 +34,7 @@ try {
     if(args.length>1 || (args.length && !['--check','--migrate'].includes(args[0]))) throw new Error('Usage: [--check | --migrate | --new "display name"]');
     const check=args[0]==='--check',migrate=args[0]==='--migrate';
     const pages=studentDirectories().map(directory=>{
-      if(!isStudentDirectoryName(path.basename(directory))) throw new Error('Student directories must use 32 hex characters');
+      if(!isStudentDirectoryName(path.basename(directory))) throw new Error('Student directories must use 32 hex characters or a name slug with a 16-hex suffix');
       const file=path.join(directory,'index.html'), html=expected(directory), original=fs.existsSync(file)?fs.readFileSync(file,'utf8'):null;
       if (!check && original!==null && !original.includes(marker)) {
         if (!migrate) throw new Error('Refusing to overwrite unmarked page: '+path.relative(root,file));

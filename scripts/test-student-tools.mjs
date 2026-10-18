@@ -48,6 +48,20 @@ try {
  writeData(directory,{...empty,learningPeriods:[{id:'p',start:null,end:null}]});run('validate-students.mjs');
  const historic={...empty,courses:[active],learningPeriods:[{id:'p',start:'2000-01-01T00:00:00Z',end:'2000-01-15T00:00:00Z'}]};
  writeData(directory,historic);assert.match(run('validate-students.mjs'),/已过期 \d+ 天/);
+ // A GitHub data-only edit must update the deployed content-hash URL.
+ writeData(directory,{...empty,courses:[active]});run('generate-student-pages.mjs');
+ const beforeEdit=fs.readFileSync(htmlFile,'utf8');
+ writeData(directory,{...empty,courses:[{...active,currentLessons:[2],accessibleLessons:[1,2]}]});
+ run('generate-student-pages.mjs',['--check'],1);
+ run('validate-students.mjs');run('generate-student-pages.mjs');run('generate-student-pages.mjs',['--check']);
+ const updated=fs.readFileSync(htmlFile,'utf8');assert.notEqual(updated,beforeEdit);
+ const updatedHash=crypto.createHash('sha1').update(fs.readFileSync(dataFile)).digest('hex').slice(0,8);
+ assert.ok(updated.includes('student-data.js?v='+updatedHash));
+ // All currently supported address formats must survive the deployment commands.
+ for(const name of ['samuel-b5def80cdaa55d42','xiaoyu-1234567890abcdef']) {
+  const fixture=path.join(temp,'students',name);fs.mkdirSync(fixture);writeData(fixture,empty);
+ }
+ run('validate-students.mjs');run('generate-student-pages.mjs');run('generate-student-pages.mjs',['--check']);
  writeData(directory,empty);const renamed=path.join(temp,'students','old-style-directory');fs.renameSync(directory,renamed);
  run('validate-students.mjs',[],1);run('validate-students.mjs',['--allow-legacy-directories']);
  console.log('PASS student tooling: stable generation, escaped names, content hashes, read-only check, overwrite protection, random --new, enrollment/resource validation and error branches');
