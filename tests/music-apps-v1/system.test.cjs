@@ -136,14 +136,14 @@ test('production scope: student/teacher data, ET, MT06, business scripts and rep
  const before=old('learning-resources/interval-theory.js'),after=fs.readFileSync('learning-resources/interval-theory.js','utf8');
  assert.equal(after,before.replace('/lesson04-x3n6cu/','/lesson04/').replace('/lesson05-s2e2f4/','/lesson05/'));
 });
-test('all fifteen entry/Learning/Practice pages, local resource paths and current Teacher/Student/Catalog links resolve',async()=>{
+test('all ten Learning-home/Practice pages, local resource paths and current Teacher/Student/Catalog links resolve',async()=>{
  const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
  try{
-  for(const c of courses)for(const suffix of ['index.html','learning/index.html','practice/index.html']){
+  for(const c of courses)for(const suffix of ['index.html','practice/index.html']){
    const f=c.path.replace('practice/index.html',suffix),{page,context,errors,missing}=await open(browser,server.url,{path:f},{entry:true});
    const urls=await page.locator('a[href],script[src],link[href]').evaluateAll(es=>es.map(e=>e.href||e.src).filter(u=>new URL(u).origin===location.origin));
    for(const u of urls){let p=decodeURIComponent(new URL(u).pathname).slice(1);if(p.endsWith('/'))p+='index.html';assert(fs.existsSync(p),f+' -> '+p);}
-   if(suffix==='learning/index.html'&&Number(c.code.slice(-2))>=3)assert.equal(await page.getByText('本课内容正在建设中。').count(),1);
+   if(suffix==='index.html'&&Number(c.code.slice(-2))>=3){assert.equal(await page.locator('.home-actions > *').count(),3);assert.equal(await page.locator('.home-actions button:disabled').count(),2);}
    assert.deepEqual(errors,[]);assert.deepEqual(missing,[]);await context.close();
   }
   const ctx=vm.createContext({});vm.runInContext(fs.readFileSync('learning-resources/interval-theory.js','utf8')+';globalThis.resources=intervalTheoryResources;',ctx);

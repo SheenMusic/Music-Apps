@@ -6,13 +6,12 @@
 
 ```text
 lessonXX/
-  index.html              # Learning / Practice 两个入口
-  learning/index.html     # 教学内容（未完成时只显示建设中）
+  index.html              # Learning 首页及互动教学，直接提供课后练习入口
   practice/index.html     # 复用任意一课的薄入口，调整标题
   practice/questions.js   # 唯一的课程配置和题库
 ```
 
-复制薄入口时校准相对路径。不要复制旧答题脚本或内联 CSS。MT03–05 的旧根 Practice URL 已按授权替换为课程首页；MT04/05 采用 lesson04/lesson05。
+复制薄入口时校准相对路径。不要复制旧答题脚本或内联 CSS。MT01–05 的 index.html 就是 Learning 首页，不另建 Learning / Practice 选择页或 learning/ 子目录。当前 MT04/05 实际目录为 lesson04/lesson05；本次首页修正保留这些既有名称。
 
 `questions.js` 在 UI 脚本前定义 `window.practiceData`：保留 `lessonId`、`lessonTitle`，增加 `code`、`title`、`subtitle`、`reportTitle`；`questions` 每题包含 `id`、`type`（boolean / single-choice / multiple-choice）、`prompt`、`options: [{id,label,value}]`、`correctAnswer: [value]`、`explanation` 和可选的 `staff`。可选 `brand` 覆盖页眉科目名、`reportType` 对接未来报告类型（当前五课默认 mt；不提前实现其他报告格式）。不要改动既有题目 ID、答案、音符及顺序。
 
@@ -31,7 +30,9 @@ lessonXX/
 
 ## Learning
 
-MT01/02 原内容仅移动到 `learning/` 并校准资源路径，继续使用 `MT-Intervals/shared/learning/theory-lesson.js` 和原共享排版。MT03–05 占位复用同一外壳，尚未编造课件。未来添加内容按 `docs/interactive-theory-lesson-standard.md` 定义步骤；演示区独立居中、双栏讲解居中/滚动、上下布局讲解顶部排列等规则不变。
+MT01/02 完整互动教学位于课程根 index.html，继续使用 `MT-Intervals/shared/learning/theory-lesson.js` 和原共享排版。MT03–05 的根首页复用同一首页结构，提供“开始学习 / 课后练习 / 辅助练习”三个入口；两个未实现入口为原生 disabled 按钮，只有课后练习正常跳转，不创建占位页或额外交互。未来添加内容按 `docs/interactive-theory-lesson-standard.md` 定义步骤；演示区独立居中、双栏讲解居中/滚动、上下布局讲解顶部排列等规则不变。
+
+`shared/styles/course-shell.css` 只对显式 `data-mt-shell` 的 MT01–05 页面统一页眉、页脚和普通页面外框。它在各自 CSS 之后加载，不加载或覆盖 Practice 卡片/结果内部规则；Learning 的活动双栏演示和阅读区继续由原 Learning 样式控制。MT06 与其他模块不自动接入。
 
 ## Notation
 
@@ -54,7 +55,7 @@ view.destroy(); // 仅在宿主真正移除时释放 observer
 ## 验证
 
 ```sh
-node --test tests/music-apps-v1/system.test.cjs
+node --test tests/music-apps-v1/system.test.cjs tests/music-apps-v1/home-shell.test.cjs
 node --test tests/practice-report/{report,scope,browser}.test.cjs
 node --test tests/theory-learning/learning.test.cjs
 node scripts/validate-students.mjs
