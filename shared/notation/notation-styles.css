@@ -1,0 +1,4 @@
+/* Only opt-in notation hosts. Teaching notation keeps its light-paper palette. */
+[data-notation] { color-scheme: light; color: #1e293b; background: #fff; min-width: 0; }
+[data-notation] svg {display: block; max-width: 100%; height: auto; margin-inline: auto;}
+[data-notation][hidden] {display: none;}

@@ -1,0 +1,45 @@
+{
+  "commit": "8e3dd0d8fbcdcf8e9bf3d35ce5837aca9faf75a1",
+  "courses": [
+    {
+      "code": "MT01",
+      "originalPath": "MT-Intervals/lesson01/practice/index.html",
+      "path": "MT-Intervals/lesson01/practice/index.html",
+      "count": 15,
+      "title": "度数、音数、旋律音程与和声音程",
+      "sha256": "cefb7b7bf77c8ff5ef896c4c4717415d4d96d34604ef5e2684ba9c11334d26d4"
+    },
+    {
+      "code": "MT02",
+      "originalPath": "MT-Intervals/lesson02/practice/index.html",
+      "path": "MT-Intervals/lesson02/practice/index.html",
+      "count": 20,
+      "title": "音程的性质与自然音程",
+      "sha256": "26aed2e51cb7004b541c7c0082f3e42fb1167e5396b34fe503b25274b48ea30d"
+    },
+    {
+      "code": "MT03",
+      "originalPath": "MT-Intervals/lesson03/index.html",
+      "path": "MT-Intervals/lesson03/practice/index.html",
+      "count": 15,
+      "title": "变化音程与等音程",
+      "sha256": "4f2a3523c881158eb0281e0419e5d6e44aef9d0ffb4f04dad3b5704beffd0dd4"
+    },
+    {
+      "code": "MT04",
+      "originalPath": "MT-Intervals/lesson04-x3n6cu/index.html",
+      "path": "MT-Intervals/lesson04/practice/index.html",
+      "count": 20,
+      "title": "单音程与复音程",
+      "sha256": "934c19276b5fdd1d1028e1bfe81466df0fa121be2aab6586095c6cc904323158"
+    },
+    {
+      "code": "MT05",
+      "originalPath": "MT-Intervals/lesson05-s2e2f4/index.html",
+      "path": "MT-Intervals/lesson05/practice/index.html",
+      "count": 20,
+      "title": "原位音程与转位音程",
+      "sha256": "3a3aa0567fdb6631661409f69f59e1884c20d8a26f6a56bc8c1e10f50f3cac28"
+    }
+  ]
+}

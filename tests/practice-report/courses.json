@@ -15,21 +15,21 @@
   },
   {
     "code": "MT03",
-    "path": "MT-Intervals/lesson03/index.html",
+    "path": "MT-Intervals/lesson03/practice/index.html",
     "type": "mt",
     "count": 15,
     "expected": "【MT03 · 变化音程与等音程】\n\n完成：15/15题 · 用时：2分03秒\n准确率：93.8% · 一次通过：14题\n\n需要关注：03\n\n© Sheen · Music Theory"
   },
   {
     "code": "MT04",
-    "path": "MT-Intervals/lesson04-x3n6cu/index.html",
+    "path": "MT-Intervals/lesson04/practice/index.html",
     "type": "mt",
     "count": 20,
     "expected": "【MT04 · 单音程与复音程】\n\n完成：20/20题 · 用时：2分03秒\n准确率：95.2% · 一次通过：19题\n\n需要关注：03\n\n© Sheen · Music Theory"
   },
   {
     "code": "MT05",
-    "path": "MT-Intervals/lesson05-s2e2f4/index.html",
+    "path": "MT-Intervals/lesson05/practice/index.html",
     "type": "mt",
     "count": 20,
     "expected": "【MT05 · 原位音程与转位音程】\n\n完成：20/20题 · 用时：2分03秒\n准确率：95.2% · 一次通过：19题\n\n需要关注：03\n\n© Sheen · Music Theory"
