@@ -5,6 +5,8 @@ const {chromium} = require('playwright');
 const {serve,scripts} = require('../course-baseline/harness.cjs');
 const ROOT=path.resolve(__dirname,'../..');
 const BASE='3eae716095bd2941f4508184ff074d5df51dd18b';
+// Music/content stays fixed to BASE; only this change's scope uses current main.
+const SCOPE_BASE='a5829af3d148932c403c8f60c6d73737e98c0eb5';
 const OUT=process.env.THEORY_ARTIFACT_DIR || '/tmp/music-apps-theory-learning';
 const VEX=process.env.VEXFLOW_TEST_FILE || '/tmp/vexflow.js';
 const original=file=>cp.execFileSync('git',['show',`${BASE}:${file}`],{cwd:ROOT,maxBuffer:8*1024*1024});
@@ -102,13 +104,9 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
   for(const name of names){const a=extractFunctions(scripts(old).join('\n'),[name])[name],b=extractFunctions(scripts(now).join('\n'),[name])[name];assert.equal(withoutStartBar(b),withoutStartBar(a),f+' protected function '+name);}
  }
  for(const f of ['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/lesson06/lesson.js'])syntax(fs.readFileSync(path.join(ROOT,f),'utf8'),f);
- const changed=cp.execFileSync('git',['diff',BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
- const allowed=new Set([...files,'MT-Intervals/lesson06/lesson.css','MT-Intervals/lesson06/lesson.js',
-  'MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css',
-  'docs/course-design-system.md','docs/interactive-theory-lesson-standard.md','docs/course-visual-unification-results.md','docs/course-phase1-visual-risk-review.md',
-  'tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
- const evidenceNames=['README.md','measurements.json','mt01-continuous.webm','mt02-continuous.webm',...['mt01-step1-1280x900','mt01-step9-1280x900','mt02-step1-1280x900','mt02-step3-1280x900','mt01-step1-390x844','mt02-step1-390x844','mt01-step1-844x390','mt01-step1-768x1024','mt01-step1-1024x768'].map(n=>n+'.png')];
- for(const name of evidenceNames)allowed.add('tests/theory-learning/alignment-evidence/'+name);
+ const changed=cp.execFileSync('git',['diff',SCOPE_BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
+ const allowed=new Set(['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css',
+  'docs/interactive-theory-lesson-standard.md','docs/course-design-system.md','tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
  for(const f of changed)assert(allowed.has(f),'unexpected changed file '+f);
  const now=fs.readFileSync(path.join(ROOT,'MT-Intervals/lesson06/lesson.js'),'utf8'),old=original('MT-Intervals/lesson06/lesson.js').toString();
  assert.equal(now.slice(now.indexOf('  const exercises'),now.indexOf('  const byID')),old.slice(old.indexOf('  const exercises'),old.indexOf('  const byID')),'review copy and exercise configurations');
@@ -400,21 +398,32 @@ test('preview feedback: actual smooth continuation, manual takeover, cached retu
   }finally{await c.context.close();}
  }}finally{fs.writeFileSync(path.join(OUT,'smooth-motion.json'),JSON.stringify(evidence,null,2));await browser.close();await server.close();}
 });
-test('preview feedback: shared arrow navigation, touch hint detection and native control exclusions',async()=>{
+test('shared arrow navigation, native button hover hints and native control exclusions',async()=>{
  const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
  try{for(const l of [0,1,2])for(const touch of [false,true]){
   const c=await open(browser,server.url,files[l],{touch}),p=c.page;
   try{
-   assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),!touch);
+   assert.equal(await p.locator('.theory-keyboard-hint').count(),0,'no footer hint or reserved row');
+   assert.equal(await p.locator('#prevBtn').getAttribute('aria-keyshortcuts'),'ArrowLeft ArrowUp');
+   assert.equal(await p.locator('#nextBtn').getAttribute('aria-keyshortcuts'),'ArrowRight ArrowDown');
    await p.locator(l===2?'#startReview':'#startLearning').click();await p.locator('body').click({position:{x:1,y:1}});
    const id=()=>p.locator('.lesson-content').getAttribute('data-step-id');const first=await id();const nav=await p.locator('.lesson-nav').boundingBox();
-   await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),true);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'hint must not shift navigation');
+   const verifyTitles=async()=>{
+    for(const [selector,arrows] of [['#prevBtn','← / ↑'],['#nextBtn','→ / ↓']]){
+     const button=p.locator(selector),label=(await button.textContent()).replace(/[←↑→↓]/g,'').replace(/\s+/g,' ').trim();
+     assert.equal(await button.getAttribute('title'),`${label}（键盘：${arrows}）`);
+    }
+   };
+   await verifyTitles();await p.locator('#nextBtn').hover();assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'native hover title must not alter layout');
+   await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);await verifyTitles();assert.equal(await p.locator('.theory-keyboard-hint').count(),0);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'keyboard use must not add a footer row');
    await p.keyboard.press('ArrowUp');assert.equal(await id(),first);
    await p.keyboard.press('ArrowDown');assert.notEqual(await id(),first);await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
    await p.locator('.lesson-content').focus();await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first,'focused reading region must retain left/right step navigation');await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
    if(l<2){await p.evaluate(l=>showStep(l===0?13:3,false),l);const quiz=await id();await p.locator('.quiz-option').first().focus();await p.keyboard.press('ArrowRight');assert.equal(await id(),quiz);assert.equal(await p.locator('#nextBtn').isDisabled(),true);}
    else{await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();const stage=await id();await p.locator('#invertButton').focus();await p.keyboard.press('ArrowLeft');assert.equal(await id(),stage);await p.keyboard.press('Space');assert.equal(await p.locator('#invertButton').getAttribute('aria-pressed'),'true');}
    await p.evaluate(()=>{const x=document.createElement('input');x.id='key-test-input';document.querySelector('.lesson-content').append(x);x.focus();});const before=await id();await p.keyboard.press('ArrowRight');assert.equal(await id(),before);await p.keyboard.type('text');assert.equal(await p.locator('#key-test-input').inputValue(),'text');
+   if(l<2)await p.evaluate(i=>showStep(i,false),l===0?22:25);else {await p.locator('#key-test-input').evaluate(e=>e.remove());await p.locator('#nextBtn').click();}
+   await settle(p);await verifyTitles();assert.equal(await p.locator('.theory-keyboard-hint').count(),0);
    assert.deepEqual(c.errors,[]);
   }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}
