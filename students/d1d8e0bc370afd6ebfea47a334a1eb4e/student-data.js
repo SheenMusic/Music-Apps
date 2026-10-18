@@ -10,45 +10,40 @@
  * GitHub 修改本文件并提交 main 后，Actions 自动校验、生成带新哈希的入口并部署。
  */
 const studentData = {
-  "studentName": "功能测试",
-  "courses": [
+  studentName: '功能测试',
+  courses: [
     {
-      "id": "interval-ear-training",
-      "title": "音程听力训练课",
-      "enrollmentTitle": "音程听力训练课",
-      "status": "active",
-      "accessEnabled": true,
-      "currentLessons": [
-        4
-      ],
-      "accessibleLessons": [
-        1,2,3,4,5,6,7
-      ],
-      "accessibleSupplementary": [
-        "harmonic-fourths-fifths",
-        "harmonic-simple-intervals"
-      ]
+      id: 'interval-ear-training',
+      title: '音程听力训练课',
+      enrollmentTitle: '音程听力训练课',
+      status: 'active',
+      accessEnabled: true,
+      currentLessons: [4],
+      accessibleLessons: [1,2,3,4,5,6,7],
+      accessibleSupplementary: ['harmonic-fourths-fifths','harmonic-simple-intervals']
     },
+
     {
-      "id": "interval-theory",
-      "title": "音程理论训练课",
-      "enrollmentTitle": "音程理论训练课",
-      "status": "active",
-      "accessEnabled": false
+      id: 'interval-theory',
+      title: '音程理论训练课',
+      enrollmentTitle: '音程理论训练课',
+      status: 'active',
+      accessEnabled: false
     },
+
     {
-      "id": "chord-theory",
-      "title": "和弦记号理论训练课",
-      "enrollmentTitle": "和弦记号理论训练课",
-      "status": "active",
-      "accessEnabled": false
+      id: 'chord-theory',
+      title: '和弦记号理论训练课',
+      enrollmentTitle: '和弦记号理论训练课',
+      status: 'active',
+      accessEnabled: false
     }
   ],
-  "learningPeriods": [
+  learningPeriods: [
     {
-      "id": "example-01",
-      "start": "2026-10-18T09:00:00+08:00",
-      "end": "2026-12-01T09:00:00+08:00"
+      id: 'example-01',
+      start: '2026-10-18T09:00:00+08:00',
+      end: '2026-12-01T09:00:00+08:00'
     }
   ]
 };

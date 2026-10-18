@@ -86,7 +86,7 @@ Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与�
 
 ### 待开课与报名名称
 
-`status: "pending"` 表示待开课；可独立记录 `paymentStatus: "paid"`，显示“已付款 · 待开课”。此状态必须关闭 `accessEnabled`，未确认日期时保持 `learningPeriods: []`。付款不代表学习开始。
+`status: 'pending'` 表示待开课，统一显示“待开课”。此状态必须关闭 `accessEnabled`，未确认日期时保持 `learningPeriods: []`。Dashboard 不记录或显示付款信息。
 
 报名记录可提供 `enrollmentTitle` 作为正式课程显示名；未提供时沿用原有 Catalog / title 回退规则，已有学员不受影响。在线资源集合名称不必与报名产品名称完全一致。教师页使用 `teacher/teacher-data.js` 学生入口列表。背景调查资料不应存入公开静态数据。
 
@@ -110,7 +110,6 @@ Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与�
 | `courses[].id` | `interval-ear-training`、`interval-theory`、`chord-theory`；报名课程不等于在线资源集合 |
 | `title` / `enrollmentTitle` | 必填课程名称 / 可选正式报名显示名；后者优先于资源标题，不必改写旧学员标题 |
 | `status` | 单门课程：`active` 进行中、`completed` 已完成、`pending` 待开课、`paused` 暂停中、`previous` 曾参加 |
-| `paymentStatus` | 可选 `paid` / `unpaid`，与开课和学习状态分开记录 |
 | `accessEnabled` | 是否显示该课程资料入口，和完成状态独立；`pending` 必须为 false |
 | `currentLessons` | 正整数数组，当前课次，必须为已开放课次的子集 |
 | `accessibleLessons` | 正整数数组，只显示明确开放的课次；不会推断这些课程已完成 |
@@ -127,3 +126,5 @@ Samuel 使用已发送的固定目录 `samuel-b5def80cdaa55d42`；生成器与�
 示例周期为北京时间 `2026-10-18 09:00` 至 `2026-11-01 09:00`。测试其他有效期状态时直接调整其日期，不修改真实学员。暂停时增加 `learningState: "paused"`；完成时移除它并将三门 status 都设为 completed。进度与资源、完成状态与日期始终独立。
 
 正式学员检查结论：Samuel、周舰、小羽的结构、状态、课程 ID、进度/开放范围和日期格式均兼容当前校验器；缩进、单双引号和换行仅属排版差异，本次未修改其数据。以后建议新增配置采用两空格缩进、每门课程独立对象、明确时区和稳定字段名，不必为格式重写历史文件。
+
+学员数据统一使用2空格缩进、不加引号的字段名、单引号字符串和单行简单数组。每门课程单独书写为对象，课程对象之间空一行；无学习周期时写 `learningPeriods: []`。新建学员生成器遵循同样格式，不改变随机目录规则。

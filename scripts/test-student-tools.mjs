@@ -22,6 +22,10 @@ try {
  const names=fs.readdirSync(path.join(temp,'students')).filter(name=>name!=='shared');
  assert.equal(names.length,1);assert.match(names[0],/^[a-f0-9]{32}$/);
  const directory=path.join(temp,'students',names[0]),htmlFile=path.join(directory,'index.html'),dataFile=path.join(directory,'student-data.js');
+ const initialData=fs.readFileSync(dataFile,'utf8');
+ assert.ok(initialData.includes("  studentName: '"));
+ assert.ok(initialData.includes('  courses: [],\n  learningPeriods: []'));
+ assert.ok(!initialData.includes('"studentName":'));
  const original=fs.readFileSync(htmlFile,'utf8');
  assert.ok(original.includes('测试 &lt;&amp;&quot;&#39;名字 · Learning Dashboard'));
  const hash=crypto.createHash('sha1').update(fs.readFileSync(dataFile)).digest('hex').slice(0,8);

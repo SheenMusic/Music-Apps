@@ -26,8 +26,13 @@ try {
   if (args[0]==='--new') {
     if(args.length!==2 || !args[1].trim()) throw new Error('Usage: --new "display name"');
     const directory=randomDirectory();
-    const data={studentName:args[1],courses:[],learningPeriods:[]};
-    fs.writeFileSync(path.join(directory,'student-data.js'),'const studentData = '+JSON.stringify(data,null,2)+';\n');
+    const studentName=JSON.stringify(args[1]).slice(1,-1).replace(/'/g,"\\'").replace(/\\"/g,'"');
+    fs.writeFileSync(path.join(directory,'student-data.js'),`const studentData = {
+  studentName: '${studentName}',
+  courses: [],
+  learningPeriods: []
+};
+`);
     fs.writeFileSync(path.join(directory,'index.html'),expected(directory));
     console.log('Created '+path.relative(root,directory)+'/');
   } else {

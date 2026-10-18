@@ -33,7 +33,6 @@ for (const directory of studentDirectories()) {
     if (ids.has(course.id)) report('ERROR',relative,`课程 ID 重复：${course.id}`);ids.add(course.id);
     if (!['completed','active','previous','pending','paused'].includes(course.status)) report('ERROR',relative,`status 无效：${course.id}`);
     if (course.enrollmentTitle!==undefined && (typeof course.enrollmentTitle!=='string' || !course.enrollmentTitle.trim())) report('ERROR',relative,`enrollmentTitle 无效：${course.id}`);
-    if (course.paymentStatus!==undefined && !['paid','unpaid'].includes(course.paymentStatus)) report('ERROR',relative,`paymentStatus 无效：${course.id}`);
     if (course.status==='pending' && course.accessEnabled) report('ERROR',relative,`待开课课程不能开放入口：${course.id}`);
     if (typeof course.title!=='string' || !course.title.trim()) report('ERROR',relative,`title 无效：${course.id}`);
     if (typeof course.accessEnabled!=='boolean') report('ERROR',relative,`accessEnabled 无效：${course.id}`);
