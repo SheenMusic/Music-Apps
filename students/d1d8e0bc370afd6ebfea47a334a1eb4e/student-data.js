@@ -22,10 +22,7 @@ const studentData = {
         4
       ],
       "accessibleLessons": [
-        1,
-        2,
-        3,
-        4
+        1,2,3,4,5,6,7
       ],
       "accessibleSupplementary": [
         "harmonic-fourths-fifths",
@@ -51,7 +48,7 @@ const studentData = {
     {
       "id": "example-01",
       "start": "2026-10-18T09:00:00+08:00",
-      "end": "2026-11-01T09:00:00+08:00"
+      "end": "2026-12-01T09:00:00+08:00"
     }
   ]
 };
