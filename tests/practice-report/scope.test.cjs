@@ -9,8 +9,10 @@ const courses = require('./courses.json');
 const BASE = '70c9f0cc6d46f2f14e2b27ff2347881c58cf3e38';
 const git = (...args) => cp.execFileSync('git', args, {encoding:'utf8'});
 const withoutStyles = text => text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
-test('all practice report scripts, DOM, data/history and clipboard handlers match the published implementation', () => {
-  for (const course of courses) {
+// MT is now protected by the 90-question baseline + shared-engine and report
+// snapshot tests in tests/music-apps-v1; ET remains byte-protected below.
+test('ET practice report scripts, DOM, data/history and clipboard handlers match the published implementation', () => {
+  for (const course of courses.filter(c => c.type !== 'mt')) {
     for (const path of [course.path, ...(course.type === 'listening' ? [course.path.replace('index.html','script.js')] : [])]) {
       const previous = git('show', BASE + ':' + path);
       const current = fs.readFileSync(path, 'utf8');

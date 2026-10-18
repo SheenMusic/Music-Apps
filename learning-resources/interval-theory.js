@@ -34,7 +34,7 @@ const intervalTheoryResources = {
       "id": "interval-theory-04",
       "number": 4,
       "title": "单音程与复音程",
-      "practiceURL": "/MT-Intervals/lesson04-x3n6cu/",
+      "practiceURL": "/MT-Intervals/lesson04/",
       "listeningURL": null,
       "isFormal": true,
       "isSupplementary": false
@@ -43,7 +43,7 @@ const intervalTheoryResources = {
       "id": "interval-theory-05",
       "number": 5,
       "title": "原位音程与转位音程",
-      "practiceURL": "/MT-Intervals/lesson05-s2e2f4/",
+      "practiceURL": "/MT-Intervals/lesson05/",
       "listeningURL": null,
       "isFormal": true,
       "isSupplementary": false

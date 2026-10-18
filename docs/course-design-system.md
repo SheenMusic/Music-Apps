@@ -1,6 +1,6 @@
 # Music-Apps 课程通用设计与维护规范
 
-状态：现行规范，2026-10-17 修订。MT Learning 的专项教学规范（v1.1.3，独立布局及按钮悬浮快捷键提示）见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
+状态：现行规范，2026-10-18 修订。MT Learning 的专项教学规范（v1.1.3，独立布局及按钮悬浮快捷键提示）见 [Interactive Theory Lesson Standard](interactive-theory-lesson-standard.md)。历史“全课程视觉统一”已撤销，不再以其宽度、字号、CSS 覆盖顺序或 PNG 像素门禁约束当前课程。
 
 ## 权威来源与边界
 
@@ -16,7 +16,8 @@
 | 全站 | `assets/site-visual.css` | 已选择 `data-visual` 的页面；主题、字体、状态、圆角和折叠视觉 |
 | 早期课程试点 | `assets/course-visual.css` | 现存 ET05/ET06/MT03 的别名与尺寸兼容规则，不是所有课程的通用布局 |
 | ET | `ET-Intervals/shared/styles/base.css` 与各课现存样式 | 保留构唱/模唱、旋律/和声及单音/双音的布局和业务差异 |
-| MT Practice | `MT-Intervals/shared/styles/practice-base.css` 与单课现存样式 | 按已接入范围工作，不改变题库、判题、计时、历史或报告 |
+| MT Practice | `shared/styles/practice-base.css`、`shared/practice/` | MT01–05 共用状态引擎与 UI；原90题和准确率算法保留，只读结果回看独立；见 `shared/README.md` |
+| Notation | `shared/notation/` | 当前 MT01/02 Learning、MT04/05 Practice；全局起始线/谱表/格式器策略，课程保留专属教学标注 |
 | MT Learning 外壳 | `MT-Intervals/shared/styles/learning-base.css` | 仅 `html[data-theory-lesson]`，当前 MT01/02/06；页面框架、语义排版、Board 尺寸档、导航、动效与响应式 |
 | 可选教学组件 | `MT-Intervals/shared/styles/learning-components.css` | 当前 MT01/02；谱例容器、键盘几何、音频按钮和 Quiz 表现 |
 | Learning 显示控制 | `MT-Intervals/shared/learning/theory-lesson.js` | 显式步骤、独立演示更新、讲解追加、滚动和会话内 DOM 状态恢复；不包含音乐知识或判题 |
@@ -32,7 +33,7 @@ ET 模唱与构唱、旋律参考音与和声双音采集独立维护，不共�
 
 MT Learning 可以改变教学显示和导航实现，但应保留知识点、文字含义、揭示顺序、音符、频率、原 Quiz 答案和完成门槛。MT Practice 的单选/多选、准确率、错题重试和历史数据不属于 Learning 框架。
 
-课程 URL、随机目录、PDF/练习资源、学生数据、权限、Dashboard/Catalog、报告核心与支付逻辑不可因视觉组件迁移而改动。
+课程 URL、随机目录、PDF/练习资源、学生数据、权限、Dashboard/Catalog、报告核心与支付逻辑不可因普通视觉组件迁移而改动。V1.0 架构任务明确授权的例外：MT01–05 分为课程首页、learning/ 与 practice/；MT04/05 从旧随机目录迁至 lesson04/lesson05，并只更新课程资源 URL 映射。所有学员数据与权限不变。
 
 ## 测试与验收
 
@@ -49,3 +50,7 @@ MT Learning 可以改变教学显示和导航实现，但应保留知识点、�
 - 不允许不断追加媒体查询、末尾覆盖和大量 `!important` 掩盖布局问题。隐藏契约允许一条有作用域的 `[hidden]/.hidden` 规则，教学特殊形状应有明确理由。
 - 新增课程专用例外，应写明教学原因、适用组件与设备；不让专用规则渗入普通页面。
 - 历史审计、失败日志与审核材料保留原始结论，并标明历史状态；不再作为新设计的旧像素审批门禁。
+
+## V1.0 入口与共享引擎
+
+MT01–05 统一采用 `lessonXX/index.html`、`learning/index.html`、`practice/index.html`。MT03–05 Learning 仅为建设中外壳；课程内容建设状态独立于学生状态。实践接入、数据与谱面示例见 [共享组件指南](../shared/README.md)。本轮没有统一 ET 或修改 MT06。
