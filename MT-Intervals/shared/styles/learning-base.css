@@ -104,13 +104,7 @@ html[data-theory-lesson] .theory-explanation { flex: none; display: flow-root; w
 html[data-theory-lesson] .theory-pending { opacity: 0; }
 html[data-theory-lesson] .theory-new { animation: theory-reveal var(--theory-reveal-duration) ease-out; }
 @keyframes theory-reveal { from { opacity: .2; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-html[data-theory-lesson] :is(.theory-instruction,.theory-keyboard-hint) { font-size: var(--theory-text-instruction-size); line-height: var(--theory-text-instruction-leading); color: var(--muted); }
-/* Reserve the hint's line so actual keyboard detection never shifts navigation. */
-html[data-theory-lesson] .theory-keyboard-hint { margin-top: 4px; visibility: hidden; }
-html[data-theory-lesson].theory-keyboard-used .theory-keyboard-hint { visibility: visible; }
-@media (hover:hover) and (pointer:fine) {
-  html[data-theory-lesson] .theory-keyboard-hint { visibility: visible; }
-}
+html[data-theory-lesson] .theory-instruction { font-size: var(--theory-text-instruction-size); line-height: var(--theory-text-instruction-leading); color: var(--muted); }
 @media (max-width:400px) {
   html[data-theory-lesson] .card { padding: 20px 17px; }
   html[data-theory-lesson] .lesson { gap: 16px; }

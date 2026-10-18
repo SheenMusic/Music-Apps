@@ -1,6 +1,6 @@
 # MT Learning 共享框架：实施与验证记录
 
-> 首次实施记录截至 `23dd0b6`；当前规则以文末 v1.1.2 及独立对齐证据为准，v1.1.0/v1.1.1 为历史记录。下述首次字号、规模与测试数量属于当时结果。
+> 首次实施记录截至 `23dd0b6`；当前规则以文末 v1.1.3 及既有独立对齐证据为准，v1.1.0/v1.1.1 为历史记录。下述首次字号、规模与测试数量属于当时结果。
 
 日期：2026-10-17。起点：最新远程 main `3eae716095bd2941f4508184ff074d5df51dd18b`，本地最初为干净的 `work@73d6884`；远程只新增了本任务必读专项规范。独立工作分支 `refactor/mt-learning-framework`，不推送、不合并、不部署。
 
@@ -140,3 +140,16 @@ node scripts/test-student-tools.mjs
 根因、实现边界、九个指定场景截图、中心差、两段真实动画及测试说明见 [独立对齐实施证据](alignment-evidence/README.md)。本轮 Learning 完整61项通过、0失败，含全部742次响应式逐步布局、两种模式动画、旋转不重建SVG、标签/引线锚点、超高演示可访问性。非目标源码与CSS隔离、Quiz/音频/状态回归均通过。
 
 复核：`THEORY_ARTIFACT_DIR=/tmp/mt-independent-alignment/final-accepted node --test tests/theory-learning/learning.test.cjs`。测试只读课程内容，试验性溢出数据只注入浏览器；常规临时截图/日志不提交，本次按交付要求仅提交代表截图、录屏、测量和说明。
+
+
+## v1.1.3：导航按钮悬浮快捷键提示（2026-10-18）
+
+从最新main `a5829af3d148932c403c8f60c6d73737e98c0eb5` 开始，在独立本地分支移除页脚方向键提示及其预留行；原键盘控制和aria-keyshortcuts保留。每个导航按钮使用原生title显示当前操作与方向键，MutationObserver只跟踪该按钮的文字变化，自动适配“返回首页”“继续”“完成复习”等文案。没有新建浮层组件、修改课程HTML或学生数据。
+
+定向回归50项通过、0失败，包括三课桌面/触控的提示属性、hover不改变布局、四方向导航、输入/Quiz/音乐控件键盘保护、完成状态标签更新、完整课程流程，以及42个响应式/主题场景中的全部教学步骤和非目标CSS隔离。没有重新执行旧PNG逐像素门禁。
+
+固定音乐/教学内容仍与原BASE提交对照；仅修改范围保护改为本任务起点SCOPE_BASE，避免把近期合法的Dashboard/学生数据更新误判为本次改动，允许清单收窄为本次6个目标文件。非目标模块没有修改。
+
+首次运行缺少已清理的`/tmp/vexflow.js`测试缓存而失败；从原CDN恢复相同4.2.5版本并校验既定SHA256后，定向回归通过。原失败日志保留于`/tmp/mt-learning-shortcut-tooltips.log`，最终日志为`/tmp/mt-learning-shortcut-tooltips-verified.log`。浏览器原生title气泡不属于网页DOM截图，测试验证title文案、可悬停按钮与布局稳定性；不是自绘气泡的像素验收。
+
+复核：`THEORY_ARTIFACT_DIR=/tmp/mt-learning-shortcut-tooltips node --test --test-name-pattern='syntax,|native button hover hints|complete click flows|responsive full content|shared styles are isolated' tests/theory-learning/learning.test.cjs`。本次只完成本地实现与提交，未推送或部署。
