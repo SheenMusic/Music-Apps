@@ -10,7 +10,7 @@ const studentData = {
     {id:'interval-theory', title:'音程理论训练', status:'completed', accessEnabled:false},
     {
       id:'interval-ear-training', title:'音程听力训练', status:'active', accessEnabled:true,
-      currentLessons:[5,6],
+      currentLessons:[6],
       accessibleLessons:[1,2,3,4,5,6,7],
       accessibleSupplementary:[]
     }
