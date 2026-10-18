@@ -33,7 +33,7 @@ ET 模唱与构唱、旋律参考音与和声双音采集独立维护，不共�
 
 MT Learning 可以改变教学显示和导航实现，但应保留知识点、文字含义、揭示顺序、音符、频率、原 Quiz 答案和完成门槛。MT Practice 的单选/多选、准确率、错题重试和历史数据不属于 Learning 框架。
 
-课程 URL、随机目录、PDF/练习资源、学生数据、权限、Dashboard/Catalog、报告核心与支付逻辑不可因普通视觉组件迁移而改动。V1.0 架构任务明确授权的例外：MT01–05 分为课程首页、learning/ 与 practice/；MT04/05 从旧随机目录迁至 lesson04/lesson05，并只更新课程资源 URL 映射。所有学员数据与权限不变。
+课程 URL、随机目录、PDF/练习资源、学生数据、权限、Dashboard/Catalog、报告核心与支付逻辑不可因普通视觉组件迁移而改动。V1.0 架构任务明确授权的例外：MT01–05 曾分为独立课程首页、learning/ 与 practice/，现已纠正为根目录 Learning 首页与 practice/；MT04/05 从旧随机目录迁至 lesson04/lesson05，并只更新课程资源 URL 映射。所有学员数据与权限不变。
 
 ## 测试与验收
 
@@ -53,4 +53,8 @@ MT Learning 可以改变教学显示和导航实现，但应保留知识点、�
 
 ## V1.0 入口与共享引擎
 
-MT01–05 统一采用 `lessonXX/index.html`、`learning/index.html`、`practice/index.html`。MT03–05 Learning 仅为建设中外壳；课程内容建设状态独立于学生状态。实践接入、数据与谱面示例见 [共享组件指南](../shared/README.md)。本轮没有统一 ET 或修改 MT06。
+MT01–05 的 `lessonXX/index.html` 直接作为 Learning 首页，Practice 保持 `practice/index.html`，不再创建中间选择页或 learning/ 子目录。MT03–05 保留三枚同样式按钮，未实现的学习/辅助练习使用禁用按钮，不编造内容或学员状态。实践接入、数据与谱面示例见 [共享组件指南](../shared/README.md)。本轮没有统一 ET 或修改 MT06。
+
+### 首页与页面外框修正（2026-10-18）
+
+`shared/styles/course-shell.css` 以显式 `data-mt-shell` 限定 MT01–05：普通首页/Practice 最大宽度520px、安全区边距、品牌12px/0.3px字距、右侧10px间距、课程徽标统一，版权12px/1.5行高统一。活动 Learning 的原有双栏宽度与独立滚动保留；Practice 引擎、题库、谱例与答题/结果卡片内部结构和样式不属于这一层。

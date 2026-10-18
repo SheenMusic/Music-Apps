@@ -6,18 +6,11 @@ const {serve,scripts} = require('../course-baseline/harness.cjs');
 const ROOT=path.resolve(__dirname,'../..');
 const BASE='3eae716095bd2941f4508184ff074d5df51dd18b';
 // Music/content stays fixed to BASE; only this change's scope uses current main.
-const SCOPE_BASE='8e3dd0d8fbcdcf8e9bf3d35ce5837aca9faf75a1';
+const SCOPE_BASE='6d94058e24a2f7c458a78df370426b37ed956470';
 const OUT=process.env.THEORY_ARTIFACT_DIR || '/tmp/music-apps-theory-learning';
 const VEX=process.env.VEXFLOW_TEST_FILE || '/tmp/vexflow.js';
-const legacyPath=file=>file.replace(/(lesson0[12])\/learning\/index.html$/, '$1/index.html');
-const original=file=>cp.execFileSync('git',['show',`${BASE}:${legacyPath(file)}`],{cwd:ROOT,maxBuffer:8*1024*1024});
-const files=['MT-Intervals/lesson01/learning/index.html','MT-Intervals/lesson02/learning/index.html','MT-Intervals/lesson06/index.html'];
-// Original lessons are served at the new Learning URL without changing their data.
-function rebaseLegacy(html,file) {
- const base='http://baseline/'+legacyPath(file);
- return html.replace(/((?:src|href)=["'])([^"']+)(["'])/g,(all,a,u,z)=>/^(https?:|#)/.test(u)?all:a+new URL(u,base).pathname+z)
- .replaceAll("file:'assets/","file:'../assets/");
-}
+const original=file=>cp.execFileSync('git',['show',`${BASE}:${file}`],{cwd:ROOT,maxBuffer:8*1024*1024});
+const files=['MT-Intervals/lesson01/index.html','MT-Intervals/lesson02/index.html','MT-Intervals/lesson06/index.html'];
 const cache=new Map();
 async function open(browser,url,file,{before=false,width=390,height=844,theme='light',motion='reduce',audioMock=true,touch=false}={}) {
  const context=await browser.newContext({viewport:{width,height},colorScheme:theme,reducedMotion:motion,hasTouch:touch,isMobile:touch});
@@ -38,7 +31,7 @@ async function open(browser,url,file,{before=false,width=390,height=844,theme='l
   if(u.origin!==url)return route.fulfill({status:200,body:'',contentType:'application/javascript'});
   if(before){
    const p=decodeURIComponent(u.pathname).slice(1);
-   try{if(!cache.has(p))cache.set(p,original(p));let body=cache.get(p); if(p.endsWith('/learning/index.html'))body=Buffer.from(rebaseLegacy(body.toString(),p));return route.fulfill({body,contentType:p.endsWith('.css')?'text/css':p.endsWith('.js')?'application/javascript':p.endsWith('.html')?'text/html':'application/octet-stream'});}catch{return route.fulfill({status:404,body:''});}
+   try{if(!cache.has(p))cache.set(p,original(p));return route.fulfill({body:cache.get(p),contentType:p.endsWith('.css')?'text/css':p.endsWith('.js')?'application/javascript':p.endsWith('.html')?'text/html':'application/octet-stream'});}catch{return route.fulfill({status:404,body:''});}
   }
   return route.continue();
  });
@@ -108,7 +101,7 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
   const now=fs.readFileSync(path.join(ROOT,f),'utf8'),old=original(f).toString();
   for(const s of scripts(now))syntax(s,f);
   const urls=(s,file)=>[...s.matchAll(/(?:href|src)=["']([^"']+)["']/g)].map(m=>m[1]).filter(u=>!u.includes('/shared/')&&u!=='../index.html').map(u=>new URL(u,'http://baseline/'+file).pathname).sort();
-  assert.deepEqual(urls(now,f),urls(old,legacyPath(f)),f+' resource URLs');
+  assert.deepEqual(urls(now,f),urls(old,f),f+' resource URLs');
   assert.equal(now.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0].replaceAll("file:'../assets/","file:'assets/"),old.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0],f+' original audio map');
   // The full contents of all original render/check/audio functions remain in
   // place except documented navigation/audio-button integration functions.
