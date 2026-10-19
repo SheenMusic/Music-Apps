@@ -99,7 +99,56 @@
     ];
     return lines.map(foldIcsLine).join('\r\n')+'\r\n';
   }
-  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs};
+  // One course entry represents one purchased package; renewals may add another entry.
+  function validatePrivateLesson(course) {
+    const pack = course?.lessonPackage;
+    const invalid = reason => ({valid:false,reason});
+    if (!pack || !Number.isSafeInteger(pack.purchasedMinutes) || pack.purchasedMinutes<=0) return invalid('购买时长必须为正整数分钟');
+    if (!validatePeriod(pack).valid) return invalid('课时包有效期必须包含明确时区，且结束晚于开始');
+    if (!Array.isArray(pack.sessions)) return invalid('上课记录必须为数组');
+    if (course.accessEnabled || ['currentLessons','accessibleLessons','accessibleSupplementary'].some(key=>course[key]?.length)) return invalid('Private Lesson 不配置课时资料或补充训练');
+    const ids = new Set(), ranges = [];
+    for (const session of pack.sessions) {
+      if (!session || typeof session.id!=='string' || !session.id.trim() || ids.has(session.id)) return invalid('上课记录 ID 缺失或重复');
+      ids.add(session.id);
+      if (!validatePeriod(session).valid) return invalid('上课起止时间无效或缺少时区');
+      const start=Date.parse(session.start), end=Date.parse(session.end);
+      if (start%60000 || end%60000) return invalid('上课时间须精确到分钟');
+      if (start<Date.parse(pack.start) || end>Date.parse(pack.end)) return invalid('上课时间超出课时包有效期');
+      ranges.push({start,end});
+    }
+    ranges.sort((a,b)=>a.start-b.start);
+    if (ranges.some((item,i)=>i>0 && item.start<ranges[i-1].end)) return invalid('上课记录时间重叠');
+    return {valid:true,reason:null};
+  }
+  function summarizePrivateLesson(course) {
+    const check=validatePrivateLesson(course);
+    if (!check.valid) throw new RangeError(check.reason);
+    const pack=course.lessonPackage;
+    let usedMinutes=0;
+    const sessions=[...pack.sessions].sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(session=>{
+      const durationMinutes=(Date.parse(session.end)-Date.parse(session.start))/60000;
+      usedMinutes+=durationMinutes;
+      return {...session,durationMinutes,usedMinutes,remainingMinutes:pack.purchasedMinutes-usedMinutes};
+    });
+    return {purchasedMinutes:pack.purchasedMinutes,usedMinutes,remainingMinutes:pack.purchasedMinutes-usedMinutes,sessions};
+  }
+  function formatLessonMinutes(minutes) {
+    if (!Number.isSafeInteger(minutes)) throw new RangeError('Invalid lesson minutes');
+    const value=Math.abs(minutes), hours=Math.floor(value/60), rest=value%60;
+    return `${minutes<0 ? '超用 ' : ''}${hours ? `${hours} 小时${rest ? ' ' : ''}` : ''}${rest || !hours ? `${rest} 分钟` : ''}`;
+  }
+  function computeStudentStatus(data,now) {
+    const courses=data.courses || [];
+    const period=pickLatestPeriod(data.learningPeriods,now);
+    const fallback=computeLearningStatus(courses,period,now,data.learningState);
+    if (data.learningState==='paused' || !courses.some(c=>c.type==='private-lesson' && c.status==='active')) return fallback;
+    const statuses=courses.filter(c=>c.status==='active').map(course=>computeLearningStatus([course],course.type==='private-lesson' ? course.lessonPackage : period,now));
+    if (statuses.includes('学习中')) return '学习中';
+    if (statuses.includes('尚未开始')) return '尚未开始';
+    return '已过期';
+  }
+  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus};
   globalThis.DashboardLogic = DashboardLogic;
   if (typeof module !== 'undefined') module.exports = DashboardLogic;
 })();

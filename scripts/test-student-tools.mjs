@@ -14,7 +14,7 @@ const run=(file,args=[],code=0)=>{
 };
 const writeData=(directory,data)=>fs.writeFileSync(path.join(directory,'student-data.js'),'const studentData = '+JSON.stringify(data)+';\n');
 try {
- for(const file of ['scripts/student-config.mjs','scripts/generate-student-pages.mjs','scripts/validate-students.mjs','students/shared/index.template.html','students/shared/dashboard-logic.js','learning-resources/course-catalog.js','learning-resources/interval-theory.js']) {
+ for(const file of ['scripts/student-config.mjs','scripts/generate-student-pages.mjs','scripts/validate-students.mjs','students/shared/index.template.html','students/shared/dashboard-logic.js','students/shared/dashboard.js','students/shared/dashboard-template.js','students/shared/dashboard.css','learning-resources/course-catalog.js','learning-resources/interval-theory.js']) {
   const target=path.join(temp,file);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(path.join(root,file),target);
  }
  const display='测试 <&"\'名字';
@@ -66,6 +66,11 @@ try {
   const fixture=path.join(temp,'students',name);fs.mkdirSync(fixture);writeData(fixture,empty);
  }
  run('validate-students.mjs');run('generate-student-pages.mjs');run('generate-student-pages.mjs',['--check']);
+ const privateCourse={id:'private-lesson-package-1',type:'private-lesson',title:'Private Lesson',status:'active',accessEnabled:false,lessonPackage:{purchasedMinutes:600,start:'2026-10-06T15:00:00+08:00',end:'2027-01-06T15:00:00+08:00',sessions:[]}};
+ writeData(directory,{...empty,courses:[privateCourse]});run('validate-students.mjs');
+ writeData(directory,{...empty,courses:[privateCourse,active]});run('validate-students.mjs');
+ writeData(directory,{...empty,courses:[{...privateCourse,lessonPackage:{...privateCourse.lessonPackage,purchasedMinutes:-1}}]});run('validate-students.mjs',[],1);
+ writeData(directory,{...empty,courses:[{...privateCourse,accessEnabled:true}]});run('validate-students.mjs',[],1);
  writeData(directory,empty);const renamed=path.join(temp,'students','old-style-directory');fs.renameSync(directory,renamed);
  run('validate-students.mjs',[],1);run('validate-students.mjs',['--allow-legacy-directories']);
  console.log('PASS student tooling: stable generation, escaped names, content hashes, read-only check, overwrite protection, random --new, enrollment/resource validation and error branches');
