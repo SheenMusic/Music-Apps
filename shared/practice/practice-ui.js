@@ -8,16 +8,13 @@
       <div class="header-top-bar">
         <span class="header-title-left">MUSIC THEORY · INTERVAL</span>
         <div class="header-right-group">
+          <span class="question-counter hidden" id="questionCounter"></span>
           <span class="header-title-right">LESSON 05</span>
           <button class="history-toggle-btn" id="historyToggleBtn">历史记录</button>
         </div>
       </div>
       <div class="progress-bar-container" id="progressBarContainer">
         <div class="progress-bar" id="progressBar"></div>
-      </div>
-      <div class="header-meta hidden" id="headerMeta">
-        <span class="lesson-tag" id="lessonTag">音程05</span>
-        <span class="question-counter" id="questionCounter">1 / 15</span>
       </div>
     </header>
 
@@ -138,13 +135,11 @@
   const engine = PracticeEngine.create(data);
   let selected = [];
   const staff = NotationRenderer.mount(byId('staffQuestion'));
-  text('lessonTag', data.code);
   document.querySelector('.header-title-left').textContent = data.brand || 'MUSIC THEORY · INTERVAL';
   document.querySelector('.header-title-right').textContent = 'LESSON ' + data.code.slice(-2);
   document.querySelector('.main-title').textContent = data.title;
   document.querySelector('.subtitle').textContent = data.subtitle;
   document.querySelector('.start-info strong').textContent = data.questions.length + ' 个题目';
-  text('questionCounter', '1 / ' + data.questions.length);
 
   function buttonNav(id, state, result = false) {
     const nav = byId(id); nav.replaceChildren();
@@ -172,7 +167,7 @@
     selected = [];
     const s = engine.state(), playing = s.mode === 'practice', review = s.mode === 'review';
     show('startScreen', s.mode === 'start'); show('questionCard', playing || review);
-    show('resultScreen', s.mode === 'result'); show('headerMeta', playing || review);
+    show('resultScreen', s.mode === 'result'); show('questionCounter', playing || review);
     byId('progressBar').style.width = `${s.total ? s.solved / s.total * 100 : 0}%`;
     if (s.mode === 'result') {renderResults(s); return;}
     if (!playing && !review) {staff.set(null); return;}

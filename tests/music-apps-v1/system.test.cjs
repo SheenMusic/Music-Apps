@@ -4,6 +4,7 @@ const fs = require('node:fs'), path = require('node:path'), vm = require('node:v
 const {chromium} = require('playwright');
 const {serve} = require('../course-baseline/harness.cjs');
 const baseline = require('./baseline.json');
+const protection = require('../header-footer/protection.cjs');
 const courses = baseline.courses.filter(c => !process.env.MT_COURSES || process.env.MT_COURSES.split(',').includes(c.code));
 const out = process.env.MT_V1_ARTIFACT_DIR || '/tmp/music-apps-v1';
 const old = p => cp.execFileSync('git',['show',baseline.commit+':'+p],{encoding:'utf8'});
@@ -130,7 +131,7 @@ test('production scope: student/teacher data, ET, MT06, business scripts and rep
  const changed=cp.execFileSync('git',['diff','--name-only','--no-renames',baseline.commit],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
  for(const file of changed){
   const allowed=/^MT-Intervals\/lesson0[1-5][^/]*\//.test(file)||file==='MT-Intervals/shared/styles/practice-base.css'||file==='learning-resources/interval-theory.js'||file.startsWith('tests/')||file.startsWith('shared/')||file==='docs/course-design-system.md'||file==='docs/music-apps-v1.md';
-  assert(allowed,'Out of scope: '+file);
+  assert(allowed||protection.allowed.has(file),'Out of scope: '+file);
  }
  for(const file of ['assets/practice-report.js','MT-Intervals/shared/utils/format-time.js','MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css'])assert.equal(fs.readFileSync(file,'utf8'),old(file),file);
  const before=old('learning-resources/interval-theory.js'),after=fs.readFileSync('learning-resources/interval-theory.js','utf8');

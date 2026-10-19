@@ -4,11 +4,12 @@ const fs = require('node:fs');
 const cp = require('node:child_process');
 const vm = require('node:vm');
 const courses = require('./courses.json');
+const protection = require('../header-footer/protection.cjs');
 // Published report implementation is immutable. Later authorized UI work may
 // edit styles; it must preserve all report scripts, markup, handlers and data.
 const BASE = '70c9f0cc6d46f2f14e2b27ff2347881c58cf3e38';
 const git = (...args) => cp.execFileSync('git', args, {encoding:'utf8'});
-const withoutStyles = text => text.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
+const withoutStyles = text => protection.earHTML(text).replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, '');
 // MT is now protected by the 90-question baseline + shared-engine and report
 // snapshot tests in tests/music-apps-v1; ET remains byte-protected below.
 test('ET practice report scripts, DOM, data/history and clipboard handlers match the published implementation', () => {

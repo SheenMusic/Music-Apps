@@ -42,7 +42,6 @@ html[data-mt-shell] .history-toggle-btn {
 }
 html[data-mt-shell] :is(.lesson-count, .question-counter) { font-size: 12px; font-weight: 300; line-height: 1.5; }
 html[data-mt-shell] .progress-bar-container { margin-bottom: 0; }
-html[data-mt-shell] .header-meta:not(.hidden) { margin-top: 12px; }
 html[data-mt-shell] :is(.footer, .app-footer) {
   font-family: var(--site-font); font-size: 12px; font-weight: 300;
   line-height: 1.5; color: var(--site-muted); text-align: center;

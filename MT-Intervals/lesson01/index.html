@@ -15,7 +15,7 @@
 <body>
 <div class="app">
 <header>
-  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">开始</span><span class="lesson-badge">LESSON 01</span></span></div>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount" hidden></span><span class="lesson-badge">LESSON 01</span></span></div>
   <div class="progress-wrap"><div class="progress" id="progress"></div></div>
   </header>
 <main>
@@ -612,7 +612,7 @@ function startLesson(){
 
 function updateHeaderLessonCount(i){
   const el=document.getElementById('headerLessonCount');
-  if(el) el.textContent=i<0?'开始':(i+1)+' / '+steps.length;
+  if(el){el.hidden=i<0;el.textContent=i<0?'':(i+1)+' / '+steps.length;}
 }
 function responsiveStaffWidth(el,min=280,max=760){
   return NotationRenderer.width(el,max);
@@ -726,7 +726,7 @@ $('#nextBtn').onclick=()=>{
 };
 $('#backHome').onclick=goHome;
 function goHome(){current=0;document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(0,steps.length,'教学步骤');updateHeaderLessonCount(-1);window.scrollTo({top:0,behavior:'instant'})}
-function showSummary(){document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(steps.length,steps.length,'教学步骤');window.scrollTo({top:0,behavior:'instant'})}
+function showSummary(){document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(steps.length,steps.length,'教学步骤');updateHeaderLessonCount(-1);window.scrollTo({top:0,behavior:'instant'})}
 // Shared display runtime preserves diagram and check state across navigation.
 
 (function(){

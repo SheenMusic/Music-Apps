@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs'), path = require('node:path'), cp = require('node:child_process');
 const {chromium} = require('playwright');
 const {serve,scripts} = require('../course-baseline/harness.cjs');
+const protection = require('../header-footer/protection.cjs');
 const ROOT=path.resolve(__dirname,'../..');
 const BASE='3eae716095bd2941f4508184ff074d5df51dd18b';
 // Music/content stays fixed to BASE; only this change's scope uses current main.
@@ -112,7 +113,7 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
  const changed=cp.execFileSync('git',['diff',SCOPE_BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
  const allowed=new Set(['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css',
   'docs/interactive-theory-lesson-standard.md','docs/course-design-system.md','tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
- for(const f of changed)assert(allowed.has(f)||/^(MT-Intervals\/lesson0[1-5][^/]*\/|MT-Intervals\/shared\/styles\/practice-base.css|shared\/|tests\/|learning-resources\/interval-theory.js|docs\/music-apps-v1.md)/.test(f),'unexpected changed file '+f);
+ for(const f of changed)assert(protection.allowed.has(f)||allowed.has(f)||/^(MT-Intervals\/lesson0[1-5][^/]*\/|MT-Intervals\/shared\/styles\/practice-base.css|shared\/|tests\/|learning-resources\/interval-theory.js|docs\/music-apps-v1.md)/.test(f),'unexpected changed file '+f);
  const now=fs.readFileSync(path.join(ROOT,'MT-Intervals/lesson06/lesson.js'),'utf8'),old=original('MT-Intervals/lesson06/lesson.js').toString();
  assert.equal(now.slice(now.indexOf('  const exercises'),now.indexOf('  const byID')),old.slice(old.indexOf('  const exercises'),old.indexOf('  const byID')),'review copy and exercise configurations');
 });

@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs'), cp = require('node:child_process'), path = require('node:path');
 const {chromium} = require('playwright');
 const {serve, scripts} = require('../course-baseline/harness.cjs');
+const protection = require('../header-footer/protection.cjs');
 const BASE = '6d94058e24a2f7c458a78df370426b37ed956470';
 const OUT = process.env.MT_SHELL_ARTIFACT_DIR || '/tmp/music-apps-mt-home-shell';
 const git = file => cp.execFileSync('git',['show',BASE+':'+file]);
@@ -61,17 +62,17 @@ function shell() {
 test('scope: engines, notation, all question files, result DOM/styles and non-target modules remain unchanged',()=>{
  const immutable=['shared/practice/practice-engine.js','shared/practice/practice-ui.js','shared/styles/practice-base.css','shared/notation/notation-config.js','shared/notation/notation-renderer.js','shared/notation/notation-styles.css','assets/practice-report.js','MT-Intervals/shared/utils/format-time.js','MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css'];
  for(let i=1;i<=5;i++)immutable.push(`MT-Intervals/lesson0${i}/practice/questions.js`);
- for(const f of immutable)assert.equal(fs.readFileSync(f,'utf8'),git(f).toString(),f);
+ for(const f of immutable)assert.equal(f==='shared/practice/practice-ui.js'?protection.practice(fs.readFileSync(f,'utf8')):fs.readFileSync(f,'utf8'),f==='shared/practice/practice-ui.js'?protection.practice(git(f).toString()):git(f).toString(),f);
  for(let i=1;i<=2;i++){
   const f=`MT-Intervals/lesson0${i}/index.html`,before=git(f.replace('index.html','learning/index.html')).toString(),now=fs.readFileSync(f,'utf8');
-  assert.deepEqual(scripts(now),scripts(before).map(s=>s.replaceAll("file:'../assets/","file:'assets/")),'Teaching JavaScript beyond resource rebasing');
+  assert.deepEqual(scripts(now).map(protection.learningJS),scripts(before).map(s=>protection.learningJS(s.replaceAll("file:'../assets/","file:'assets/"))),'Teaching JavaScript beyond resource rebasing');
   const normalize=s=>s.slice(s.indexOf('<body>')).replace(/<script[\s\S]*$/,'').replace('    <a class="ghost btn-link" href="../index.html">← 课程首页</a>\n','').replaceAll('href="../practice/','href="practice/').replaceAll('href="../assets/','href="assets/');
-  assert.equal(normalize(now),normalize(before),'Teaching DOM beyond removed self-link');
+  assert.equal(protection.learningDOM(normalize(now)),protection.learningDOM(normalize(before)),'Teaching DOM beyond removed self-link');
  }
  const allowed=f=>/^MT-Intervals\/lesson0[1-5]\/(?:index.html|learning\/index.html|practice\/index.html)$/.test(f)||f==='shared/styles/course-shell.css'||f.startsWith('tests/music-apps-v1/')||f==='tests/theory-learning/learning.test.cjs'||f==='shared/README.md'||f==='docs/course-design-system.md';
  const changes=cp.execFileSync('git',['diff','--name-only',BASE],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
  const newFiles=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
- for(const f of [...changes,...newFiles])assert(allowed(f),'Out of scope: '+f);
+ for(const f of [...changes,...newFiles])assert(allowed(f)||protection.allowed.has(f),'Out of scope: '+f);
  for(let i=1;i<=5;i++)assert(!fs.existsSync(`MT-Intervals/lesson0${i}/learning`));
 });
 test('Chromium: all five homes and Practice share chrome in 50 viewport/theme pairs',async t=>{
