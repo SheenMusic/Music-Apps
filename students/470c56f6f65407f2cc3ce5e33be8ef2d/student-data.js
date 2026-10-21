@@ -14,8 +14,8 @@ const studentData = {
       title: '音程听力训练',
       status: 'active',
       accessEnabled: true,
-      currentLessons: [12],
-      accessibleLessons: [1,2,3,4,5,6,7,8,9,10,11,12],
+      currentLessons: [13],
+      accessibleLessons: [1,2,3,4,5,6,7,8,9,10,11,12,13],
       accessibleSupplementary: []
     }
   ],
