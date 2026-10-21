@@ -41,6 +41,13 @@ for (const directory of studentDirectories()) {
     }
     const current=Array.isArray(course.currentLessons)?course.currentLessons:[],accessible=Array.isArray(course.accessibleLessons)?course.accessibleLessons:[];
     if (current.some(n=>!accessible.includes(n))) report('ERROR',relative,`currentLessons 不是 accessibleLessons 的子集：${course.id}`);
+    if (course.type!==undefined && course.type!=='private-lesson') report('ERROR',relative,`未知课程类型：${course.type}`);
+    if (course.type==='private-lesson') {
+      const validation=L.validatePrivateLesson(course);
+      if (!validation.valid) report('ERROR',relative,`${course.id}：${validation.reason}`);
+      else if (L.summarizePrivateLesson(course).remainingMinutes<0) report('WARNING',relative,`${course.id}：累计授课已超过购买时长`);
+      continue;
+    }
     const catalogResource=catalog?.courses?.[course.id];
     const resource=catalogResource || (course.id==='interval-theory' ? theoryResources : undefined);
     if (catalog && !catalogResource && !enrollmentIDs.has(course.id)) report('ERROR',relative,`课程 ID 不存在于 Catalog：${course.id}`);

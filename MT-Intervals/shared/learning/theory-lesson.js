@@ -5,12 +5,22 @@
   function installNavigation() {
     if (navigationInstalled) return;
     navigationInstalled = true;
-    const hint = document.createElement('p');
-    hint.className = 'theory-keyboard-hint';
-    hint.textContent = '方向键：← ↑ 上一步 · → ↓ 继续';
-    document.querySelector('.footer')?.append(hint);
-    document.getElementById('prevBtn')?.setAttribute('aria-keyshortcuts','ArrowLeft ArrowUp');
-    document.getElementById('nextBtn')?.setAttribute('aria-keyshortcuts','ArrowRight ArrowDown');
+    for (const [id, keys, arrows] of [
+      ['prevBtn','ArrowLeft ArrowUp','← / ↑'],
+      ['nextBtn','ArrowRight ArrowDown','→ / ↓']
+    ]) {
+      const button = document.getElementById(id);
+      if (!button) continue;
+      button.setAttribute('aria-keyshortcuts',keys);
+      // Native hover text needs no extra footer row or touch-screen space.
+      // Read the current label: Continue may become Finish or Return Home.
+      const updateHint = () => {
+        const label = button.textContent.replace(/[←↑→↓]/g,'').replace(/\s+/g,' ').trim();
+        button.title = `${label}（键盘：${arrows}）`;
+      };
+      updateHint();
+      new MutationObserver(updateHint).observe(button,{childList:true,characterData:true,subtree:true});
+    }
     document.addEventListener('keydown', event => {
       if (event.defaultPrevented || !document.body.classList.contains('theory-active') || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
       const previous = ['ArrowLeft','ArrowUp'].includes(event.key);
@@ -20,7 +30,6 @@
       const reading = target.matches?.('.lesson-content') && target.scrollHeight > target.clientHeight && ['ArrowUp','ArrowDown'].includes(event.key);
       if (target.isContentEditable || reading || target.closest?.('.lesson-board,.quiz-block') || (control && !control.closest('.lesson-nav'))) return;
       event.preventDefault();
-      document.documentElement.classList.add('theory-keyboard-used');
       if (event.repeat) return;
       const button = document.getElementById(previous ? 'prevBtn' : 'nextBtn');
       if (button && !button.disabled && button.getAttribute('aria-disabled') !== 'true') button.click();

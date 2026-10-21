@@ -3,8 +3,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs'), path = require('node:path'), cp = require('node:child_process');
 const {chromium} = require('playwright');
 const {serve,scripts} = require('../course-baseline/harness.cjs');
+const protection = require('../header-footer/protection.cjs');
 const ROOT=path.resolve(__dirname,'../..');
 const BASE='3eae716095bd2941f4508184ff074d5df51dd18b';
+// Music/content stays fixed to BASE; only this change's scope uses current main.
+const SCOPE_BASE='6d94058e24a2f7c458a78df370426b37ed956470';
 const OUT=process.env.THEORY_ARTIFACT_DIR || '/tmp/music-apps-theory-learning';
 const VEX=process.env.VEXFLOW_TEST_FILE || '/tmp/vexflow.js';
 const original=file=>cp.execFileSync('git',['show',`${BASE}:${file}`],{cwd:ROOT,maxBuffer:8*1024*1024});
@@ -68,6 +71,11 @@ async function choose(page,lesson,i,wrong=false){
 // Normalize only the authorized initial bar and display-coordinate/callout
 // adaptation; note generation, voices, pitches and course handlers remain exact.
 const withoutStartBar = s => s
+ .replaceAll('NotationRenderer.createRenderer(el)','new VF.Renderer(el,VF.Renderer.Backends.SVG)')
+ .replaceAll('NotationRenderer.createStave(','new VF.Stave(')
+ .replaceAll('NotationRenderer.createFormatter()','new VF.Formatter()')
+ .replaceAll('NotationRenderer.formatAndDraw','VF.Formatter.FormatAndDraw')
+ .replaceAll(',{initial:i===0}', '')
  .replace('      const align=()=>{','      requestAnimationFrame(()=>{')
  .replace("      };\n      el.dataset.theoryLayout='';\n      el.addEventListener('theory-board-layout',align);\n      requestAnimationFrame(align);",'      });')
  .replaceAll('.setBegBarType(VF.Barline.type.NONE)','')
@@ -93,23 +101,19 @@ test('syntax, fixed baseline teaching/rendering/check/audio code, links and unre
  for(const f of files.slice(0,2)){
   const now=fs.readFileSync(path.join(ROOT,f),'utf8'),old=original(f).toString();
   for(const s of scripts(now))syntax(s,f);
-  const urls=s=>[...s.matchAll(/(?:href|src)=["']([^"']+)["']/g)].map(m=>m[1]).filter(s=>!s.includes('../shared/')).sort();
-  assert.deepEqual(urls(now),urls(old),f+' resource URLs');
-  assert.equal(now.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0],old.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0],f+' original audio map');
+  const urls=(s,file)=>[...s.matchAll(/(?:href|src)=["']([^"']+)["']/g)].map(m=>m[1]).filter(u=>!u.includes('/shared/')&&u!=='../index.html').map(u=>new URL(u,'http://baseline/'+file).pathname).sort();
+  assert.deepEqual(urls(now,f),urls(old,f),f+' resource URLs');
+  assert.equal(now.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0].replaceAll("file:'../assets/","file:'assets/"),old.match(/const LESSON_AUDIO=\{[\s\S]*?\n\};/)[0],f+' original audio map');
   // The full contents of all original render/check/audio functions remain in
   // place except documented navigation/audio-button integration functions.
   const names=[...old.matchAll(/function ((?:draw|render|bind|parseNote|play|stop|l2|confirmL2)\w*)\(/g)].map(m=>m[1]).filter(n=>!['renderOpening'].includes(n));
   for(const name of names){const a=extractFunctions(scripts(old).join('\n'),[name])[name],b=extractFunctions(scripts(now).join('\n'),[name])[name];assert.equal(withoutStartBar(b),withoutStartBar(a),f+' protected function '+name);}
  }
  for(const f of ['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/lesson06/lesson.js'])syntax(fs.readFileSync(path.join(ROOT,f),'utf8'),f);
- const changed=cp.execFileSync('git',['diff',BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
- const allowed=new Set([...files,'MT-Intervals/lesson06/lesson.css','MT-Intervals/lesson06/lesson.js',
-  'MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css',
-  'docs/course-design-system.md','docs/interactive-theory-lesson-standard.md','docs/course-visual-unification-results.md','docs/course-phase1-visual-risk-review.md',
-  'tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
- const evidenceNames=['README.md','measurements.json','mt01-continuous.webm','mt02-continuous.webm',...['mt01-step1-1280x900','mt01-step9-1280x900','mt02-step1-1280x900','mt02-step3-1280x900','mt01-step1-390x844','mt02-step1-390x844','mt01-step1-844x390','mt01-step1-768x1024','mt01-step1-1024x768'].map(n=>n+'.png')];
- for(const name of evidenceNames)allowed.add('tests/theory-learning/alignment-evidence/'+name);
- for(const f of changed)assert(allowed.has(f),'unexpected changed file '+f);
+ const changed=cp.execFileSync('git',['diff',SCOPE_BASE,'--name-only'],{cwd:ROOT}).toString().trim().split('\n').filter(Boolean);
+ const allowed=new Set(['MT-Intervals/shared/learning/theory-lesson.js','MT-Intervals/shared/styles/learning-base.css',
+  'docs/interactive-theory-lesson-standard.md','docs/course-design-system.md','tests/theory-learning/learning.test.cjs','tests/theory-learning/README.md']);
+ for(const f of changed)assert(protection.allowed.has(f)||allowed.has(f)||/^(MT-Intervals\/lesson0[1-5][^/]*\/|MT-Intervals\/shared\/styles\/practice-base.css|shared\/|tests\/|learning-resources\/interval-theory.js|docs\/music-apps-v1.md)/.test(f),'unexpected changed file '+f);
  const now=fs.readFileSync(path.join(ROOT,'MT-Intervals/lesson06/lesson.js'),'utf8'),old=original('MT-Intervals/lesson06/lesson.js').toString();
  assert.equal(now.slice(now.indexOf('  const exercises'),now.indexOf('  const byID')),old.slice(old.indexOf('  const exercises'),old.indexOf('  const byID')),'review copy and exercise configurations');
 });
@@ -210,9 +214,11 @@ test('explicit continuation appends existing nodes; text-only steps retain board
   for(let i=15;i<=20;i++){await p.locator('#nextBtn').click();await settle(p);}
   const result=await p.evaluate(()=>{
    const e=document.querySelector('#stepBody'),last=e.firstElementChild.lastElementChild,r=last.getBoundingClientRect(),v=e.getBoundingClientRect();
-   return {top:e.scrollTop,calls:__scrollCalls,bottom:r.bottom,visibleBottom:v.bottom,window:scrollY,animation:getComputedStyle(last).animationName};
+   return {top:e.scrollTop,scrollHeight:e.scrollHeight,viewHeight:e.clientHeight,calls:__scrollCalls,bottom:r.bottom,visibleBottom:v.bottom,window:scrollY,animation:getComputedStyle(last).animationName};
   });
-  assert(result.top>0);assert(result.calls.every(c=>c.behavior==='instant'));assert(result.bottom<=result.visibleBottom+1);assert.equal(result.window,0);assert.equal(result.animation,'none');
+  // Current 16px typography can fit this group (404px in a 411px viewport).
+  // Scroll only on real overflow; oversized/threshold cases below stay strict.
+  assert.equal(result.top>0,result.scrollHeight>result.viewHeight);assert(result.calls.every(c=>c.behavior==='instant'));assert(result.bottom<=result.visibleBottom+1);assert.equal(result.window,0);assert.equal(result.animation,'none');
   assert.deepEqual(await p.locator('#lessonBoard').boundingBox(),geometry,'scroll must not move board');
   await p.locator('#stepBody').evaluate(e=>e.scrollTop=35);const saved=await p.locator('#stepBody').evaluate(e=>e.scrollTop);
   await p.locator('#prevBtn').click();await p.locator('#nextBtn').click();await settle(p);
@@ -307,7 +313,7 @@ test('representative original/new screenshots and local PDF/exercise targets rem
    await p.locator(l===2?'#startReview':'#startLearning').click();await settle(p);
    await p.screenshot({path:path.join(OUT,`comparison-mt${l===2?'06':'0'+(l+1)}-${width}-${before?'before':'after'}.png`),caret:'initial'});
    const hrefs=await p.locator('a[href]').evaluateAll(nodes=>nodes.map(a=>a.getAttribute('href')));
-   for(const href of hrefs){if(!/^https?:/.test(href)&&!href.startsWith('#'))assert(fs.existsSync(path.resolve(ROOT,path.dirname(files[l]),href)),href);}
+   for(const href of hrefs){if(!/^https?:/.test(href)&&!href.startsWith('#'))assert(fs.existsSync(href.startsWith('/')?path.join(ROOT,href):path.resolve(ROOT,path.dirname(files[l]),href)),href);}
    if(l===2)for(let i=0;i<3;i++){const links=await p.locator('#exerciseLinks a').evaluateAll(nodes=>nodes.map(a=>({url:a.href,target:a.target,rel:a.rel})));for(const a of links){assert.match(a.url,/^https:\/\/www\.musictheory\.net\/exercises\/interval\//);assert.equal(a.target,'_blank');assert.match(a.rel,/noopener/);}await p.locator('#nextBtn').click();}
   }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}
@@ -315,7 +321,7 @@ test('representative original/new screenshots and local PDF/exercise targets rem
 test('shared styles are isolated from Practice, ET, Dashboard and Catalog',async()=>{
  const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
  const styles=['MT-Intervals/shared/styles/learning-base.css','MT-Intervals/shared/styles/learning-components.css','MT-Intervals/lesson06/lesson.css'].map(f=>fs.readFileSync(path.join(ROOT,f),'utf8')).join('\n');
- const targets=['MT-Intervals/lesson03/index.html','ET-Intervals/05-2nd-d7wzes/index.html','students/samuel-b5def80cdaa55d42/index.html','teacher/index.html','courses/index.html'];
+ const targets=['MT-Intervals/lesson03/practice/index.html','ET-Intervals/05-2nd-d7wzes/index.html','students/samuel-b5def80cdaa55d42/index.html','teacher/index.html','courses/index.html'];
  const snapshot=page=>page.evaluate(()=>[...document.body.querySelectorAll('*')].filter(e=>e.tagName!=='STYLE').map(e=>{
   const c=getComputedStyle(e),r=e.getBoundingClientRect();return [e.tagName,e.id,c.display,c.color,c.backgroundColor,c.borderRadius,c.fontSize,c.lineHeight,r.x,r.y,r.width,r.height];
  }));
@@ -400,21 +406,32 @@ test('preview feedback: actual smooth continuation, manual takeover, cached retu
   }finally{await c.context.close();}
  }}finally{fs.writeFileSync(path.join(OUT,'smooth-motion.json'),JSON.stringify(evidence,null,2));await browser.close();await server.close();}
 });
-test('preview feedback: shared arrow navigation, touch hint detection and native control exclusions',async()=>{
+test('shared arrow navigation, native button hover hints and native control exclusions',async()=>{
  const server=await serve(),browser=await chromium.launch({executablePath:'/usr/bin/chromium',args:['--no-sandbox']});
  try{for(const l of [0,1,2])for(const touch of [false,true]){
   const c=await open(browser,server.url,files[l],{touch}),p=c.page;
   try{
-   assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),!touch);
+   assert.equal(await p.locator('.theory-keyboard-hint').count(),0,'no footer hint or reserved row');
+   assert.equal(await p.locator('#prevBtn').getAttribute('aria-keyshortcuts'),'ArrowLeft ArrowUp');
+   assert.equal(await p.locator('#nextBtn').getAttribute('aria-keyshortcuts'),'ArrowRight ArrowDown');
    await p.locator(l===2?'#startReview':'#startLearning').click();await p.locator('body').click({position:{x:1,y:1}});
    const id=()=>p.locator('.lesson-content').getAttribute('data-step-id');const first=await id();const nav=await p.locator('.lesson-nav').boundingBox();
-   await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);assert.equal(await p.locator('.theory-keyboard-hint').isVisible(),true);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'hint must not shift navigation');
+   const verifyTitles=async()=>{
+    for(const [selector,arrows] of [['#prevBtn','← / ↑'],['#nextBtn','→ / ↓']]){
+     const button=p.locator(selector),label=(await button.textContent()).replace(/[←↑→↓]/g,'').replace(/\s+/g,' ').trim();
+     assert.equal(await button.getAttribute('title'),`${label}（键盘：${arrows}）`);
+    }
+   };
+   await verifyTitles();await p.locator('#nextBtn').hover();assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'native hover title must not alter layout');
+   await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first);await verifyTitles();assert.equal(await p.locator('.theory-keyboard-hint').count(),0);assert.deepEqual(await p.locator('.lesson-nav').boundingBox(),nav,'keyboard use must not add a footer row');
    await p.keyboard.press('ArrowUp');assert.equal(await id(),first);
    await p.keyboard.press('ArrowDown');assert.notEqual(await id(),first);await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
    await p.locator('.lesson-content').focus();await p.keyboard.press('ArrowRight');assert.notEqual(await id(),first,'focused reading region must retain left/right step navigation');await p.keyboard.press('ArrowLeft');assert.equal(await id(),first);
    if(l<2){await p.evaluate(l=>showStep(l===0?13:3,false),l);const quiz=await id();await p.locator('.quiz-option').first().focus();await p.keyboard.press('ArrowRight');assert.equal(await id(),quiz);assert.equal(await p.locator('#nextBtn').isDisabled(),true);}
    else{await p.locator('#nextBtn').click();await p.locator('#nextBtn').click();const stage=await id();await p.locator('#invertButton').focus();await p.keyboard.press('ArrowLeft');assert.equal(await id(),stage);await p.keyboard.press('Space');assert.equal(await p.locator('#invertButton').getAttribute('aria-pressed'),'true');}
    await p.evaluate(()=>{const x=document.createElement('input');x.id='key-test-input';document.querySelector('.lesson-content').append(x);x.focus();});const before=await id();await p.keyboard.press('ArrowRight');assert.equal(await id(),before);await p.keyboard.type('text');assert.equal(await p.locator('#key-test-input').inputValue(),'text');
+   if(l<2)await p.evaluate(i=>showStep(i,false),l===0?22:25);else {await p.locator('#key-test-input').evaluate(e=>e.remove());await p.locator('#nextBtn').click();}
+   await settle(p);await verifyTitles();assert.equal(await p.locator('.theory-keyboard-hint').count(),0);
    assert.deepEqual(c.errors,[]);
   }finally{await c.context.close();}
  }}finally{await browser.close();await server.close();}

@@ -12,18 +12,17 @@
     if(text !== undefined) node.textContent = text;
     return node;
   }
-  function completeVolume(id){
+  function availableVolume(id){
     const volume = catalogue.volumes.find(volume=>volume.id === id);
     if(!volume) return null;
     const tracks = catalogue.tracks.filter(track=>track.volume === id);
-    return tracks.length === volume.end-volume.start+1 && tracks.every((track,index)=>track.number === volume.start+index)
-      ? {volume,tracks} : null;
+    return tracks.length ? {volume,tracks} : null;
   }
   function selectionPlan(){
     const tracks = catalogue.tracks.filter(track=>selected.has(track.number) && !track.free);
     const quote = window.scorePricing.quote(tracks.length);
     if(!quote) return null;
-    const bundle = completeVolume(1);
+    const bundle = availableVolume(1);
     const recommend = bundle && tracks.every(track=>track.volume === 1) && quote.volume === bundle.volume.id;
     return {tracks,quote,bundle:recommend ? bundle : null};
   }
@@ -32,7 +31,7 @@
     byID('selectedCount').textContent = `已选 ${count} 首`;
     byID('selectedCount').hidden = !plan?.bundle;
     byID('selectionPrice').textContent = !plan ? '单首 ¥2 · 多选自动优惠'
-      : plan.bundle ? `Vol. 1 全30首更划算 · ¥${plan.bundle.volume.price}` : `已选 ${count} 首 · ¥${plan.quote.price}`;
+      : plan.bundle ? `Vol. 1 全${plan.bundle.tracks.length}首更划算 · ¥${plan.bundle.volume.price}` : `已选 ${count} 首 · ¥${plan.quote.price}`;
     byID('confirmSelection').disabled = !plan;
     byID('confirmSelection').textContent = plan?.bundle ? `购买 Vol.1 · ¥${plan.bundle.volume.price}` : '确认选择';
     byID('confirmSelection').closest('.selection-bar').classList.toggle('recommending',Boolean(plan?.bundle));
@@ -86,11 +85,11 @@
     const fragment = document.createDocumentFragment();
     for(const volume of catalogue.volumes){
       const tracks = catalogue.tracks.filter(track=>track.volume === volume.id);
-      // Only publish an existing, complete volume; never advertise future ones.
-      if(tracks.length !== volume.end-volume.start+1 || !tracks.every((track,index)=>track.number === volume.start+index)) continue;
+      // Only publish volumes with uploaded tracks.
+      if(!tracks.length) continue;
       const section = element('section','volume'), info = element('div');
       const freeTitles = tracks.filter(track=>track.free).map(track=>`《${track.title}》`).join('、');
-      info.append(element('h2','',volume.title),element('p','',volume.description),element('p','volume-range',`${numberLabel(volume.start)}–${numberLabel(volume.end)}${freeTitles ? ` · 全集包含免费样本${freeTitles}` : ''}`));
+      info.append(element('h2','',volume.title),element('p','',`${volume.description} · ${tracks.length}首精选`),element('p','volume-range',`${numberLabel(tracks[0].number)}–${numberLabel(tracks[tracks.length-1].number)}${freeTitles ? ` · 全集包含免费样本${freeTitles}` : ''}`));
       const button = element('button','button',`购买全辑 · ¥${volume.price}`);
       button.type = 'button'; button.addEventListener('click',()=>purchaseVolume({volume,tracks}));
       section.append(info,button); fragment.append(section);
@@ -101,7 +100,7 @@
     if(!data || !Array.isArray(data.tracks) || !Array.isArray(data.volumes)) throw new Error('Invalid catalogue');
     const numbers = new Set();
     for(const track of data.tracks){
-      if(!Number.isInteger(track.number) || track.number < 1 || numbers.has(track.number) || typeof track.title !== 'string' || typeof track.artist !== 'string' || !Number.isInteger(track.volume)) throw new Error('Invalid track');
+      if(!Number.isInteger(track.number) || track.number < 1 || numbers.has(track.number) || (typeof track.title !== 'string' || !track.title.trim()) || typeof track.artist !== 'string' || !Number.isInteger(track.volume)) throw new Error('Invalid track');
       numbers.add(track.number);
       if(track.free){
         const url = new URL(track.url,location.href);
@@ -111,9 +110,10 @@
     data.tracks.sort((a,b)=>a.number-b.number);
     const volumeIDs = new Set();
     for(const volume of data.volumes){
-      if(!Number.isInteger(volume.id) || volumeIDs.has(volume.id) || !Number.isInteger(volume.start) || !Number.isInteger(volume.end) || volume.start < 1 || volume.end < volume.start || !Number.isFinite(volume.price) || volume.price <= 0 || typeof volume.title !== 'string' || typeof volume.description !== 'string') throw new Error('Invalid volume');
+      if(!Number.isInteger(volume.id) || volumeIDs.has(volume.id) || !Number.isFinite(volume.price) || volume.price <= 0 || typeof volume.title !== 'string' || typeof volume.description !== 'string') throw new Error('Invalid volume');
       volumeIDs.add(volume.id);
     }
+    if(data.tracks.some(track=>!volumeIDs.has(track.volume))) throw new Error('Unknown track volume');
   }
   byID('songSearch').addEventListener('input',renderSongs);
   byID('clearSelection').addEventListener('click',()=>{selected.clear();updateSelection()});

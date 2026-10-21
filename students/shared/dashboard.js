@@ -16,7 +16,7 @@
   };
   document.getElementById('studentName').textContent = studentData.studentName;
   document.title = `${studentData.studentName} · Learning Dashboard`;
-  document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,DashboardLogic.pickLatestPeriod(studentData.learningPeriods,Date.now()),Date.now(),studentData.learningState);
+  document.getElementById('learningStatus').textContent = DashboardLogic.computeStudentStatus(studentData,Date.now());
   const list = document.getElementById('courseList');
   const coursePanels = new Map();
   studentData.courses.forEach((course,index)=>{
@@ -25,7 +25,7 @@
     content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',DashboardLogic.getCourseTitle(course,courseCatalog)));
     const current = course.currentLessons?.length ? `当前进度：${lessonRange(course.currentLessons)}` : '课程资料';
     row.append(content,text('span',({completed:'已完成 ✓',active:'进行中',previous:'曾参加',paused:'暂停中',pending:'待开课'})[course.status] || '状态待确认','status'));
-    if (course.accessEnabled) {
+    if (course.accessEnabled && course.type!=='private-lesson') {
       row.classList.add('with-resources');
       const panel = document.createElement('div');panel.className = 'course-resources';
       panel.id = `course-access-${course.id}`;panel.hidden = true;
@@ -41,7 +41,7 @@
     } else if (course.status==='active' && course.currentLessons?.length) content.append(text('p',current,'course-current'));
     list.append(row);
   });
-  studentData.courses.filter(c=>c.accessEnabled).forEach(course=>{
+  studentData.courses.filter(c=>c.accessEnabled && c.type!=='private-lesson').forEach(course=>{
     const access = coursePanels.get(course.id);
     const resources = courseCatalog.courses[course.id];
     const links = text('ul','','resource-list');
@@ -76,10 +76,51 @@
     const parts = format(date), value = type => parts.find(p=>p.type===type)?.value;
     return `${value('year')}.${value('month')}.${value('day')}${includeTime ? ` ${value('hour')}:${value('minute')}` : ''}`;
   };
+  const privatePanels=[];
+  const definitionList = (items,className) => {
+    const dl=text('dl','',className);
+    for (const [label,value] of items) {
+      const group=document.createElement('div');group.append(text('dt',label),text('dd',value));dl.append(group);
+    }
+    return dl;
+  };
+  studentData.courses.filter(course=>course.type==='private-lesson').forEach((course,index)=>{
+    const panel=text('section','','dashboard-section period-panel private-lesson-panel');
+    const heading=text('h2',`${DashboardLogic.getCourseTitle(course,courseCatalog)} · 课时记录`,'public-section');
+    heading.id=`private-lesson-heading-${index}`;panel.setAttribute('aria-labelledby',heading.id);panel.append(heading);
+    document.querySelector('[aria-labelledby="periodHeading"]').before(panel);
+    try {
+      const summary=DashboardLogic.summarizePrivateLesson(course), pack=course.lessonPackage;
+      const duration=DashboardLogic.formatLessonMinutes;
+      panel.append(definitionList([
+        ['购买总时长',duration(summary.purchasedMinutes)],['累计消耗',duration(summary.usedMinutes)],
+        ['当前剩余',duration(summary.remainingMinutes)]
+      ],'private-lesson-totals'));
+      panel.append(definitionList([['有效期开始',displayDate(pack.start,true)],['有效期截止',displayDate(pack.end,true)]],'period-dates'));
+      const state=text('p','','period-note');panel.append(state);privatePanels.push({state,period:pack});
+      panel.append(text('h3','上课记录','session-heading'));
+      const records=text('ol','','session-list');
+      summary.sessions.forEach((session,i)=>{
+        const row=text('li','','session-record');
+        row.append(text('h4',`第 ${i+1} 次 · ${displayDate(session.start,false)}`));
+        row.append(definitionList([
+          ['开始时间',displayDate(session.start,true)],['结束时间',displayDate(session.end,true)],
+          ['本次消耗',duration(session.durationMinutes)],['课后剩余',duration(session.remainingMinutes)]
+        ],'session-details'));
+        records.append(row);
+      });
+      if (summary.sessions.length) panel.append(records);
+      else panel.append(text('p','暂无上课记录','muted'));
+      panel.append(text('p','按已记录的实际授课分钟累计扣减。所有时间均为北京时间（UTC+8）。','period-note'));
+    } catch (error) {
+      panel.append(text('p','课时记录暂不可用，请联系老师核对。','period-note'));
+      console.error('Private Lesson 配置无效：',error.message);
+    }
+  });
   const calendarButton = text('button','添加到日历','calendar-button');
   calendarButton.type='button';calendarButton.hidden=true;
   const calendarNotice = text('p','请在系统浏览器中打开本页后再添加到日历','period-note');calendarNotice.hidden=true;
-  document.querySelector('.period-panel > .period-note:last-child').before(calendarButton,calendarNotice);
+  document.querySelector('[aria-labelledby="periodHeading"] > .period-note:last-child').before(calendarButton,calendarNotice);
   const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
   const canDownload = typeof Blob==='function' && typeof TextEncoder==='function' && typeof URL!=='undefined' && typeof URL.createObjectURL==='function' && typeof URL.revokeObjectURL==='function' && 'download' in document.createElement('a');
   calendarButton.addEventListener('click',()=>{
@@ -95,11 +136,12 @@
   function updatePeriod() {
     const now = Date.now();
     const period = DashboardLogic.pickLatestPeriod(studentData.learningPeriods,now);
-    document.getElementById('learningStatus').textContent = DashboardLogic.computeLearningStatus(studentData.courses,period,now,studentData.learningState);
-    const panel = document.querySelector('.period-panel');panel.hidden = !period;
+    document.getElementById('learningStatus').textContent = DashboardLogic.computeStudentStatus(studentData,now);
+    for (const entry of privatePanels) entry.state.textContent=DashboardLogic.computePeriodState(entry.period,now).status;
+    const panel = document.querySelector('[aria-labelledby="periodHeading"]');panel.hidden = !period;
     if (!period) {
       calendarButton.hidden=true;calendarNotice.hidden=true;
-      if (!missingWarned) {
+      if (!missingWarned && !studentData.courses.some(course=>course.type==='private-lesson')) {
         const reasons = studentData.learningPeriods.length ? studentData.learningPeriods.map(item=>DashboardLogic.validatePeriod(item).reason) : ['missing-dates'];
         console.warn('学习周期未显示：', [...new Set(reasons)].map(reason=>reasonMessages[reason] || reason).join('；'));
         missingWarned = true;

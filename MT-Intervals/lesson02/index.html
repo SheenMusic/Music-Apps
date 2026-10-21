@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-visual="learning" data-theory-lesson lang="zh-CN">
+<html data-visual="learning" data-theory-lesson data-mt-shell lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -28,11 +28,12 @@
   <link rel="stylesheet" href="../shared/styles/learning-base.css">
   <link rel="stylesheet" href="../shared/styles/learning-components.css">
   <script src="../../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../../shared/styles/course-shell.css">
 </head>
 <body>
 <div class="app">
 <header>
-  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount">开始</span><span class="lesson-badge">LESSON 02</span></span></div>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><span class="lesson-count" id="headerLessonCount" hidden></span><span class="lesson-badge">LESSON 02</span></span></div>
   <div class="progress-wrap"><div class="progress" id="progress"></div></div>
   </header>
 <main>
@@ -66,6 +67,8 @@
 <div class="footer" id="siteFooter">©Sheen · Music Theory</div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
+<script src="../../shared/notation/notation-config.js"></script>
+<script src="../../shared/notation/notation-renderer.js"></script>
 <script src="../shared/learning/theory-lesson.js"></script>
 <script>
 const $=s=>document.querySelector(s); const home=$('#home'),lesson=$('#lesson'),summary=$('#summary'),body=$('#stepExplanation'),board=$('#lessonBoard');
@@ -81,8 +84,8 @@ function play(note,d=.72,delay=0){wakeAudio();synth(note,d,delay)}
 function semitonePath(a,b){let ia=chromatic.indexOf(a),ib=chromatic.indexOf(b);if(ia<0||ib<0)return [];if(ia>ib)[ia,ib]=[ib,ia];return chromatic.slice(ia,ib+1)}
 function vf(){return window.Vex&&window.Vex.Flow?window.Vex.Flow:window.VexFlow}
 function parseNote(n){const m=n.match(/^([a-g])(s|b)?(\d)$/);return {letter:m[1],acc:m[2]||'',oct:m[3]}}
-function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,140);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24).setBegBarType(VF.Barline.type.NONE);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
-function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,165);const ctx=r.getContext(),st=new VF.Stave(12,30,w-24).setBegBarType(VF.Barline.type.NONE);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});VF.Formatter.FormatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
+function drawStaff(el,notes,{clef='treble',harmonic=false}={}){el.innerHTML='';const VF=vf();if(!VF){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">五线谱组件未载入，请检查网络连接。</div>';return}try{const w=responsiveStaffWidth(el,260,760),r=NotationRenderer.createRenderer(el);r.resize(w,140);const ctx=r.getContext(),st=NotationRenderer.createStave(12,30,w-24);st.addClef(clef).setContext(ctx).draw();const makeKey=n=>{const x=parseNote(n);return x.letter+'/'+x.oct};const addAcc=(sn,n,i=0)=>{const x=parseNote(n);if(x.acc)sn.addModifier(new VF.Accidental(x.acc==='s'?'#':'b'),i)};let ns;if(harmonic){const sn=new VF.StaveNote({clef,keys:notes.map(makeKey),duration:'q'});notes.forEach((n,i)=>addAcc(sn,n,i));ns=[sn]}else{ns=notes.map(n=>{const sn=new VF.StaveNote({clef,keys:[makeKey(n)],duration:'q'});addAcc(sn,n);return sn})}NotationRenderer.formatAndDraw(ctx,st,ns,{auto_beam:false})}catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}}
+function drawDegreeStaff(el){el.innerHTML='';const VF=vf();if(!VF){drawStaff(el,['c4','g4']);return}try{const w=responsiveStaffWidth(el,260,760),r=NotationRenderer.createRenderer(el);r.resize(w,165);const ctx=r.getContext(),st=NotationRenderer.createStave(12,30,w-24);st.addClef('treble').setContext(ctx).draw();const names=['c4','d4','e4','f4','g4'];const ns=names.map((n,i)=>{const x=parseNote(n),sn=new VF.StaveNote({clef:'treble',keys:[x.letter+'/'+x.oct],duration:'q'});if(i>0&&i<4){if(sn.setStyle)sn.setStyle({fillStyle:'#94a3b8',strokeStyle:'#94a3b8'});if(sn.setStemStyle)sn.setStemStyle({strokeStyle:'transparent',fillStyle:'transparent'});if(sn.setFlagStyle)sn.setFlagStyle({strokeStyle:'transparent',fillStyle:'transparent'})}const an=new VF.Annotation(String(i+1)).setVerticalJustification(VF.Annotation.VerticalJustify.BOTTOM);if(an.setFont)an.setFont('Arial',16,'bold');sn.addModifier(an,0);return sn});NotationRenderer.formatAndDraw(ctx,st,ns,{auto_beam:false});}catch(e){drawStaff(el,['c4','g4'])}}
 function alignBoardRoleLabels(){
   const wrap=board.querySelector('.board-role-wrap'),staff=board.querySelector('#mainBoardStaff');
   if(!wrap||!staff)return;
@@ -107,10 +110,10 @@ function renderNameBoard(){
 function drawUnisonMeasures(el,{accidentals=false}={}){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','f4'],['g4','g4']]:[['f4','f4'],['g4','g4'],['a4','a4']];
-    const st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
+    const st=NotationRenderer.createStave(8,38,w-16);
     st.addClef('treble').setContext(ctx).draw();
     const tickables=[];
     groups.forEach((pair,gi)=>{
@@ -123,17 +126,17 @@ function drawUnisonMeasures(el,{accidentals=false}={}){
       if(gi<groups.length-1)tickables.push(new VF.BarNote());
     });
     const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
   }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function drawSecondMeasures(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
     r.resize(w,176); const ctx=r.getContext();
     const groups=w<380?[['f4','g4'],['g4','a4']]:[['f4','g4'],['g4','a4'],['a4','b4']];
-    const st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
+    const st=NotationRenderer.createStave(8,38,w-16);
     st.addClef('treble').setContext(ctx).draw();
     const tickables=[];
     groups.forEach((pair,gi)=>{
@@ -144,15 +147,15 @@ function drawSecondMeasures(el){
       if(gi<groups.length-1)tickables.push(new VF.BarNote());
     });
     const voice=new VF.Voice({num_beats:groups.length*8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(tickables);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
   }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
 function drawIntervalOverview(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
+    r.resize(w,176); const ctx=r.getContext(), st=NotationRenderer.createStave(8,38,w-16);
     st.addClef('treble').setContext(ctx).draw();
     const uppers=['f4','g4','a4','b4','c5','d5','e5','f5'];
     const labels=['uni.','2nd','3rd','4th','5th','6th','7th','oct.'];
@@ -164,7 +167,7 @@ function drawIntervalOverview(el){
       sn.addModifier(an,0); return sn;
     });
     const voice=new VF.Voice({num_beats:32,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
   }catch(e){ el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'; }
 }
@@ -190,8 +193,8 @@ function makeLeader(container,x1,y1,x2,y2){
 function drawMelodicBoard(el,mode='ascending'){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
+    r.resize(w,176); const ctx=r.getContext(), st=NotationRenderer.createStave(8,38,w-16);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
     let notes;
     if(mode==='ascending'){
@@ -207,7 +210,7 @@ function drawMelodicBoard(el,mode='ascending'){
       ];
     }
     const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables(notes);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
     if(mode==='both'){
       const align=()=>{
@@ -245,8 +248,8 @@ function renderMelodicBoard(mode){
 function drawHarmonicBoard(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176); const ctx=r.getContext(), st=new VF.Stave(8,38,w-16).setBegBarType(VF.Barline.type.NONE);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
+    r.resize(w,176); const ctx=r.getContext(), st=NotationRenderer.createStave(8,38,w-16);
     st.addClef('treble').addTimeSignature('4/4').setContext(ctx).draw();
 
     // Preserve the page-12 melodic positions: C5, D5, G4.
@@ -259,7 +262,7 @@ function drawHarmonicBoard(el){
 
     const upper=new VF.Voice({num_beats:4,beat_value:4}).addTickables([c5,d5,g4]);
     const lower=new VF.Voice({num_beats:4,beat_value:4}).addTickables([e4,f4]);
-    new VF.Formatter().joinVoices([upper,lower]).formatToStave([upper,lower],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([upper,lower]).formatToStave([upper,lower],st,{align_rests:false});
     upper.draw(ctx,st); lower.draw(ctx,st);
   }catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
 }
@@ -307,7 +310,7 @@ function renderCompactKeyboard(active=[]){
 function drawToneCountStaff(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,260,760), r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,260,760), r=NotationRenderer.createRenderer(el);
     r.resize(w,176); const ctx=r.getContext();
     const groups=[
       {upper:'e/4',acc:null,label:'2'},
@@ -317,13 +320,13 @@ function drawToneCountStaff(el){
     const gap=5,left=8,usable=w-left*2-gap*2,sw=usable/3;
     const labelY=151, ns='http://www.w3.org/2000/svg';
     groups.forEach((g,i)=>{
-      const st=new VF.Stave(left+i*(sw+gap),34,sw);
-      if(i===0)st.setBegBarType(VF.Barline.type.NONE).addClef('treble');
+      const st=NotationRenderer.createStave(left+i*(sw+gap),34,sw,{initial:i===0});
+      if(i===0)st.addClef('treble');
       st.setContext(ctx).draw();
       const note=new VF.StaveNote({clef:'treble',keys:['c/4',g.upper],duration:'w'});
       if(g.acc)note.addModifier(new VF.Accidental(g.acc),1);
       const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([note]);
-      new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
+      NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st);
       voice.draw(ctx,st);
       const svg=el.querySelector('svg');
       if(svg){
@@ -349,9 +352,9 @@ function drawEnharmonicToneStaff(el){
   el.innerHTML=''; const VF=vf(); if(!VF)return;
   try{
     const w=responsiveStaffWidth(el,220,760),h=176;
-    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG); r.resize(w,h);
+    const r=NotationRenderer.createRenderer(el); r.resize(w,h);
     const ctx=r.getContext(),left=8,right=8,staffW=w-left-right,staveY=38;
-    const st=new VF.Stave(left,staveY,staffW).setBegBarType(VF.Barline.type.NONE);
+    const st=NotationRenderer.createStave(left,staveY,staffW);
     st.addClef('treble').setContext(ctx).draw();
 
     const svg=el.querySelector('svg'),ns='http://www.w3.org/2000/svg';
@@ -366,7 +369,7 @@ function drawEnharmonicToneStaff(el){
     // Snapshot the SVG before the notes are drawn. This lets us inspect only
     // the final SVG geometry created by the notation pass.
     const before=new Set([...svg.querySelectorAll('*')]);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st);
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st);
     voice.draw(ctx,st);
     const created=[...svg.querySelectorAll('*')].filter(node=>!before.has(node));
 
@@ -612,10 +615,10 @@ function startLesson(){
 
 function updateHeaderLessonCount(i){
   const el=document.getElementById('headerLessonCount');
-  if(el) el.textContent=i<0?'开始':(i+1)+' / '+steps.length;
+  if(el){el.hidden=i<0;el.textContent=i<0?'':(i+1)+' / '+steps.length;}
 }
 function responsiveStaffWidth(el,min=280,max=760){
-  return Math.max(180,Math.min(max,el.clientWidth||430));
+  return NotationRenderer.width(el,max);
 }
 
 
@@ -630,12 +633,12 @@ function renderLesson02SecondBoard(useQuality=false){
   try{
     const w=responsiveStaffWidth(el,280,760);
     const h=176;
-    const r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const r=NotationRenderer.createRenderer(el);
     r.resize(w,h);
     const ctx=r.getContext();
 
     const x=12, y=38, staveW=w-24;
-    const st=new VF.Stave(x,y,staveW).setBegBarType(VF.Barline.type.NONE);
+    const st=NotationRenderer.createStave(x,y,staveW);
     st.addClef('treble').setContext(ctx).draw();
 
     const c1=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'});
@@ -649,7 +652,7 @@ function renderLesson02SecondBoard(useQuality=false){
     const voice=new VF.Voice({num_beats:8,beat_value:4})
       .setMode(VF.Voice.Mode.SOFT)
       .addTickables(tickables);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
 
     const svg=el.querySelector('svg');
@@ -821,12 +824,12 @@ function renderL2ThirdBoard(quality=false){
  board.innerHTML='<div class="lesson02-second-board"><div id="l2third" style="width:100%;height:100%"></div></div>';
  const el=document.getElementById('l2third'),VF=vf(); if(!VF)return;
  try{
-  const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);r.resize(w,176);const ctx=r.getContext(),x=12,sw=w-24;
-  const st=new VF.Stave(x,38,sw).setBegBarType(VF.Barline.type.NONE);st.addClef('treble').setContext(ctx).draw();
+  const w=responsiveStaffWidth(el,280,760),r=NotationRenderer.createRenderer(el);r.resize(w,176);const ctx=r.getContext(),x=12,sw=w-24;
+  const st=NotationRenderer.createStave(x,38,sw);st.addClef('treble').setContext(ctx).draw();
   const c1=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'}), eb=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h'});eb.addModifier(new VF.Accidental('b'),0);
   const c2=new VF.StaveNote({clef:'treble',keys:['c/4'],duration:'h'}),e2=new VF.StaveNote({clef:'treble',keys:['e/4'],duration:'h'});
   const v=new VF.Voice({num_beats:8,beat_value:4}).setMode(VF.Voice.Mode.SOFT).addTickables([c1,eb,new VF.BarNote(),c2,e2]);
-  new VF.Formatter().joinVoices([v]).formatToStave([v],st,{align_rests:false});v.draw(ctx,st);
+  NotationRenderer.createFormatter().joinVoices([v]).formatToStave([v],st,{align_rests:false});v.draw(ctx,st);
   const svg=el.querySelector('svg'),ns=[...svg.querySelectorAll('.vf-stavenote')],cx=(n,f)=>{try{let b=n.getBBox();return b.x+b.width/2}catch(e){return f}};
   const a=(cx(ns[0],sw*.25)+cx(ns[1],sw*.4))/2,b=(cx(ns[2],sw*.63)+cx(ns[3],sw*.8))/2,NS='http://www.w3.org/2000/svg';
   const t=(z,X,Y,fill='#64748b',weight='400',size='12')=>{let e=document.createElementNS(NS,'text');Object.entries({x:X,y:Y,'text-anchor':'middle','font-family':'Arial, PingFang SC','font-size':size,'font-weight':weight,fill}).forEach(([k,v])=>e.setAttribute(k,v));e.textContent=z;svg.appendChild(e)};
@@ -839,9 +842,9 @@ function renderL2PairBoard(cfg){
   board.innerHTML='<div class="lesson02-second-board"><div id="l2pair" style="width:100%;height:100%"></div></div>';
   const el=document.getElementById('l2pair'),VF=vf(); if(!VF)return;
   try{
-    const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
+    const w=responsiveStaffWidth(el,280,760),r=NotationRenderer.createRenderer(el);
     r.resize(w,176); const ctx=r.getContext(),x=12,sw=w-24;
-    const st=new VF.Stave(x,38,sw).setBegBarType(VF.Barline.type.NONE); st.addClef('treble').setContext(ctx).draw();
+    const st=NotationRenderer.createStave(x,38,sw); st.addClef('treble').setContext(ctx).draw();
 
     const mk=(key,acc)=>{
       const n=new VF.StaveNote({clef:'treble',keys:[key],duration:'h'});
@@ -852,7 +855,7 @@ function renderL2PairBoard(cfg){
     const n3=mk(cfg.m2[0].key,cfg.m2[0].acc),n4=mk(cfg.m2[1].key,cfg.m2[1].acc);
     const v=new VF.Voice({num_beats:8,beat_value:4}).setMode(VF.Voice.Mode.SOFT)
       .addTickables([n1,n2,new VF.BarNote(),n3,n4]);
-    new VF.Formatter().joinVoices([v]).formatToStave([v],st,{align_rests:false}); v.draw(ctx,st);
+    NotationRenderer.createFormatter().joinVoices([v]).formatToStave([v],st,{align_rests:false}); v.draw(ctx,st);
 
     const svg=el.querySelector('svg'),ns=[...svg.querySelectorAll('.vf-stavenote')],
           cx=(n,f)=>{try{let b=n.getBBox();return b.x+b.width/2}catch(e){return f}},
@@ -880,12 +883,12 @@ function renderL2QuizStaff(note1,note2){
       return {key:m[1].toLowerCase()+'/'+m[3],acc:m[2]||null};
     };
     const a=parse(note1),b=parse(note2);
-    const w=responsiveStaffWidth(el,280,760),r=new VF.Renderer(el,VF.Renderer.Backends.SVG);
-    r.resize(w,176);const ctx=r.getContext(),st=new VF.Stave(12,38,w-24).setBegBarType(VF.Barline.type.NONE);
+    const w=responsiveStaffWidth(el,280,760),r=NotationRenderer.createRenderer(el);
+    r.resize(w,176);const ctx=r.getContext(),st=NotationRenderer.createStave(12,38,w-24);
     st.addClef('treble').setContext(ctx).draw();
     const mk=(n)=>{const x=new VF.StaveNote({clef:'treble',keys:[n.key],duration:'h'});if(n.acc)x.addModifier(new VF.Accidental(n.acc),0);return x};
     const voice=new VF.Voice({num_beats:4,beat_value:4}).addTickables([mk(a),mk(b)]);
-    new VF.Formatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
+    NotationRenderer.createFormatter().joinVoices([voice]).formatToStave([voice],st,{align_rests:false});
     voice.draw(ctx,st);
   }catch(e){el.innerHTML='<div class="theory-note" style="padding:40px;text-align:center">谱例暂时无法显示。</div>'}
 }
@@ -1068,7 +1071,7 @@ $('#nextBtn').onclick=e=>{
 };
 $('#backHome').onclick=goHome;
 function goHome(){current=0;document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');summary.classList.add('hidden');home.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(0,steps.length,'教学步骤');updateHeaderLessonCount(-1);window.scrollTo({top:0,behavior:'instant'})}
-function showSummary(){document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(steps.length,steps.length,'教学步骤');window.scrollTo({top:0,behavior:'instant'})}
+function showSummary(){document.body.classList.remove('lesson-active','theory-active');lessonView.leave();clearBoard();lesson.classList.add('hidden');home.classList.add('hidden');summary.classList.remove('hidden');$('#siteFooter').style.display='';TheoryLesson.progress(steps.length,steps.length,'教学步骤');updateHeaderLessonCount(-1);window.scrollTo({top:0,behavior:'instant'})}
 // Shared display runtime preserves diagram and check state across navigation.
 
 (function(){
