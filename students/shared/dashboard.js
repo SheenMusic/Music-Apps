@@ -17,9 +17,18 @@
   document.getElementById('studentName').textContent = studentData.studentName;
   document.title = `${studentData.studentName} · Learning Dashboard`;
   document.getElementById('learningStatus').textContent = DashboardLogic.computeStudentStatus(studentData,Date.now());
+  const privateOnly = studentData.courses.length>0 && studentData.courses.every(course=>course.type==='private-lesson');
+  if (privateOnly) {
+    document.title = `${studentData.studentName} · 学习记录`;
+    document.querySelector('.dashboard-heading .eyebrow').textContent='一对一音乐课';
+    document.querySelector('.dashboard-heading .muted').hidden=true;
+    document.getElementById('learningStatus').hidden=true;
+    document.querySelector('[aria-labelledby="progressHeading"]').hidden=true;
+  }
   const list = document.getElementById('courseList');
   const coursePanels = new Map();
   studentData.courses.forEach((course,index)=>{
+    if (course.type==='private-lesson') return;
     const row = text('li','','course-row');
     const content = document.createElement('div');
     content.append(text('p',`Course ${String(index+1).padStart(2,'0')}`,'course-number'),text('h3',DashboardLogic.getCourseTitle(course,courseCatalog)));
@@ -76,7 +85,6 @@
     const parts = format(date), value = type => parts.find(p=>p.type===type)?.value;
     return `${value('year')}.${value('month')}.${value('day')}${includeTime ? ` ${value('hour')}:${value('minute')}` : ''}`;
   };
-  const privatePanels=[];
   const definitionList = (items,className) => {
     const dl=text('dl','',className);
     for (const [label,value] of items) {
@@ -84,39 +92,59 @@
     }
     return dl;
   };
+  const courseRecords=[];
+  const duration = DashboardLogic.formatLessonMinutes;
+  const recordDate = session => session.date ? session.date.replace(/-/g,'.') : displayDate(session.start,false);
+  const periodAnchor=document.querySelector('[aria-labelledby="periodHeading"]');
   studentData.courses.filter(course=>course.type==='private-lesson').forEach((course,index)=>{
-    const panel=text('section','','dashboard-section period-panel private-lesson-panel');
-    const heading=text('h2',`${DashboardLogic.getCourseTitle(course,courseCatalog)} · 课时记录`,'public-section');
+    const panel=text('section','','dashboard-section private-lesson-panel');
+    const heading=text('h2','剩余课时','public-section');
     heading.id=`private-lesson-heading-${index}`;panel.setAttribute('aria-labelledby',heading.id);panel.append(heading);
-    document.querySelector('[aria-labelledby="periodHeading"]').before(panel);
+    periodAnchor.before(panel);
     try {
       const summary=DashboardLogic.summarizePrivateLesson(course), pack=course.lessonPackage;
-      const duration=DashboardLogic.formatLessonMinutes;
-      panel.append(definitionList([
-        ['购买总时长',duration(summary.purchasedMinutes)],['累计消耗',duration(summary.usedMinutes)],
-        ['当前剩余',duration(summary.remainingMinutes)]
-      ],'private-lesson-totals'));
-      panel.append(definitionList([['有效期开始',displayDate(pack.start,true)],['有效期截止',displayDate(pack.end,true)]],'period-dates'));
-      const state=text('p','','period-note');panel.append(state);privatePanels.push({state,period:pack});
-      panel.append(text('h3','上课记录','session-heading'));
-      const records=text('ol','','session-list');
-      summary.sessions.forEach((session,i)=>{
-        const row=text('li','','session-record');
-        row.append(text('h4',`第 ${i+1} 次 · ${displayDate(session.start,false)}`));
-        row.append(definitionList([
-          ['开始时间',displayDate(session.start,true)],['结束时间',displayDate(session.end,true)],
-          ['本次消耗',duration(session.durationMinutes)],['课后剩余',duration(session.remainingMinutes)]
-        ],'session-details'));
-        records.append(row);
+      panel.append(text('p',duration(summary.remainingMinutes),'private-balance'));
+      panel.append(definitionList([['有效期',`${displayDate(pack.start,false)} — ${displayDate(pack.end,false)}`]],'private-validity'));
+      const ledger=document.createElement('details');ledger.className='private-ledger';
+      ledger.append(text('summary','查看销课记录'));
+      ledger.append(definitionList([
+        ['购买时长',duration(summary.purchasedMinutes)],['累计消耗',duration(summary.usedMinutes)]
+      ],'session-details'));
+      const records=text('ol','','private-ledger-list');
+      summary.sessions.forEach(session=>{
+        const row=text('li');row.append(text('span',recordDate(session)),text('span',duration(session.durationMinutes)));records.append(row);
+        if (session.title || ['content','homework','advice'].some(key=>session[key]?.length)) courseRecords.push(session);
       });
-      if (summary.sessions.length) panel.append(records);
-      else panel.append(text('p','暂无上课记录','muted'));
-      panel.append(text('p','按已记录的实际授课分钟累计扣减。所有时间均为北京时间（UTC+8）。','period-note'));
+      if (summary.sessions.length) ledger.append(records);
+      panel.append(ledger);
     } catch (error) {
       panel.append(text('p','课时记录暂不可用，请联系老师核对。','period-note'));
-      console.error('Private Lesson 配置无效：',error.message);
+      console.error('一对一课时配置无效：',error.message);
     }
   });
+  if (studentData.learningFocus?.length) {
+    const section=text('section','','dashboard-section learning-focus');
+    const heading=text('h2','学习方向','public-section');heading.id='focusHeading';section.setAttribute('aria-labelledby',heading.id);section.append(heading);
+    studentData.learningFocus.forEach(item=>{
+      const entry=document.createElement('div');entry.append(text('h3',item.title),text('p',item.description,'muted'));section.append(entry);
+    });
+    periodAnchor.before(section);
+  }
+  if (courseRecords.length) {
+    const section=text('section','','dashboard-section private-course-records');
+    const heading=text('h2','课程记录','public-section');heading.id='recordsHeading';section.setAttribute('aria-labelledby',heading.id);section.append(heading);
+    courseRecords.reverse().sort((a,b)=>Date.parse(b.start || `${b.date}T00:00:00+08:00`)-Date.parse(a.start || `${a.date}T00:00:00+08:00`));
+    courseRecords.forEach((session,index)=>{
+      const record=document.createElement('details');record.className='private-record';record.open=index===0;
+      record.append(text('summary',`${recordDate(session)} · ${session.title || '一对一课程'} · ${duration(session.durationMinutes)}`));
+      for (const [key,label] of [['content','本次内容'],['homework','课后任务'],['advice','学习建议']]) {
+        if (!session[key]?.length) continue;
+        record.append(text('h3',label));const items=document.createElement('ul');session[key].forEach(item=>items.append(text('li',item)));record.append(items);
+      }
+      section.append(record);
+    });
+    periodAnchor.before(section);
+  }
   const calendarButton = text('button','添加到日历','calendar-button');
   calendarButton.type='button';calendarButton.hidden=true;
   const calendarNotice = text('p','请在系统浏览器中打开本页后再添加到日历','period-note');calendarNotice.hidden=true;
@@ -137,7 +165,6 @@
     const now = Date.now();
     const period = DashboardLogic.pickLatestPeriod(studentData.learningPeriods,now);
     document.getElementById('learningStatus').textContent = DashboardLogic.computeStudentStatus(studentData,now);
-    for (const entry of privatePanels) entry.state.textContent=DashboardLogic.computePeriodState(entry.period,now).status;
     const panel = document.querySelector('[aria-labelledby="periodHeading"]');panel.hidden = !period;
     if (!period) {
       calendarButton.hidden=true;calendarNotice.hidden=true;

@@ -99,7 +99,28 @@
     ];
     return lines.map(foldIcsLine).join('\r\n')+'\r\n';
   }
-  // One course entry represents one purchased package; renewals may add another entry.
+  // One source of duration per record: exact timestamps OR confirmed seconds + date.
+  const sessionTime = session => Date.parse(session.start || `${session.date}T00:00:00+08:00`);
+  function roundLessonSeconds(seconds) {
+    if (!Number.isSafeInteger(seconds) || seconds<=0) throw new RangeError('实际时长须为正整数秒');
+    return Math.round(seconds/60);
+  }
+  // Explicit confirmed billing wins over raw precision; never overwrite raw timestamps.
+  // durationMinutes is accepted only as a pre-existing confirmed-minutes field.
+  function calculateSessionMinutes(session) {
+    if (session.durationSeconds!==undefined && (session.start!==undefined || session.end!==undefined)) throw new RangeError('实际时长来源重复');
+    if (session.billedMinutes!==undefined && session.durationMinutes!==undefined) throw new RangeError('不要重复填写计费分钟');
+    const confirmed=session.billedMinutes!==undefined ? session.billedMinutes : session.durationMinutes;
+    if (confirmed!==undefined) {
+      if (!Number.isSafeInteger(confirmed) || confirmed<0) throw new RangeError('确认计费分钟须为非负整数');
+      return confirmed;
+    }
+    if (session.durationSeconds!==undefined) {
+      return roundLessonSeconds(session.durationSeconds);
+    }
+    if (!validatePeriod(session).valid) throw new RangeError('授课起止时间无效');
+    return roundLessonSeconds((Date.parse(session.end)-Date.parse(session.start))/1000);
+  }
   function validatePrivateLesson(course) {
     const pack = course?.lessonPackage;
     const invalid = reason => ({valid:false,reason});
@@ -111,11 +132,27 @@
     for (const session of pack.sessions) {
       if (!session || typeof session.id!=='string' || !session.id.trim() || ids.has(session.id)) return invalid('上课记录 ID 缺失或重复');
       ids.add(session.id);
-      if (!validatePeriod(session).valid) return invalid('上课起止时间无效或缺少时区');
-      const start=Date.parse(session.start), end=Date.parse(session.end);
-      if (start%60000 || end%60000) return invalid('上课时间须精确到分钟');
-      if (start<Date.parse(pack.start) || end>Date.parse(pack.end)) return invalid('上课时间超出课时包有效期');
-      ranges.push({start,end});
+      if (session.durationSeconds!==undefined && (!Number.isSafeInteger(session.durationSeconds) || session.durationSeconds<=0)) return invalid('确认授课秒数须为正整数');
+      const hasTimes=session.start!==undefined || session.end!==undefined;
+      if (session.durationSeconds!==undefined && hasTimes) return invalid('实际时长与起止时间不能重复填写');
+      try {calculateSessionMinutes(session);} catch(error) {return invalid(error.message);}
+      if (!hasTimes) {
+        if (typeof session.date!=='string' || !/^\d{4}-\d{2}-\d{2}$/.test(session.date)
+          || !Number.isFinite(Date.parse(session.date)) || new Date(session.date).toISOString().slice(0,10)!==session.date) return invalid('授课日期无效');
+        const day=sessionTime(session);
+        // A date-only record can only be checked at day granularity; never invent its time.
+        if (day>=Date.parse(pack.end) || day+86400000<=Date.parse(pack.start)) return invalid('授课日期超出课时包有效期');
+      } else {
+        if (session.date!==undefined || !validatePeriod(session).valid) return invalid('上课起止时间无效或缺少时区');
+        const start=Date.parse(session.start), end=Date.parse(session.end);
+        if (start%1000 || end%1000) return invalid('上课时间须为整秒');
+        if (start<Date.parse(pack.start) || end>Date.parse(pack.end)) return invalid('上课时间超出课时包有效期');
+        ranges.push({start,end});
+      }
+      if (session.title!==undefined && (typeof session.title!=='string' || !session.title.trim())) return invalid('课程记录标题无效');
+      for (const key of ['content','homework','advice']) {
+        if (session[key]!==undefined && (!Array.isArray(session[key]) || session[key].some(item=>typeof item!=='string' || !item.trim()))) return invalid('课程记录内容须为文字数组');
+      }
     }
     ranges.sort((a,b)=>a.start-b.start);
     if (ranges.some((item,i)=>i>0 && item.start<ranges[i-1].end)) return invalid('上课记录时间重叠');
@@ -126,8 +163,8 @@
     if (!check.valid) throw new RangeError(check.reason);
     const pack=course.lessonPackage;
     let usedMinutes=0;
-    const sessions=[...pack.sessions].sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).map(session=>{
-      const durationMinutes=(Date.parse(session.end)-Date.parse(session.start))/60000;
+    const sessions=[...pack.sessions].sort((a,b)=>sessionTime(a)-sessionTime(b)).map(session=>{
+      const durationMinutes=calculateSessionMinutes(session);
       usedMinutes+=durationMinutes;
       return {...session,durationMinutes,usedMinutes,remainingMinutes:pack.purchasedMinutes-usedMinutes};
     });
@@ -136,7 +173,7 @@
   function formatLessonMinutes(minutes) {
     if (!Number.isSafeInteger(minutes)) throw new RangeError('Invalid lesson minutes');
     const value=Math.abs(minutes), hours=Math.floor(value/60), rest=value%60;
-    return `${minutes<0 ? '超用 ' : ''}${hours ? `${hours} 小时${rest ? ' ' : ''}` : ''}${rest || !hours ? `${rest} 分钟` : ''}`;
+    return `${minutes<0 ? '超用 ' : ''}${hours ? `${hours}小时` : ''}${rest || !hours ? `${rest}分钟` : ''}`;
   }
   function computeStudentStatus(data,now) {
     const courses=data.courses || [];
@@ -148,7 +185,7 @@
     if (statuses.includes('尚未开始')) return '尚未开始';
     return '已过期';
   }
-  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus};
+  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus,roundLessonSeconds,calculateSessionMinutes};
   globalThis.DashboardLogic = DashboardLogic;
   if (typeof module !== 'undefined') module.exports = DashboardLogic;
 })();

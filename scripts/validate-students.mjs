@@ -27,6 +27,7 @@ for (const directory of studentDirectories()) {
   if (data.learningState!==undefined && data.learningState!=='paused') report('ERROR',relative,'learningState 仅支持 paused；省略时自动计算状态');
   if (data.showPeriodDuration!==undefined && typeof data.showPeriodDuration!=='boolean') report('ERROR',relative,'showPeriodDuration 必须为布尔值');
   if (!Array.isArray(data.courses) || !Array.isArray(data.learningPeriods)) {report('ERROR',relative,'courses 和 learningPeriods 必须为数组');continue;}
+  if (data.learningFocus!==undefined && (!Array.isArray(data.learningFocus) || data.learningFocus.some(item=>!item || typeof item.title!=='string' || !item.title.trim() || typeof item.description!=='string' || !item.description.trim()))) report('ERROR',relative,'learningFocus 必须为包含 title 和 description 的文字对象数组');
   const ids=new Set();
   for (const course of data.courses) {
     if (!course || typeof course!=='object' || typeof course.id!=='string' || !course.id.trim()) {report('ERROR',relative,'课程结构或 ID 无效');continue;}

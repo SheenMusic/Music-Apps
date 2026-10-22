@@ -1,6 +1,7 @@
 /* Minimal public navigation registry only. Do not add personal or learning records. */
 const teacherDirectory = {
   students:[
+    {id:'3c820ccd9a030c21dd9a0ef348d153d6',displayName:'阿润',dashboardURL:'/students/3c820ccd9a030c21dd9a0ef348d153d6/'},
     {id:'2a4cce9a2401e10eab7d346241deec9a',displayName:'鲁茜茜',dashboardURL:'/students/2a4cce9a2401e10eab7d346241deec9a/'},
     {id:'samuel',displayName:'Samuel',dashboardURL:'/students/samuel-b5def80cdaa55d42/'},
     {id:'zhou-jian',displayName:'周舰',dashboardURL:'/students/470c56f6f65407f2cc3ce5e33be8ef2d/'},
