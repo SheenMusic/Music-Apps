@@ -30,6 +30,13 @@ test('one dashboard layout, course deadlines, records, resource access and calen
      const data=read(id);await page.goto(`${server.url}/students/${id}/index.html`);
      assert.equal(await page.locator('h1').textContent(),'Learning Dashboard');
      assert.equal(await page.locator('#studentName').textContent(),data.studentName);
+     // Match the typography before the unified-layout change, at every viewport.
+     assert.deepEqual(await page.locator('.dashboard-label').evaluate(e=>{
+       const s=getComputedStyle(e);return [s.fontSize,s.fontWeight,s.letterSpacing];
+     }),['12px','400','0.6px']);
+     const nameStyle=await page.locator('#studentName').evaluate(e=>{const s=getComputedStyle(e);return {size:parseFloat(s.fontSize),weight:s.fontWeight,line:parseFloat(s.lineHeight)};});
+     const originalSize=Math.max(40,Math.min(64,viewport.width*.06));
+     assert.ok(Math.abs(nameStyle.size-originalSize)<.02);assert.equal(nameStyle.weight,'700');assert.ok(Math.abs(nameStyle.line-originalSize*1.25)<.03);
      assert.ok(await page.locator('#learningStatus').isVisible());
      assert.equal(await page.locator('#learningHeading').textContent(),'学习进度与课程资料');
      assert.equal(await page.locator('#progressHeading').textContent(),'学习进度');
@@ -48,7 +55,7 @@ test('one dashboard layout, course deadlines, records, resource access and calen
        if(id==='2a4cce9a2401e10eab7d346241deec9a')assert.equal(await item.locator('.course-balance').textContent(),'剩余 6小时28分钟');
        if(id===arun){
         assert.equal(await item.locator('.course-balance').textContent(),'剩余 8小时43分钟');
-        assert.equal(await item.locator('.course-deadline>span').first().textContent(),'截止 2027.01.22 00:00');
+        assert.equal(await item.locator('.course-deadline>span').first().textContent(),'有效期至 2027.01.22 00:00');
         await item.locator('.record-toggle').click();assert.equal(await item.locator('.record-notes h5').count(),3);
         assert.equal(await item.locator('.record-notes:visible').count(),1);
         const original=page.url();assert.equal(page.url(),original);assert.equal(page.context().pages().length,1);

@@ -143,7 +143,7 @@
       const {period}=L.resolveCoursePeriod(studentData,course,now);
       const show=course.status!=='completed' && period!==null;
       deadline.hidden=!show;
-      if(show)deadlineText.textContent=`截止 ${displayDate(period.end)}`;
+      if(show)deadlineText.textContent=`有效期至 ${displayDate(period.end)}`;
       const future=show && Date.parse(period.end)>now;
       calendar.hidden=!future || isWeChat || !canDownload;
       calendarNotice.hidden=!future || !isWeChat;

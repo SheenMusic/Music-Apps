@@ -4,9 +4,9 @@
   template.innerHTML=`
 <main class="dashboard">
   <header class="dashboard-heading">
-    <h1 class="public-title">Learning Dashboard</h1>
+    <h1 class="public-title dashboard-label">Learning Dashboard</h1>
     <span class="status" id="learningStatus" role="status"></span>
-    <p class="student-name" id="studentName"></p>
+    <p class="public-title student-name" id="studentName"></p>
   </header>
   <section class="dashboard-section" aria-labelledby="learningHeading">
     <h2 class="public-section" id="learningHeading">学习进度与课程资料</h2>
