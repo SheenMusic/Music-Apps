@@ -107,3 +107,36 @@ test('explicit paused student state overrides inferred status without changing r
  assert.equal(L.computeLearningStatus([{status:'active'}],period,now,'paused'),'暂停中');
  assert.equal(JSON.stringify(courses),original);
 });
+
+test('course periods: safe legacy association and ambiguous multi-course dates',()=>{
+ const course={id:'ear',status:'active'};
+ const old={courses:[{id:'old',status:'completed'},course],learningPeriods:[period]};
+ assert.equal(L.resolveCoursePeriod(old,course,now).period,period);
+ const ambiguous={...old,courses:[course,{id:'theory',status:'active'}]};
+ assert.equal(L.resolveCoursePeriod(ambiguous,course,now).period,null);
+ assert.equal(L.resolveCoursePeriod(ambiguous,course,now).reason,'ambiguous-course-period');
+ const explicit={...ambiguous,learningPeriods:[{...period,courseId:'ear'},{...future,courseId:'theory'}]};
+ assert.equal(L.resolveCoursePeriod(explicit,course,now).period.end,period.end);
+ assert.equal(L.resolveCoursePeriod(explicit,explicit.courses[1],now).period.end,future.end);
+ const done={id:'done',status:'completed'};
+ assert.equal(L.resolveCoursePeriod({...old,courses:[done]},done,now).period,null);
+});
+test('independent course statuses and mixed overall status',()=>{
+ const ear={id:'ear',status:'active'},piano={id:'piano',type:'private-lesson',status:'active',lessonPackage:period},done={id:'done',status:'completed'};
+ const data={courses:[ear,piano,done],learningPeriods:[{...history,courseId:'ear'}]};
+ assert.equal(L.computeCourseStatus(data,ear,now),'已过期');
+ assert.equal(L.computeCourseStatus(data,piano,now),'进行中');
+ assert.equal(L.computeCourseStatus(data,done,now),'已完成');
+ assert.equal(L.computeStudentStatus(data,now),'学习中');
+ assert.equal(L.computeStudentStatus({...data,courses:[ear,done]},now),'已过期');
+ assert.equal(L.computeStudentStatus({...data,courses:[done]},now),'已完成');
+ assert.equal(L.computeStudentStatus({...data,learningState:'paused'},now),'暂停中');
+});
+test('calendar identifies course-specific deadlines without breaking legacy calendar',()=>{
+ const first=L.buildIcs({studentName:'测试',period,now,courseId:'ear',courseTitle:'音程听力训练'});
+ const second=L.buildIcs({studentName:'测试',period,now,courseId:'private',courseTitle:'一对一课'});
+ const uid=ics=>ics.match(/UID:([^\r]+)/)[1];
+ assert.notEqual(uid(first),uid(second));
+ assert.match(first,/DTSTART:20261027T080700Z/);
+ assert.match(first,/SUMMARY:音程听力训练有效期截止/);
+});

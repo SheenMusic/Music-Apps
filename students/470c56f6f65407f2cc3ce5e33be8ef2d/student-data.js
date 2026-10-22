@@ -8,7 +8,6 @@ const studentData = {
       status: 'completed',
       accessEnabled: false
     },
-
     {
       id: 'interval-ear-training',
       title: '音程听力训练',
@@ -20,16 +19,7 @@ const studentData = {
     }
   ],
   learningPeriods: [
-    {
-      id: 'period-01',
-      start: '2026-09-16T17:15:00+08:00',
-      end: '2026-09-30T17:15:00+08:00'
-    },
-
-    {
-      id: 'period-02',
-      start: '2026-09-16T17:15:00+08:00',
-      end: '2026-10-21T21:30:00+08:00'
-    }
+    {id: 'period-01', start: '2026-09-16T17:15:00+08:00', end: '2026-09-30T17:15:00+08:00'},
+    {id: 'period-02', start: '2026-09-16T17:15:00+08:00', end: '2026-10-21T21:30:00+08:00'}
   ]
 };

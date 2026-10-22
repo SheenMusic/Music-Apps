@@ -1,72 +1,61 @@
-/* Shared student pages; no public navigation or application overrides. */
+/* One course list for every student; teaching apps and public navigation are untouched. */
 *{box-sizing:border-box}
 body{margin:0;font:400 15px/1.8 var(--site-font)}
 .dashboard{width:min(calc(100% - 40px),880px);margin-inline:auto;padding:48px 0 40px}
-.dashboard-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
-.dashboard-heading h1{margin:0;line-height:1.25}
-.eyebrow{margin:0 0 12px;font-size:12px;letter-spacing:.05em;color:var(--site-muted)}
-.muted{color:var(--site-muted)}
-.dashboard-heading .muted{margin:14px 0 0}
-.status{display:inline-block;flex:none;font-size:12px;color:var(--site-muted);white-space:nowrap}
-.dashboard-heading>.status{padding-top:9px}
+.dashboard [hidden]{display:none}
+.dashboard-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 20px;align-items:baseline}
+.dashboard-heading h1{margin:0;line-height:1.3}
+.student-name{grid-column:1/-1;margin:0;font-size:20px;font-weight:500}
+.status{font-size:12px;color:var(--site-muted);white-space:nowrap}
 .dashboard-section{margin-top:40px}
 .dashboard-section>.public-section{margin:0 0 20px}
+.progress-heading{font-size:15px;font-weight:500;color:var(--site-muted);margin:0 0 8px}
 .course-list{list-style:none;margin:0;padding:0}
-.course-row{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:20px 0}
+.course-row{display:grid;grid-template-columns:80px minmax(0,1fr) auto;align-items:baseline;gap:0 16px;padding:22px 0}
 .course-row+.course-row{border-top:1px solid var(--site-border)}
-.course-number{margin:0 0 6px;font-size:12px;color:var(--site-muted)}
-.course-row h3{margin:0;font-size:18px;line-height:1.5}
-.course-current{margin:8px 0 0;color:var(--site-muted);font-size:14px}
-.period-panel{padding:24px;border:1px solid var(--site-border);border-radius:var(--site-radius-card);background:var(--site-panel)}
-.period-range{margin:0 0 20px;font-size:20px;font-weight:500}
-.period-dates{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:0}
-.period-dates dt{font-size:12px;color:var(--site-muted)}
-.period-dates dd{margin:4px 0 0;font-size:14px}
-.period-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:22px 0 16px}
-.period-summary p{margin:0;font-size:18px;font-weight:500}
-.period-note{font-size:12px}
-.period-note{margin:14px 0 0;color:var(--site-muted)}
-.supplementary-access{margin-top:24px}
-.supplementary-access h3{margin:0 0 12px;font-size:16px}
-.version{margin:40px 0 0;font-size:11px;color:var(--site-muted)}
-@media(min-width:768px){.dashboard{padding-top:64px}.dashboard-section{margin-top:48px}}
-@media(max-width:480px){.period-panel{padding:20px}.period-dates{grid-template-columns:1fr}.period-range{font-size:18px}.course-row{gap:12px}}
-
-/* Shared student course disclosure and inline links; shared teacher styles stay unchanged. */
-.course-row.with-resources{display:grid;grid-template-columns:minmax(0,1fr) auto}
-.course-row.with-resources>div{min-width:0}
-.course-resources{grid-column:1/-1;min-width:0;margin-top:4px}
-.course-resources[hidden]{display:none}
-.course-toggle{display:flex;width:100%;align-items:center;gap:12px;min-height:44px;padding:4px 0;border:0;background:none;color:var(--site-muted);font:400 14px/1.6 var(--site-font);text-align:left;cursor:pointer}
+.course-number{margin:0;font-size:12px;color:var(--site-muted)}
+.course-content{min-width:0}
+.course-title{margin:0;font-size:18px;font-weight:600;line-height:1.5}
+.course-balance,.course-current{margin:6px 0 0;font-size:14px}
+.course-deadline{margin:4px 0 0;font-size:13px;color:var(--site-muted)}
+.calendar-button{display:inline-flex;align-items:center;min-height:44px;padding:6px 0;margin-left:8px;border:0;background:none;color:inherit;font:inherit;text-decoration:underline dashed;text-underline-offset:4px;cursor:pointer}
+.calendar-button:before,.calendar-notice:before{content:'·';display:inline-block;margin-right:8px;text-decoration:none}
+.calendar-notice{margin-left:8px;font-size:12px}
+.calendar-button:hover{text-decoration-style:solid;color:var(--site-text)}
+.muted{color:var(--site-muted)}
+.course-toggle{display:flex;align-items:center;gap:var(--site-disclosure-gap);width:100%;min-height:44px;padding:8px 0;margin:4px 0 0;border:0;background:none;color:var(--site-muted);font:400 14px/1.8 var(--site-font);text-align:left;cursor:pointer}
 .course-toggle:hover,.course-toggle:active{color:var(--site-text)}
+.course-resources{grid-column:2/-1;min-width:0;margin-top:8px}
+/* Resource rows, billing rows and notes share the same type and spacing rhythm. */
+.dashboard .resource-list{font-size:14px;line-height:1.8}
+.dashboard .resource-list .resource-row{grid-template-columns:80px minmax(0,1fr);gap:12px;padding:10px 0}
+.dashboard .resource-number{font-size:12px;padding-top:8px;color:var(--site-muted)}
+.dashboard .resource-title{margin:0;font-size:14px;line-height:1.8;font-weight:400}
+.dashboard .resource-list a.training-link{min-height:44px;padding:8px 6px;margin:0 2px;border:0;border-radius:0;background:none;color:var(--site-text);font:500 14px/1.8 var(--site-font);text-decoration:underline dashed;text-underline-offset:4px}
+.dashboard .resource-list a.training-link:hover,.dashboard .resource-list a.training-link:active{background:none;text-decoration-style:solid}
+.supplementary-access{margin-top:20px}
+.supplementary-access h5{font-size:14px;font-weight:500;margin:0 0 8px}
+.dashboard .resource-list .session-row{display:block}
+.record-heading{display:grid;grid-template-columns:100px 104px minmax(0,1fr);gap:8px 12px;align-items:baseline;width:100%;min-height:44px;padding:8px 0;border:0;background:none;color:var(--site-text);font:400 14px/1.8 var(--site-font);text-align:left;overflow-wrap:anywhere}
+.record-toggle{grid-template-columns:var(--site-disclosure-size) 100px 104px minmax(0,1fr);cursor:pointer}
+.record-date,.record-duration{color:var(--site-muted)}
+.record-title{font-weight:500}
+.record-notes{margin:8px 0 12px;padding-left:24px;font-size:14px;line-height:1.8}
+.record-notes h5{font-size:14px;font-weight:500;margin:16px 0 6px}
+.record-notes ul{padding-left:20px;margin:0 0 12px}
+.course-toggle:focus-visible,.record-toggle:focus-visible,.calendar-button:focus-visible{outline:2px solid var(--site-accent);outline-offset:4px}
+@media(min-width:768px){.dashboard{padding-top:64px}.dashboard-section{margin-top:48px}}
+@media(max-width:600px){
+ .course-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
+ .course-number{grid-column:1/-1}
+ .course-content{grid-column:1;grid-row:2}
+ .course-status{grid-column:2;grid-row:2;align-self:start}
+ .course-resources{grid-column:1/-1}
+ .record-heading{grid-template-columns:100px minmax(0,1fr)}
+ .record-toggle{grid-template-columns:var(--site-disclosure-size) 100px minmax(0,1fr)}
+ .record-title{grid-column:1/-1}
+ .record-toggle .record-title{grid-column:2/-1}
+ .dashboard-heading h1{font-size:clamp(21px,5.8vw,28px)}
+}
 
-.dashboard .resource-list a.training-link{min-height:44px;padding:8px 10px;margin:2px 3px;border:0;border-radius:0;background:none;text-decoration-line:underline;text-decoration-style:dashed;text-decoration-thickness:1px;text-underline-offset:5px}
-.dashboard .resource-list a.training-link:hover{background:none;text-decoration-style:solid}
-.dashboard .resource-list a.training-link:active{color:var(--site-accent);text-decoration-style:solid}
-
-/* Local ICS download only; existing component styles are unchanged. */
-.calendar-button{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;padding:4px 0;border:0;background:none;color:var(--site-muted);font:400 14px/1.6 var(--site-font);text-align:left;text-decoration:underline dashed;text-underline-offset:5px;cursor:pointer}
-.calendar-button:hover,.calendar-button:active{color:var(--site-text);text-decoration-style:solid}
-.calendar-button[hidden]{display:none}
-
-.period-summary .status[hidden]{display:none}
-
-/* Optional private lesson content; existing resource dashboards are unchanged. */
-.dashboard [hidden]{display:none}
-.private-balance{margin:0 0 22px;font-size:clamp(28px,5vw,38px);line-height:1.3;font-weight:500}
-.private-validity{margin:0 0 16px}
-.private-validity dt,.session-details dt{font-size:13px;color:var(--site-muted)}
-.private-validity dd,.session-details dd{margin:4px 0 0}
-.private-ledger summary{display:list-item;width:fit-content;min-height:44px;padding:8px 0;color:var(--site-muted);cursor:pointer;text-decoration:underline dashed;text-underline-offset:5px;list-style-position:inside}
-.private-ledger summary:hover{text-decoration-style:solid;color:var(--site-text)}
-.session-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 20px;margin:16px 0}
-.private-ledger-list{padding:0;margin:12px 0;list-style:none}
-.private-ledger-list li{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-top:1px solid var(--site-border)}
-.learning-focus>div+div{margin-top:20px}
-.learning-focus h3{font-size:16px;font-weight:500;margin:0}
-.learning-focus p{margin:4px 0 0}
-.private-record{padding:12px 0;border-top:1px solid var(--site-border)}
-.private-record summary{min-height:44px;padding:8px 0;list-style-position:inside;cursor:pointer;font-weight:500;overflow-wrap:anywhere}
-.private-record h3{font-size:15px;font-weight:500;margin:20px 0 6px}
-.private-record ul{padding-left:22px;margin:0 0 16px}
-.private-ledger summary:focus-visible,.private-record summary:focus-visible{outline:2px solid var(--site-accent);outline-offset:4px}
+.dashboard .resource-collapse{font:400 14px/1.8 var(--site-font)}

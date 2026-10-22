@@ -1,13 +1,7 @@
-/* 虚拟学员，仅供公开功能测试；不要填写真实个人资料。
- * 学习中：移除 learningState，并至少保留一门 status: 'active'；日期需处于本期内。
- * 暂停中：在 studentName 同级添加 learningState: 'paused'，不改变资源开放范围。
- * 已完成：移除 learningState，将所有 courses 的 status 改为 'completed'。
- * 单门暂停/待开课使用 status: 'paused' / 'pending'；pending 必须 accessEnabled: false。
- * currentLessons 是当前课次，必须包含在 accessibleLessons 中；后者控制可见入口。
- * accessibleSupplementary 控制听力课内补充训练；accessEnabled 控制资料折叠入口。
- * learningPeriods 的 start/end 必须带时区（北京时间 +08:00）；新增周期保留历史。
- * 顶部学习状态按课程及日期计算；截止前72小时内提示即将到期，到期后链接仍可用。
- * GitHub 修改本文件并提交 main 后，Actions 自动校验、生成带新哈希的入口并部署。
+/* 公开虚拟数据，不对应真实购买。修改状态、进度与开放范围可测试不同界面。
+ * 周期用 courseId 关联课程；active 的显示状态按其真实起止时间判断。
+ * 暂停测试：增加 learningState: 'paused'；全部完成：移除此字段并将课程设为 completed。
+ * 一对一 records 在 lessonPackage.sessions 追加；秒数逐次取整，余额自动计算。
  */
 const studentData = {
   studentName: '功能测试',
@@ -22,28 +16,74 @@ const studentData = {
       accessibleLessons: [1,2,3,4,5,6,7],
       accessibleSupplementary: ['harmonic-fourths-fifths','harmonic-simple-intervals']
     },
-
     {
       id: 'interval-theory',
       title: '音程理论训练课',
       enrollmentTitle: '音程理论训练课',
       status: 'active',
-      accessEnabled: false
+      accessEnabled: true,
+      currentLessons: [2],
+      accessibleLessons: [1,2,3],
+      accessibleSupplementary: []
     },
-
     {
       id: 'chord-theory',
       title: '和弦记号理论训练课',
       enrollmentTitle: '和弦记号理论训练课',
-      status: 'active',
+      status: 'completed',
       accessEnabled: false
+    },
+    {
+      id: 'private-lesson-example',
+      type: 'private-lesson',
+      title: '一对一课',
+      status: 'active',
+      accessEnabled: false,
+      lessonPackage: {
+        purchasedMinutes: 600,
+        start: '2026-10-01T09:00:00+08:00',
+        end: '2027-01-01T21:30:00+08:00',
+        sessions: [
+          {
+            id: 'example-session-01',
+            date: '2026-10-10',
+            durationSeconds: 4644,
+            title: '和声与键盘应用',
+            content: ['比较常见和声进行。','在键盘上尝试不同伴奏织体。'],
+            homework: ['选一段熟悉的旋律练习伴奏。'],
+            advice: ['先保持节奏稳定，再增加变化。']
+          },
+          {
+            id: 'example-session-02',
+            date: '2026-10-20',
+            durationSeconds: 3635,
+            title: '听辨与即兴练习',
+            content: ['听辨旋律的运动方向。','在固定和声上进行简短即兴。'],
+            homework: ['录制一段简短即兴并整理问题。'],
+            advice: ['用较少的音建立完整乐句。']
+          }
+        ]
+      }
     }
   ],
   learningPeriods: [
     {
-      id: 'example-01',
-      start: '2026-10-18T09:00:00+08:00',
-      end: '2026-12-01T09:00:00+08:00'
+      id: 'example-ear',
+      courseId: 'interval-ear-training',
+      start: '2026-10-01T09:00:00+08:00',
+      end: '2026-12-01T18:00:00+08:00'
+    },
+    {
+      id: 'example-theory',
+      courseId: 'interval-theory',
+      start: '2026-09-01T09:00:00+08:00',
+      end: '2026-10-15T18:30:00+08:00'
+    },
+    {
+      id: 'example-chord',
+      courseId: 'chord-theory',
+      start: '2026-09-01T09:00:00+08:00',
+      end: '2026-10-01T20:15:00+08:00'
     }
   ]
 };

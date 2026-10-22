@@ -53,7 +53,6 @@ for (const directory of studentDirectories()) {
     const resource=catalogResource || (course.id==='interval-theory' ? theoryResources : undefined);
     if (catalog && !catalogResource && !enrollmentIDs.has(course.id)) report('ERROR',relative,`课程 ID 不存在于 Catalog：${course.id}`);
     if (resource) {
-      if (!catalogResource && course.accessEnabled && accessible.length) report('WARNING',relative,`在线资源存在，但现有 Dashboard 不映射此报名课程，将显示资源待补充：${course.id}`);
       if (!course.enrollmentTitle && catalogResource?.title && course.title!==catalogResource.title) report('WARNING',relative,`课程标题与 Catalog 不一致：${course.id}`);
       for (const number of accessible) {
         const lesson=resource.lessons?.find(item=>item.number===number);
@@ -71,10 +70,15 @@ for (const directory of studentDirectories()) {
   const periodIDs=new Set();
   for (const period of data.learningPeriods) {
     if (!period || typeof period!=='object' || typeof period.id!=='string' || !period.id.trim()) {report('ERROR',relative,'周期结构或 ID 无效');continue;}
+    if (period.courseId!==undefined && (typeof period.courseId!=='string' || !ids.has(period.courseId))) report('ERROR',relative,`周期关联了未知课程：${period.courseId}`);
     if (periodIDs.has(period.id)) report('ERROR',relative,`周期 ID 重复：${period.id}`);periodIDs.add(period.id);
     if (period.start===null && period.end===null) continue;
     const validation=L.validatePeriod(period);
     if (!validation.valid) report('ERROR',relative,`周期 ${period.id}：${validation.reason}`);
+  }
+  for (const course of data.courses) {
+    if (!course || typeof course!=='object') continue;
+    if (L.resolveCoursePeriod(data,course,now).reason==='ambiguous-course-period') report('WARNING',relative,`未标明课程归属的有效期，未套用到课程：${course.id}；请在周期记录中确认 courseId`);
   }
   const selected=L.pickLatestPeriod(data.learningPeriods,now);
   if (selected && Date.parse(selected.end)<=now) report('WARNING',relative,`最近历史有效期已过期 ${Math.floor((now-Date.parse(selected.end))/86400000)} 天（不影响资源访问）`);

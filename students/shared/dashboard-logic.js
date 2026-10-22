@@ -77,7 +77,7 @@
     }
     lines.push(current);return lines.join('\r\n');
   }
-  function buildIcs({studentName,period,now}) {
+  function buildIcs({studentName,period,now,courseId,courseTitle}) {
     const validation = validatePeriod(period), time = timestamp(now);
     if (!validation.valid || !Number.isFinite(time) || typeof studentName!=='string') throw new RangeError('Invalid calendar data');
     const end = Date.parse(period.end);
@@ -85,14 +85,14 @@
     // A short deterministic UTF-8 hash is only a UID discriminator, never a credential.
     let hash=2166136261;
     for (const byte of new TextEncoder().encode(studentName)) hash=Math.imul(hash^byte,16777619)>>>0;
-    const uid = `${period.id || 'period'}-${end}-${hash.toString(16).padStart(8,'0')}@student-dashboard`;
+    const uid = `${courseId ? `${courseId}-` : ''}${period.id || 'period'}-${end}-${hash.toString(16).padStart(8,'0')}@student-dashboard`;
     const parts = new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date(end));
     const part = type => parts.find(item=>item.type===type).value;
     const deadline = `${part('year')}.${part('month')}.${part('day')} ${part('hour')}:${part('minute')}`;
     const lines = [
       'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Student Dashboard//Learning Period//ZH','CALSCALE:GREGORIAN',
       'BEGIN:VEVENT',`UID:${escapeIcsText(uid)}`,`DTSTAMP:${utc(time)}`,`DTSTART:${utc(end)}`,`DTEND:${utc(end+30*60000)}`,
-      'SUMMARY:学习有效期截止',`DESCRIPTION:${escapeIcsText(`${studentName} 的学习有效期于北京时间 ${deadline} 截止`)}`,
+      `SUMMARY:${escapeIcsText(courseTitle ? `${courseTitle}有效期截止` : '学习有效期截止')}`,`DESCRIPTION:${escapeIcsText(`${studentName} 的${courseTitle || '学习'}有效期于北京时间 ${deadline} 截止`)}`,
       'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:学习有效期即将截止','TRIGGER:-P3D','END:VALARM',
       'BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:学习有效期即将截止','TRIGGER:-P1D','END:VALARM',
       'END:VEVENT','END:VCALENDAR'
@@ -175,17 +175,43 @@
     const value=Math.abs(minutes), hours=Math.floor(value/60), rest=value%60;
     return `${minutes<0 ? '超用 ' : ''}${hours ? `${hours}小时` : ''}${rest || !hours ? `${rest}分钟` : ''}`;
   }
-  function computeStudentStatus(data,now) {
-    const courses=data.courses || [];
-    const period=pickLatestPeriod(data.learningPeriods,now);
-    const fallback=computeLearningStatus(courses,period,now,data.learningState);
-    if (data.learningState==='paused' || !courses.some(c=>c.type==='private-lesson' && c.status==='active')) return fallback;
-    const statuses=courses.filter(c=>c.status==='active').map(course=>computeLearningStatus([course],course.type==='private-lesson' ? course.lessonPackage : period,now));
-    if (statuses.includes('学习中')) return '学习中';
-    if (statuses.includes('尚未开始')) return '尚未开始';
-    return '已过期';
+  // Existing student-level periods are safe only for a single unfinished system course.
+  // Multiple unfinished courses require an explicit period.courseId; never copy a deadline.
+  function resolveCoursePeriod(data,course,now) {
+    if (course.type==='private-lesson') return {
+      period:validatePeriod(course.lessonPackage).valid ? course.lessonPackage : null,
+      reason:validatePeriod(course.lessonPackage).valid ? null : 'invalid-private-period'
+    };
+    const periods=Array.isArray(data.learningPeriods) ? data.learningPeriods : [];
+    const explicit=periods.filter(period=>period && period.courseId===course.id);
+    if (explicit.length) return {period:pickLatestPeriod(explicit,now),reason:null};
+    const unscoped=periods.filter(period=>period && period.courseId==null && validatePeriod(period).valid);
+    const unfinished=(data.courses || []).filter(item=>item && item.type!=='private-lesson' && ['active','pending','paused'].includes(item.status));
+    if (unscoped.length && unfinished.length===1 && unfinished[0].id===course.id && course.status==='active') return {period:pickLatestPeriod(unscoped,now),reason:null};
+    return {period:null,reason:unscoped.length && unfinished.length>1 && unfinished.some(item=>item.id===course.id) ? 'ambiguous-course-period' : null};
   }
-  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus,roundLessonSeconds,calculateSessionMinutes};
+  function computeCourseStatus(data,course,now) {
+    const fixed={completed:'已完成',paused:'暂停中',pending:'待开课',previous:'曾参加'};
+    if (fixed[course.status]) return fixed[course.status];
+    if (course.status!=='active') return '状态待确认';
+    const {period}=resolveCoursePeriod(data,course,now);
+    if (!period) return '进行中';
+    const time=timestamp(now);
+    if (time<Date.parse(period.start)) return '尚未开始';
+    return time>=Date.parse(period.end) ? '已过期' : '进行中';
+  }
+  function computeStudentStatus(data,now) {
+    if (data.learningState==='paused') return '暂停中';
+    const courses=data.courses || [];
+    if (courses.length && courses.every(course=>course.status==='completed')) return '已完成';
+    const statuses=courses.map(course=>computeCourseStatus(data,course,now));
+    if (statuses.includes('进行中')) return '学习中';
+    if (statuses.some(status=>['尚未开始','待开课'].includes(status))) return '尚未开始';
+    if (statuses.includes('暂停中')) return '暂停中';
+    if (statuses.includes('已过期')) return '已过期';
+    return '暂无进行中课程';
+  }
+  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus,roundLessonSeconds,calculateSessionMinutes,resolveCoursePeriod,computeCourseStatus};
   globalThis.DashboardLogic = DashboardLogic;
   if (typeof module !== 'undefined') module.exports = DashboardLogic;
 })();

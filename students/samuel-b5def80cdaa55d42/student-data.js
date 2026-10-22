@@ -12,14 +12,12 @@ const studentData = {
       status: 'completed',
       accessEnabled: false
     },
-
     {
       id: 'interval-theory',
       title: '音程理论训练',
       status: 'completed',
       accessEnabled: false
     },
-
     {
       id: 'interval-ear-training',
       title: '音程听力训练',
@@ -31,16 +29,7 @@ const studentData = {
     }
   ],
   learningPeriods: [
-    {
-      id: 'period-01',
-      start: null,
-      end: null
-    },
-
-    {
-      id: 'period-02',
-      start: '2026-10-13T16:07:00+08:00',
-      end: '2026-10-27T16:07:00+08:00'
-    }
+    {id: 'period-01', start: null, end: null},
+    {id: 'period-02', start: '2026-10-13T16:07:00+08:00', end: '2026-10-27T16:07:00+08:00'}
   ]
 };
