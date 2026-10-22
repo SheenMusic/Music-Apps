@@ -10,3 +10,8 @@ html[data-visual="ear"] .pitch-disclosure[data-pitch-mode="imitate"]:not(:has(.p
   background: transparent; border-color: transparent; border-radius: 0; color: var(--site-text);
 }
 html[data-visual="ear"] .pitch-disclosure[data-pitch-mode="imitate"]:not(:has(.pitch-details[open])) #toneBtn.playing { color: var(--site-warning); }
+
+/* The control sits below the revealed content: point upward to collapse. */
+html[data-visual="ear"] .pitch-details[open] > .settings-summary::after {
+  -webkit-mask-image: var(--site-disclosure-up); mask-image: var(--site-disclosure-up);
+}
