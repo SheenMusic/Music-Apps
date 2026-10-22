@@ -56,8 +56,14 @@ test('one dashboard layout, course deadlines, records, resource access and calen
        if(id===arun){
         assert.equal(await item.locator('.course-balance').textContent(),'剩余 8小时43分钟');
         assert.equal(await item.locator('.course-deadline>span').first().textContent(),'有效期至 2027.01.22 00:00');
-        await item.locator('.record-toggle').click();assert.equal(await item.locator('.record-notes h5').count(),3);
+        await item.locator('.record-toggle').click();assert.equal(await item.locator('.record-notes h5').count(),2);
         assert.equal(await item.locator('.record-notes:visible').count(),1);
+        assert.deepEqual(await item.locator('.record-notes h5').allTextContents(),['本次主题','课后任务']);
+        assert.deepEqual(await item.locator('.record-notes li').allTextContents(),[
+          '视频视觉升级｜动态乐谱｜Sibelius与AI制谱｜乐理学习规划',
+          '视频制作（优先）：准备Sibelius；梳理视频视觉需求，借助AI探索制作方案并整理问题。',
+          '乐理自评（中期）：借助AI了解乐理知识体系，诊断自身薄弱环节，形成初步学习计划并反馈。'
+        ]);
         const original=page.url();assert.equal(page.url(),original);assert.equal(page.context().pages().length,1);
        }
        await item.locator('.resource-collapse').click();assert.equal(await toggle.getAttribute('aria-expanded'),'false');
@@ -88,7 +94,7 @@ test('one dashboard layout, course deadlines, records, resource access and calen
   assert.equal(await virtualPrivate.locator('.course-balance').textContent(),'剩余 '+L.formatLessonMinutes(virtualSummary.remainingMinutes));
   await virtualPrivate.locator('.course-toggle').click();assert.equal(await virtualPrivate.locator('.session-row').count(),virtualSummary.sessions.length);
   assert.equal(await virtualPrivate.locator('.record-notes:visible').count(),0);
-  await virtualPrivate.locator('.record-toggle').first().click();assert.equal(await virtualPrivate.locator('.record-notes:visible h5').count(),3);
+  await virtualPrivate.locator('.record-toggle').first().click();assert.equal(await virtualPrivate.locator('.record-notes:visible h5').count(),2);
   await fixturePage.close();
   const privateCourse=read(arun).courses[0];privateCourse.lessonPackage.sessions.push({id:'second',date:'2026-10-22',durationSeconds:3600,title:'第二次课程',homework:['任务']});
   const theory={id:'interval-theory',title:'音程理论训练',status:'completed',accessEnabled:true,accessibleLessons:[1,2,3]};
@@ -135,7 +141,12 @@ test('one dashboard layout, course deadlines, records, resource access and calen
     if(id==='d1d8e0bc370afd6ebfea47a334a1eb4e')continue;
     const file=`students/${id}/student-data.js`;
     const before=JSON.parse(vm.runInNewContext(execFileSync('git',['show',`HEAD:${file}`],{cwd:root,encoding:'utf8'})+';JSON.stringify(studentData)'));
-    assert.deepEqual(read(id),before,'Real student data values changed');
+    const after=read(id);
+    if(id===arun){
+      // This task intentionally replaces only Arun's first-session notes.
+      for(const data of [before,after])for(const key of ['topics','content','homework','advice'])delete data.courses[0].lessonPackage.sessions[0][key];
+    }
+    assert.deepEqual(after,before,'Other student records or billing values changed');
   }
  }finally{await browser.close();await server.close();}
 });

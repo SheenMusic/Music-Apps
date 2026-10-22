@@ -121,6 +121,14 @@
     if (!validatePeriod(session).valid) throw new RangeError('授课起止时间无效');
     return roundLessonSeconds((Date.parse(session.end)-Date.parse(session.start))/1000);
   }
+  // Two public note categories, with lossless read compatibility for old records.
+  function getSessionNotes(session) {
+    const array=key=>Array.isArray(session[key]) ? session[key] : [];
+    return {
+      topics:[...new Set([...array('topics'),...array('content')])],
+      homework:[...new Set([...array('homework'),...array('advice')])]
+    };
+  }
   function validatePrivateLesson(course) {
     const pack = course?.lessonPackage;
     const invalid = reason => ({valid:false,reason});
@@ -150,7 +158,7 @@
         ranges.push({start,end});
       }
       if (session.title!==undefined && (typeof session.title!=='string' || !session.title.trim())) return invalid('课程记录标题无效');
-      for (const key of ['content','homework','advice']) {
+      for (const key of ['topics','homework','content','advice']) {
         if (session[key]!==undefined && (!Array.isArray(session[key]) || session[key].some(item=>typeof item!=='string' || !item.trim()))) return invalid('课程记录内容须为文字数组');
       }
     }
@@ -211,7 +219,7 @@
     if (statuses.includes('已过期')) return '已过期';
     return '暂无进行中课程';
   }
-  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus,roundLessonSeconds,calculateSessionMinutes,resolveCoursePeriod,computeCourseStatus};
+  const DashboardLogic = {validatePeriod,pickLatestPeriod,computeLearningStatus,formatDuration,computePeriodState,getCourseTitle,buildIcs,validatePrivateLesson,summarizePrivateLesson,formatLessonMinutes,computeStudentStatus,roundLessonSeconds,calculateSessionMinutes,resolveCoursePeriod,computeCourseStatus,getSessionNotes};
   globalThis.DashboardLogic = DashboardLogic;
   if (typeof module !== 'undefined') module.exports = DashboardLogic;
 })();

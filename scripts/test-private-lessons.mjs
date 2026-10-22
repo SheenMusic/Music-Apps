@@ -89,3 +89,16 @@ assert.throws(()=>L.calculateSessionMinutes({durationSeconds:60,start:confirmed.
 console.log('PASS minute thresholds, independent rounding, confirmed historical billing precedence, raw timestamp preservation and compact duration formatting.');
 
 assert.throws(()=>L.calculateSessionMinutes({billedMinutes:null,durationSeconds:4644}),RangeError);
+
+// Legacy note text is read losslessly under the two shared headings, never migrated.
+const legacyNotes={content:['原有主题'],homework:['原有任务'],advice:['原有建议']};
+const legacyBefore=JSON.stringify(legacyNotes);
+assert.deepEqual(L.getSessionNotes(legacyNotes),{topics:['原有主题'],homework:['原有任务','原有建议']});
+assert.equal(JSON.stringify(legacyNotes),legacyBefore);
+assert.deepEqual(L.getSessionNotes({topics:['新主题'],homework:['新任务']}),{topics:['新主题'],homework:['新任务']});
+assert.deepEqual(L.getSessionNotes({advice:['旧建议']}),{topics:[],homework:['旧建议']});
+assert.deepEqual(L.getSessionNotes({}),{topics:[],homework:[]});
+assert.deepEqual(L.getSessionNotes({topics:['重复'],content:['重复'],homework:['任务'],advice:['任务']}),{topics:['重复'],homework:['任务']});
+assert.equal(L.validatePrivateLesson({...arun,lessonPackage:{...arun.lessonPackage,sessions:[{id:'topics',date:'2026-10-22',durationSeconds:4644,topics:['关键词'],homework:['任务']}]}}).valid,true);
+assert.equal(L.validatePrivateLesson({...arun,lessonPackage:{...arun.lessonPackage,sessions:[{id:'topics',date:'2026-10-22',durationSeconds:4644,topics:'invalid'}]}}).valid,false);
+console.log('PASS two-field session notes, lossless legacy compatibility, empty-field handling and unchanged source data.');

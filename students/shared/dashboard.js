@@ -52,7 +52,8 @@
     // Stable reverse order makes the latest appended record first on the same date.
     [...summary.sessions].reverse().sort((a,b)=>sessionTime(b)-sessionTime(a)).forEach((session,i)=>{
       const row=text('li','','resource-row session-row');
-      const hasNotes=['content','homework','advice'].some(key=>session[key]?.length);
+      const noteContent=L.getSessionNotes(session);
+      const hasNotes=noteContent.topics.length>0 || noteContent.homework.length>0;
       const heading=document.createElement(hasNotes ? 'button' : 'div');heading.className='record-heading';
       if(hasNotes){heading.type='button';heading.classList.add('record-toggle');}
       heading.append(text('span',session.date ? session.date.replace(/-/g,'.') : displayDate(session.start,false),'record-date'),text('span',L.formatLessonMinutes(session.durationMinutes),'record-duration'));
@@ -62,9 +63,9 @@
         const notes=text('div','','record-notes');notes.id=`record-${index}-${i}`;notes.hidden=true;
         heading.setAttribute('aria-expanded','false');heading.setAttribute('aria-controls',notes.id);
         const arrow=text('span','','course-toggle-arrow');arrow.setAttribute('aria-hidden','true');heading.prepend(arrow);
-        for(const [key,label] of [['content','本次内容'],['homework','课后任务'],['advice','学习建议']]){
-          if(!session[key]?.length)continue;
-          notes.append(text('h5',label));const list=document.createElement('ul');session[key].forEach(item=>list.append(text('li',item)));notes.append(list);
+        for(const [key,label] of [['topics','本次主题'],['homework','课后任务']]){
+          if(!noteContent[key]?.length)continue;
+          notes.append(text('h5',label));const list=document.createElement('ul');noteContent[key].forEach(item=>list.append(text('li',item)));notes.append(list);
         }
         heading.addEventListener('click',()=>{
           const expanded=heading.getAttribute('aria-expanded')!=='true';heading.setAttribute('aria-expanded',String(expanded));notes.hidden=!expanded;
