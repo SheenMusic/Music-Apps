@@ -1,5 +1,11 @@
 # Unified course design acceptance
 
+## ET05–18 pitch disclosure
+
+Run `node --test tests/course-system/pitch-disclosure.test.cjs` for the pitch disclosure feature. It checks both modes at 320/390/1280px in Light/Dark, keyboard toggling, uninterrupted playback, question/reload reset, microphone judging and ten-question reports with the existing audio/device mocks. Set `PITCH_SCREENSHOTS=/tmp/pitch-disclosure` to capture the two prototype panels. Real microphones and mobile Safari still require device checks.
+
+This feature intentionally adds native details/summary markup and a reset at the start of question generation. Its source check preserves all other inline teaching JavaScript against commit `6fccb4f8f3adf7409216dd9bfbb765f4852344b6`. The historical CSS-only body/script equality checks below describe the earlier migration and cannot accept these intentional feature changes; their historical baselines remain unchanged.
+
 This suite validates the new course design, not historical PNG equality. The historical course-baseline visual/raster/review tests and evidence remain available for their original Phase 1 contract; they are not acceptance gates for the unified design.
 
 ```bash

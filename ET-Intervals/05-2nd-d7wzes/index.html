@@ -79,6 +79,8 @@
   <link rel="stylesheet" href="../../assets/site-visual.css">
   <link rel="stylesheet" href="../shared/styles/chrome-typography.css">
   <script src="../../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../shared/styles/pitch-disclosure.css">
+  <script src="../shared/pitch-disclosure.js" defer></script>
 </head>
 <body>
 
@@ -138,7 +140,9 @@
         </div>
       </details>
 
-      <div class="target-card">
+      <div class="target-card pitch-disclosure" data-pitch-mode="construct">
+        <details class="pitch-details" id="pitchDetails">
+          <summary class="settings-summary" aria-label="展开或折叠示范音高信息"></summary>
         <div class="target-pair">
           <div class="target-half">
             <div class="target-label">示范音高 (你听到的)</div>
@@ -152,6 +156,7 @@
             <div class="target-freq" id="targetFreqText">-- Hz</div>
           </div>
         </div>
+        </details>
         <div class="interval-text" id="intervalText">--</div>
         <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音高</button>
       </div>
@@ -521,6 +526,7 @@
   }
 
   function generateQuestion() {
+    document.getElementById('pitchDetails').open = false;
     stopTargetTone();
     let minMidi = parseInt(document.getElementById('minNoteSelect').value);
     let maxMidi = parseInt(document.getElementById('maxNoteSelect').value);

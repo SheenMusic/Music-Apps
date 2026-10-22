@@ -1,0 +1,12 @@
+/* Shared only by lessons opting into the pitch disclosure. */
+html[data-visual="ear"] .pitch-disclosure { position: relative; padding: 16px; }
+html[data-visual="ear"] .pitch-details > .settings-summary {
+  position: absolute; right: 12px; bottom: 16px; width: 44px; height: 44px;
+  box-sizing: border-box; padding: 0; justify-content: center;
+}
+html[data-visual="ear"] .pitch-details > .settings-summary:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 2px; border-radius: 8px; }
+html[data-visual="ear"] .pitch-disclosure #toneBtn { width: calc(100% - 48px); border-radius: 999px; min-height: 44px; }
+html[data-visual="ear"] .pitch-disclosure[data-pitch-mode="imitate"]:not(:has(.pitch-details[open])) #toneBtn {
+  background: transparent; border-color: transparent; border-radius: 0; color: var(--site-text);
+}
+html[data-visual="ear"] .pitch-disclosure[data-pitch-mode="imitate"]:not(:has(.pitch-details[open])) #toneBtn.playing { color: var(--site-warning); }
