@@ -96,7 +96,7 @@ test('all 16 lessons render concise shared rules and controls on desktop/mobile,
     try {
       const panel = page.locator('[data-practice-rules]'), type = await panel.getAttribute('data-practice-rules');
       const text = await panel.textContent();
-      if (type === 'harmonic') {assert.match(text, /连续完成 10 道无辅助正确题/); assert.match(text, /短暂振荡两次/);}
+      if (type === 'harmonic') {assert.match(text, /连续完成 10 道无辅助正确题/); assert.match(text, /短暂振荡一次/);}
       else assert.equal(text, expected[type]);
       assert.equal(await page.locator('#finishBtn').textContent(), '完成练习');
       assert.equal(await page.locator('#nextBtn').textContent(), '正确，下一题');
@@ -137,7 +137,7 @@ test('all 16 lessons render concise shared rules and controls on desktop/mobile,
   }
 });
 
-for (const course of harmonics) test(`${course}: independent two-cycle modulation never restarts sources/envelopes/deadline`, async () => {
+for (const course of harmonics) test(`${course}: independent single-cycle modulation never restarts sources/envelopes/deadline`, async () => {
   const {context, page, errors} = await open(course);
   try {
     assert.equal(await page.evaluate(() => triggerPitchOscillation('low')), false);
@@ -171,11 +171,11 @@ for (const course of harmonics) test(`${course}: independent two-cycle modulatio
     assert.equal(graph.timer, graph.nowTimer); assert.equal(graph.sameEnvelope, true); assert.equal(graph.untouched, true); assert.equal(graph.highActive, true); assert.equal(graph.lowReset, true);
     assert.equal(graph.curves.length, 5);
     for (const curve of graph.curves) {
-      assert.equal(curve.length, 256); assert.equal(curve.at(-1)[2], 2/3.5);
+      assert.equal(curve.length, 256); assert.equal(curve.at(-1)[2], 1/3.5);
       const values=curve.map(e=>e[1]);
       assert.equal(values.at(-1), 0);
       assert.equal(Math.max(...values), 25); assert.equal(Math.min(...values), -25);
-      assert.ok(Math.abs(values[63]) < .0001); assert.ok(Math.abs(values[127]) < .0001); assert.ok(Math.abs(values[191]) < .0001);
+      assert.equal(values[63], 25); assert.ok(Math.abs(values[127]) < .0001); assert.equal(values[191], -25);
     }
     assert.deepEqual(graph.targets, [[['value',.35,0],['target',0,0,2]],[['value',.35,0],['target',0,0,2]]]);
     assert.deepEqual(graph.stops, Array(10).fill(5)); assert.equal(graph.cleaned, true); assert.equal(graph.silentTap, true);
@@ -231,7 +231,7 @@ for (const course of harmonics) test(`${course}: irreversible assistance, idempo
   } finally {await context.close();}
 });
 
-test('real offline audio: selected voice oscillates twice then stabilizes, other voice and two-second decay stay intact', async () => {
+test('real offline audio: selected voice oscillates once then stabilizes, other voice and two-second decay stay intact', async () => {
   const {context,page,errors} = await open(harmonics[0],{},false);
   try {
     for (const voice of ['low','high']) {
@@ -251,7 +251,7 @@ test('real offline audio: selected voice oscillates twice then stabilizes, other
           for(let i=1;i<rate*4.9;i++)if(data[i-1]<0&&data[i]>=0)cross.push((i-1-data[i-1]/(data[i]-data[i-1]))/rate);
           const samples=cross.slice(1).map((t,i)=>({t:(t+cross[i])/2,c:1200*Math.log2(1/((t-cross[i])*freq))}));
           const selected=(voice==='low'?0:1)===channel;
-          const error=Math.max(...samples.filter(x=>x.t>.1).map(x=>Math.abs(x.c-(selected&&x.t>=1&&x.t<1+2/3.5?25*Math.sin(2*Math.PI*3.5*(x.t-1)):0))));
+          const error=Math.max(...samples.filter(x=>x.t>.1).map(x=>Math.abs(x.c-(selected&&x.t>=1&&x.t<1+1/3.5?25*Math.sin(2*Math.PI*3.5*(x.t-1)):0))));
           const after=Math.max(...samples.filter(x=>x.t>1.6).map(x=>Math.abs(x.c)));
           const env=b.getChannelData(channel+2),rms=(a,start,end)=>Math.sqrt(a.slice(start*rate,end*rate).reduce((s,x)=>s+x*x,0)/((end-start)*rate));
           result.push({error,after,ratio:rms(env,2.1,2.3)/rms(env,.1,.3),tail:Math.max(...data.slice(rate*5.01).map(Math.abs)),min:Math.min(...samples.map(x=>x.c)),max:Math.max(...samples.map(x=>x.c))});

@@ -96,7 +96,7 @@ function canFinishHarmonicPractice() {
   return !assistanceUsed && questionCompleted && consecutivePassCount >= 10 && questionHistory.length === 10;
 }
 
-const HARMONIC_AUDIO = Object.freeze({rate: 3.5, cents: 25, cycles: 2, seconds: 5, decay: 2});
+const HARMONIC_AUDIO = Object.freeze({rate: 3.5, cents: 25, cycles: 1, seconds: 5, decay: 2});
 let toneEndTime = 0;
 let oscillationTimer = null;
 let oscillationId = 0;
