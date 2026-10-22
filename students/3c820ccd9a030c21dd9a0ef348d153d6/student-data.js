@@ -10,7 +10,7 @@ const studentData = {
     {
       id: 'private-lesson-20261022',
       type: 'private-lesson',
-      title: '一对一音乐课',
+      title: 'private lesson',
       status: 'active',
       accessEnabled: false,
       lessonPackage: {
@@ -22,11 +22,11 @@ const studentData = {
             id: 'session-01',
             date: '2026-10-22',
             durationSeconds: 4644,
-            title: '创作方法与音乐学习规划',
-            topics: ['视频视觉升级｜动态乐谱｜Sibelius与AI制谱｜乐理学习规划'],
+            title: '需求分析和学习规划',
+            topics: ['视频视觉升级｜乐谱制作工具｜项目驱动学习｜AI工具和个人发展'],
             homework: [
-              '视频制作（优先）：准备Sibelius；梳理视频视觉需求，借助AI探索制作方案并整理问题。',
-              '乐理自评（中期）：借助AI了解乐理知识体系，诊断自身薄弱环节，形成初步学习计划并反馈。'
+              '视频制作（优先）：准备Sibelius；梳理视频视觉需求，探索升级方案并整理问题。',
+              '乐理自评（中期）：借助AI探索乐理知识体系，诊断自身薄弱环节，形成初步学习计划并反馈。'
             ]
           }
         ]
