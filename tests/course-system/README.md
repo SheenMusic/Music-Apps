@@ -1,10 +1,15 @@
 # Unified course design acceptance
 
-## ET05–18 pitch disclosure
+## ET03–18 concise rules and harmonic assistance
 
-Run `node --test tests/course-system/pitch-disclosure.test.cjs` for the pitch disclosure feature. It checks both modes at 320/390/1280px in Light/Dark, keyboard toggling, uninterrupted playback, question/reload reset, microphone judging and ten-question reports with the existing audio/device mocks. Set `PITCH_SCREENSHOTS=/tmp/pitch-disclosure` to capture the two prototype panels. Real microphones and mobile Safari still require device checks.
+```bash
+HARMONIC_SCREENSHOTS=/tmp/harmonic-practice node --test tests/course-system/harmonic-practice.test.cjs
+node --test tests/course-system/pitch-disclosure.test.cjs
+```
 
-This feature intentionally adds native details/summary markup and a reset at the start of question generation. Its source check preserves all other inline teaching JavaScript against commit `6fccb4f8f3adf7409216dd9bfbb765f4852344b6`. The historical CSS-only body/script equality checks below describe the earlier migration and cannot accept these intentional feature changes; their historical baselines remain unchanged.
+The harmonic suite checks all 16 pages at 320/390/1280px in Light/Dark, source/ID/parameter preservation against `e38b41b732a1fe5ea78265d133bf0259df1a59af`, the ET04 strict octave policy, and each of the seven harmonic lessons' independent two-cycle detune, unchanged voices/envelopes/deadlines, repeated taps, automatic cleanup, microphone resume and final-ten-only reports. Real OfflineAudioContext verifies 3.5 Hz / ±25 cents, return to standard tuning, five-second silence and the two-second decay constant. A native AudioContext test also exercises rapid in-flight curve replacement. Device mocks test singing; real microphone permissions, listening quality and mobile Safari still require device checks.
+
+The pitch-disclosure suite continues checking the seven melodic construction lessons. Native disclosure and concise display strings are intentional changes; historical CSS-only DOM/script equality gates below describe the earlier migration and do not apply to this feature. Their historical baselines remain unchanged.
 
 This suite validates the new course design, not historical PNG equality. The historical course-baseline visual/raster/review tests and evidence remain available for their original Phase 1 contract; they are not acceptance gates for the unified design.
 

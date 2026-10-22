@@ -505,6 +505,7 @@
   <link rel="stylesheet" href="../../assets/site-visual.css">
   <link rel="stylesheet" href="../shared/styles/chrome-typography.css">
   <script src="../../assets/site-analytics.js" defer></script>
+  <script src="../shared/course-rules.js" defer></script>
 </head>
 <body>
 
@@ -519,19 +520,14 @@
       <div class="header-section">
         <div class="sub-title-top">自然音程听觉训练 · 第三课</div>
         <h1 class="main-title">模唱</h1>
-        <p class="main-desc">听辨示范音高，然后用自己的声音对着麦克风准确唱出，训练声带对音高的控制与听觉记忆能力。</p>
+        <p class="main-desc">聆听示范音，模唱相同音高。</p>
       </div>
 
       <!-- 整合后的折叠区域 -->
       <details class="settings-details">
         <summary class="settings-summary">练习规则与参数设置</summary>
         <div class="collapsed-content">
-          <div class="rule-box-inner">
-            <strong>练习规则：</strong><br>
-            1. 建议使用 <strong>统一元音</strong> 模唱，保持稳定发声 <strong>0.2 秒</strong> 以上即可通过检测。<br>
-            2. 连续 <strong>正确完成 10 题</strong>才可解锁“结束练习”按钮。<br>
-            3. 建议佩戴耳机以获得更好的检测效果；若未勾选“已佩戴耳机”，示范音与麦克风监听会自动互斥切换——播放示范音时麦克风自动暂停，停止播放后自动恢复监听，无需手动操作。
-          </div>
+          <div class="rule-box-inner" data-practice-rules="basic"></div>
           <div class="config-grid">
             <div>
               <label>容错阈值</label>
@@ -562,10 +558,10 @@
       </details>
 
       <div class="target-card">
-        <div class="target-label">示范音高 (Target Pitch)</div>
+        <div class="target-label">示范音</div>
         <div class="target-note" id="targetNoteName">--</div>
         <div class="target-freq" id="targetFreqText">-- Hz</div>
-        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音高</button>
+        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音</button>
       </div>
 
       <label class="headphone-toggle">
@@ -576,7 +572,7 @@
       <button class="btn mic-btn" id="micBtn" onclick="toggleMic()">开启麦克风</button>
 
       <div class="status-box">
-        <div style="font-size: 12px; color: var(--text-muted);">实时捕获演唱音高</div>
+        <div style="font-size: 12px; color: var(--text-muted);">实时音高</div>
         <div class="pitch-val" id="currentPitchText">--</div>
         <div id="centsDevText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">等待发声...</div>
         
@@ -588,20 +584,20 @@
         <div id="holdingProgress" style="font-size: 12px; color: var(--text-muted);">保持音准稳定 0.2 秒通过</div>
       </div>
 
-      <div class="progress-text">练习结束进度：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
+      <div class="progress-text">连续正确：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
       
-      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">模唱正确，进入下一题</button>
+      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">正确，下一题</button>
 
       <div class="action-row">
         <button class="btn btn-restart" onclick="restartPractice()">重新开始</button>
-        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">结束练习并生成报告</button>
+        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">完成练习</button>
       </div>
 
     </div>
 
     <div class="card hidden" id="reportCard">
       <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">模唱练习报告 Summary</h2>
-      <p style="font-size: 13px; color: var(--text-muted);">连续达标题数：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
+      <p style="font-size: 13px; color: var(--text-muted);">连续正确：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
       
       <table class="report-table">
         <thead>
@@ -729,7 +725,7 @@
     }
     isTonePlaying = false;
     const toneBtn = document.getElementById('toneBtn');
-    toneBtn.textContent = "播放示范音高";
+    toneBtn.textContent = "播放示范音";
     toneBtn.classList.remove('playing');
 
     // 如果麦克风是被示范音自动暂停的，这里负责把它自动恢复
@@ -862,7 +858,7 @@
           const nextBtn = document.getElementById('nextBtn');
           nextBtn.disabled = false;
           nextBtn.classList.add('unlocked');
-          nextBtn.textContent = "✓ 模唱正确！点击进入下一题";
+          nextBtn.textContent = "正确，下一题";
 
           document.getElementById('holdingProgress').textContent = "🎉 音准达标！请点击进入下一题";
 
@@ -926,7 +922,7 @@
     const nextBtn = document.getElementById('nextBtn');
     nextBtn.disabled = true;
     nextBtn.classList.remove('unlocked');
-    nextBtn.textContent = "模唱正确，进入下一题";
+    nextBtn.textContent = "正确，下一题";
 
     resetStatusDisplay();
   }

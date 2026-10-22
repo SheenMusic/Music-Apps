@@ -139,6 +139,7 @@
   <script src="../../assets/site-analytics.js" defer></script>
   <link rel="stylesheet" href="../shared/styles/pitch-disclosure.css">
   <script src="../shared/pitch-disclosure.js" defer></script>
+  <script src="../shared/course-rules.js" defer></script>
 </head>
 <body>
 
@@ -160,14 +161,7 @@
       <details class="settings-details">
         <summary class="settings-summary">练习规则与参数设置</summary>
         <div class="collapsed-content">
-          <div class="rule-box-inner">
-            <strong>练习规则：</strong><br>
-            1. 先选择<strong>练习模式</strong>（默认为"随机混合"）。系统将在你的音区内随机生成一个<strong>示范音</strong>，并按所选模式给出<strong>指定音</strong>（示范音上方或下方的大七度/小七度）。<br>
-            2. 点击"播放示范音高"聆听示范音，然后用统一元音对着麦克风准确唱出<strong>指定音</strong>。<br>
-            3. 本课<strong>只判定音名</strong>：唱对音名即通过，<strong>任意八度均可</strong>（男生低八度、女生高八度都算对）。保持音准稳定 <strong>0.2 秒</strong>以上即通过。<br>
-            4. 连续 <strong>正确完成 10 题</strong>才可解锁"结束练习"按钮。<br>
-            5. 建议佩戴耳机；若未勾选"已佩戴耳机"，播放示范音时麦克风会自动暂停，停止后自动恢复监听。
-          </div>
+          <div class="rule-box-inner" data-practice-rules="construct"></div>
           <div class="register-line" id="registerLine">当前练习音区：<strong>--</strong></div>
           <div class="config-grid">
             <div>
@@ -205,20 +199,20 @@
           <summary class="settings-summary" aria-label="展开或折叠示范音高信息"></summary>
         <div class="target-pair">
           <div class="target-half">
-            <div class="target-label">示范音高 (你听到的)</div>
+            <div class="target-label">示范音</div>
             <div class="target-note" id="refNoteName">--</div>
             <div class="target-freq" id="refFreqText">-- Hz</div>
           </div>
           <div class="target-arrow" id="arrowIcon">→</div>
           <div class="target-half highlight">
-            <div class="target-label">指定音 (你要唱的)</div>
+            <div class="target-label">目标音</div>
             <div class="target-note" id="targetNoteName">--</div>
             <div class="target-freq" id="targetFreqText">-- Hz</div>
           </div>
         </div>
         </details>
         <div class="interval-text" id="intervalText">--</div>
-        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音高</button>
+        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音</button>
       </div>
 
       <label class="headphone-toggle">
@@ -229,7 +223,7 @@
       <button class="btn mic-btn" id="micBtn" onclick="toggleMic()">开启麦克风</button>
 
       <div class="status-box">
-        <div style="font-size: 12px; color: var(--text-muted);">实时捕获演唱音高</div>
+        <div style="font-size: 12px; color: var(--text-muted);">实时音高</div>
         <div class="pitch-val" id="currentPitchText">--</div>
         <div id="centsDevText" style="font-size: 13px; font-weight: 600; color: var(--text-muted);">等待发声...</div>
         <div class="meter-bar">
@@ -239,20 +233,20 @@
         <div id="holdingProgress" style="font-size: 12px; color: var(--text-muted);">保持音准稳定 0.2 秒通过</div>
       </div>
 
-      <div class="progress-text">练习结束进度：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
+      <div class="progress-text">连续正确：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
 
-      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">模唱正确，进入下一题</button>
+      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">正确，下一题</button>
 
       <div class="action-row">
         <button class="btn btn-restart" onclick="restartPractice()">重新开始</button>
-        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">结束练习并生成报告</button>
+        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">完成练习</button>
       </div>
 
     </div>
 
     <div class="card hidden" id="reportCard">
       <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">七度构唱练习报告 Summary</h2>
-      <p style="font-size: 13px; color: var(--text-muted);">连续达标题数：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
+      <p style="font-size: 13px; color: var(--text-muted);">连续正确：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
       <table class="report-table">
         <thead>
           <tr>
@@ -451,7 +445,7 @@
     }
     isTonePlaying = false;
     const toneBtn = document.getElementById('toneBtn');
-    toneBtn.textContent = "播放示范音高";
+    toneBtn.textContent = "播放示范音";
     toneBtn.classList.remove('playing');
     if (micPausedForTone) {
       micPausedForTone = false;
@@ -560,7 +554,7 @@
           const nextBtn = document.getElementById('nextBtn');
           nextBtn.disabled = false;
           nextBtn.classList.add('unlocked');
-          nextBtn.textContent = "✓ 模唱正确！点击进入下一题";
+          nextBtn.textContent = "正确，下一题";
           document.getElementById('holdingProgress').textContent = "🎉 音名正确！请点击进入下一题";
           consecutivePassCount++;
           document.getElementById('passCountText').textContent = consecutivePassCount;
@@ -645,7 +639,7 @@
     const nextBtn = document.getElementById('nextBtn');
     nextBtn.disabled = true;
     nextBtn.classList.remove('unlocked');
-    nextBtn.textContent = "模唱正确，进入下一题";
+    nextBtn.textContent = "正确，下一题";
     resetStatusDisplay();
   }
 

@@ -2,11 +2,10 @@ const {test, before, after} = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const {execFileSync} = require('node:child_process');
 const {chromium} = require('playwright');
 const H = require('../course-baseline/harness.cjs');
-const BASE = '6fccb4f8f3adf7409216dd9bfbb765f4852344b6';
-const lessons = fs.readdirSync(path.join(H.ROOT, 'ET-Intervals')).filter(n => /^(0[5-9]|1[0-8])-/.test(n));
+// Harmonic lessons have a separate assistance/streak contract in harmonic-practice.test.cjs.
+const lessons = fs.readdirSync(path.join(H.ROOT, 'ET-Intervals')).filter(n => /^(05|07|09|11|13|15|17)-/.test(n));
 let browser, server;
 before(async () => {
   server = await H.serve();
@@ -16,9 +15,7 @@ after(async () => { await browser?.close(); await server?.close(); });
 
 for (const lesson of lessons) test(`${lesson}: disclosure, responsive layout and original practice`, async () => {
   const file = `ET-Intervals/${lesson}/index.html`;
-  const original = execFileSync('git', ['show', `${BASE}:${file}`], {cwd: H.ROOT}).toString();
-  const current = fs.readFileSync(path.join(H.ROOT, file), 'utf8');
-  assert.deepEqual(H.scripts(current).map(s => s.replace("    document.getElementById('pitchDetails').open = false;\n", '')), H.scripts(original), 'only disclosure reset may change inline teaching scripts');
+  // Core source/parameter preservation is checked for all 16 lessons in harmonic-practice.test.cjs.
   const construct = Number(lesson.slice(0, 2)) % 2 === 1;
   for (const width of [320, 390, 1280]) for (const theme of ['light', 'dark']) {
     const context = await browser.newContext({viewport: {width, height: 900}, colorScheme: theme, reducedMotion: 'reduce'});

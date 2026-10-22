@@ -82,6 +82,8 @@
   <script src="../../assets/site-analytics.js" defer></script>
   <link rel="stylesheet" href="../shared/styles/pitch-disclosure.css">
   <script src="../shared/pitch-disclosure.js" defer></script>
+  <script src="../shared/course-rules.js" defer></script>
+  <link rel="stylesheet" href="../shared/styles/harmonic-practice.css">
 </head>
 <body>
 
@@ -103,14 +105,7 @@
       <details class="settings-details">
         <summary class="settings-summary">练习规则与参数设置</summary>
         <div class="collapsed-content">
-          <div class="rule-box-inner">
-            <strong>练习规则：</strong><br>
-            1. 先选择<strong>练习模式</strong>（大二度、小二度或随机混合）。系统将在你的音区内随机生成一个和声音程（钢琴音色双音同时发声）。<br>
-            2. 点击"播放示范音"聆听双音，然后分别点击对应的采集按钮，对准麦克风模唱出<strong>低音</strong>与<strong>高音</strong>。<br>
-            3. 本课判定两个音的音名：分别点击低音和高音的采集按钮锁定演唱音高，<strong>任意八度均可</strong>。保持音准稳定 <strong>0.2 秒</strong>以上即锁定通过。<br>
-            4. 连续 <strong>正确完成 10 题</strong>才可解锁"结束练习"按钮。<br>
-            5. 建议佩戴耳机；若未勾选"已佩戴耳机"，播放示范音时麦克风会自动暂停。
-          </div>
+          <div class="rule-box-inner" data-practice-rules="harmonic"></div>
           <div class="register-line" id="registerLine">当前练习音区：<strong>--</strong></div>
           <div class="config-grid">
             <div>
@@ -141,25 +136,30 @@
         </div>
       </details>
 
-      <div class="target-card pitch-disclosure" data-pitch-mode="imitate">
+      <div class="target-card pitch-disclosure harmonic-pitch" data-pitch-mode="imitate">
         <details class="pitch-details" id="pitchDetails">
-          <summary class="settings-summary" aria-label="展开或折叠示范音高信息"></summary>
-        <div class="target-label" style="margin-bottom: 8px;">示范音 (你听到的)</div>
-        <div class="target-pair-dual">
-          <div class="target-half-box">
-            <div class="target-label">低音 (Lower)</div>
-            <div class="target-note" id="refLowNoteName">--</div>
-            <div class="target-freq" id="refLowFreqText">-- Hz</div>
+          <summary class="settings-summary" aria-label="展开或折叠示范音高信息">
+            <button type="button" class="btn btn-tone" id="toneBtn" onclick="event.stopPropagation(); toggleTargetTone()">播放示范音</button>
+          </summary>
+          <div class="pitch-information">
+            <div class="target-label" style="margin-bottom: 8px;">示范音</div>
+            <div class="target-pair-dual">
+              <button type="button" class="target-half-box" onclick="triggerPitchOscillation('low')">
+                <span class="target-label">低音</span>
+                <span class="target-note" id="refLowNoteName">--</span>
+                <span class="target-freq" id="refLowFreqText">-- Hz</span>
+                <span class="assist-listen-label">点击触发音高振荡</span>
+              </button>
+              <button type="button" class="target-half-box" onclick="triggerPitchOscillation('high')">
+                <span class="target-label">高音</span>
+                <span class="target-note" id="refHighNoteName">--</span>
+                <span class="target-freq" id="refHighFreqText">-- Hz</span>
+                <span class="assist-listen-label">点击触发音高振荡</span>
+              </button>
+            </div>
+            <div class="interval-text" id="intervalText">--</div>
           </div>
-          <div class="target-half-box">
-            <div class="target-label">高音 (Higher)</div>
-            <div class="target-note" id="refHighNoteName">--</div>
-            <div class="target-freq" id="refHighFreqText">-- Hz</div>
-          </div>
-        </div>
-        <div class="interval-text" id="intervalText">--</div>
         </details>
-        <button class="btn btn-tone" id="toneBtn" onclick="toggleTargetTone()">播放示范音</button>
       </div>
 
       <label class="headphone-toggle">
@@ -185,7 +185,7 @@
 
       <!-- 需求3：恢复音高检测滑块与实时偏差显示 (放在进度条上方) -->
       <div class="status-box-global">
-        <div style="font-size: 11px; color: var(--text-muted);">实时音高捕获与偏差指示</div>
+        <div style="font-size: 11px; color: var(--text-muted);">实时音高</div>
         <div id="centsDevText" style="font-size: 12px; font-weight: 600; color: var(--text-muted); margin-top: 3px;">请点击上方按钮开始采集...</div>
         <div class="meter-bar">
           <div class="meter-target-zone" id="targetZone"></div>
@@ -194,20 +194,20 @@
         <div id="holdingProgress" style="font-size: 11px; color: var(--text-muted);">保持音准稳定 0.2 秒锁定</div>
       </div>
 
-      <div class="progress-text">练习结束进度：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
+      <div class="progress-text">连续正确：<strong id="passCountText" style="color: var(--primary);">0</strong> / 10</div>
 
-      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">双音模唱正确，进入下一题</button>
+      <button class="btn btn-next" id="nextBtn" disabled onclick="nextQuestion()">正确，下一题</button>
 
       <div class="action-row">
         <button class="btn btn-restart" onclick="restartPractice()">重新开始</button>
-        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">结束练习并生成报告</button>
+        <button class="btn btn-finish" id="finishBtn" disabled onclick="finishPractice()">完成练习</button>
       </div>
 
     </div>
 
     <div class="card hidden" id="reportCard">
       <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">二度和声模唱报告 Summary</h2>
-      <p style="font-size: 13px; color: var(--text-muted);">连续达标题数：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
+      <p style="font-size: 13px; color: var(--text-muted);">连续正确：10 题 | 总耗时：<strong id="totalTimeText">0</strong> 秒</p>
       <table class="report-table">
         <thead>
           <tr>
@@ -289,6 +289,7 @@
   let pianoNodesHigh = [];
   let isTonePlaying = false;
 
+
   let isListening = false;
   let activeCaptureTarget = null; // 'low' 或 'high'
   
@@ -352,104 +353,12 @@
     restartPractice();
   }
 
-  function toggleTargetTone() {
-    if (isTonePlaying) stopTargetTone(true);
-    else startTargetTone();
-  }
+
 
   // 需求2：用合成钢琴音色（多泛音 + 自然衰减包络）替代纯正弦波，消除低音区纠缠感
-  function playPianoNote(freq, timeOffset = 0) {
-    if (!audioCtx) return [];
-    
-    // 钢琴模拟泛音比例与权重（基频、2倍频、3倍频、4倍频等）
-    const harmonics = [
-      { mult: 1, gain: 0.6 },
-      { mult: 2, gain: 0.3 },
-      { mult: 3, gain: 0.15 },
-      { mult: 4, gain: 0.08 },
-      { mult: 5, gain: 0.04 }
-    ];
 
-    let nodes = [];
-    const masterGain = audioCtx.createGain();
-    masterGain.gain.setValueAtTime(0.35, audioCtx.currentTime + timeOffset);
-    // 模拟自然钢琴音符的弹奏衰减（持续约 2.5 秒柔和余音）
-    masterGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + timeOffset + 2.5);
-    masterGain.connect(audioCtx.destination);
-    nodes.push(masterGain);
 
-    harmonics.forEach(h => {
-      if (freq * h.mult > 20000) return; // 超出听觉上限则跳过
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      
-      osc.type = h.mult === 1 ? 'sine' : 'triangle'; // 丰富音色质感
-      osc.frequency.setValueAtTime(freq * h.mult, audioCtx.currentTime + timeOffset);
-      
-      gain.gain.setValueAtTime(h.gain, audioCtx.currentTime + timeOffset);
-      
-      osc.connect(gain);
-      gain.connect(masterGain);
-      
-      osc.start(audioCtx.currentTime + timeOffset);
-      nodes.push(osc);
-    });
 
-    return nodes;
-  }
-
-  function startTargetTone() {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const isHeadphone = document.getElementById('headphoneCheckbox').checked;
-    if (!isHeadphone && isListening) {
-      micPausedForTone = true;
-      stopMic();
-    }
-
-    stopTargetTone(false);
-
-    const freqLow = midiToFreq(currentLowMidi);
-    const freqHigh = midiToFreq(currentHighMidi);
-
-    // 双音同时触发钢琴音色
-    pianoNodesLow = playPianoNote(freqLow);
-    pianoNodesHigh = playPianoNote(freqHigh);
-    isTonePlaying = true;
-
-    const toneBtn = document.getElementById('toneBtn');
-    toneBtn.textContent = "停止播放示范音";
-    toneBtn.classList.add('playing');
-
-    // 自动在 2.5 秒后恢复按钮状态
-    setTimeout(() => {
-      if (isTonePlaying) {
-        stopTargetTone(false);
-      }
-    }, 2600);
-  }
-
-  function stopTargetTone(autoResumeMic = false) {
-    if (isTonePlaying) {
-      try {
-        [...pianoNodesLow, ...pianoNodesHigh].forEach(node => {
-          if (node.stop) node.stop();
-          if (node.disconnect) node.disconnect();
-        });
-      } catch(e) {}
-    }
-    pianoNodesLow = [];
-    pianoNodesHigh = [];
-    isTonePlaying = false;
-    const toneBtn = document.getElementById('toneBtn');
-    toneBtn.textContent = "播放示范音";
-    toneBtn.classList.remove('playing');
-    if (micPausedForTone) {
-      micPausedForTone = false;
-      if (autoResumeMic && (!lowCaptured || !highCaptured)) startMic(activeCaptureTarget);
-    }
-  }
 
   function handleHeadphoneToggle() {
     const isHeadphone = document.getElementById('headphoneCheckbox').checked;
@@ -660,40 +569,9 @@
     document.getElementById('holdingProgress').style.color = "#64748b";
   }
 
-  function checkAllPassed() {
-    updateCaptureButtonUI();
-    if (lowCaptured && highCaptured) {
-      if (isTonePlaying) stopTargetTone();
-      const nextBtn = document.getElementById('nextBtn');
-      nextBtn.disabled = false;
-      nextBtn.classList.add('unlocked');
-      nextBtn.textContent = "✓ 双音模唱正确！点击进入下一题";
-      
-      consecutivePassCount++;
-      document.getElementById('passCountText').textContent = consecutivePassCount;
-      const duration = ((Date.now() - questionStartTime) / 1000).toFixed(1);
-      
-      questionHistory.push({
-        id: questionHistory.length + 1,
-        type: currentIntervalName,
-        lowTarget: currentLowSpell,
-        highTarget: currentHighSpell,
-        lowCapturedText: document.getElementById('lowPitchText').textContent,
-        highCapturedText: document.getElementById('highPitchText').textContent,
-        time: duration
-      });
-
-      if (consecutivePassCount >= 10) {
-        const finishBtn = document.getElementById('finishBtn');
-        finishBtn.disabled = false;
-        finishBtn.classList.add('unlocked');
-      }
-    }
-  }
 
   function generateQuestion() {
-    document.getElementById('pitchDetails').open = false;
-    stopTargetTone();
+    resetHarmonicQuestion();
     let minMidi = parseInt(document.getElementById('minNoteSelect').value);
     let maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
     if (minMidi >= maxMidi) maxMidi = Math.min(84, minMidi + 12);
@@ -753,7 +631,7 @@
     const nextBtn = document.getElementById('nextBtn');
     nextBtn.disabled = true;
     nextBtn.classList.remove('unlocked');
-    nextBtn.textContent = "双音模唱正确，进入下一题";
+    nextBtn.textContent = "正确，下一题";
     updateCaptureButtonUI();
     resetStatusDisplay();
   }
@@ -808,12 +686,12 @@
   }
 
   function finishPractice() {
-    if (consecutivePassCount < 10) return;
+    if (!canFinishHarmonicPractice()) return;
     stopMic();
     stopTargetTone();
     document.getElementById('practiceCard').classList.add('hidden');
     document.getElementById('reportCard').classList.remove('hidden');
-    const totalTime = ((Date.now() - practiceStartTime) / 1000).toFixed(0);
+    const totalTime = questionHistory.reduce((sum, question) => sum + Number(question.time), 0).toFixed(0);
     document.getElementById('totalTimeText').textContent = totalTime;
     const tbody = document.getElementById('reportTableBody');
     tbody.innerHTML = '';
@@ -831,6 +709,7 @@
   }
 
   function copyReport() {
+    if (!canFinishHarmonicPractice()) return;
     const totalTime = document.getElementById('totalTimeText').textContent;
     const minMidi = parseInt(document.getElementById('minNoteSelect').value);
     const maxMidi = parseInt(document.getElementById('maxNoteSelect').value);
@@ -855,5 +734,6 @@
   };
 </script>
 
+<script src="../shared/harmonic-practice.js"></script>
 </body>
 </html>

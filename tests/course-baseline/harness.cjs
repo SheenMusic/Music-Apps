@@ -53,7 +53,7 @@ function installMocks() {
   window.clearTimeout = () => {};
   window.alert = message => window.__audio.alerts.push(message);
   window.confirm = () => true;
-  const param = () => ({value: 0, setValueAtTime(v) {this.value=v;}, linearRampToValueAtTime(v) {this.value=v;}, exponentialRampToValueAtTime(v) {this.value=v;}});
+  const param = () => ({value: 0, setValueAtTime(v) {this.value=v;}, setTargetAtTime(v) {this.target=v;}, linearRampToValueAtTime(v) {this.value=v;}, exponentialRampToValueAtTime(v) {this.value=v;}});
   const node = () => ({connect() {}, disconnect() {}, gain: param(), frequency: param(), start() {this.started=true;}, stop() {this.stopped=true;}});
   window.AudioContext = window.webkitAudioContext = class {
     constructor() {this.state='running'; this.currentTime=0; this.sampleRate=48000; this.destination={};}
