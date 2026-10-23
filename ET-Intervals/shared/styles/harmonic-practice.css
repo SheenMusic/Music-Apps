@@ -22,7 +22,7 @@ html[data-visual="ear"] .pitch-disclosure.harmonic-pitch[data-pitch-mode] .setti
 .harmonic-pitch .target-half-box { position: relative; overflow: hidden; }
 .harmonic-pitch .target-half-box.oscillating::after {
   content: ''; position: absolute; inset: 1px; border: 1px solid var(--site-muted);
-  border-radius: inherit; pointer-events: none; animation: harmonic-ripple .2857143s ease-out;
+  border-radius: inherit; pointer-events: none; animation: harmonic-ripple .7692308s ease-out;
 }
 @keyframes harmonic-ripple { from { opacity: .45; transform: scale(.87); } to { opacity: 0; transform: scale(1.04); } }
 @media (prefers-reduced-motion: reduce) { .harmonic-pitch .target-half-box { transition: none; } }

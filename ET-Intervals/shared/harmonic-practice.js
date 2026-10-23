@@ -96,10 +96,13 @@ function canFinishHarmonicPractice() {
   return !assistanceUsed && questionCompleted && consecutivePassCount >= 10 && questionHistory.length === 10;
 }
 
-const HARMONIC_AUDIO = Object.freeze({rate: 3.5, cents: 25, cycles: 1, seconds: 5, decay: 2});
+const HARMONIC_AUDIO = Object.freeze({
+  rate: 6.5, cents: 15, cycles: 5, boost: .30, burstDecay: 1.15,
+  seconds: 5.5, naturalSeconds: 4.5, decay: 2, baseGain: .32, samplesPerCycle: 128, transition: .012
+});
 let toneEndTime = 0;
-let oscillationTimer = null;
-let oscillationId = 0;
+const oscillationTimers = {low: null, high: null};
+const oscillationVersions = {low: 0, high: 0};
 
 function releasePianoNodes(nodes) {
   nodes.forEach(node => {
@@ -114,10 +117,24 @@ function playPianoNote(freq, startTime = null) {
   try {
     const start = startTime ?? audioCtx.currentTime;
     const masterGain = audioCtx.createGain();
-    nodes.push(masterGain);
-    masterGain.gain.setValueAtTime(0.35, start);
+    const assistGain = audioCtx.createGain(), fadeGain = audioCtx.createGain();
+    nodes.push(masterGain, assistGain, fadeGain);
+    nodes.assistGain = assistGain;
+    nodes.fadeGain = fadeGain;
+    nodes.modulation = null;
+    // Headroom for BOTH voices at +30%: 2 * .32 * 1.17 * 1.3 < 1.
+    masterGain.gain.setValueAtTime(HARMONIC_AUDIO.baseGain, start);
     masterGain.gain.setTargetAtTime(0, start, HARMONIC_AUDIO.decay);
-    masterGain.connect(audioCtx.destination);
+    masterGain.gain.setValueAtTime(HARMONIC_AUDIO.baseGain * Math.exp(-HARMONIC_AUDIO.naturalSeconds / HARMONIC_AUDIO.decay), start + HARMONIC_AUDIO.naturalSeconds);
+    assistGain.gain.setValueAtTime(1, start);
+    fadeGain.gain.setValueAtTime(1, start);
+    fadeGain.gain.setValueAtTime(1, start + HARMONIC_AUDIO.naturalSeconds);
+    // Raised-cosine fade reaches exact silence with zero endpoint slope.
+    for (let i = 1; i <= 128; i++) {
+      fadeGain.gain.linearRampToValueAtTime((1 + Math.cos(Math.PI * i / 128)) / 2,
+        start + HARMONIC_AUDIO.naturalSeconds + (HARMONIC_AUDIO.seconds - HARMONIC_AUDIO.naturalSeconds) * i / 128);
+    }
+    masterGain.connect(assistGain); assistGain.connect(fadeGain); fadeGain.connect(audioCtx.destination);
     const harmonics = [{mult: 1, gain: .6}, {mult: 2, gain: .3}, {mult: 3, gain: .15}, {mult: 4, gain: .08}, {mult: 5, gain: .04}];
     harmonics.forEach(h => {
       if (freq * h.mult > 20000) return;
@@ -134,52 +151,81 @@ function playPianoNote(freq, startTime = null) {
 }
 
 function clearPitchOscillation() {
-  oscillationId++;
-  clearTimeout(oscillationTimer);
-  oscillationTimer = null;
-  [...pianoNodesLow, ...pianoNodesHigh].forEach(node => {
-    if (!node.detune) return;
-    // Cancel pending ramp events before another tap replaces the burst.
-    node.detune.cancelScheduledValues(audioCtx.currentTime);
-    node.detune.setValueAtTime(0, audioCtx.currentTime);
+  ['low', 'high'].forEach(voice => {
+    oscillationVersions[voice]++;
+    clearTimeout(oscillationTimers[voice]); oscillationTimers[voice] = null;
   });
+  // Called only when the sound is being stopped, never to switch cards.
   document.querySelectorAll('.harmonic-pitch .oscillating').forEach(card => card.classList.remove('oscillating'));
 }
 
 function triggerPitchOscillation(voice) {
   if (voice !== 'low' && voice !== 'high') return false;
   if (!isTonePlaying || !audioCtx || audioCtx.state !== 'running' || audioCtx.currentTime >= toneEndTime) return false;
-  const notes = (voice === 'low' ? pianoNodesLow : pianoNodesHigh).filter(node => node.detune);
-  if (!notes.length) return false; // AudioContext resume may still be pending.
+  const nodes = voice === 'low' ? pianoNodesLow : pianoNodesHigh;
+  if (!nodes.assistGain) return false; // AudioContext resume may still be pending.
   syncAssistance(); markAssistanceUsed();
-  clearPitchOscillation();
+  clearTimeout(oscillationTimers[voice]);
+  const burst = ++oscillationVersions[voice];
   const now = audioCtx.currentTime;
-  const duration = schedulePitchOscillation(notes, now);
+  const duration = schedulePitchOscillation(nodes, now, voice);
   const card = document.querySelectorAll('.harmonic-pitch .target-half-box')[voice === 'low' ? 0 : 1];
+  card.classList.remove('oscillating');
   void card.offsetWidth; // Restart only the small ripple, never the sound.
   card.classList.add('oscillating');
-  const playback = tonePlaybackId, burst = oscillationId;
-  // A late tap never extends the original five-second playback deadline.
-  oscillationTimer = setTimeout(() => {
-    if (playback !== tonePlaybackId || burst !== oscillationId) return;
-    card.classList.remove('oscillating'); oscillationTimer = null;
+  const playback = tonePlaybackId;
+  // A late tap never extends the original playback deadline.
+  oscillationTimers[voice] = setTimeout(() => {
+    if (playback !== tonePlaybackId || burst !== oscillationVersions[voice]) return;
+    card.classList.remove('oscillating'); oscillationTimers[voice] = null;
   }, Math.min(duration, toneEndTime - now) * 1000);
   return true;
 }
 
-function schedulePitchOscillation(notes, now) {
+function modulationAt(nodes, time) {
+  const curve = nodes.modulation;
+  if (!curve || time >= curve.start + curve.duration) return {cents: 0, gain: 1};
+  const position = Math.max(0, (time - curve.start) / curve.duration) * (curve.pitch.length - 1);
+  const i = Math.min(Math.floor(position), curve.pitch.length - 2), f = position - i;
+  return {
+    cents: curve.pitch[i] + (curve.pitch[i + 1] - curve.pitch[i]) * f,
+    gain: curve.gain[i] + (curve.gain[i + 1] - curve.gain[i]) * f
+  };
+}
+
+function schedulePitchOscillation(nodes, now, voice) {
   const duration = HARMONIC_AUDIO.cycles / HARMONIC_AUDIO.rate;
-  const curve = new Float32Array(257);
-  for (let i = 0; i < curve.length; i++) curve[i] = HARMONIC_AUDIO.cents * Math.sin(2 * Math.PI * HARMONIC_AUDIO.cycles * i / (curve.length - 1));
-  curve[0] = curve[curve.length - 1] = 0;
-  notes.forEach(node => {
-    node.detune.setValueAtTime(0, now);
-    // Short linear segments approximate the sine while remaining cancellable.
-    // Replacing a native setValueCurveAtTime mid-curve can throw in Chromium.
-    for (let i = 1; i < curve.length; i++) {
-      node.detune.linearRampToValueAtTime(curve[i], now + duration * i / (curve.length - 1));
+  const current = modulationAt(nodes, now);
+  const count = HARMONIC_AUDIO.cycles * HARMONIC_AUDIO.samplesPerCycle + 1;
+  const pitch = new Float32Array(count), gain = new Float32Array(count);
+  const sign = voice === 'low' ? -1 : 1;
+  const attackSamples = Math.ceil(HARMONIC_AUDIO.transition / duration * (count - 1));
+  const attack = duration * attackSamples / (count - 1);
+  // From interval_fm_lab_ripple_am.html: raised-cosine ripples times (1-u)^1.15.
+  // Normalize the first ripple so "15 cents" is its actual maximum, not its input depth.
+  const pulseAt = u => (1 - Math.cos(2 * Math.PI * HARMONIC_AUDIO.cycles * u)) / 2 * Math.pow(1 - u, HARMONIC_AUDIO.burstDecay);
+  let firstPeak = 0;
+  for (let i = 0; i <= HARMONIC_AUDIO.samplesPerCycle; i++) firstPeak = Math.max(firstPeak, pulseAt(i / (count - 1)));
+  for (let i = 0; i < count; i++) {
+    const u = i / (count - 1), t = duration * u, x = Math.min(1, t / attack);
+    const blend = x * x * (3 - 2 * x);
+    pitch[i] = current.cents * (1 - blend) + sign * HARMONIC_AUDIO.cents * pulseAt(u) / firstPeak * blend;
+    // Lab-style relative boost with a smooth attack, then polynomial release.
+    gain[i] = i <= attackSamples ? current.gain + (1 + HARMONIC_AUDIO.boost - current.gain) * blend :
+      1 + HARMONIC_AUDIO.boost * Math.pow(1 - (t - attack) / (duration - attack), HARMONIC_AUDIO.burstDecay);
+  }
+  pitch[count - 1] = 0; gain[count - 1] = 1;
+  function automate(param, values) {
+    param.cancelScheduledValues(now);
+    // Re-anchor the interpolated value before cancelling/replacing future ramps.
+    param.linearRampToValueAtTime(values[0], now);
+    for (let i = 1; i < count; i++) {
+      param.linearRampToValueAtTime(values[i], now + duration * i / (count - 1));
     }
-  });
+  }
+  nodes.filter(node => node.detune).forEach(node => automate(node.detune, pitch));
+  automate(nodes.assistGain.gain, gain);
+  nodes.modulation = {start: now, duration, pitch, gain};
   return duration;
 }
 

@@ -4,10 +4,11 @@
 
 ```bash
 HARMONIC_SCREENSHOTS=/tmp/harmonic-practice node --test tests/course-system/harmonic-practice.test.cjs
+node --test tests/course-system/harmonic-audio.test.cjs
 node --test tests/course-system/pitch-disclosure.test.cjs
 ```
 
-The harmonic suite checks all 16 pages at 320/390/1280px in Light/Dark, source/ID/parameter preservation against `e38b41b732a1fe5ea78265d133bf0259df1a59af`, the ET04 strict octave policy, and each of the seven harmonic lessons' independent single-cycle detune, unchanged voices/envelopes/deadlines, repeated taps, automatic cleanup, microphone resume and final-ten-only reports. Real OfflineAudioContext verifies 3.5 Hz / ±25 cents, return to standard tuning, five-second silence and the two-second decay constant. A native AudioContext test also exercises rapid in-flight curve replacement. Device mocks test singing; real microphone permissions, listening quality and mobile Safari still require device checks.
+The practice suite checks shared rules/layout, source/ID/parameter preservation, the ET04 strict octave policy, compound interval modes and all seven harmonic lessons' final-ten-only eligibility/reports using simulated singing. The audio suite separately protects deployed HTML/rules/report logic and verifies 6.5 Hz / five one-sided decaying ripples (first peak 15 cents), independent relative +30% gain, continuous retriggers, unchanged piano harmonics, 4.5-second natural decay with a two-second time constant, a one-second raised-cosine release, and exact silence at 5.5 seconds. The ripple/boost envelope follows `interval_fm_lab_ripple_am.html`'s `(1-u)^1.15` curve with first-peak normalization and a smooth gain attack. Real OfflineAudioContext checks pitch, amplitude, continuity and clipping; native AudioContext checks rapid taps/replay and cleanup. Device microphones, listening quality and mobile Safari still require device checks.
 
 The pitch-disclosure suite continues checking the seven melodic construction lessons. Native disclosure and concise display strings are intentional changes; historical CSS-only DOM/script equality gates below describe the earlier migration and do not apply to this feature. Their historical baselines remain unchanged.
 
