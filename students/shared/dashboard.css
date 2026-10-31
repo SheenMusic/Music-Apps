@@ -1,0 +1,60 @@
+/* One course list for every student; teaching apps and public navigation are untouched. */
+*{box-sizing:border-box}
+body{margin:0;font:400 15px/1.8 var(--site-font)}
+.dashboard{width:min(calc(100% - 40px),880px);margin-inline:auto;padding:48px 0 40px}
+.dashboard [hidden]{display:none}
+.dashboard-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 20px;align-items:baseline}
+.dashboard .dashboard-heading .dashboard-label{margin:0;font-family:var(--site-font);font-size:12px;font-weight:400;line-height:1.8;letter-spacing:.05em;color:var(--site-muted)}
+.student-name{grid-column:1/-1;margin:0;line-height:1.25}
+.status{font-size:12px;color:var(--site-muted);white-space:nowrap}
+.dashboard-section{margin-top:40px}
+.dashboard-section>.public-section{margin:0 0 20px}
+.progress-heading{font-size:15px;font-weight:500;color:var(--site-muted);margin:0 0 8px}
+.course-list{list-style:none;margin:0;padding:0}
+.course-row{display:grid;grid-template-columns:80px minmax(0,1fr) auto;align-items:baseline;gap:0 16px;padding:22px 0}
+.course-row+.course-row{border-top:1px solid var(--site-border)}
+.course-number{margin:0;font-size:12px;color:var(--site-muted)}
+.course-content{min-width:0}
+.course-title{margin:0;font-size:18px;font-weight:600;line-height:1.5}
+.course-balance,.course-current{margin:6px 0 0;font-size:14px}
+.course-deadline{margin:4px 0 0;font-size:13px;color:var(--site-muted)}
+.calendar-button{display:inline-flex;align-items:center;min-height:44px;padding:6px 0;margin-left:8px;border:0;background:none;color:inherit;font:inherit;text-decoration:underline dashed;text-underline-offset:4px;cursor:pointer}
+.calendar-button:before,.calendar-notice:before{content:'·';display:inline-block;margin-right:8px;text-decoration:none}
+.calendar-notice{margin-left:8px;font-size:12px}
+.calendar-button:hover{text-decoration-style:solid;color:var(--site-text)}
+.muted{color:var(--site-muted)}
+.course-toggle{display:flex;align-items:center;gap:var(--site-disclosure-gap);width:100%;min-height:44px;padding:8px 0;margin:4px 0 0;border:0;background:none;color:var(--site-muted);font:400 14px/1.8 var(--site-font);text-align:left;cursor:pointer}
+.course-toggle:hover,.course-toggle:active{color:var(--site-text)}
+.course-resources{grid-column:2/-1;min-width:0;margin-top:8px}
+/* Resource rows, billing rows and notes share the same type and spacing rhythm. */
+.dashboard .resource-list{font-size:14px;line-height:1.8}
+.dashboard .resource-list .resource-row{grid-template-columns:80px minmax(0,1fr);gap:12px;padding:10px 0}
+.dashboard .resource-number{font-size:12px;padding-top:8px;color:var(--site-muted)}
+.dashboard .resource-title{margin:0;font-size:14px;line-height:1.8;font-weight:400}
+.dashboard .resource-list a.training-link{min-height:44px;padding:8px 6px;margin:0 2px;border:0;border-radius:0;background:none;color:var(--site-text);font:500 14px/1.8 var(--site-font);text-decoration:underline dashed;text-underline-offset:4px}
+.dashboard .resource-list a.training-link:hover,.dashboard .resource-list a.training-link:active{background:none;text-decoration-style:solid}
+.supplementary-access{margin-top:20px}
+.supplementary-access h5{font-size:14px;font-weight:500;margin:0 0 8px}
+.dashboard .resource-list .session-row{display:block}
+.record-heading{display:grid;grid-template-columns:100px 104px minmax(0,1fr);gap:8px 12px;align-items:baseline;width:100%;min-height:44px;padding:8px 0;border:0;background:none;color:var(--site-text);font:400 14px/1.8 var(--site-font);text-align:left;overflow-wrap:anywhere}
+.record-toggle{grid-template-columns:var(--site-disclosure-size) 100px 104px minmax(0,1fr);cursor:pointer}
+.record-date,.record-duration{color:var(--site-muted)}
+.record-title{font-weight:500}
+.record-notes{margin:8px 0 12px;padding-left:24px;font-size:14px;line-height:1.8}
+.record-notes h5{font-size:14px;font-weight:500;margin:16px 0 6px}
+.record-notes ul{padding-left:20px;margin:0 0 12px}
+.course-toggle:focus-visible,.record-toggle:focus-visible,.calendar-button:focus-visible{outline:2px solid var(--site-accent);outline-offset:4px}
+@media(min-width:768px){.dashboard{padding-top:64px}.dashboard-section{margin-top:48px}}
+@media(max-width:600px){
+ .course-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px}
+ .course-number{grid-column:1/-1}
+ .course-content{grid-column:1;grid-row:2}
+ .course-status{grid-column:2;grid-row:2;align-self:start}
+ .course-resources{grid-column:1/-1}
+ .record-heading{grid-template-columns:100px minmax(0,1fr)}
+ .record-toggle{grid-template-columns:var(--site-disclosure-size) 100px minmax(0,1fr)}
+ .record-title{grid-column:1/-1}
+ .record-toggle .record-title{grid-column:2/-1}
+}
+
+.dashboard .resource-collapse{font:400 14px/1.8 var(--site-font)}

@@ -1,0 +1,56 @@
+/* 和弦记号课程 · 课后练习（共享样式）。颜色、字体、圆角沿用 site-visual.css 的 --site-* 变量。 */
+html[data-chord-practice] body { margin: 0; background: var(--site-bg); color: var(--site-text); font-family: var(--site-font); }
+html[data-chord-practice] #chordPracticeApp { max-width: 720px; margin: 0 auto; padding: 12px 16px 40px; }
+.cp-top { display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: 13px; color: var(--site-muted); }
+.cp-back { color: inherit; text-decoration: none; }
+.cp-code { letter-spacing: .06em; text-transform: uppercase; }
+.cp-count { margin-left: auto; }
+.cp-card { padding: 20px 18px; border: 1px solid var(--site-border); border-radius: var(--site-radius-card); background: var(--site-panel); }
+.cp-start, .cp-result { text-align: center; }
+.cp-start h1, .cp-result h1 { margin: 4px 0 12px; font-size: 26px; }
+.cp-kicker { margin: 0; font-size: 13px; font-weight: 600; color: var(--site-accent); }
+.cp-hint, .cp-note, .cp-tip { margin: 4px 0 0; font-size: 13px; color: var(--site-muted); }
+.cp-lead { line-height: 1.7; }
+.cp-label { margin: 14px 0 8px; font-size: 17px; }
+/* 谱例：浅色纸面（与课件一致） */
+.cp-score, .cp-entry { color-scheme: light; background: #fff; border-radius: var(--site-radius-panel); padding: 6px 0; display: flex; justify-content: center; }
+.cp-score.is-wide { justify-content: flex-start; overflow-x: auto; }
+.cp-score svg, .cp-entry svg { display: block; flex: none; }
+.cp-entry { cursor: crosshair; touch-action: manipulation; }
+.cp-score .segment-highlight { fill: #e0e7ff; }
+.cp-target { margin: 6px 0 10px; text-align: center; font-size: 34px; }
+.cp-play { display: flex; gap: 8px; justify-content: center; margin: 8px 0; }
+/* 拼记号的按钮 */
+.cp-builder { margin-top: 10px; }
+.cp-preview { min-height: 44px; margin: 6px 0 10px; text-align: center; font-size: 32px; }
+.cp-placeholder { font-size: 14px; color: var(--site-muted); }
+.cp-row { display: grid; grid-template-columns: 2.6em 1fr; align-items: start; gap: 8px; margin: 8px 0; }
+.cp-row-title { padding-top: 10px; font-size: 13px; color: var(--site-muted); }
+.cp-bass-row { margin-top: -2px; }
+.cp-bass-row[hidden] { display: none; }
+.cp-keys, .cp-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+.cp-tools { justify-content: center; margin-top: 8px; }
+.cp-key { min-width: 40px; min-height: 40px; padding: 4px 8px; border: 1px solid var(--site-border); border-radius: var(--site-radius-control); background: var(--site-panel); color: var(--site-text); font: inherit; font-size: 16px; cursor: pointer; touch-action: manipulation; }
+.cp-key .cs { font-size: 18px; }
+.cp-key[aria-pressed="true"] { background: var(--site-tint); color: var(--site-tint-text); border-color: var(--site-accent); }
+/* 反馈与操作 */
+.cp-feedback { min-height: 1.5em; margin: 14px 0 0; line-height: 1.7; }
+.cp-feedback .cs { font-size: 1.15em; }
+.cp-feedback.is-right { color: var(--site-success); }
+.cp-feedback.is-wrong { color: var(--site-error); }
+.cp-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+.cp-primary, .cp-ghost { min-height: 44px; padding: 10px 18px; border-radius: var(--site-radius-control); font: inherit; font-size: 15px; cursor: pointer; touch-action: manipulation; }
+.cp-primary { border: 1px solid var(--site-accent); background: var(--site-accent); color: var(--site-on-accent); }
+.cp-primary:disabled { opacity: .4; cursor: default; }
+.cp-ghost { border: 1px solid var(--site-border); background: var(--site-panel); color: var(--site-text); }
+.cp-small { min-height: 36px; padding: 6px 14px; font-size: 14px; }
+/* 题号 */
+.cp-chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 16px; }
+.cp-chip { min-width: 38px; min-height: 32px; padding: 2px 6px; border: 1px solid var(--site-border); border-radius: var(--site-radius-pill); background: var(--site-panel); color: var(--site-muted); font: inherit; font-size: 13px; cursor: pointer; }
+.cp-chip.is-solved { background: var(--site-success-bg); border-color: var(--site-success-border); color: var(--site-success); }
+.cp-chip.is-needs-review, .cp-chip.is-attempted { background: var(--site-warning-bg); color: var(--site-warning); }
+.cp-chip.is-current { outline: 2px solid var(--site-accent); outline-offset: 1px; }
+.cp-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.cp-stats p { margin: 0; display: grid; gap: 2px; }
+.cp-stats b { font-size: 22px; }
+.cp-stats span { font-size: 12px; color: var(--site-muted); }

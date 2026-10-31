@@ -1,0 +1,11 @@
+/* Only opt-in notation hosts. Teaching notation keeps its light-paper palette. */
+[data-notation] { color-scheme: light; color: #1e293b; background: #fff; min-width: 0; }
+[data-notation] svg {display: block; max-width: 100%; height: auto; margin-inline: auto;}
+[data-notation][hidden] {display: none;}
+/* 记谱文字字体（全站共用）：和弦记号的字母与数字用 Edwin，升降号与和弦记号专用符号用 Bravura Text。
+   字体与许可证见 assets/fonts（SIL Open Font License 1.1，原样使用、未修改）。 */
+@font-face { font-family: 'Edwin'; src: url('../../assets/fonts/edwin/Edwin-Roman.otf') format('opentype'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Bravura Text'; src: url('../../assets/fonts/bravura/BravuraText.woff2') format('woff2'); font-display: block; }
+
+/* 谱面文字不描边（规范 N13）：VexFlow 默认会给文字加 0.3px 黑色描边，彩色文字看起来像有一圈深色轮廓 */
+svg text { stroke: none; }

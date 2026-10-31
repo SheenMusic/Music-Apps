@@ -1,0 +1,2 @@
+/* Beyond the Horizon only: preserve the full score frame at its native ratio. */
+.animated-score video{display:block;width:100%;max-width:3840px;height:auto;max-height:none;aspect-ratio:16/9;object-fit:contain;background:#111;border-radius:var(--site-radius-panel)}

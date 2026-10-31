@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-visual="learning" data-theory-lesson>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex">
+  <title>乐理 · 和弦记号 01｜三和弦</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../../MT-Intervals/shared/styles/learning-base.css">
+  <link rel="stylesheet" href="../../MT-Intervals/shared/styles/learning-components.css">
+  <link rel="stylesheet" href="../../shared/notation/notation-styles.css">
+  <link rel="stylesheet" href="../shared/chord-stage.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="topbar"><span>MUSIC THEORY · CHORD SYMBOL</span><span class="header-right"><button class="section-toggle" id="stepCount" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="sectionMenu" title="本课小节">开始</button><span class="lesson-badge">LESSON 01</span></span></div>
+    <nav class="section-menu" id="sectionMenu" aria-label="本课小节" hidden></nav>
+    <div class="progress-wrap" aria-label="本节学习进度"><div class="progress" id="progress"></div></div>
+  </header>
+  <main>
+    <section class="card hero" id="home" aria-labelledby="homeTitle">
+      <div class="home-course-title"><p class="home-course-index">和弦记号 1</p><h1 id="homeTitle" tabindex="-1">三和弦</h1></div>
+      <p class="theory-note">学习中点击右上角的进度，可展开小节目录并跳转。课件有声音示例，点击后才会发声；iPhone 请先关闭静音模式。</p>
+      <!-- 开始页功能区（规范 L10）：五个位置顺序固定；未上线的功能加 hidden 预留，上线时删去 hidden 并填链接 -->
+      <div class="home-actions">
+        <button class="primary" id="startLearning" type="button">开始学习</button>
+        <a class="secondary" href="practice/">课后练习</a>
+        <a class="secondary" href="https://www.musictheory.net/exercises/chord/brwyryxybbnyyrbb" target="_blank" rel="noopener">辅助练习 ↗</a>
+        <a class="ghost" href="#" target="_blank" rel="noopener" hidden>查看 PDF 教材 ↗</a>
+        <a class="ghost" href="../glossary/">课程术语表</a>
+      </div>
+      <p class="sample-credit">钢琴采样：Salamander Grand Piano · Alexander Holm · CC BY 3.0</p>
+</section>
+
+    <section class="card lesson" id="lesson" hidden aria-label="教学步骤">
+      <div class="lesson-board" id="lessonBoard"></div>
+      <div class="lesson-content" id="lessonContent"><div class="theory-explanation" id="lessonExplanation"></div></div>
+    </section>
+
+    <section class="card lesson-complete" id="summary" hidden aria-labelledby="summaryTitle">
+      <p class="home-course-index">和弦记号 1</p>
+      <h1 id="summaryTitle" tabindex="-1">第一课学习完成</h1>
+      <p class="lead">你已经能读写三和弦的记号：从根音和后缀推导和弦音，用斜线记号写出转位，并知道和弦记号只规定和弦与低音，不规定具体排列。</p>
+      <div class="home-actions">
+        <a class="primary" href="practice/">开始课后练习</a>
+        <a class="secondary" href="https://www.musictheory.net/exercises/chord/brwyryxybbnyyrbb" target="_blank" rel="noopener">辅助练习 ↗</a>
+        <a class="secondary" href="../glossary/">课程术语表</a>
+        <button class="secondary" id="backHome" type="button">返回课程首页</button>
+        <button class="ghost" id="restart" type="button">从导论重新开始</button>
+      </div>
+    </section>
+  </main>
+  <nav class="lesson-footer-zone lesson-nav" id="lessonNav" aria-label="教学步骤"><button class="ghost" id="prevBtn" type="button">← 上一步</button><button class="primary" id="nextBtn" type="button">继续 →</button></nav>
+  <div class="footer">©Sheen · Music Theory</div>
+</div>
+<noscript><p class="no-script">互动教学需要 JavaScript。</p></noscript>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
+<script src="../../shared/notation/notation-config.js?v=20261029b"></script>
+<script src="../../shared/notation/notation-renderer.js?v=20261029b"></script>
+<script src="../../MT-Intervals/shared/learning/theory-lesson.js?v=20261031a"></script>
+<script src="../shared/chord-stage.js?v=20261029e"></script>
+<script src="../shared/chord-lesson.js?v=20261031a"></script>
+<script src="lesson.js?v=20261031a"></script>
+</body>
+</html>

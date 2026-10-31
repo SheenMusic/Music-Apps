@@ -1,0 +1,49 @@
+/* 仅维护必要教学信息；不要填写完整会议转写或联系方式。
+ * purchasedMinutes 为购买分钟；sessions 每次追加一条，余额自动计算。
+ * 只知道日期和时长时，填写 date 和 durationSeconds（实际秒数，自动四舍五入到分钟）。
+ * 已知精确起止时，可改用带时区的 start/end；两种时长来源不能同时填写。
+ * topics / homework 为可选文字数组；learningFocus 是可选学习方向。
+ */
+const studentData = {
+  studentName: '阿润',
+  courses: [
+      {
+      id: 'interval-theory',
+      title: '音程理论训练课',
+      enrollmentTitle: '音程理论训练课',
+      status: 'active',
+      accessEnabled: true,
+      currentLessons: [5],
+      accessibleLessons: [1, 2, 3, 4, 5],
+      accessibleSupplementary: []
+    },
+    {
+      id: 'private-lesson-20261022',
+      type: 'private-lesson',
+      title: 'private lesson',
+      status: 'active',
+      accessEnabled: false,
+      lessonPackage: {
+        purchasedMinutes: 600,
+        start: '2026-10-22T00:00:00+08:00',
+        end: '2027-01-22T00:00:00+08:00',
+        sessions: [
+          {
+            id: 'session-01',
+            date: '2026-10-22',
+            durationSeconds: 4644,
+            title: '需求分析和学习规划',
+            topics: ['视频视觉升级｜乐谱制作工具｜项目驱动学习｜AI工具和个人发展'],
+            homework: [
+              '视频制作（优先）：准备Sibelius；梳理视频视觉需求，探索升级方案并整理问题。',
+              '乐理自评（中期）：借助AI探索乐理知识体系，诊断自身薄弱环节，形成初步学习计划并反馈。'
+            ]
+          }
+        ]
+      }
+    }
+  ],
+    learningPeriods: [
+      {id: 'term-01', courseId: 'interval-theory', start: '2026-10-29T00:00:00+08:00', end: '2026-11-05T00:00:00+08:00'}
+    ]
+  };

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "pusa-man",
+    "title": "菩萨蛮",
+    "secondaryTitle": "小山重叠金明灭",
+    "type": "paid",
+    "instrumentation": "Voice & Piano",
+    "price": 9,
+    "currency": "CNY",
+    "url": "/scores/pusa-man/",
+    "preview": "/scores/pusa-man/assets/score-preview.png",
+    "video": "/scores/pusa-man/assets/pusa-man-demo.mp4",
+    "pages": 3,
+    "scorePages": 2,
+    "performer": "刘欢",
+    "words": "温庭筠【唐】",
+    "music": "刘欢",
+    "transcription": "Sheen",
+    "source": "original studio recording"
+  },
+  {
+    "id": "wo-huai-nian-de",
+    "title": "我怀念的",
+    "secondaryTitle": "孙燕姿",
+    "type": "paid",
+    "instrumentation": "Voice & Piano",
+    "price": 9,
+    "currency": "CNY",
+    "url": "/scores/wo-huai-nian-de/",
+    "preview": "/scores/wo-huai-nian-de/assets/score-preview.png",
+    "previewUrl": "https://v.douyin.com/kTtY7OTFDfw/",
+    "pages": 2,
+    "scorePages": 2,
+    "performer": "孙燕姿",
+    "transcription": "Sheen",
+    "source": "original studio recording"
+  }
+]

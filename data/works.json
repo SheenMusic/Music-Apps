@@ -1,0 +1,335 @@
+[
+  {
+    "id": "orig-001",
+    "slug": "opening-pulse",
+    "title": "Opening Pulse",
+    "category": "original",
+    "year": 2026,
+    "description": {
+      "zh": "为游戏 Opening 场景创作的 16 秒 Swing Jazz 短篇。作品不依赖明确调性与功能和声，以节奏推进、Chord Voicing 与 Voice Leading 为主要材料，在紧凑的四重奏编制中建立鲜明的开场感。",
+      "en": "A 16-second swing jazz piece composed for a game opening scene. Rather than relying on a clear tonality or functional harmony, it uses rhythmic momentum, chord voicing and voice leading as its primary materials to establish a distinct opening within a compact quartet."
+    },
+    "audio": "/works/opening-pulse/assets/audio.mp3",
+    "score": "/works/opening-pulse/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [],
+    "order": 1,
+    "productionDate": "2026-08",
+    "duration": "0:16",
+    "genres": [
+      "Swing Jazz",
+      "Game Music"
+    ],
+    "instrumentation": [
+      "Alto Saxophone",
+      "Piano",
+      "Bass",
+      "Drums"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Studio Alto Sax",
+      "Pianoteq",
+      "Roots Upright",
+      "Studio Drummer"
+    ]
+  },
+  {
+    "id": "orig-002",
+    "slug": "before-the-scream",
+    "title": "Before the Scream",
+    "category": "original",
+    "year": 2026,
+    "description": {
+      "zh": "为 Jump Scare 前逐渐累积的紧张感而创作的弦乐作品。作品弱化明确旋律与调性，通过音色、音域、不协和音程与声响密度的变化建立不稳定的音响空间，并运用 Artificial Harmonics、Sul ponticello、Tritone、Minor 2nd 以及局部 Controlled Aleatory，使心理压力随时间逐渐增加。",
+      "en": "A string piece composed to build tension before a jump scare. Clear melody and tonality are downplayed; changes in timbre, register, dissonant intervals and sound density create an unstable sonic space. Artificial harmonics, sul ponticello, tritones, minor seconds and passages of controlled aleatory gradually increase psychological tension."
+    },
+    "audio": "/works/before-the-scream/assets/audio.mp3",
+    "score": "/works/before-the-scream/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [],
+    "order": 2,
+    "productionDate": "2026-07",
+    "duration": "1:11",
+    "genres": [
+      "Horror",
+      "Cinematic Music"
+    ],
+    "instrumentation": [
+      "Violin I",
+      "Violin II",
+      "Viola",
+      "Cello",
+      "Double Bass"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Modern Scoring Strings (MSS)"
+    ]
+  },
+  {
+    "id": "orig-003",
+    "slug": "the-enchanted-box",
+    "title": "The Enchanted Box",
+    "category": "original",
+    "year": 2023,
+    "description": {
+      "zh": "以绘本般的 Fantasy 场景为想象背景创作的木管四重奏。作品从 Octatonic Scale 构建动机，通过动机发展、声部间的传递与模仿以及对位处理展开，并利用四种木管乐器不同的音色与音域，营造逐渐展开的温和、幻想性世界。",
+      "en": "A woodwind quartet inspired by a picture-book-like fantasy scene. Motifs drawn from the octatonic scale unfold through development, exchange and imitation between parts, and contrapuntal writing. The contrasting timbres and registers of the four woodwinds create a gentle fantasy world that gradually opens up."
+    },
+    "audio": "/works/the-enchanted-box/assets/audio.mp3",
+    "score": "/works/the-enchanted-box/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [],
+    "order": 3,
+    "productionDate": "2023-11",
+    "duration": "1:11",
+    "genres": [
+      "Fantasy",
+      "Chamber Music"
+    ],
+    "instrumentation": [
+      "Flute",
+      "Oboe",
+      "Clarinet",
+      "Bassoon"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "NotePerformer"
+    ]
+  },
+  {
+    "id": "orig-004",
+    "slug": "beyond-the-horizon",
+    "title": "Beyond the Horizon",
+    "category": "original",
+    "year": 2022,
+    "description": {
+      "zh": "为宏大影像场景创作的管弦乐作品。从抒情而开阔的主题逐渐发展至具有战斗行进感的紧张段落，并通过多次转调、节奏变化以及共同旋律动机的持续发展与变形，在不同音乐情绪之间保持整体统一。",
+      "en": "An orchestral piece composed for a large-scale visual scene. A lyrical, expansive theme gradually develops into a tense passage with the character of a battle march. Repeated modulations, rhythmic changes and the continuing development and transformation of shared melodic motifs maintain unity across different musical moods."
+    },
+    "audio": "/works/beyond-the-horizon/assets/audio.mp3",
+    "score": "/works/beyond-the-horizon/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [],
+    "order": 4,
+    "productionDate": "2022-01",
+    "duration": "2:04",
+    "genres": [
+      "Cinematic",
+      "Orchestral Music"
+    ],
+    "instrumentation": [
+      "Full Orchestra"
+    ],
+    "roles": [
+      "Composition",
+      "Arrangement",
+      "Score Preparation",
+      "Audio Production"
+    ],
+    "soundLibraries": [
+      "Orchestral Tools Berlin Series",
+      "Modern Scoring Strings (MSS)"
+    ]
+  },
+  {
+    "id": "trans-001",
+    "slug": "poker-face",
+    "title": "Poker Face",
+    "category": "transcription",
+    "year": null,
+    "description": "A complete voice-and-piano transcription of the Glee Cast recording of Poker Face, performed as a duet by Lea Michele and Idina Menzel. Both vocal parts are notated on a single staff, using harmonic intervals when their rhythms align and independent voices when they differ.\n\nThe performance features highly flexible timing and extensive piano ornamentation. The transcription establishes a readable metric framework informed by Lady Gaga’s original dance version, while aiming to preserve the phrasing, rhythmic character, and ornamental detail of the Glee performance.",
+    "audio": "/works/poker-face/assets/audio.mp3",
+    "score": "/works/poker-face/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Glee Cast — Lea Michele & Idina Menzel"
+      },
+      {
+        "role": "Words",
+        "name": "Lady Gaga"
+      },
+      {
+        "role": "Music",
+        "name": "Lady Gaga & RedOne"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 1,
+    "duration": "3:41",
+    "scope": "Full transcription",
+    "source": {
+      "description": "Glee Cast recording"
+    },
+    "originalArtist": "Lady Gaga",
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
+  },
+  {
+    "id": "trans-002",
+    "slug": "guo-bu-qu",
+    "title": "過不去",
+    "category": "transcription",
+    "year": null,
+    "description": "A complete voice-and-piano transcription of A-Mei’s original studio recording of Guò Bú Qù, from the album 也許明天. The piano accompaniment becomes particularly dense during the song’s more emotionally intense vocal passages, making individual notes and inner voices challenging to distinguish by ear.\n\nThe transcription aims to reconstruct these piano textures as faithfully as possible while translating the recording’s flexible pulse and expressive timing into clear, readable rhythmic notation.",
+    "audio": "/works/guo-bu-qu/assets/audio.mp3",
+    "score": "/works/guo-bu-qu/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "A-Mei (張惠妹)"
+      },
+      {
+        "role": "Words",
+        "name": "廖莹如"
+      },
+      {
+        "role": "Music",
+        "name": "伍冠谚 · 易桀齐"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 2,
+    "secondaryTitle": "Guò Bú Qù",
+    "duration": "3:45",
+    "scope": "Full transcription",
+    "source": {
+      "description": "Original studio recording from 也許明天"
+    },
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
+  },
+  {
+    "id": "trans-003",
+    "slug": "shinunoga-ii-wa",
+    "title": "死ぬのがいいわ",
+    "category": "transcription",
+    "year": null,
+    "description": "A complete voice-and-piano transcription of Fujii Kaze’s short live performance of Shinunoga E-Wa on Tetsuko’s Room. The performance features expressive timing and spontaneous piano playing, with the main transcription challenges involving rhythmic interpretation and harmonic detail.\n\nThe score also requires careful handling of Japanese lyrics and their alignment with the vocal notation.",
+    "audio": "/works/shinunoga-ii-wa/assets/audio.mp3",
+    "score": "/works/shinunoga-ii-wa/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Lyrics",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Music",
+        "name": "Fujii Kaze (藤井 風)"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 3,
+    "secondaryTitle": "Shinunoga E-Wa",
+    "duration": "1:01",
+    "scope": "Complete transcription of the selected live performance",
+    "source": {
+      "description": "Live performance on Tetsuko’s Room",
+      "performanceDate": "2025-09-08"
+    },
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
+  },
+  {
+    "id": "trans-004",
+    "slug": "haru-haru",
+    "title": "하루하루",
+    "category": "transcription",
+    "year": null,
+    "description": "A complete transcription of Baek A-yeon’s shortened live rendition of BIGBANG’s Haru Haru, performed on KBS’s You Hee-yeol’s Sketchbook. Her interpretation presents the original electronic K-pop song as a compact, lyrical voice-and-piano performance.\n\nThe transcription focuses on presenting this stripped-down version in a clear, concise score, including the accurate placement and alignment of Korean lyrics within the vocal notation.",
+    "audio": "/works/haru-haru/assets/audio.mp3",
+    "score": "/works/haru-haru/assets/score.pdf",
+    "scoreMode": "preview",
+    "video": null,
+    "thumbnail": null,
+    "credits": [
+      {
+        "role": "Performed by",
+        "name": "Baek A-yeon (백아연)"
+      },
+      {
+        "role": "Lyrics",
+        "name": "G-Dragon"
+      },
+      {
+        "role": "Music",
+        "name": "G-Dragon & Daishi Dance"
+      },
+      {
+        "role": "Transcription",
+        "name": "Sheen"
+      }
+    ],
+    "order": 4,
+    "secondaryTitle": "Haru Haru",
+    "duration": "1:23",
+    "scope": "Complete transcription of the selected shortened live performance",
+    "source": {
+      "description": "Live performance on You Hee-yeol’s Sketchbook (KBS)",
+      "performanceDate": "2022-06-17"
+    },
+    "originalArtist": "BIGBANG",
+    "projectType": "Voice & Piano Transcription",
+    "instrumentation": [
+      "Voice",
+      "Piano"
+    ]
+  }
+]

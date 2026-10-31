@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html data-visual="learning" data-theory-lesson data-mt-shell lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>乐理 · 音程 04｜互动学习</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../shared/styles/learning-base.css">
+  <link rel="stylesheet" href="../shared/styles/learning-components.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../../shared/styles/course-shell.css">
+  <link rel="stylesheet" href="../../shared/notation/notation-styles.css">
+  <link rel="stylesheet" href="../../MT-Chord/shared/chord-stage.css">
+  <link rel="stylesheet" href="lesson.css?v=20261029a">
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="topbar"><span class="topbar-brand">MUSIC THEORY · INTERVAL</span><span class="topbar-right"><button class="section-toggle" id="stepCount" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="sectionMenu" title="本课小节">开始</button><span class="lesson-badge">LESSON 04</span></span></div>
+  <nav class="section-menu" id="sectionMenu" aria-label="本课小节" hidden></nav>
+  <div class="progress-wrap" aria-label="学习进度"><div class="progress" id="progress"></div></div>
+</header>
+<main>
+<section class="card hero" id="home" aria-labelledby="homeTitle">
+  <div class="home-course-title"><div class="home-course-index">音程 4</div><h1 id="homeTitle" tabindex="-1">单音程与复音程</h1></div>
+  <p class="theory-note">学习中点击右上角的进度，可展开小节目录并跳转。课件有声音示例，点击后才会发声；iPhone 请先关闭静音模式。</p>
+  <!-- 开始页功能区（规范 L10）：五个位置顺序固定；未上线的功能加 hidden 预留 -->
+  <div class="home-actions">
+    <button class="primary" id="startLearning" type="button">开始学习</button>
+    <a class="secondary btn-link" href="practice/index.html">课后练习</a>
+    <a class="secondary btn-link aux-practice-link" href="https://www.musictheory.net/exercises/interval-construction/oy991yqyryb99999bbnbdyrby8" target="_blank" rel="noopener">辅助练习 ↗</a>
+    <a class="ghost btn-link" href="assets/lesson-04.pdf" target="_blank" rel="noopener">查看 PDF 教材 ↗</a>
+    <a class="ghost btn-link" href="#" hidden>课程术语表</a>
+  </div>
+  <p class="sample-credit">钢琴采样：Salamander Grand Piano · Alexander Holm · CC BY 3.0</p>
+</section>
+
+<section class="card lesson" id="lesson" hidden aria-label="教学步骤">
+  <div class="lesson-board" id="lessonBoard"></div>
+  <div class="lesson-content" id="lessonContent"><div class="theory-explanation" id="lessonExplanation"></div></div>
+</section>
+
+<section class="card lesson-complete" id="summary" hidden aria-labelledby="summaryTitle">
+  <div class="kicker">LESSON COMPLETE</div>
+  <h1 id="summaryTitle" tabindex="-1">本课学习完成</h1>
+  <div class="confetti-pop" aria-hidden="true">🎉</div>
+  <div class="home-actions completion-actions">
+    <a class="primary btn-link" href="practice/index.html">开始课后练习</a>
+    <a class="secondary btn-link aux-practice-link" href="https://www.musictheory.net/exercises/interval-construction/oy991yqyryb99999bbnbdyrby8" target="_blank" rel="noopener">辅助练习 ↗</a>
+    <button class="secondary" id="backHome" type="button">返回课程首页</button>
+    <button class="ghost" id="restart" type="button">从头重新开始</button>
+  </div>
+</section>
+</main>
+<nav class="lesson-footer-zone lesson-nav" id="lessonNav" aria-label="教学步骤"><button class="ghost" id="prevBtn" type="button">← 上一步</button><button class="primary" id="nextBtn" type="button">继续 →</button></nav>
+<div class="footer">©Sheen · Music Theory</div>
+</div>
+<noscript><p class="no-script">互动教学需要 JavaScript。</p></noscript>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js"></script>
+<script src="../../shared/notation/notation-config.js?v=20261029b"></script>
+<script src="../../shared/notation/notation-renderer.js?v=20261029b"></script>
+<script src="../shared/learning/theory-lesson.js?v=20261031a"></script>
+<script src="../../MT-Chord/shared/chord-stage.js?v=20261029e"></script>
+<script src="../../MT-Chord/shared/chord-lesson.js?v=20261031a"></script>
+<script src="lesson.js?v=20261031a"></script>
+</body>
+</html>

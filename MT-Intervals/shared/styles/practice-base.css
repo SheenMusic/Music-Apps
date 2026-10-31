@@ -1,0 +1,2 @@
+/* Compatibility entry; shared Practice styling has one source of truth. */
+@import url("../../../shared/styles/practice-base.css");

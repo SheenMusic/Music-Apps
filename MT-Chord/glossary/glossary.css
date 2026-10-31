@@ -1,0 +1,20 @@
+/* 课程术语表。外壳与配色沿用 Learning 页面（learning-base.css / site-visual.css）。 */
+html[data-theory-lesson] .glossary { text-align: left; }
+html[data-theory-lesson] .glossary .home-course-title { text-align: center; }
+html[data-theory-lesson] .glossary-search input { width: 100%; min-height: 44px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--site-radius-control); background: var(--card); color: var(--text); font: inherit; font-size: 15px; }
+html[data-theory-lesson] .glossary-search input:focus-visible { outline: 2px solid var(--site-focus); outline-offset: 2px; }
+html[data-theory-lesson] .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+html[data-theory-lesson] .glossary-lesson { margin-top: 28px; }
+html[data-theory-lesson] .glossary-lesson h2 { font-size: var(--theory-text-heading-size); line-height: var(--theory-text-heading-leading); margin: 0 0 12px; }
+html[data-theory-lesson] .glossary-lesson-number { color: var(--primary); margin-right: 10px; font-weight: 700; }
+html[data-theory-lesson] .glossary dl { margin: 0; display: grid; gap: 0; }
+html[data-theory-lesson] .glossary-term { padding: 12px 0; border-top: 1px solid var(--border); }
+html[data-theory-lesson] .glossary-term dt { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 16px; }
+html[data-theory-lesson] .glossary-en { font-size: var(--theory-text-secondary-size); color: var(--muted); }
+html[data-theory-lesson] .glossary-term dd { margin: 4px 0 0; font-size: var(--theory-text-list-size); line-height: 1.75; color: var(--text); }
+html[data-theory-lesson] .glossary-example { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 6px; font-size: 22px; }
+html[data-theory-lesson] .glossary .theory-note { margin-top: 16px; }
+@media (prefers-color-scheme: dark) {
+  /* 记号在深色背景上提亮 */
+  html[data-theory-lesson] .glossary { --chord-root: #a5b4fc; --chord-third: #5eead4; --chord-bass: #fca5a5; }
+}
