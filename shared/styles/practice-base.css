@@ -612,3 +612,14 @@ html[data-practice] *, html[data-practice] *::before, html[data-practice] *::aft
 }
 
 html[data-practice] #practiceApp {width: 100%; max-width: 520px;}
+
+/* 结业测验：分项掌握（只有带 modules 的练习显示） */
+:where(html[data-visual="practice"]) .module-list { display: grid; gap: 10px; }
+:where(html[data-visual="practice"]) .module-row { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "name value" "bar bar"; gap: 6px 12px; font-size: 0.88rem; }
+:where(html[data-visual="practice"]) .module-name { grid-area: name; color: var(--text-main); }
+:where(html[data-visual="practice"]) .module-value { grid-area: value; font-weight: 700; }
+:where(html[data-visual="practice"]) .module-bar { grid-area: bar; height: 8px; border-radius: 4px; background: #e2e8f0; overflow: hidden; }
+:where(html[data-visual="practice"]) .module-bar span { display: block; height: 100%; border-radius: inherit; background: #22c55e; }
+:where(html[data-visual="practice"]) .module-row[data-level="mid"] .module-bar span { background: #f59e0b; }
+:where(html[data-visual="practice"]) .module-row[data-level="low"] .module-bar span { background: #ef4444; }
+:where(html[data-visual="practice"]) .module-row[data-level="low"] .module-value { color: #dc2626; }

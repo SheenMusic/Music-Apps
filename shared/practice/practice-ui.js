@@ -97,6 +97,11 @@
         </div>
       </div>
 
+      <div class="detail-list-wrapper module-breakdown hidden" id="moduleBreakdownWrap">
+        <h3>分项掌握（按一次通过计算）</h3>
+        <div class="module-list" id="moduleBreakdown"></div>
+      </div>
+
       <div class="detail-list-wrapper">
         <h3>逐题答题记录（含错误尝试）</h3>
         <div class="detail-list" id="detailList"></div>
@@ -213,6 +218,18 @@
   function renderResults(s) {
     text('resAccuracy', s.accuracy + '%'); text('resTotalTime', MTFormatTime(s.seconds)); text('resTotalAttempts', s.totalAttempts + '次');
     buttonNav('resultQuestionNav', s, true);
+    show('moduleBreakdownWrap', s.modules.length > 0);
+    byId('moduleBreakdown').replaceChildren(...s.modules.map(m => {
+      const row = document.createElement('div'); row.className = 'module-row';
+      const level = PracticeEngine.masteryLabel(m.rate);
+      row.dataset.level = m.rate === 100 ? 'high' : m.rate >= 75 ? 'mid' : 'low';
+      const name = document.createElement('span'); name.className = 'module-name'; name.textContent = m.title;
+      const bar = document.createElement('span'); bar.className = 'module-bar';
+      bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', `一次通过 ${m.firstPass}/${m.total}`);
+      const fill = document.createElement('span'); fill.style.width = m.rate + '%'; bar.append(fill);
+      const value = document.createElement('span'); value.className = 'module-value'; value.textContent = `${m.firstPass}/${m.total} · ${level}`;
+      row.append(name, bar, value); return row;
+    }));
     byId('detailList').replaceChildren();
     s.stats.forEach((stat, index) => {
       const item = document.createElement('div'); item.className = 'detail-item';

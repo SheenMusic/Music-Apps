@@ -21,6 +21,15 @@
       return {seconds, accuracy: attempts ? ((solvedCount() / attempts) * 100).toFixed(1) : '0.0',
         totalAttempts: attempts, solved: solvedCount(), total: questions.length};
     }
+    // 可选：data.modules = [{id, title}]，题目带 module 时，按单元统计一次通过率（结业测验用）
+    function breakdown() {
+      if (!data.modules?.length || !stats.length) return [];
+      return data.modules.map(({id, title}) => {
+        const own = questions.flatMap((q, i) => q.module === id ? [stats[i]] : []);
+        const firstPass = own.filter(s => s.isSolved && s.attempts === 1).length;
+        return {id, title, total: own.length, firstPass, rate: own.length ? Math.round(firstPass / own.length * 100) : 0};
+      }).filter(m => m.total);
+    }
     const api = {
       start() {
         mode = 'practice'; index = 0; started = now(); ended = null; attempts = 0;
@@ -70,8 +79,8 @@
       },
       backToResults() {if (mode === 'review') mode = 'result';},
       reset() {mode = 'start'; index = 0; started = 0; ended = null; questionStarted = null; stats = []; attempts = 0;},
-      state() {return {mode, index, stats: clone(stats), history: clone(history), ...summary()};},
-      reportInput() {const s = summary(); return {type: data.reportType || 'mt', code: data.code, title: data.reportTitle || data.title, seconds: s.seconds, accuracy: s.accuracy, records: clone(stats)};}
+      state() {return {mode, index, stats: clone(stats), history: clone(history), modules: breakdown(), ...summary()};},
+      reportInput() {const s = summary(); return {type: data.reportType || 'mt', code: data.code, title: data.reportTitle || data.title, seconds: s.seconds, accuracy: s.accuracy, records: clone(stats), modules: breakdown()};}
     };
     return Object.freeze(api);
   }
@@ -79,5 +88,6 @@
     if (stat.isSolved) return stat.attempts === 1 ? 'solved' : 'needs-review';
     return stat.attempts > 0 ? 'attempted' : 'unanswered';
   }
-  root.PracticeEngine = Object.freeze({create, questionStatus});
+  const masteryLabel = rate => rate === 100 ? '熟练' : rate >= 75 ? '基本掌握' : '建议复习';
+  root.PracticeEngine = Object.freeze({create, questionStatus, masteryLabel});
 })(typeof window !== 'undefined' ? window : globalThis);

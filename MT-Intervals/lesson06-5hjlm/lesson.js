@@ -1,124 +1,180 @@
-/* Four review strategies from lesson-06.pdf. External exercise URLs are the
-   original PDF hyperlink annotations, not newly generated configurations. */
+/* 音程 · 第六课：音程的快速识别（综合复习）
+   以 assets/lesson-06.pdf 的四组判断方法为主线，按 1–5 课的「一步一句」重写：
+   一、二度与三度（参照音程 + 变化音推导）；二、四度与五度（三全音特例 + 谱面位形）；
+   三、六度与七度（借助转位）；四、复音程（减 7 回到单音程）；五、判断流程（把四种方法串成一条路线）。
+   每节后有课内 Quiz；全课结束进入 practice/ 结业测验，按单元量化学习成果。
+   讲解区：<strong> = 音乐术语；accent() = 重点词；warn() = 「注意」。
+   演示区与流程用和弦记号课程的共享实现（MT-Chord/shared）。规则见 docs/interactive-theory-lesson-standard.md。 */
 (() => {
   'use strict';
-  const exercises = {
-    seconds: [
-      ['大小二度识别', 'brwyryyroyybnyynbyb'],
-      ['增减二度识别', 'brwyrybyyeybnyynbyb'],
-      ['大小三度识别', 'brwyryyeybybnyynbyb'],
-      ['增减三度识别', 'brwyrynyyoybnyynbyb']
-    ],
-    fourths: [
-      ['纯四度 / 纯五度识别', 'brwyryyobyybnyynbyb'],
-      ['增减四度 / 五度识别', 'brwyrycyyydbnyynbyb']
-    ],
-    inversions: [
-      ['大小六度 / 七度识别', 'brwyryyyggybnyynbyb'],
-      ['增减六度 / 七度识别', 'brwyryobyycbnyynbyb']
-    ],
-    compound: [['9–15 度复音程识别', 'brwyry99999bnbynbyb']]
-  };
-  const modules = [
-    {
-      title: '二度与三度', group: 'seconds',
-      copy: `<h2>先找到自然音程的参照</h2><ul><li>自然二度中，<strong>B–C、E–F 是小二度</strong>，其余是大二度。</li><li>自然三度中，<strong>C–E、F–A、G–B 是大三度</strong>，其余是小三度。</li></ul><h2>再看变化音怎样改变距离</h2><p>先判断不带变化音的参考音程，再根据变化音推导性质。</p><ul><li>升高下音或降低上音 → 音程变窄。</li><li>降低下音或升高上音 → 音程变宽。</li></ul>`
-    },
-    {
-      title: '四度与五度', group: 'fourths',
-      copy: `<h2>抓住两个特例</h2><p>自然音程中，<strong>F–B 是增四度，B–F 是减五度</strong>，它们都是三全音。其余自然四度、五度是纯音程。</p><h2>先看度数，再判断性质</h2><ul><li>四度：一个音在线上，一个音在间上。</li><li>五度：两个音同在线上，或同在间上。</li></ul><p>先确认是四度还是五度，再对照纯音程或三全音；有变化音时，按变宽、变窄推导。<strong>位形帮助读度数，不直接决定性质。</strong></p>`
-    },
-    {
-      title: '六度与七度', group: 'inversions',
-      copy: `<h2>把大跨度转成熟悉的小跨度</h2><ul><li><strong>六度转位为三度。</strong></li><li><strong>七度转位为二度。</strong></li></ul><h2>判断转位，再还原性质</h2><p>先判断转位后的二度、三度，再把性质反转：<strong>大 ↔ 小，增 ↔ 减</strong>。例如大三度对应小六度，大二度对应小七度。</p><p>遇到不确定的六度、七度，不必从头逐个计算音数，先试着转位。</p>`
-    },
-    {
-      title: '复音程', group: 'compound',
-      copy: `<h2>先回到对应的单音程</h2><p>对于这组 <strong>9–15 度</strong>练习，将复音程度数减去 7，先判断对应单音程的性质。</p><h2>度数变化，性质保留</h2><p>对应单音程与复音程的<strong>大、小、纯、增、减性质相同</strong>。例如纯四度对应纯十一度。</p><p>点击左侧或上方的度数，整理每一组对应关系，再进入综合练习。</p>`
-    }
+  const {COLOR, CENTER} = ChordStage;
+
+  /* ---------- 谱例资料 ---------- */
+  const tone = (id, key, slot, extra = {}) => ({id, key, slot, ...extra});
+  const below = (id, slot, text, color = '#334155') => ({id, slot, text, color, drop: 0});
+  const above = (id, slot, text, extra = {}) => ({id, slot, text, anchor: 'middle', font: 'label', size: 16, color: '#4f46e5', ...extra});
+  const changed = {color: COLOR.bass};
+  const reference = {color: '#f87171'};
+
+  // 和声音程：notes 从低到高 [id, 音, extra]；上方标名称，下方可加说明。先低后高依次发声
+  const stack = (notes, name, under = null, lift = 30) => ({
+    tones: notes.map(([id, key, extra = {}]) => tone(id, key, CENTER, extra)),
+    staffSymbols: name ? [above('name', CENTER, name, {lift})] : [],
+    staffLabels: under ? [below('under', CENTER, under)] : [],
+    offsets: notes.map((_, i) => i * .5), play: true
+  });
+  const two = (lo, hi, name, under) => stack([['lo', lo], ['hi', hi]], name, under);
+  // 变化音推导：先给出去掉变化记号的参考音程，再把变化后的那个音标红
+  const altered = (lo, hi, name, under, which) => stack([['lo', lo, which === 'lo' ? changed : {}], ['hi', hi, which === 'hi' ? changed : {}]], name, under);
+  // 用转位认六、七度：「?」→ 上方加浅红参考音（下方音高八度）→ 标出答案
+  const guess = (lo, hi) => two(lo, hi, '?');
+  const lookUp = (lo, hi, ref, under) => ({...stack([['lo', lo], ['hi', hi], ['ref', ref, reference]], '?', under)});
+  const answer = (lo, hi, ref, name, under) => ({...stack([['lo', lo], ['hi', hi], ['ref', ref, reference]], name, under), play: false});
+
+  // 度数对照（面板）：上一行 top，下一行 bottom；marks 'cN' 高亮上一行为 N 的那一列
+  const table = (key, tags, top, bottom, foot, marks = []) => ({panel: {key, marks, html:
+    `<div class="sums" style="--columns:${top.length}"><span class="sm-tag">${tags[0]}</span><span class="sm-tag">${tags[1]}</span>` +
+    top.map((n, i) => `<span class="sm-cell" data-mark="c${n}" style="grid-column:${i + 2};grid-row:1">${n}</span>` +
+      `<span class="sm-cell" data-mark="c${n}" style="grid-column:${i + 2};grid-row:2">${bottom[i]}</span>`).join('') +
+    `<span class="sm-total">${foot}</span></div>`}});
+  const range = (a, b) => Array.from({length: b - a + 1}, (_, i) => a + i);
+  const inversionTable = marks => table('inv', ['原位', '转位'], range(1, 8), range(1, 8).map(n => 9 - n), '同一列相加 = 9', marks);
+  const compoundTable = marks => table('cmp', ['复音程', '单音程'], range(9, 15), range(2, 8), '复音程度数 − 7 = 单音程度数', marks);
+
+  // 判断流程（面板）：先读度数，再按度数走对应的路线
+  const ROUTES = [
+    ['r23', '二、三度', '找自然音程参照'],
+    ['r45', '四、五度', '纯音程 + F–B / B–F 特例'],
+    ['r67', '六、七度', '转位成三、二度'],
+    ['r9', '九度以上', '减 7 回到单音程']
   ];
-  const byID = id => document.getElementById(id);
-  let current = -1, compoundDegree = 9, inverted = false;
-  const names = ['二','三','四','五','六','七','八'];
-  function staffExample(interval) {
-    const upperY = interval === 4 ? 93 : 88;
-    const upperName = interval === 4 ? 'F' : 'G';
-    return `<figure><svg class="staff-example" viewBox="0 0 150 145" role="img" aria-label="C 与 ${upperName}：${interval === 4 ? '四度，一线一间' : '五度，同在线上'}">${[58,68,78,88,98].map(y=>`<line x1="12" y1="${y}" x2="138" y2="${y}"/>`).join('')}<line x1="33" y1="108" x2="58" y2="108"/><ellipse cx="45" cy="108" rx="7" ry="5" transform="rotate(-18 45 108)"/><ellipse cx="105" cy="${upperY}" rx="7" ry="5" transform="rotate(-18 105 ${upperY})"/><text x="40" y="136">C</text><text x="100" y="136">${upperName}</text></svg><figcaption>${interval === 4 ? '四度 · 一线一间' : '五度 · 同在线上'}</figcaption></figure>`;
-  }
-  function renderBoard() {
-    const board = byID('lessonBoard');
-    if(current === 0) board.innerHTML = `<p class="board-label">二度的例外</p><div class="board-pair"><p class="reference-notes">B–C　E–F</p><p class="reference-caption">小二度 · 其余自然二度为大二度</p></div><div class="board-divider"></div><p class="board-label">三度的参考锚点</p><div class="board-pair"><p class="reference-notes">C–E　F–A　G–B</p><p class="reference-caption">大三度 · 其余自然三度为小三度</p></div>`;
-    if(current === 1) board.innerHTML = `<p class="board-label">先看五线谱上的位形</p><div class="staff-examples">${staffExample(4)}${staffExample(5)}</div><div class="board-divider"></div><p class="reference-notes">F–B 增四度 · B–F 减五度</p><p class="reference-caption">自然四度、五度中的两个特例</p>`;
-    if(current === 2) {
-      board.innerHTML = `<p class="board-label">借助转位，换一个角度判断</p><div class="board-pair"><p class="board-equation" id="inversionSix"></p><p class="board-equation" id="inversionSeven"></p></div><p class="reference-caption">大 ↔ 小　增 ↔ 减</p><div class="board-controls"><button type="button" id="invertButton" aria-pressed="${inverted}">切换转位参照</button></div>`;
-      updateInversion();
-    }
-    if(current === 3) {
-      board.innerHTML = `<p class="board-label">复音程 → 对应单音程</p><p class="board-equation" id="compoundPair" aria-live="polite"></p><div class="board-controls" role="group" aria-label="选择复音程度数">${Array.from({length:7},(_,i)=>i+9).map(n=>`<button type="button" data-degree="${n}" aria-pressed="${n===compoundDegree}">${n} 度</button>`).join('')}</div><div class="board-divider"></div><p class="reference-caption">度数减去 7 · 性质保持不变</p><p class="reference-caption">纯十一度 → 纯四度</p>`;
-      updateCompound();
-    }
-  }
-  function updateInversion() {
-    byID('inversionSix').textContent = inverted ? '大三度 → 小六度' : '小六度 → 大三度';
-    byID('inversionSeven').textContent = inverted ? '大二度 → 小七度' : '小七度 → 大二度';
-    byID('invertButton').setAttribute('aria-pressed', String(inverted));
-  }
-  function updateCompound() {
-    byID('compoundPair').textContent = `${compoundDegree} 度 − 7 → ${names[compoundDegree - 9]}度`;
-    byID('lessonBoard').querySelectorAll('[data-degree]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.degree)===compoundDegree)));
-  }
-  const explanationTemplate = byID('reviewExplanation').innerHTML;
-  function renderModuleContent() {
-      const module = modules[current];
-      byID('moduleNumber').textContent = `复习 ${String(current+1).padStart(2,'0')}`;
-      byID('moduleTitle').textContent = module.title;
-      byID('moduleCopy').innerHTML = module.copy;
-      byID('exerciseLinks').replaceChildren(...exercises[module.group].map(([title,config])=>{
-        const link = document.createElement('a');link.className='secondary exercise-link';
-        link.href=`https://www.musictheory.net/exercises/interval/${config}`;
-        link.target='_blank';link.rel='noopener noreferrer';
-        link.setAttribute('aria-label',`${title}，MusicTheory.net 外部练习，新窗口打开`);
-        const text=document.createElement('span');text.textContent=title;
-        const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');
-        link.append(text,arrow);return link;
-      }));
-  }
-  const lessonView = TheoryLesson.create({board:byID('lessonBoard'),explanation:byID('reviewExplanation'),viewport:byID('lessonContent')});
-  const moduleSteps = modules.map(module=>({
-    id:`review-${module.group}`,kind:'new-concept',groupId:module.group,
-    boardKey:module.group,size:'expanded',
-    board:renderBoard,explanation:()=>explanationTemplate,mount:renderModuleContent
-  }));
-  function setStage(stage) {
-    const previous=current;
-    if(stage<0 || stage>=modules.length) lessonView.leave();
-    current = stage;
-    const reviewing = stage >= 0 && stage < modules.length;
-    byID('home').hidden = stage !== -1;
-    byID('lesson').hidden = !reviewing;
-    byID('summary').hidden = stage !== modules.length;
-    byID('lessonNav').hidden = !reviewing;
-    document.body.classList.toggle('review-active',reviewing);
-    document.body.classList.toggle('theory-active',reviewing);
-    const completed = stage < 0 ? 0 : Math.min(stage, modules.length);
-    TheoryLesson.progress(completed,modules.length,'复习模块');
-    byID('stepCount').textContent = stage === -1 ? '开始' : reviewing ? `${stage+1} / 4` : '完成';
-    if(reviewing) {
-      lessonView.show(moduleSteps[stage],{forward:stage>previous});
-      byID('prevBtn').textContent = stage === 0 ? '返回首页' : '← 上一步';
-      byID('nextBtn').textContent = stage === modules.length-1 ? '完成复习' : '继续 →';
-    }
-    window.scrollTo({top:0,behavior:'instant'});
-    byID(reviewing ? 'moduleTitle' : stage === -1 ? 'homeTitle' : 'summaryTitle').focus({preventScroll:true});
-  }
-  byID('startReview').addEventListener('click',()=>setStage(0));
-  byID('prevBtn').addEventListener('click',()=>setStage(current-1));
-  byID('nextBtn').addEventListener('click',()=>setStage(current+1));
-  byID('backHome').addEventListener('click',()=>setStage(-1));
-  byID('reviewAgain').addEventListener('click',()=>setStage(0));
-  byID('lessonBoard').addEventListener('click',event=>{
-    const button=event.target.closest('button');if(!button)return;
-    if(button.id==='invertButton'){inverted=!inverted;updateInversion()}
-    if(button.dataset.degree){compoundDegree=Number(button.dataset.degree);updateCompound()}
+  const flow = marks => ({panel: {key: 'flow', marks, html:
+    `<div class="flow"><p class="flow-head">① 先读度数</p>` +
+    ROUTES.map(([id, deg, how]) => `<div class="flow-row" data-mark="${id}"><b>${deg}</b><span>${how}</span></div>`).join('') +
+    `<p class="flow-foot">② 有变化音时，再判断变宽或变窄</p></div>`}});
+
+  /* ---------- 课程内容 ---------- */
+  const {steps, sections, section, group, quiz, accent, p, warn} = ChordLesson.builder();
+
+  // 一、二度与三度
+  section('seconds', '一', '二度与三度');
+  group('seconds', [
+    [p(`判断音程，总是先读<strong>度数</strong>，再定<strong>性质</strong>。定性质最快的办法，是先记住几个${accent('参照音程')}。`), flow([])],
+    [p(`自然二度中，只有 <strong>B–C、E–F</strong> 是${accent('小二度')}，其余都是大二度。`), [two('B3', 'C4', 'm2'), two('E4', 'F4', 'm2'), two('C4', 'D4', 'M2')], {sequence: 1400}],
+    [p(`自然三度中，<strong>C–E、F–A、G–B</strong> 是${accent('大三度')}，其余都是小三度。`), [two('C4', 'E4', 'M3'), two('F4', 'A4', 'M3'), two('G4', 'B4', 'M3'), two('D4', 'F4', 'm3')], {sequence: 1400}],
+    [p(`遇到变化音时，先${accent('去掉变化记号')}，判断参考音程的性质。`), [two('E4', 'G#4', '?'), two('E4', 'G4', 'm3', '参考音程')], {sequence: 1400}],
+    [p(`再看变化音：上方音升高、或下方音降低，音程${accent('变宽')}；上方音降低、或下方音升高，音程${accent('变窄')}。`), [two('E4', 'G4', 'm3'), altered('E4', 'G#4', 'M3', '上方音升高 → 变宽', 'hi')], {sequence: 1400}],
+    [p(`例如 E♭–G：E–G 是小三度，下方音降低，变宽一个半音，所以是${accent('大三度')}。`), [two('E4', 'G4', 'm3'), altered('Eb4', 'G4', 'M3', '下方音降低 → 变宽', 'lo')], {sequence: 1400}]
+  ]);
+  const HINT_ALT = '先去掉变化记号，参考音程是什么性质？变化音让它变宽还是变窄？';
+  quiz('fs-a', guess('F#4', 'A4'), {
+    question: '这个音程是：', options: [['M3', '大三度'], ['m3', '小三度'], ['d3', '减三度']], answer: 'm3',
+    right: '正确。F–A 是大三度；下方音升高，变窄一个半音，所以是小三度。', wrong: HINT_ALT
+  });
+  quiz('b-cs', guess('B4', 'C#5'), {
+    question: '这个音程是：', options: [['m2', '小二度'], ['M2', '大二度'], ['A2', '增二度']], answer: 'M2',
+    right: '正确。B–C 是小二度；上方音升高，变宽一个半音，所以是大二度。', wrong: HINT_ALT
+  });
+
+  // 二、四度与五度
+  section('fourths', '二', '四度与五度');
+  group('fourths', [
+    [p(`自然四度、五度，绝大多数是<strong>纯音程</strong>。`), [two('C4', 'F4', 'P4'), two('C4', 'G4', 'P5')], {sequence: 1400}],
+    [p(`特例只有一对：<strong>F–B</strong> 是增四度，<strong>B–F</strong> 是减五度，它们都是${accent('三全音')}。`), [two('F4', 'B4', 'A4'), two('B4', 'F5', 'd5', '三全音 TT')], {sequence: 1400}],
+    [p(`在谱上读度数：四度的两个音${accent('一线一间')}。`), two('E4', 'A4', 'P4', '一线一间')],
+    [p(`五度的两个音${accent('同在线上')}，或同在间上。`), [two('E4', 'B4', 'P5', '同在线上'), two('F4', 'C5', 'P5', '同在间上')], {sequence: 1400}],
+    [warn(`位形只帮助读<strong>度数</strong>，不决定性质。F–B 也是一线一间，但它是增四度。`), two('F4', 'B4', 'A4', '一线一间')],
+    [p(`有变化音时，仍按「变宽、变窄」推导。例如 F–B♭：F–B 是增四度，上方音降低，变窄成${accent('纯四度')}。`), [two('F4', 'B4', 'A4'), altered('F4', 'Bb4', 'P4', '上方音降低 → 变窄', 'hi')], {sequence: 1400}]
+  ]);
+  quiz('bb-f', guess('Bb4', 'F5'), {
+    question: '这个音程是：', options: [['d5', '减五度'], ['P5', '纯五度'], ['A5', '增五度']], answer: 'P5',
+    right: '正确。B–F 是减五度；下方音降低，变宽一个半音，所以是纯五度。', wrong: 'B–F 是自然五度里的特例。下方音降低，音程变宽还是变窄？'
+  });
+  quiz('e-as', guess('E4', 'A#4'), {
+    question: '这个音程是：', options: [['P4', '纯四度'], ['A4', '增四度'], ['d5', '减五度']], answer: 'A4',
+    right: '正确。E–A 是纯四度；上方音升高，变宽一个半音，所以是增四度。', wrong: '先读度数：一线一间是几度？E–A 是什么性质？'
+  });
+
+  // 三、六度与七度
+  section('inversion', '三', '六度与七度');
+  group('inversion', [
+    [p(`六度、七度跨度大，直接数音数${accent('又慢又容易错')}。`), guess('E4', 'C5')],
+    [p(`第五课学过：单音程转位前后，度数相加等于 9。所以${accent('六度转位成三度，七度转位成二度')}。`), inversionTable(['c6', 'c7'])],
+    [p(`转位后性质反转：<strong>大 ↔ 小，增 ↔ 减</strong>，纯音程不变。`), inversionTable(['c2', 'c3', 'c6', 'c7'])],
+    [p(`例如 E–C：把下方的 E 移高一个八度，得到 C–E。`), lookUp('E4', 'C5', 'E5', 'C–E　M3')],
+    [p(`C–E 是大三度，反转回来，E–C 就是${accent('小六度')}。`), answer('E4', 'C5', 'E5', 'm6', 'M3 → m6')],
+    [p(`七度也一样：A–G 转位成 G–A，大二度，所以 A–G 是${accent('小七度')}。`), [guess('A4', 'G5'), lookUp('A4', 'G5', 'A5', 'G–A　M2'), answer('A4', 'G5', 'A5', 'm7', 'M2 → m7')], {sequence: 1600}]
+  ]);
+  const HINT_INV = '把下方音移高一个八度，转位后是几度、什么性质？再把性质反转回来。';
+  quiz('d-b', guess('D4', 'B4'), {
+    question: '这个音程是：', options: [['m6', '小六度'], ['M6', '大六度'], ['A6', '增六度']], answer: 'M6',
+    right: '正确。转位成 B–D 是小三度，反转回来是大六度。', wrong: HINT_INV
+  });
+  quiz('g-fs', guess('G4', 'F#5'), {
+    question: '这个音程是：', options: [['m7', '小七度'], ['M7', '大七度'], ['d8', '减八度']], answer: 'M7',
+    right: '正确。转位成 F♯–G 是小二度，反转回来是大七度。', wrong: HINT_INV
+  });
+
+  // 四、复音程
+  section('compound', '四', '复音程');
+  group('compound', [
+    [p(`超过八度的<strong>复音程</strong>，先把度数${accent('减去 7')}，回到对应的单音程。`), compoundTable([])],
+    [p(`例如 C4–E5：10 − 7 = 3，对应单音程 C–E。`), compoundTable(['c10'])],
+    [p(`复音程与对应单音程的大、小、纯、增、减${accent('性质相同')}。C–E 是大三度，所以 C4–E5 是大十度。`), [two('C4', 'E4', 'M3'), two('C4', 'E5', 'M10')], {sequence: 1400}],
+    [p(`再如 D4–G5：D 到 G 是四度，再加一个八度，是${accent('十一度')}（11 − 7 = 4）。D–G 是纯四度，所以是纯十一度。`), [two('D4', 'G4', 'P4'), two('D4', 'G5', 'P11')], {sequence: 1400}],
+    [warn(`读复音程时，先确认跨了几个八度，再数度数；数错度数，后面的性质判断就全错了。`), compoundTable(['c11'])]
+  ]);
+  quiz('c-d5', guess('C4', 'D5'), {
+    question: '这个音程是：', options: [['M2', '大二度'], ['M9', '大九度'], ['m9', '小九度']], answer: 'M9',
+    right: '正确。C–D 是大二度，再加一个八度，是大九度。', wrong: '它超过了八度吗？减去 7 后对应哪个单音程？'
+  });
+  quiz('e-b5', guess('E4', 'B5'), {
+    question: '这个音程是：', options: [['P5', '纯五度'], ['P12', '纯十二度'], ['d12', '减十二度']], answer: 'P12',
+    right: '正确。E–B 是纯五度，加一个八度是纯十二度。', wrong: '先确认度数：E4 到 B5 是几度？对应的单音程是什么性质？'
+  });
+
+  // 五、判断流程
+  section('flow', '五', '判断流程');
+  group('flow', [
+    [p(`把四种方法串起来：遇到任何音程，第一步都是${accent('读度数')}。`), flow([])],
+    [p(`二、三度，找自然音程参照；四、五度，记住纯音程和三全音特例。`), flow(['r23', 'r45'])],
+    [p(`六、七度，转位成三、二度；九度以上，减 7 回到单音程。`), flow(['r67', 'r9'])],
+    [p(`最后，有变化音时，再判断音程${accent('变宽还是变窄')}。`), flow(['r23', 'r45', 'r67', 'r9'])]
+  ]);
+  quiz('ab-f', guess('Ab4', 'F5'), {
+    question: '这个音程是：', options: [['m6', '小六度'], ['M6', '大六度'], ['A6', '增六度']], answer: 'M6',
+    right: '正确。六度先转位：F–A♭，F–A 是大三度，上方音降低变成小三度；反转回来是大六度。', wrong: '六度用哪种方法？转位后还有变化音，别忘了判断变宽或变窄。'
+  });
+  quiz('cs-g5', guess('C#4', 'G5'), {
+    question: '这个音程是：', options: [['P12', '纯十二度'], ['d12', '减十二度'], ['A11', '增十一度']], answer: 'd12',
+    right: '正确。C4–G5 是十二度，对应 C–G 纯五度；下方音升高变窄，所以是减十二度。', wrong: '先读度数并减 7，再看变化音让音程变宽还是变窄。'
+  });
+
+  ChordLesson.run({
+    steps, sections, countBy: 'lesson', noteLength: 1,
+    storageId: 'interval-06', formerPaths: ['/MT-Intervals/lesson06/', '/MT-Intervals/lesson06/index.html'],
+    preload: ['B3','C4','C#4','D4','E4','Eb4','F4','F#4','G4','G#4','A4','A#4','Ab4','B4','Bb4','C5','C#5','D5','E5','F5','F#5','G5','A5','B5']
+  });
+
+  /* ---------- 完成页：MusicTheory.net 强化练习（链接为 PDF 原有超链接） ---------- */
+  const EXTERNAL = [
+    ['二度与三度', [['大小二度识别', 'brwyryyroyybnyynbyb'], ['增减二度识别', 'brwyrybyyeybnyynbyb'], ['大小三度识别', 'brwyryyeybybnyynbyb'], ['增减三度识别', 'brwyrynyyoybnyynbyb']]],
+    ['四度与五度', [['纯四度 / 纯五度识别', 'brwyryyobyybnyynbyb'], ['增减四度 / 五度识别', 'brwyrycyyydbnyynbyb']]],
+    ['六度与七度', [['大小六度 / 七度识别', 'brwyryyyggybnyynbyb'], ['增减六度 / 七度识别', 'brwyryobyycbnyynbyb']]],
+    ['复音程', [['9–15 度复音程识别', 'brwyry99999bnbynbyb']]]
+  ];
+  const list = document.getElementById('exerciseLinks');
+  EXTERNAL.forEach(([group, items]) => {
+    const h = document.createElement('h3'); h.textContent = group; list.append(h);
+    items.forEach(([title, config]) => {
+      const a = document.createElement('a');
+      a.className = 'secondary btn-link exercise-link';
+      a.href = `https://www.musictheory.net/exercises/interval/${config}`;
+      a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', `${title}，MusicTheory.net 外部练习，新窗口打开`);
+      const text = document.createElement('span'); text.textContent = title;
+      const arrow = document.createElement('span'); arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true');
+      a.append(text, arrow); list.append(a);
+    });
   });
 })();

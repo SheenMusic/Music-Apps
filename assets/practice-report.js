@@ -53,6 +53,11 @@
       if (!['singing', 'construction', 'harmonic'].includes(type)) throw new Error(`Unknown report type: ${type}`);
     }
     sections.push(summary);
+    // 结业测验：按单元列出一次通过率
+    if (type === 'mt' && data.modules?.length) {
+      const label = rate => rate === 100 ? '熟练' : rate >= 75 ? '基本掌握' : '建议复习';
+      sections.push('分项掌握：\n' + data.modules.map(m => `${m.title}  ${m.firstPass}/${m.total}  ${label(m.rate)}`).join('\n'));
+    }
     if (details) sections.push(details);
     sections.push(`© Sheen · ${type === 'mt' ? 'Music Theory' : 'Ear Training'}`);
     return sections.join('\n\n');
