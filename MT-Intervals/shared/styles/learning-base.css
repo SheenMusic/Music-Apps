@@ -1,0 +1,134 @@
+/* Theory Learning only. Site tokens remain authoritative for theme and radii. */
+:where(html[data-theory-lesson]) { --primary: #6366f1; --primary-hover: #4f46e5; }
+html[data-theory-lesson] {
+  --theory-text-body-size: 1rem;
+  --theory-text-body-leading: 1.85;
+  --theory-text-module-size: 1.5rem;
+  --theory-text-module-leading: 1.4;
+  --theory-text-heading-size: 1.0625rem;
+  --theory-text-heading-leading: 1.5;
+  --theory-text-list-size: .9375rem;
+  --theory-text-list-leading: 1.85;
+  --theory-text-caption-size: .875rem;
+  --theory-text-caption-leading: 1.7;
+  --theory-text-secondary-leading: 1.75;
+  --theory-text-label-leading: 1.6;
+  --theory-text-instruction-size: .8125rem;
+  --theory-text-instruction-leading: 1.75;
+  --theory-text-quiz-size: 1.125rem;
+  --theory-text-quiz-leading: 1.65;
+  --theory-reading-width: 34rem;
+  --theory-board-padding: 12px;
+  --theory-board-gap: 14px;
+  --theory-reveal-duration: 240ms;
+  --theory-text-secondary-size: .8125rem;
+  --theory-text-label-size: .8125rem;
+  --theory-space-paragraph: 1.125rem;
+  --theory-color-emphasis: var(--primary);
+  --theory-page-gap: 10px;
+  --theory-content-gap: 24px;
+  --theory-header-gap: 14px;
+  --theory-page-width: 520px;
+  --success: var(--site-success);
+  --error: var(--site-error);
+}
+html[data-theory-lesson] *, html[data-theory-lesson] *::before, html[data-theory-lesson] *::after { box-sizing: border-box; }
+html[data-theory-lesson] { min-height: 100%; background: var(--site-bg); }
+html[data-theory-lesson] body {
+  margin: 0; min-height: 100svh; display: flex; justify-content: center;
+  padding: max(var(--theory-page-gap), env(safe-area-inset-top)) max(var(--theory-page-gap), env(safe-area-inset-right)) max(var(--theory-page-gap), env(safe-area-inset-bottom)) max(var(--theory-page-gap), env(safe-area-inset-left));
+}
+html[data-theory-lesson] :is(p,h1,h2,h3,ul,ol,figure) { margin: 0; }
+html[data-theory-lesson] :is([hidden],.hidden) { display: none !important; }
+html[data-theory-lesson] .app { width: 100%; max-width: var(--theory-page-width); min-height: calc(100svh - max(10px,env(safe-area-inset-top)) - max(10px,env(safe-area-inset-bottom))); display: flex; flex-direction: column; min-width: 0; }
+html[data-theory-lesson] header { flex: none; margin-bottom: var(--theory-header-gap); }
+html[data-theory-lesson] .topbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 12px; letter-spacing: .3px; color: var(--muted); margin-bottom: 12px; }
+html[data-theory-lesson] .topbar > :first-child { min-width: 0; }
+html[data-theory-lesson] :is(.topbar-right,.header-right) { display: flex; align-items: center; gap: 10px; flex: none; white-space: nowrap; }
+html[data-theory-lesson] .lesson-badge { padding: 4px 8px; border-radius: var(--site-radius-pill); background: var(--site-tint); color: var(--site-tint-text); font-size: 11px; }
+html[data-theory-lesson] .progress-wrap { height: 8px; border-radius: var(--site-radius-pill); overflow: hidden; background: var(--site-border); }
+html[data-theory-lesson] .progress { height: 100%; width: 0; background: var(--primary); transition: width .2s ease; }
+html[data-theory-lesson] main { flex: 1; min-height: 0; min-width: 0; }
+html[data-theory-lesson] .card { padding: 24px; border: 1px solid var(--border); border-radius: var(--site-radius-card); background: var(--card); box-shadow: var(--shadow); }
+html[data-theory-lesson] .home-course-title { text-align: center; margin-bottom: 24px; }
+html[data-theory-lesson] .home-course-index { font-size: 14px; color: var(--primary); font-weight: 600; margin-bottom: 10px; }
+html[data-theory-lesson] :is(.hero,.lesson-complete) h1 { font-size: clamp(24px,5vw,32px); line-height: 1.35; letter-spacing: -.025em; margin-bottom: 18px; }
+html[data-theory-lesson] .lead { font-size: var(--theory-text-body-size); line-height: var(--theory-text-body-leading); color: var(--text); }
+html[data-theory-lesson] .lead + .lead { margin-top: var(--theory-space-paragraph); }
+html[data-theory-lesson] .review-outline { font-size: var(--theory-text-list-size); line-height: var(--theory-text-list-leading); padding-left: 22px; margin: 22px 0; }
+html[data-theory-lesson] .review-outline li + li { margin-top: 6px; }
+html[data-theory-lesson] .home-actions { display: grid; gap: 10px; margin-top: 24px; }
+/* 开始页功能区预留位：未上线的功能带 hidden，不显示（规范 L10） */
+html[data-theory-lesson] .home-actions [hidden] { display: none; }
+html[data-theory-lesson] :is(button,a) { font: inherit; }
+html[data-theory-lesson] :is(.primary,.secondary,.ghost) { display: flex; align-items: center; justify-content: center; min-height: 46px; padding: 11px 16px; border-radius: var(--site-radius-control); text-decoration: none; line-height: 1.5; font-size: 15px; touch-action: manipulation; cursor: pointer; border: 1px solid transparent; }
+html[data-theory-lesson] .ghost { border-color: var(--border); }
+html[data-theory-lesson] .primary:hover { background: var(--primary-hover); }
+html[data-theory-lesson] :is(button,a):focus-visible { outline: 2px solid var(--site-focus); outline-offset: 3px; }
+html[data-theory-lesson] button:disabled { opacity: .5; cursor: default; }
+html[data-theory-lesson] .lesson { display: flex; flex-direction: column; gap: var(--theory-content-gap); padding: 20px; }
+html[data-theory-lesson] .lesson-board { position: relative; flex: none; min-width: 0; height: var(--theory-board-height,240px); padding: var(--theory-board-padding); border: 1px solid #e2e8f0; border-radius: var(--site-radius-card); display: flex; flex-direction: column; justify-content: flex-start; text-align: center; overflow: auto; }
+html[data-theory-lesson] .theory-board-content { flex: none; width: 100%; min-width: 0; display: flex; flex-direction: column; gap: var(--theory-board-gap); margin-block: auto; }
+html[data-theory-lesson] .theory-board-content > * { flex: none; }
+html[data-theory-lesson] .lesson-board[data-size="compact"] { --theory-board-height: 202px; }
+html[data-theory-lesson] .lesson-board[data-size="standard"] { --theory-board-height: clamp(230px,32dvh,280px); }
+html[data-theory-lesson] .lesson-board[data-size="expanded"] { --theory-board-height: clamp(230px,34dvh,340px); }
+html[data-theory-lesson] .lesson-content { width: 100%; max-width: var(--theory-reading-width); margin-inline: auto; text-align: left; min-width: 0; min-height: 0; font-size: var(--theory-text-body-size); line-height: var(--theory-text-body-leading); overflow-wrap: anywhere; color: var(--text); }
+html[data-theory-lesson] .lesson-content :where(.lesson-paragraph,p) { font-size: inherit; line-height: inherit; color: inherit; }
+html[data-theory-lesson] .lesson-content :is(p,ul,ol) + :is(p,ul,ol) { margin-top: var(--theory-space-paragraph); }
+html[data-theory-lesson] .lesson-content :is(ul,ol) { padding-left: 1.3em; font-size: var(--theory-text-list-size); line-height: var(--theory-text-list-leading); }
+html[data-theory-lesson] .lesson-content li + li { margin-top: 7px; }
+html[data-theory-lesson] strong { font-weight: 700; color: var(--text); }
+html[data-theory-lesson] :is(.key-accent,.theory-concept) { color: var(--theory-color-emphasis); font-weight: 700; }
+html[data-theory-lesson] .key-accent strong { color: inherit; }
+html[data-theory-lesson] .lesson-content h1 { font-size: var(--theory-text-module-size); line-height: var(--theory-text-module-leading); margin-bottom: 24px; }
+html[data-theory-lesson] .lesson-content h2 { font-size: var(--theory-text-heading-size); line-height: var(--theory-text-heading-leading); margin: 22px 0 12px; }
+html[data-theory-lesson] .lesson-content h2:first-child { margin-top: 0; }
+html[data-theory-lesson] :is(.tiny,.theory-note) { font-size: var(--theory-text-secondary-size); line-height: var(--theory-text-secondary-leading); color: var(--muted); margin-top: 14px; }
+html[data-theory-lesson] .lesson-content :is(.tiny,.theory-note) { font-size: var(--theory-text-secondary-size); line-height: var(--theory-text-secondary-leading); color: var(--muted); }
+html[data-theory-lesson] :is(.board-label,.theory-label) { font-size: var(--theory-text-label-size); line-height: var(--theory-text-label-leading); font-weight: 600; color: #64748b; }
+html[data-theory-lesson] .reference-caption { font-size: var(--theory-text-caption-size); line-height: var(--theory-text-caption-leading); color: #475569; }
+html[data-theory-lesson] .kicker { font-size: 12px; line-height: 1.5; letter-spacing: .06em; color: var(--primary); margin-bottom: 8px; }
+html[data-theory-lesson] .lesson-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; flex: none; }
+html[data-theory-lesson] .lesson-footer-zone { display: none; }
+html[data-theory-lesson] .theory-active .lesson-footer-zone { display: grid; }
+html[data-theory-lesson] .footer { margin-top: auto; text-align: center; font-size: 12px; line-height: 1.5; padding: 16px 0 4px; flex: none; }
+html[data-theory-lesson] .lesson-complete { text-align: center; }
+html[data-theory-lesson] .lesson-complete .lead { text-align: left; }
+html[data-theory-lesson] .theory-active { height: 100dvh; overflow: hidden; }
+html[data-theory-lesson] .theory-active .app { height: 100%; min-height: 0; }
+html[data-theory-lesson] .theory-active main { display: flex; overflow: hidden; }
+html[data-theory-lesson] .theory-active .lesson { flex: 1; min-height: 0; overflow: hidden; }
+html[data-theory-lesson] .theory-active .lesson-content { flex: 1; display: flex; flex-direction: column; overflow: auto; overscroll-behavior: contain; padding-inline: 6px; scrollbar-gutter: stable both-edges; overflow-anchor: none; }
+/* Stacked lessons read from the top; only the actual two-column layout
+   distributes positive free space around the explanation. */
+html[data-theory-lesson] .theory-explanation { flex: none; display: flow-root; width: 100%; min-width: 0; margin-block: 0; }
+html[data-theory-lesson] .theory-pending { opacity: 0; }
+html[data-theory-lesson] .theory-new { animation: theory-reveal var(--theory-reveal-duration) ease-out; }
+@keyframes theory-reveal { from { opacity: .2; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+html[data-theory-lesson] .theory-instruction { font-size: var(--theory-text-instruction-size); line-height: var(--theory-text-instruction-leading); color: var(--muted); }
+@media (max-width:400px) {
+  html[data-theory-lesson] .card { padding: 20px 17px; }
+  html[data-theory-lesson] .lesson { gap: 16px; }
+  html[data-theory-lesson] .topbar { font-size: 10px; gap: 6px; }
+  html[data-theory-lesson] :is(.topbar-right,.header-right) { gap: 7px; }
+  html[data-theory-lesson] .lesson-badge { font-size: 10px; }
+}
+@media (orientation:landscape) and (min-width:600px) {
+  html[data-theory-lesson] .theory-active .app { max-width: 1440px; }
+  html[data-theory-lesson] .theory-active .lesson { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); grid-template-rows: minmax(0,1fr); }
+  html[data-theory-lesson] .theory-active .lesson-board { height: 100%; min-height: 0; }
+  html[data-theory-lesson] .theory-explanation { margin-block: auto; }
+  html[data-theory-lesson] .theory-active .lesson-nav { width: min(520px,100%); align-self: flex-end; }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  html[data-theory-lesson] { --theory-header-gap: 10px; --theory-content-gap: 16px; --theory-text-module-size: 1.3125rem; }
+  html[data-theory-lesson] .topbar { margin-bottom: 8px; }
+  html[data-theory-lesson] .lesson { padding: 12px; }
+  html[data-theory-lesson] .footer { padding-top: 6px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html[data-theory-lesson] .progress { transition: none; }
+  html[data-theory-lesson] .theory-new { animation: none; }
+  html[data-theory-lesson] .theory-pending { opacity: 1; }
+}

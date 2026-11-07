@@ -1,0 +1,84 @@
+<!doctype html>
+<html data-visual="site" data-public-visual lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="《菩萨蛮》人声与钢琴扒谱｜3 页 PDF（含封面），人民币 ¥9，试听与局部乐谱预览。">
+  <title>菩萨蛮 · 乐铺屋 · Sheen Yang</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../scores.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+  <script src="./checkout.js" defer></script>
+  <link rel="stylesheet" href="../../assets/site-navigation.css">
+  <script src="/assets/site-language.js" defer></script>
+  <script src="../../assets/site-navigation.js" defer></script>
+  <link rel="stylesheet" href="../consent.css">
+  <script src="../consent.js" defer></script>
+  <link rel="stylesheet" href="./product.css">
+</head>
+<body>
+<header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
+
+<main class="shell detail-main paid-score-detail">
+  <a class="product-back" href="/scores/">← 乐铺屋 / Scores</a>
+  <section class="page-heading"><h1 class="public-title">菩萨蛮</h1><p class="lead">小山重叠金明灭</p></section>
+  <p class="product-meta">人声与钢琴扒谱 · Voice &amp; Piano Transcription<br>3 页 PDF（1 页封面 + 2 页乐谱）</p>
+  <div class="product-buy"><strong>¥9 <small>CNY · 人民币</small></strong><button id="buyScore" class="button primary site-cta" type="button" disabled>购买乐谱 →</button></div>
+  <section class="demo-section" aria-labelledby="demoHeading"><h2 id="demoHeading">演奏示范</h2><div class="demo-video"><video controls playsinline preload="none" poster="./assets/video-poster.jpg" width="720" height="1280"><source src="./assets/pusa-man-demo.mp4" type="video/mp4">你的浏览器暂不支持视频播放。</video></div></section>
+  <section class="product-preview" aria-labelledby="previewHeading"><h2 id="previewHeading">乐谱预览</h2><p class="detail-note">以下为局部谱面预览。完整 PDF 在付款及人工核对后通过邮箱交付。</p><img src="./assets/score-preview.png" width="952" height="450" loading="lazy" alt="《菩萨蛮》人声与钢琴乐谱局部预览"></section>
+  <p class="product-credits">演唱 · 刘欢<br>词 · 温庭筠【唐】<br>曲 · 刘欢<br>扒谱 · Sheen<br>来源 · 原版录音</p>
+  <p class="detail-note">微信或支付宝付款后，请提交订单信息。人工核对到账后，通过邮箱交付完整乐谱；订单提交成功不代表自动确认到账。</p>
+  <p id="productError" class="checkout-error" role="alert" hidden>商品信息暂时无法加载，请刷新页面后重试。</p>
+</main>
+<dialog id="purchaseDialog" class="purchase-dialog" aria-labelledby="purchaseHeading">
+  <div class="dialog-heading"><h2 id="purchaseHeading">确认订单</h2><button class="close-button" id="closeDialog" type="button" aria-label="关闭订单">×</button></div>
+  <p id="purchaseSummary" class="purchase-summary"></p>
+  <section id="checkoutDetails" class="checkout-step">
+    <details class="checkout-tracks"><summary>查看商品内容</summary><ol id="purchaseTracks" class="purchase-tracks"></ol></details>
+    <form id="checkoutEmailForm">
+      <div class="checkout-field"><label for="buyerEmail">接收 PDF 的 Email</label><input id="buyerEmail" type="email" inputmode="email" autocomplete="email" maxlength="254" placeholder="name@example.com" required aria-describedby="emailError"></div>
+      <p id="emailError" class="checkout-error" role="alert" hidden>请填写有效的邮箱地址。</p>
+      <button class="button primary" type="submit">下一步 · 付款</button>
+    </form>
+  </section>
+  <section id="checkoutPayment" class="checkout-step" hidden aria-label="支付和提交订单">
+    <p class="checkout-order">订单 <span id="orderId"></span><br>接收邮箱：<span id="emailShow"></span></p>
+    <div class="payment-methods" role="group" aria-label="支付方式"><button class="button payment-method" type="button" data-method="支付宝" aria-pressed="true">支付宝</button><button class="button payment-method" type="button" data-method="微信" aria-pressed="false">微信</button></div>
+    <div class="payment-qr"><img id="qrImg" src="../assets/payment/alipay.jpg" width="260" height="260" alt="支付宝收款二维码"></div>
+    <p class="payment-hint" id="payHint"></p>
+    <a id="openPay" class="button" href="https://qr.alipay.com/fkx13921kb0l57ujqpulsb8" target="_blank" rel="noopener noreferrer" hidden>打开支付宝付款</a>
+    <a id="saveQr" class="save-qr" href="../assets/payment/alipay.jpg" download="支付宝收款码.jpg">保存收款码</a>
+    <div class="checkout-field"><label for="paymentName">付款昵称（建议填写，方便核对）</label><input id="paymentName" type="text" maxlength="60" placeholder="微信或支付宝付款昵称" autocomplete="off"></div>
+    <p id="submitError" class="checkout-error" role="alert" hidden>订单尚未提交成功，已保留你的信息。如果已经付款，请勿重复付款。</p>
+    <div id="orderFallback" class="order-fallback" hidden><p>请先保存订单信息。如果重试仍失败，请复制后通过联系过我的平台私信发送，以便人工处理。</p><pre id="orderCopy" class="order-copy"></pre><button id="copyOrder" class="button" type="button">复制订单信息</button></div>
+    <div class="checkout-actions"><button id="paidBtn" class="button primary" type="button">我已完成付款</button><button id="backToEmail" class="text-button" type="button">返回修改</button></div>
+    <p class="checkout-legal">请按订单金额付款。提交付款信息后，人工核对到账，再向你的 Email 发送 PDF；提交成功不代表自动确认到账。</p>
+  </section>
+  <section id="checkoutSuccess" class="checkout-step" hidden aria-label="订单提交结果">
+    <h3>购买信息已提交</h3><p class="checkout-order">订单号：<span id="doneOrder"></span><br>接收邮箱：<span id="doneEmail"></span></p><p class="checkout-legal">核对到账后，将通过 Email 发送 PDF 乐谱。</p><p class="detail-note">支付遇到问题？<a href="https://v.douyin.com/2Kz3u1Obq9c/" target="_blank" rel="noopener noreferrer">请联系抖音私信 ↗</a></p><button id="doneBtn" class="button" type="button">完成</button>
+  </section>
+</dialog>
+<footer class="site-footer shell visual-footer">© 2026 Sheen Yang, All rights reserved.</footer>
+</body>
+</html>

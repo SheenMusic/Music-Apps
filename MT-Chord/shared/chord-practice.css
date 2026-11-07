@@ -1,0 +1,45 @@
+/* 和弦记号课程 · 课后练习：答题区（写和弦、谱例分析）。键盘输入的样式在 chord-input.css。
+   页面外壳、导航、反馈框与结果页用 shared/styles/practice-base.css 与 course-shell.css（与音程练习相同）。
+   颜色、圆角沿用 site-visual.css 的 --site-* 变量；practice-base.css 把所有元素的 margin / padding 归零，这里按需补回。 */
+
+/* 题目导航：按题型分组，组名占一整行 */
+html[data-chord-practice] .chord-nav .question-nav-group { grid-column: 1 / -1; margin-top: 6px; font-size: 12px; color: var(--site-muted); }
+html[data-chord-practice] .chord-nav .question-nav-group:first-child { margin-top: 0; }
+
+/* 谱例：浅色纸面（与课件演示区一致），点击播放 */
+html[data-chord-practice] .chord-area { margin-bottom: 16px; }
+html[data-chord-practice] .staff-question.chord-score,
+html[data-chord-practice] .staff-question.chord-entry { color-scheme: light; display: flex; justify-content: center; align-items: center; min-height: 0; margin: 0 0 8px; padding: 6px 0; }
+html[data-chord-practice] .staff-question.chord-score svg { width: auto; max-width: 100%; flex: none; }
+html[data-chord-practice] .staff-question.is-wide { justify-content: flex-start; overflow-x: auto; }
+html[data-chord-practice] .staff-question.is-wide svg { max-width: none; cursor: pointer; }
+html[data-chord-practice] .staff-question.tap-to-play { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+html[data-chord-practice] .chord-entry { cursor: crosshair; touch-action: manipulation; }
+
+/* 长谱例横向滚动时固定在左边的谱号、调号、拍号（chord-practice.js 的 pinStart） */
+html[data-chord-practice] .chord-area { position: relative; }
+html[data-chord-practice] .score-pin { position: absolute; z-index: 2; overflow: hidden; pointer-events: none; background: #ffffff; opacity: 0; transition: opacity .15s; box-shadow: 6px 0 6px -4px rgba(15, 23, 42, .18); }
+html[data-chord-practice] .score-pin.is-on { opacity: 1; }
+html[data-chord-practice] .score-pin svg { display: block; max-width: none; }
+
+/* 谱例分析：可以点的拍点、选中的位置、判错的标记 */
+html[data-chord-practice] .analysis-dot { fill: #94a3b8; }
+html[data-chord-practice] .analysis-current { fill: #e0e7ff; }
+html[data-chord-practice] .analysis-wrong { fill: #fee2e2; stroke: #dc2626; stroke-width: 1.2; }
+html[data-chord-practice] .analysis-missing { fill: none; stroke: #dc2626; stroke-width: 1.2; stroke-dasharray: 4 3; }
+html[data-chord-practice] .analysis-editor { margin-top: 8px; }
+html[data-chord-practice] .analysis-editor-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 600; }
+
+/* 看记号写和弦：上方的记号 */
+html[data-chord-practice] .chord-target { margin: 4px 0 10px; text-align: center; font-size: 34px; }
+html[data-chord-practice] .chord-play { display: flex; gap: 8px; justify-content: center; margin: 4px 0 8px; }
+html[data-chord-practice] .chord-small { width: auto; min-height: 36px; padding: 6px 14px; font-size: 14px; }
+html[data-chord-practice] .chord-tip { margin: 4px 0 0; text-align: center; font-size: 13px; color: var(--site-muted); }
+
+/* 看记号写和弦：升降号、上下移动等工具按钮 */
+html[data-chord-practice] .chord-tools { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 8px; }
+html[data-chord-practice] .chord-key { min-width: 40px; min-height: 40px; padding: 4px 8px; border: 1px solid var(--site-border); border-radius: var(--site-radius-control); background: var(--site-panel); color: var(--site-text); font: inherit; font-size: 16px; cursor: pointer; touch-action: manipulation; }
+html[data-chord-practice] .chord-key .cs { font-size: 19px; }
+
+/* 反馈框里的记号 */
+html[data-chord-practice] .explanation-text .cs { font-size: 1.15em; }

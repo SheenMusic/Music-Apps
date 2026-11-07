@@ -1,0 +1,56 @@
+/* MT01–05 page chrome only. Never load Learning layout rules into Practice.
+   Active Learning's independent board/reading areas retain their own geometry. */
+html[data-mt-shell] {
+  --course-content-width: var(--theory-page-width, 520px);
+  --course-shell-gap: var(--theory-page-gap, 10px);
+  --course-shell-header-gap: var(--theory-header-gap, 14px);
+  --course-shell-topbar-gap: 12px;
+  --course-shell-footer-top: 16px;
+}
+html[data-mt-shell] body {
+  font-family: var(--site-font);
+  min-height: 100svh;
+  align-items: stretch;
+  padding: max(var(--course-shell-gap), env(safe-area-inset-top)) max(var(--course-shell-gap), env(safe-area-inset-right)) max(var(--course-shell-gap), env(safe-area-inset-bottom)) max(var(--course-shell-gap), env(safe-area-inset-left));
+}
+html[data-mt-shell] body:not(.theory-active) :is(.app, .app-container) {
+  max-width: var(--course-content-width);
+  min-height: calc(100svh - max(var(--course-shell-gap), env(safe-area-inset-top)) - max(var(--course-shell-gap), env(safe-area-inset-bottom)));
+}
+html[data-mt-shell] #practiceApp { display: flex; flex-direction: column; max-width: var(--course-content-width); }
+html[data-mt-shell] .app-container { flex: 1; }
+html[data-mt-shell] :is(.app > header, .app-header) { margin-bottom: var(--course-shell-header-gap); }
+html[data-mt-shell] :is(.topbar, .header-top-bar) {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  font-family: var(--site-font); font-size: 12px; font-weight: 300;
+  line-height: 1.5; letter-spacing: .3px; color: var(--site-muted);
+  margin-bottom: var(--course-shell-topbar-gap);
+}
+html[data-mt-shell] :is(.topbar-brand, .header-title-left) { min-width: 0; }
+html[data-mt-shell] :is(.topbar-right, .header-right-group) {
+  display: flex; align-items: center; gap: 10px; flex: none; white-space: nowrap;
+}
+html[data-mt-shell] :is(.lesson-badge, .header-title-right) {
+  display: inline-flex; align-items: center;
+  font-family: var(--site-font); font-size: 11px; font-weight: 300;
+  line-height: 1.5; padding: 4px 8px; border-radius: var(--site-radius-pill);
+  background: var(--site-tint); color: var(--site-tint-text);
+}
+html[data-mt-shell] .history-toggle-btn {
+  font-family: var(--site-font); font-size: 11px; font-weight: 400;
+  line-height: 1.5; padding: 4px 8px;
+}
+html[data-mt-shell] :is(.lesson-count, .question-counter) { font-size: 12px; font-weight: 300; line-height: 1.5; }
+html[data-mt-shell] .progress-bar-container { margin-bottom: 0; }
+html[data-mt-shell] :is(.footer, .app-footer) {
+  font-family: var(--site-font); font-size: 12px; font-weight: 300;
+  line-height: 1.5; color: var(--site-muted); text-align: center;
+  margin-top: auto; padding: var(--course-shell-footer-top) 0 4px; flex: none;
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  html[data-mt-shell] {
+    --course-shell-header-gap: 10px;
+    --course-shell-topbar-gap: 8px;
+    --course-shell-footer-top: 6px;
+  }
+}

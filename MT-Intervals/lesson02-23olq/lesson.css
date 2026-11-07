@@ -1,0 +1,18 @@
+/* 音程 · 第二课：五种性质的关系图（面板）。state 0 只有「减 · 增」，1 显示纯音程的度数，2 再显示大小音程的度数。 */
+html[data-theory-lesson] .quality-map { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center; gap: 12px; width: 100%; max-width: 420px; padding: 8px 18px; }
+html[data-theory-lesson] .qm-side { font-size: 1.2rem; font-weight: 900; color: var(--primary); text-align: center; }
+html[data-theory-lesson] .qm-center { display: grid; grid-template-rows: 1fr 1fr; align-items: center; gap: 6px; }
+html[data-theory-lesson] :is(.qm-pure-wrap, .qm-mm-wrap) { display: grid; justify-items: center; align-items: center; min-height: 68px; transition: opacity .5s var(--stage-ease); }
+html[data-theory-lesson] .qm-pure-wrap { grid-template-rows: 22px 1px 32px; }
+html[data-theory-lesson] .qm-mm-wrap { grid-template-rows: 32px 1px 22px; }
+html[data-theory-lesson] :is(.qm-pure, .qm-mm) { font-size: 1.15rem; font-weight: 900; color: #1e293b; }
+html[data-theory-lesson] .qm-mm { display: flex; gap: 42px; }
+html[data-theory-lesson] .qm-line { width: min(180px, 80%); height: 1px; background: #94a3b8; }
+html[data-theory-lesson] :is(.qm-degree, .qm-line) { opacity: 0; transition: opacity .5s var(--stage-ease); }
+html[data-theory-lesson] .qm-degree { font: 800 12px var(--site-font); color: var(--primary); letter-spacing: .08em; }
+html[data-theory-lesson] .stage-panel:is([data-state="1"], [data-state="2"]) .qm-pure-wrap :is(.qm-degree, .qm-line),
+html[data-theory-lesson] .stage-panel[data-state="2"] .qm-mm-wrap :is(.qm-degree, .qm-line) { opacity: 1; }
+@media (max-width: 390px) {
+  html[data-theory-lesson] .quality-map { grid-template-columns: 48px 1fr 48px; padding: 8px 6px; }
+  html[data-theory-lesson] .qm-mm { gap: 28px; }
+}

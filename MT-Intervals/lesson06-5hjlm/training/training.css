@@ -1,0 +1,147 @@
+/* 第六课长期练习：在 practice-base.css 的卡片、按钮、结果样式之上，只补这一页特有的部分。
+   题目卡、构建键盘沿用第五课辅助练习（drill-*）的样子 */
+.drill-label {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 4px 0 8px;
+}
+.drill-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.drill-choices .option-btn { justify-content: center; padding: 12px; }
+
+/* 开始页：所选题型的成绩 */
+.history {
+  border: 1px solid var(--border-color);
+  border-radius: var(--site-radius-control);
+  padding: 12px;
+  margin-bottom: 18px;
+}
+.history-empty { margin: 0; font-size: .85rem; color: var(--text-muted); }
+.history-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+.history-stats > div { display: grid; gap: 2px; }
+.history-value { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.history-label { font-size: .75rem; color: var(--text-muted); }
+.history-trend { margin: 12px 0 0; }
+.history-trend svg { display: block; width: 100%; height: auto; }
+.trend-line { fill: none; stroke: var(--primary-color); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.trend-dot { fill: var(--primary-color); stroke: var(--card-bg); stroke-width: 2; }
+.history-trend figcaption { margin-top: 6px; font-size: .75rem; color: var(--text-muted); }
+.storage-note { margin: 12px 0 0; font-size: .75rem; color: var(--text-muted); line-height: 1.5; }
+
+/* 题目：题型标签、作答次数、退出 */
+.drill-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.drill-top-right { display: flex; align-items: center; gap: 12px; }
+.drill-count {
+  font-variant-numeric: tabular-nums;
+  font-size: .9rem;
+  color: var(--text-muted);
+}
+.drill-quit {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--site-radius-control);
+  padding: 4px 10px;
+  font-size: .8rem;
+  cursor: pointer;
+}
+.drill-staff {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
+.drill-staff svg { width: auto; max-width: 100%; }
+/* 谱表上方的音程记号（构建题，如 M10） */
+.drill-tag {
+  min-height: 1.4em;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #6366f1;
+  font-variant-numeric: tabular-nums;
+}
+.drill-tag:empty { display: none; }
+.building .drill-staff { cursor: pointer; touch-action: none; }
+
+/* 识别题键盘：上排 d m P M A，下面 1–15；选中的键高亮，两样都选好就提交 */
+.drill-pad { display: grid; gap: 6px; margin-bottom: 16px; }
+.drill-pad-row {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: 6px;
+}
+.drill-pad .option-btn {
+  justify-content: center;
+  min-height: 44px;
+  padding: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.drill-pad .qualities { margin-bottom: 6px; }
+.drill-pad .qualities .option-btn { flex-direction: column; gap: 0; min-height: 52px; line-height: 1.1; }
+.drill-pad .qualities b { font-size: 1.15rem; }
+.drill-pad .qualities small { font-size: .7rem; font-weight: 400; color: var(--text-muted); }
+
+/* 构建题按键：▲▼ | ♭ ♯ 𝄫 𝄪 | 确认 */
+.drill-build {
+  display: none;
+  grid-template-columns: 1fr 2fr 1.2fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.building .drill-build { display: grid; }
+.building .drill-pad { display: none; }
+.drill-nudge { display: grid; gap: 6px; }
+.drill-build .option-btn { justify-content: center; padding: 0; min-height: 44px; font-size: 1.1rem; font-weight: 700; }
+.drill-accidentals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+/* 变音记号用谱面同一套 Bravura 字形，手机上重升、重降也能正常显示 */
+.drill-accidentals .option-btn {
+  font-family: 'Bravura Text', serif;
+  font-size: 2.6rem !important;
+  font-weight: 400 !important;
+  line-height: 1;
+}
+.drill-confirm { margin: 0; min-height: 100%; }
+
+/* 结果 */
+.drill-stats { grid-template-columns: 1fr 1fr; }
+.drill-compare {
+  text-align: center;
+  font-size: .85rem;
+  color: var(--text-muted);
+  margin: -8px 0 20px;
+  white-space: pre-line;
+}
+/* 结果页按钮：复制成绩占一整行，下面是「再练一组」和「回到练习首页」 */
+.result-actions { display: grid; grid-template-columns: 1fr 1fr; }
+.result-actions .copy-btn { grid-column: 1 / -1; }
+
+/* 快速连点：不选中文字、不弹出长按菜单、不双击放大 */
+html[data-practice] body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
