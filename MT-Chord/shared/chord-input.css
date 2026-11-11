@@ -1,0 +1,35 @@
+/* 和弦记号课程 · 键盘输入（chord-input.js）：课件 Quiz 与课后练习共用。颜色沿用 site-visual.css 的 --site-* 变量。 */
+.chord-input { margin: 12px 0 0; }
+.chord-input-label { display: block; margin: 0 0 6px; font-size: 13px; color: var(--site-muted); }
+.chord-input-box {
+  display: block; width: 100%; box-sizing: border-box; min-height: 48px; margin: 0; padding: 10px 14px;
+  border: 1px solid var(--site-border); border-radius: var(--site-radius-control);
+  background: var(--site-panel); color: var(--site-text);
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 20px; letter-spacing: .04em;
+}
+.chord-input-box:focus { outline: 2px solid var(--site-focus, var(--site-accent)); outline-offset: 1px; border-color: transparent; }
+.chord-input-box::placeholder { font-family: var(--site-font); font-size: 14px; letter-spacing: 0; color: var(--site-muted); }
+/* 实时排版预览：识别成功显示印刷体记号，识别不了显示提示 */
+.chord-input-preview { min-height: 44px; margin: 8px 0 0; text-align: center; font-size: 32px; line-height: 1.3; color: var(--site-text); }
+.chord-input-preview.is-error { font-size: 14px; line-height: 1.6; color: var(--site-error); text-align: left; }
+.chord-input-hint { font-size: 14px; color: var(--site-muted); }
+.chord-input-preview .cs, .chord-input .cs :is(.cs-root, .cs-suffix, .cs-slash, .cs-bass) { color: inherit; }
+/* 符号快捷键：只在触屏设备上显示（电脑用键盘直接打） */
+.chord-input-keys { display: grid; grid-template-columns: repeat(auto-fit, minmax(30px, 44px)); justify-content: center; gap: 6px; margin: 8px 0 0; }
+.chord-input-key {
+  min-width: 0; min-height: 40px; margin: 0; padding: 0;
+  border: 1px solid var(--site-border); border-radius: var(--site-radius-control);
+  background: var(--site-panel); color: var(--site-text); font-family: Edwin, Georgia, serif; font-size: 20px;
+  cursor: pointer; touch-action: manipulation;
+}
+.chord-input-key .cs-music { font-family: 'Bravura Text', Bravura; }
+@media (hover: hover) and (pointer: fine) { .chord-input-keys { display: none; } }
+/* 输入说明 */
+.chord-input-guide { margin: 10px 0 0; font-size: 13px; color: var(--site-muted); }
+.chord-input-guide summary { cursor: pointer; text-align: center; }
+.chord-input-guide p { margin: 8px 0 0; line-height: 1.6; }
+.chord-input-guide table { margin: 8px auto 0; border-collapse: collapse; }
+.chord-input-guide td { padding: 3px 8px; vertical-align: middle; }
+.chord-input-guide td:first-child { text-align: right; white-space: nowrap; }
+.chord-input-guide kbd { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; padding: 1px 6px; border: 1px solid var(--site-border); border-radius: 4px; color: var(--site-text); }
+.chord-input-guide .cs { font-size: 18px; color: var(--site-text); }

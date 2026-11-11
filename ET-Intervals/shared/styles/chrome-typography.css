@@ -1,0 +1,12 @@
+/* ET03–18 typography only. Preserve each course's geometry, palette, DOM,
+   training controls and reports. Loaded after site-visual.css. */
+html[data-visual="ear"] > body > .top-header,
+html[data-visual="ear"] > body > .footer-bar {
+  font-family: var(--site-font);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--site-muted);
+}
+html[data-visual="ear"] > body > .top-header { letter-spacing: .3px; }
+html[data-visual="ear"] > body > .footer-bar { letter-spacing: normal; }

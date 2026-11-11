@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html data-visual="site" data-public-visual lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" data-description-en="Learn to read and write chord symbols accurately in six short units over one week." content="用一周时间，系统读懂和弦记号。">
+  <title data-title-en="Chord Symbols · Sheen Yang">和弦记号用法 · Sheen Yang</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
+  <link rel="stylesheet" href="../../../assets/site-visual.css">
+  <link rel="stylesheet" href="../../courses.css">
+  <link rel="stylesheet" href="../../../shared/notation/notation-styles.css">
+  <link rel="stylesheet" href="entry-test.css">
+  <script src="../../../assets/site-analytics.js" defer></script>
+  <link rel="stylesheet" href="../../../assets/site-navigation.css">
+  <script src="/assets/site-language.js" defer></script>
+  <script src="../../../assets/site-navigation.js" defer></script>
+  <script src="../../courses.js" defer></script>
+</head>
+<body>
+<header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/">Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
+
+<main class="shell private-main training-detail entry-test">
+<a class="back training-back" href="../"><span data-content-lang="zh">← 返回和弦记号用法</span><span data-content-lang="en" hidden>← Chord Symbols</span></a>
+<h1 class="page-title public-title"><span data-content-lang="zh">入学自测</span><span data-content-lang="en" hidden>Entry Self-Test</span></h1>
+<div class="training-copy" data-content-lang="zh"><p>这份自测帮助你判断自己是否适合学习和弦记号用法。第一部分是 10 道音程题，第二部分是和弦记号题。</p><p>每题答完会马上告诉你对错和讲解。不会的题可以跳过，跳过不得分。测试结束后会生成一份成绩单，报名时可以发给老师。</p></div>
+<div class="training-copy" data-content-lang="en" hidden inert><p>This self-test helps you find out whether Chord Symbols is right for you. Part 1 has 10 interval questions; Part 2 covers chord symbols.</p><p>You will see whether each answer is correct, with an explanation, straight away. You can skip any question you are unsure of, but skipped questions score zero. At the end you will get a results report that you can send to the teacher when you enrol.</p></div>
+<div id="entryTest" aria-live="polite"></div>
+<noscript><span data-content-lang="zh">请启用 JavaScript 进行测试。</span><span data-content-lang="en" hidden>Please enable JavaScript to take the test.</span></noscript>
+</main>
+<footer class="visual-footer">© <span id="year"></span> Sheen Yang</footer>
+<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js" defer></script>
+<script src="../../../shared/notation/notation-config.js?v=20261029b" defer></script>
+<script src="../../../shared/notation/notation-renderer.js?v=20261029b" defer></script>
+<script src="../../../MT-Chord/shared/chord-stage.js?v=20261104b" defer></script>
+<script src="../../../MT-Chord/shared/chord-input.js?v=20261104a" defer></script>
+<script src="entry-test.js" defer></script>
+</body>
+</html>

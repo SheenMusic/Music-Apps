@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-visual="practice" data-practice data-mt-shell>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>MT06 · 音程熟练度｜长期练习</title>
+<link rel="stylesheet" href="../../../shared/styles/practice-base.css">
+<link rel="stylesheet" href="../../../assets/site-visual.css">
+<link rel="stylesheet" href="../../../shared/notation/notation-styles.css">
+<link rel="stylesheet" href="../../../shared/styles/course-shell.css">
+<link rel="stylesheet" href="training.css?v=20261102a">
+<script src="../../../assets/site-analytics.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.5/build/cjs/vexflow.js" defer></script>
+<script src="../../../shared/notation/notation-config.js" defer></script>
+<script src="../../../shared/notation/notation-renderer.js" defer></script>
+<script src="training.js?v=20261103a" defer></script>
+</head>
+<body>
+<main class="app-container">
+  <header class="app-header">
+    <div class="header-top-bar">
+      <span class="header-title-left">MUSIC THEORY · INTERVAL</span>
+      <div class="header-right-group">
+        <span class="question-counter hidden" id="questionCounter"></span>
+        <span class="header-title-right">LESSON 06</span>
+      </div>
+    </div>
+    <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
+  </header>
+
+  <!-- 1. 开始：选题型，看最近的成绩 -->
+  <section class="card-container" id="startScreen">
+    <div class="start-header">
+      <p class="subtitle">音程理论基础 · 长期练习</p>
+      <h1 class="main-title">音程熟练度</h1>
+    </div>
+    <div class="start-info">
+      <p>• 一度到十五度，大、小、纯、增、减随机出现；所有音在 C2–C6 之间。构建题有向上，也有向下。</p>
+      <p>• 每组 30 次作答。答错可以继续尝试，但每作答一次就用掉一次，30 次用完这一组就结束。</p>
+      <p>• 每道题从出现开始计时，到答对为止（中间答错的时间也算）。答题时不显示秒表，答对后才显示用时。</p>
+      <p>• 不设通过标准。每组结束后显示正确率和答对题的平均用时，和自己以前的成绩比一比。</p>
+    </div>
+    <h2 class="drill-label">题型</h2>
+    <div class="drill-choices" data-group="mode">
+      <button class="option-btn selected" type="button" data-value="identify"><span>识别音程</span></button>
+      <button class="option-btn" type="button" data-value="build"><span>构建音程</span></button>
+    </div>
+    <!-- 所选题型的历史：最近一组、最快平均、最高正确率、最近 7 天的平均用时走势 -->
+    <div class="history" id="history"></div>
+    <button class="primary-btn start-btn" id="startBtn" type="button">开始练习</button>
+    <p class="storage-note">成绩只保存在这台设备的浏览器里，超过 7 天不打开本页可能会被清除。建议在 7 天内集中练习，看看自己速度的变化。</p>
+  </section>
+
+  <!-- 2. 题目 -->
+  <section class="card-container hidden" id="questionCard">
+    <div class="drill-top">
+      <span class="type-badge single" id="kindBadge"></span>
+      <span class="drill-top-right">
+        <span class="drill-count" id="countText"></span>
+        <button class="drill-quit" id="quitBtn" type="button">退出</button>
+      </span>
+    </div>
+    <h2 class="question-prompt" id="prompt"></h2>
+    <div class="staff-question drill-staff" id="staffBox">
+      <div class="drill-tag" id="tag"></div>
+      <div id="staff" aria-label="五线谱谱例"></div>
+    </div>
+    <!-- 识别题：上排五个性质键，下面 1–15 度数键；两样都选好就提交 -->
+    <div class="drill-pad" id="pad"></div>
+    <!-- 构建题：左边微调音高，中间降号、升号（上排）和重降、重升（下排），右边确认 -->
+    <div class="drill-build" id="buildPad">
+      <div class="drill-nudge">
+        <button class="option-btn" id="upBtn" type="button" aria-label="升高一个音级">▲</button>
+        <button class="option-btn" id="downBtn" type="button" aria-label="降低一个音级">▼</button>
+      </div>
+      <div class="drill-accidentals">
+        <button class="option-btn" type="button" data-accidental="-1" aria-label="降号">&#xE260;</button>
+        <button class="option-btn" type="button" data-accidental="1" aria-label="升号">&#xE262;</button>
+        <button class="option-btn" type="button" data-accidental="-2" aria-label="重降号">&#xE264;</button>
+        <button class="option-btn" type="button" data-accidental="2" aria-label="重升号">&#xE263;</button>
+      </div>
+      <button class="primary-btn drill-confirm" id="confirmBtn" type="button" disabled>确认</button>
+    </div>
+    <div role="status" aria-live="polite" class="feedback-box hidden" id="feedback">
+      <div class="feedback-header"><span id="feedbackTitle"></span></div>
+    </div>
+  </section>
+
+  <!-- 3. 结果 -->
+  <section class="card-container hidden" id="resultScreen">
+    <h2 class="result-title" id="resultTitle">本组完成</h2>
+    <div class="result-stats-grid drill-stats">
+      <div class="stat-card">
+        <span class="stat-value" id="resAccuracy"></span>
+        <span class="stat-label" id="resAccuracyLabel">正确率</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value" id="resAverage"></span>
+        <span class="stat-label">答对题平均用时</span>
+      </div>
+    </div>
+    <p class="drill-compare" id="resCompare"></p>
+    <div class="detail-list-wrapper">
+      <h3>逐题记录</h3>
+      <div class="detail-list" id="detailList"></div>
+    </div>
+    <div class="result-actions">
+      <button class="primary-btn copy-btn" id="copyBtn" type="button">复制成绩</button>
+      <button class="secondary-btn" id="againBtn" type="button">再练一组</button>
+      <button class="secondary-btn" id="restartBtn" type="button">回到练习首页</button>
+    </div>
+  </section>
+
+  <div class="return-home-wrap">
+    <button class="return-home-link" id="homeBtn" type="button">← 返回第六课首页</button>
+  </div>
+  <footer class="app-footer">©Sheen · Music Theory</footer>
+</main>
+<noscript>请启用 JavaScript 进行练习。</noscript>
+</body>
+</html>

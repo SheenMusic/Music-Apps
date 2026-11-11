@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html data-visual="ear" lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Ear Training · 音程听力综合测试</title>
+  <style>
+    :root {
+      --primary: #1c1c1e;
+      --success: #34c759;
+      --warning: #ff9f0a;
+      --danger: #ff3b30;
+      --bg: #f2f2f7;
+      --card-bg: #ffffff;
+      --text-main: #1c1c1e;
+      --text-secondary: #6e6e73;
+      --text-muted: #8e8e93;
+      --text-tertiary: #aeaeb2;
+      --border: #d1d1d6;
+      --surface-secondary: #f2f2f7;
+      --green-soft: rgba(52, 199, 89, 0.12);
+      --red-soft: rgba(255, 59, 48, 0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: var(--site-font);
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: env(safe-area-inset-top, 12px) max(16px, env(safe-area-inset-right)) env(safe-area-inset-bottom, 16px) max(16px, env(safe-area-inset-left));
+      -webkit-font-smoothing: antialiased;
+    }
+    button { font: inherit; -webkit-tap-highlight-color: transparent; }
+    .top-header {
+      width: 100%; max-width: 480px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+      color: var(--text-muted); padding: 8px 2px 18px; text-transform: uppercase;
+    }
+    .main-wrapper { width: 100%; max-width: 480px; margin: 0 auto; flex: 1; }
+    .card {
+      background: var(--card-bg); border-radius: var(--site-radius-card); padding: 24px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.025), 0 8px 24px rgba(0,0,0,0.035);
+      border: 1px solid rgba(209,209,214,0.65);
+    }
+    .hidden { display: none !important; }
+    .sub-title-top { font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; }
+    .main-title { font-size: 30px; font-weight: 600; line-height: 1.18; margin-bottom: 7px; }
+    .main-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+    .rule-list { font-size: 13px; color: var(--text-secondary); line-height: 1.7; padding-left: 18px; margin-bottom: 20px; }
+    .rule-list strong { color: var(--text-main); font-weight: 600; }
+
+    .btn {
+      width: 100%; padding: 13px; border: none; border-radius: var(--site-radius-control); font-size: 14px; font-weight: 500;
+      cursor: pointer; min-height: 46px; display: flex; justify-content: center; align-items: center; gap: 6px;
+      transition: background-color 0.18s ease, color 0.18s ease, transform 0.08s ease;
+    }
+    .btn:active:not(:disabled) { transform: scale(0.985); }
+    .btn-main { background: var(--site-accent, #1c1c1e); color: var(--site-on-accent, #fff); }
+    .btn-main:disabled { background: var(--site-soft, #e5e5ea); color: var(--text-tertiary); cursor: not-allowed; }
+    .btn-tone { background: var(--site-soft, #e5e5ea); color: var(--text-main); }
+    .btn-tone.playing { background: var(--warning); color: #fff; }
+    .btn-quiet { background: transparent; color: var(--text-muted); font-size: 13px; min-height: 36px; padding: 8px; }
+
+    .quiz-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .quiz-part { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    .quiz-count { font-size: 13px; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+    .quiz-count { border: none; background: none; cursor: pointer; padding: 4px 0 4px 8px; }
+    .progress-slider { width: 100%; margin: 0 0 18px; accent-color: var(--text-main); cursor: pointer; }
+    .nav-panel { background: var(--surface-secondary); border-radius: var(--site-radius-card); padding: 12px; margin-bottom: 18px; }
+    .nav-grid { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 5px; }
+    .nav-cell {
+      border: 1px solid var(--border); background: var(--card-bg); color: var(--text-secondary);
+      border-radius: 8px; font-size: 12px; padding: 7px 0; cursor: pointer; font-variant-numeric: tabular-nums;
+    }
+    .nav-cell.answered { background: var(--text-main); border-color: var(--text-main); color: var(--card-bg); }
+    .nav-cell.current { outline: 2px solid var(--warning); outline-offset: 1px; }
+    .nav-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 12px; color: var(--text-muted); }
+    .nav-submit { width: auto; min-height: 32px; padding: 4px 12px; color: var(--danger); }
+    .nav-row { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+    .question-type { font-size: 20px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .ref-note { font-size: 13px; color: var(--text-secondary); text-align: center; margin-bottom: 14px; }
+    .ref-note strong { font-size: 26px; color: var(--text-main); font-weight: 600; display: block; margin-top: 2px; font-variant-numeric: tabular-nums; }
+    .answer-gap { height: 18px; }
+
+    .choice-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 5px; }
+    .answer-area { margin-top: 18px; }
+    .quality-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; margin-top: 12px; }
+    .choice {
+      border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main);
+      border-radius: var(--site-radius-control); padding: 10px 0; font-size: 13px; cursor: pointer; min-height: 42px; white-space: nowrap;
+    }
+    .choice.selected { background: var(--text-main); color: var(--card-bg); border-color: var(--text-main); }
+
+    /* 键盘：已知音上下各两个八度。宽屏铺满窗口宽度；太窄时白键保持最小宽度，可左右拖动 */
+    .keyboard-scroll {
+      width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+      overflow-x: auto; overflow-y: hidden; padding: 0 16px; margin: 4px 0 6px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+    }
+    .keyboard { position: relative; height: 130px; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+    .key { position: absolute; top: 0; border: 1px solid var(--border); cursor: pointer; padding: 0; }
+    .key.white { height: 100%; background: #fff; border-radius: 0 0 6px 6px; z-index: 1; }
+    .key.black { height: 62%; background: #2c2c2e; border-color: #2c2c2e; border-radius: 0 0 4px 4px; z-index: 2; }
+    .key.ref { box-shadow: inset 0 -6px 0 var(--warning); }
+    .key.selected.white { background: #0a84ff; border-color: #0a84ff; }
+    .key.selected.black { background: #0a84ff; border-color: #0a84ff; }
+    .key-label { position: absolute; bottom: 4px; left: 0; right: 0; font-size: 9px; color: #8e8e93; text-align: center; pointer-events: none; }
+    .key.selected .key-label { color: #fff; }
+    .key-legend { font-size: 12px; color: var(--text-muted); text-align: center; min-height: 18px; }
+
+    .timbre-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-width: 200px; margin: 10px auto 0; }
+    .timbre-switch .choice { min-height: 32px; padding: 5px 0; font-size: 12px; }
+    #resultScreen .timbre-switch { margin: 0 0 6px auto; }
+    .sample-credit { font-size: 11px; color: var(--text-tertiary); margin-top: 14px; text-align: center; }
+    .submit-row { margin-top: 20px; display: grid; gap: 6px; }
+
+    .score { font-size: 52px; font-weight: 600; text-align: center; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .score-sub { font-size: 13px; color: var(--text-secondary); text-align: center; margin: 4px 0 18px; }
+    .summary-details { margin-top: 20px; border-top: 1px solid var(--site-border, #e5e5ea); }
+    .summary-details summary { font-size: 15px; font-weight: 600; padding: 14px 0 10px; cursor: pointer; }
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 16px; }
+    .summary-table td { padding: 9px 4px; border-bottom: 1px solid var(--site-border, #e5e5ea); }
+    .summary-table td:nth-child(2) { text-align: right; font-variant-numeric: tabular-nums; }
+    .summary-table td:nth-child(3) { text-align: right; color: var(--text-secondary); width: 56px; font-variant-numeric: tabular-nums; }
+    .summary-table tr.group td { font-weight: 600; }
+    .summary-table tr.sub td:first-child { padding-left: 16px; color: var(--text-secondary); }
+    .weak-box { font-size: 13px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-secondary); border-radius: var(--site-radius-card); padding: 10px 12px; margin-bottom: 18px; }
+    .weak-box strong { color: var(--text-main); font-weight: 600; }
+
+    .review-title { font-size: 15px; font-weight: 600; margin: 4px 0 10px; }
+    .review-filter { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .review-item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--site-border, #e5e5ea); font-size: 13px; }
+    .review-head { font-size: 12px; color: var(--text-muted); margin-bottom: 2px; }
+    .review-mark { font-weight: 600; margin-right: 4px; }
+    .review-mark.ok { color: var(--success); }
+    .review-mark.bad { color: var(--danger); }
+    .review-correct { color: var(--text-secondary); }
+    .review-play { border: none; background: var(--site-soft, #e5e5ea); color: var(--text-main); border-radius: 999px; width: 40px; height: 40px; cursor: pointer; font-size: 14px; }
+    .review-play.playing { background: var(--warning); color: #fff; }
+    .result-actions { display: grid; gap: 8px; margin-top: 18px; }
+    .footer-bar { text-align: center; font-size: 11px; color: var(--text-tertiary); padding: 17px 0 8px; letter-spacing: 0.04em; }
+    @media (max-width: 380px) {
+      .card { padding: 20px 14px; }
+      .choice-grid { gap: 4px; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+  </style>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../shared/styles/chrome-typography.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+</head>
+<body>
+
+  <header class="top-header">
+    <span>EAR TRAINING · INTERVAL</span>
+    <span>ASSESSMENT</span>
+  </header>
+
+  <main class="main-wrapper">
+
+    <!-- 开始页 -->
+    <section class="card" id="startScreen">
+      <div class="sub-title-top">音程听力 · 综合测试</div>
+      <h1 class="main-title">音程听力综合测试</h1>
+      <p class="main-desc">这个练习会包含二度到十五度的音程听辨，共 48 题，完成时间预计 10 分钟左右。低音在手机等移动设备的扬声器上播放不容易听清，因此建议在开始前准备好耳机。</p>
+      <ul class="rule-list">
+        <li>支持用等音程作答</li>
+        <li>提交前可以反复修改答案</li>
+        <li>提交后可以查看全部答题记录和正确答案</li>
+        <li>中途退出需重新开始</li>
+      </ul>
+      <button class="btn btn-main" onclick="startExam()">开始测试</button>
+      <div class="sample-credit">钢琴采样：Salamander Grand Piano · Alexander Holm · CC BY 3.0</div>
+    </section>
+
+    <!-- 答题页 -->
+    <section class="card hidden" id="quizScreen">
+      <div class="quiz-top">
+        <span class="quiz-part" id="partText">--</span>
+        <button type="button" class="quiz-count" id="countText" onclick="toggleNavPanel()" aria-label="题目导航">-- / 48 ▾</button>
+      </div>
+      <!-- 进度条可拖动：松手后跳到对应题目 -->
+      <input type="range" class="progress-slider" id="progressSlider" min="1" max="48" value="1" aria-label="拖动跳题"
+        oninput="previewSlider()" onchange="goTo(Number(this.value) - 1)">
+
+      <!-- 题目导航：已答的题填色，不显示对错 -->
+      <div class="nav-panel hidden" id="navPanel">
+        <div class="nav-grid" id="navGrid"></div>
+        <div class="nav-foot">
+          <span id="answeredText">--</span>
+          <button type="button" class="btn btn-quiet nav-submit" onclick="submitExam()">交卷</button>
+        </div>
+      </div>
+
+      <div class="question-type" id="typeText">--</div>
+      <div class="ref-note hidden" id="refNoteBox">已知音<strong id="refNoteText">--</strong></div>
+
+      <button class="btn btn-tone" id="playBtn" onclick="playCurrent()">▶ 播放</button>
+      <div class="timbre-switch">
+        <button type="button" class="choice selected" data-timbre="piano" onclick="setTimbre('piano')">钢琴</button>
+        <button type="button" class="choice" data-timbre="sine" onclick="setTimbre('sine')">正弦波</button>
+      </div>
+
+      <!-- 第一部分：度数一行、性质一行，互不影响 -->
+      <div id="partOneAnswer" class="answer-area">
+        <div class="choice-grid" id="degreeGrid"></div>
+        <div class="quality-grid" id="qualityGrid"></div>
+      </div>
+
+      <!-- 第二部分：键盘 -->
+      <div id="partTwoAnswer" class="answer-area hidden">
+        <div class="keyboard-scroll" id="keyboardScroll"><div class="keyboard" id="keyboard"></div></div>
+        <div class="key-legend" id="keyLegend"></div>
+      </div>
+
+      <div class="submit-row">
+        <div class="nav-row">
+          <button class="btn btn-tone" id="prevBtn" onclick="goTo(current - 1)">‹ 上一题</button>
+          <button class="btn btn-main" id="nextBtn" onclick="nextOrSubmit()">下一题 ›</button>
+        </div>
+        <button class="btn btn-quiet" onclick="quitExam()">退出测试</button>
+      </div>
+    </section>
+
+    <!-- 结果页 -->
+    <section class="card hidden" id="resultScreen">
+      <div class="sub-title-top" style="text-align: center;">测试完成</div>
+      <div class="score" id="scoreText">--</div>
+      <div class="score-sub" id="scoreSub">--</div>
+
+      <div class="review-title">逐题回看</div>
+      <div class="review-filter">
+        <button class="choice selected" id="filterWrong" onclick="setReviewFilter('wrong')">只看错题</button>
+        <button class="choice" id="filterAll" onclick="setReviewFilter('all')">全部题目</button>
+      </div>
+      <div class="timbre-switch">
+        <button type="button" class="choice selected" data-timbre="piano" onclick="setTimbre('piano')">钢琴</button>
+        <button type="button" class="choice" data-timbre="sine" onclick="setTimbre('sine')">正弦波</button>
+      </div>
+      <div id="reviewList"></div>
+
+      <details class="summary-details">
+        <summary>分项正确率</summary>
+        <table class="summary-table"><tbody id="summaryBody"></tbody></table>
+        <div class="weak-box" id="weakBox"></div>
+      </details>
+
+      <div class="result-actions">
+        <button class="btn btn-main" onclick="copyReport()">复制测试结果</button>
+        <button class="btn btn-tone" onclick="backToStart()">重新测试</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer-bar">©Sheen · Ear Training</footer>
+
+<script src="../shared/interval-spelling.js"></script>
+<script src="exam-questions.js"></script>
+<script>
+  const E = window.IntervalExam;
+  const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+  let questions = [];
+  let current = 0;
+  let examRunning = false;
+  let reviewFilter = 'wrong';
+  let examStart = 0;
+  let examSeconds = 0;
+
+  function $(id) { return document.getElementById(id); }
+
+  function show(screenId) {
+    ['startScreen', 'quizScreen', 'resultScreen'].forEach(id => $(id).classList.toggle('hidden', id !== screenId));
+    window.scrollTo(0, 0);
+  }
+
+  // 音名：键盘上的音只看音高，黑键同时写出升、降两种
+  function midiLabel(midi) {
+    const pc = midi % 12, octave = Math.floor(midi / 12) - 1;
+    return SHARP_NAMES[pc] === FLAT_NAMES[pc] ? `${SHARP_NAMES[pc]}${octave}` : `${SHARP_NAMES[pc]}${octave}/${FLAT_NAMES[pc]}${octave}`;
+  }
+
+  // ---------- 声音 ----------
+  // 默认钢琴采样（网站共享 audio_pn：Salamander Grand Piano，C2–C6，每隔小三度一个，每个音用最近的采样、变调不超过 1 个半音）。
+  // 学生可以随时换成正弦波（没有泛音，纯八度、纯十二度不会被泛音干扰），选择一直保留到再切回来；不影响成绩。
+  const SAMPLE_BASE = '../../audio_pn/';
+  const SAMPLE_NAMES = { 0: 'C', 3: 'Ds', 6: 'Fs', 9: 'A' };
+  const MELODIC_NOTE = 1.2, MELODIC_GAP = 1.25, HARMONIC_NOTE = 2.4;
+  let timbre = 'piano';
+  let audioCtx = null;
+  let stale = false;
+  let playingNodes = [];
+  let playingButton = null;
+  let playingTimer = null;
+  let generation = 0;
+  const buffers = new Map();
+
+  // iPhone：静音键开着也出声；页面回到前台后旧的音频可能没有输出，下一次点按时新建（已解码的采样沿用）
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && audioCtx) stale = true; });
+  function context() {
+    if (navigator.audioSession && navigator.audioSession.type !== 'playback') {
+      try { navigator.audioSession.type = 'playback'; } catch (e) {}
+    }
+    if (audioCtx && (stale || audioCtx.state === 'closed')) {
+      audioCtx.close().catch(() => {});
+      audioCtx = null;
+      stale = false;
+    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state !== 'running') audioCtx.resume().catch(() => {});
+    return audioCtx;
+  }
+
+  function sampleOf(midi) {
+    const sample = Math.max(36, Math.min(84, Math.round(midi / 3) * 3));
+    return { file: `${SAMPLE_NAMES[sample % 12]}${Math.floor(sample / 12) - 1}.mp3`, rate: Math.pow(2, (midi - sample) / 12) };
+  }
+
+  function loadSample(midi) {
+    const { file } = sampleOf(midi);
+    if (!buffers.has(file)) {
+      const request = fetch(SAMPLE_BASE + file)
+        .then(response => { if (!response.ok) throw new Error(file); return response.arrayBuffer(); })
+        .then(data => new Promise((resolve, reject) => context().decodeAudioData(data, resolve, reject)))
+        .catch(error => { console.warn('钢琴采样载入失败', error); buffers.delete(file); return null; });
+      buffers.set(file, request);
+    }
+    return buffers.get(file);
+  }
+
+  // 开始测试时先载入全部 17 个采样（约 2.4 MB）
+  function preloadPiano() {
+    for (let midi = 36; midi <= 84; midi += 3) loadSample(midi);
+  }
+
+  function stopSound() {
+    generation++;
+    playingNodes.forEach(node => { try { node.stop(); } catch (e) {} });
+    playingNodes = [];
+    clearTimeout(playingTimer);
+    if (playingButton) playingButton.classList.remove('playing');
+    playingButton = null;
+  }
+
+  // 结尾 0.12 秒淡出到静音，避免爆音
+  function fadeOut(ctx, start, seconds) {
+    const fade = ctx.createGain();
+    fade.gain.setValueAtTime(1, start);
+    fade.gain.setValueAtTime(1, start + seconds - 0.12);
+    fade.gain.linearRampToValueAtTime(0, start + seconds);
+    fade.connect(ctx.destination);
+    return fade;
+  }
+
+  // 正弦波：只有基音，起音 10 毫秒、自然衰减
+  function sineTone(ctx, midi, start, seconds, volume) {
+    const env = ctx.createGain(), osc = ctx.createOscillator();
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(volume, start + 0.01);
+    env.gain.setTargetAtTime(0, start + 0.01, 0.9);
+    env.connect(fadeOut(ctx, start, seconds));
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440 * Math.pow(2, (midi - 69) / 12), start);
+    osc.connect(env);
+    osc.start(start); osc.stop(start + seconds);
+    playingNodes.push(osc);
+  }
+
+  function pianoTone(ctx, buffer, midi, start, seconds, volume) {
+    if (!buffer) return;
+    const source = ctx.createBufferSource(), gain = ctx.createGain(), clean = ctx.createBiquadFilter();
+    source.buffer = buffer;
+    source.playbackRate.value = sampleOf(midi).rate;
+    gain.gain.value = volume;
+    // 滤掉比这个音低一个八度以下的声音：C6 采样（B5、C6 用它）的余音里有将近一半是 200 Hz 以下的低频杂音，
+    // 听起来像混响很大；其他采样这部分很少，滤掉也不影响音色
+    clean.type = 'highpass';
+    clean.frequency.value = 440 * Math.pow(2, (midi - 69) / 12) * 0.5;
+    clean.Q.value = 0.7;
+    source.connect(clean); clean.connect(gain); gain.connect(fadeOut(ctx, start, seconds));
+    source.start(start); source.stop(start + seconds);
+    playingNodes.push(source);
+  }
+
+  // 旋律题：两个音先后各 1.2 秒；和声题：两个音同时 2.4 秒
+  async function playQuestion(question, button) {
+    stopSound();
+    const mine = generation;
+    const ctx = context();
+    const notes = question.played.map(n => n.midi);
+    const loaded = timbre === 'piano' ? await Promise.all(notes.map(loadSample)) : null;
+    if (mine !== generation) return;   // 载入期间又按了别的
+    const start = ctx.currentTime + 0.05;
+    const harmonic = question.type === 'harm';
+    notes.forEach((midi, i) => {
+      const at = harmonic ? start : start + i * MELODIC_GAP;
+      const seconds = harmonic ? HARMONIC_NOTE : MELODIC_NOTE;
+      if (timbre === 'piano') pianoTone(ctx, loaded[i], midi, at, seconds, harmonic ? 0.6 : 0.8);
+      else sineTone(ctx, midi, at, seconds, harmonic ? 0.3 : 0.42);
+    });
+    const total = harmonic ? HARMONIC_NOTE : MELODIC_GAP + MELODIC_NOTE;
+    playingButton = button;
+    button.classList.add('playing');
+    playingTimer = setTimeout(() => {
+      button.classList.remove('playing');
+      if (playingButton === button) playingButton = null;
+    }, total * 1000 + 150);
+  }
+
+  function playCurrent() {
+    playQuestion(questions[current], $('playBtn'));
+  }
+
+  // 换音色：答题页换完立刻用新音色重播这一题；回看页只切换，学生自己点 ▶
+  function setTimbre(value) {
+    timbre = value;
+    document.querySelectorAll('.timbre-switch button').forEach(btn => btn.classList.toggle('selected', btn.dataset.timbre === value));
+    if (!$('quizScreen').classList.contains('hidden')) playCurrent();
+    else stopSound();
+  }
+
+  // ---------- 答题 ----------
+  function startExam() {
+    preloadPiano();
+    examStart = Date.now();
+    questions = E.buildExam();
+    questions.forEach(q => { q.draft = { degree: null, quality: null, midi: null }; });
+    $('navGrid').replaceChildren();
+    $('navPanel').classList.add('hidden');
+    current = 0;
+    examRunning = true;
+    buildDegreeGrid();
+    buildQualityGrid();
+    show('quizScreen');
+    loadQuestion();
+  }
+
+  function quitExam() {
+    if (!confirm('退出后本次作答不保存，需要重新开始。确定退出吗？')) return;
+    stopSound();
+    examRunning = false;
+    show('startScreen');
+  }
+
+  function backToStart() {
+    stopSound();
+    show('startScreen');
+  }
+
+  function buildDegreeGrid() {
+    const grid = $('degreeGrid');
+    grid.replaceChildren();
+    for (let d = 2; d <= 15; d++) {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = String(d);
+      btn.dataset.degree = d;
+      btn.onclick = () => chooseDegree(d);
+      grid.appendChild(btn);
+    }
+  }
+
+  // 性质按钮固定为 m M P A d，与度数互不影响
+  function buildQualityGrid() {
+    const grid = $('qualityGrid');
+    grid.replaceChildren();
+    E.QUALITIES.forEach(quality => {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = quality;
+      btn.dataset.quality = quality;
+      btn.onclick = () => chooseQuality(quality);
+      grid.appendChild(btn);
+    });
+  }
+
+  function chooseDegree(degree) {
+    questions[current].draft.degree = degree;
+    document.querySelectorAll('#degreeGrid .choice').forEach(btn => btn.classList.toggle('selected', Number(btn.dataset.degree) === degree));
+    updateSubmit();
+  }
+
+  function chooseQuality(quality) {
+    questions[current].draft.quality = quality;
+    document.querySelectorAll('#qualityGrid .choice').forEach(btn => btn.classList.toggle('selected', btn.dataset.quality === quality));
+    updateSubmit();
+  }
+
+  // 键盘：已知音上下各两个八度（两端是黑键时各多放一个白键）；按键不发声
+  const MIN_WHITE_KEY = 26; // 白键最小宽度（px），窗口放不下时改为左右拖动
+  const isBlack = midi => [1, 3, 6, 8, 10].includes(((midi % 12) + 12) % 12);
+  let keyboardRef = null;
+
+  function buildKeyboard(refMidi) {
+    keyboardRef = refMidi;
+    const board = $('keyboard');
+    board.replaceChildren();
+    const low = refMidi - 24 - (isBlack(refMidi - 24) ? 1 : 0);
+    const high = refMidi + 24 + (isBlack(refMidi + 24) ? 1 : 0);
+    for (let m = low; m <= high; m++) {
+      const key = document.createElement('button');
+      key.type = 'button';
+      key.className = 'key ' + (isBlack(m) ? 'black' : 'white');
+      key.dataset.midi = m;
+      key.setAttribute('aria-label', midiLabel(m));
+      if (!isBlack(m) && m % 12 === 0) {
+        const label = document.createElement('span');
+        label.className = 'key-label';
+        label.textContent = midiLabel(m);
+        key.appendChild(label);
+      }
+      if (m === refMidi) key.classList.add('ref');
+      key.onclick = () => chooseKey(m);
+      board.appendChild(key);
+    }
+    layoutKeyboard();
+  }
+
+  // 按窗口宽度排键：放得下就铺满，放不下就用最小宽度并把已知音滚到正中间
+  function layoutKeyboard() {
+    if (keyboardRef === null) return;
+    const scroller = $('keyboardScroll'), board = $('keyboard');
+    const keys = [...board.children];
+    const whites = keys.filter(k => k.classList.contains('white'));
+    const available = scroller.clientWidth - 32;
+    const keyWidth = Math.max(MIN_WHITE_KEY, available / whites.length);
+    board.style.width = `${keyWidth * whites.length}px`;
+    let whiteIndex = 0;
+    keys.forEach(key => {
+      if (key.classList.contains('white')) {
+        key.style.left = `${whiteIndex * keyWidth}px`;
+        key.style.width = `${keyWidth}px`;
+        whiteIndex++;
+      } else {
+        key.style.left = `${whiteIndex * keyWidth - keyWidth * 0.3}px`;
+        key.style.width = `${keyWidth * 0.6}px`;
+      }
+    });
+    const ref = board.querySelector('.key.ref');
+    scroller.scrollLeft = ref.offsetLeft + ref.offsetWidth / 2 + 16 - scroller.clientWidth / 2;
+  }
+
+  window.addEventListener('resize', () => {
+    if (!$('partTwoAnswer').classList.contains('hidden')) layoutKeyboard();
+  });
+
+  function chooseKey(midi) {
+    questions[current].draft.midi = midi;
+    showKeySelection(midi);
+    updateSubmit();
+  }
+
+  function showKeySelection(midi) {
+    document.querySelectorAll('#keyboard .key').forEach(key => key.classList.toggle('selected', Number(key.dataset.midi) === midi));
+    $('keyLegend').textContent = midi === null ? '' : `你选的音：${midiLabel(midi)}`;
+  }
+
+  // 草稿是否已经是完整答案（第一部分要度数和性质都选了）
+  function isAnswered(q) {
+    return q.part === 1 ? q.draft.degree !== null && q.draft.quality !== null : q.draft.midi !== null;
+  }
+
+  // 选答案时只刷新导航格子，不改按钮：「下一题」随时可以点，没答的题交卷时按错算
+  function updateSubmit() {
+    renderNav();
+  }
+
+  function renderNav() {
+    const grid = $('navGrid');
+    if (grid.children.length !== questions.length) {
+      grid.replaceChildren();
+      questions.forEach((q, i) => {
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'nav-cell';
+        cell.textContent = i + 1;
+        cell.onclick = () => { $('navPanel').classList.add('hidden'); goTo(i); };
+        grid.appendChild(cell);
+      });
+    }
+    [...grid.children].forEach((cell, i) => {
+      cell.classList.toggle('answered', isAnswered(questions[i]));
+      cell.classList.toggle('current', i === current);
+    });
+    const answered = questions.filter(isAnswered).length;
+    $('answeredText').textContent = `已答 ${answered} / ${questions.length}`;
+  }
+
+  function toggleNavPanel() {
+    $('navPanel').classList.toggle('hidden');
+    renderNav();
+  }
+
+  // 拖动进度条时只预览题号，松手才跳题
+  function previewSlider() {
+    $('countText').textContent = `${$('progressSlider').value} / ${questions.length} ▾`;
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= questions.length) return;
+    current = index;
+    loadQuestion();
+  }
+
+  function nextOrSubmit() {
+    if (current < questions.length - 1) goTo(current + 1);
+    else submitExam();
+  }
+
+  function loadQuestion() {
+    stopSound();
+    const q = questions[current];
+    const isOne = q.part === 1;
+    $('partText').textContent = isOne ? '第一部分 · 音程性质' : '第二部分 · 听音找音';
+    $('countText').textContent = `${current + 1} / ${questions.length} ▾`;
+    $('progressSlider').value = current + 1;
+    $('prevBtn').disabled = current === 0;
+    $('nextBtn').textContent = current === questions.length - 1 ? '交卷' : '下一题 ›';
+    // 答题时不提示上行、下行或和声，只在回看和报告里显示
+    $('typeText').textContent = isOne ? '听辨这个音程的度数和性质' : '另一个音是什么？';
+    $('refNoteBox').classList.toggle('hidden', isOne);
+    $('partOneAnswer').classList.toggle('hidden', !isOne);
+    $('partTwoAnswer').classList.toggle('hidden', isOne);
+    if (isOne) {
+      keyboardRef = null;
+      // 回到做过的题时显示之前的选择，可以修改
+      document.querySelectorAll('#degreeGrid .choice').forEach(btn => btn.classList.toggle('selected', Number(btn.dataset.degree) === q.draft.degree));
+      document.querySelectorAll('#qualityGrid .choice').forEach(btn => btn.classList.toggle('selected', btn.dataset.quality === q.draft.quality));
+    } else {
+      $('refNoteText').textContent = q.ref.name;
+      buildKeyboard(q.ref.midi);
+      showKeySelection(q.draft.midi);
+    }
+    updateSubmit();
+    // 进入每一题自动播放一次（都由点按触发，手机浏览器允许出声）
+    playCurrent();
+  }
+
+  // 交卷：还有没答的题时先提示；未答的题按错算
+  function submitExam() {
+    const left = questions.filter(q => !isAnswered(q)).length;
+    if (left && !confirm(`还有 ${left} 题未答，未答的题按错算。确定交卷吗？`)) return;
+    questions.forEach(q => {
+      if (!isAnswered(q)) q.answer = null;
+      else q.answer = q.part === 1 ? { degree: q.draft.degree, quality: q.draft.quality } : { midi: q.draft.midi };
+      q.result = E.grade(q);
+    });
+    $('navPanel').classList.add('hidden');
+    examSeconds = Math.round((Date.now() - examStart) / 1000);
+    finishExam();
+  }
+
+  // ---------- 结果 ----------
+  function count(list) {
+    return { correct: list.filter(q => q.result.correct).length, total: list.length };
+  }
+
+  function percent(c) { return Math.round(c.correct / c.total * 100); }
+
+  const TYPE_SHORT = { asc: '上行', desc: '下行', harm: '和声' };
+
+  function summary() {
+    const one = questions.filter(q => q.part === 1), two = questions.filter(q => q.part === 2);
+    const byType = (list, type) => count(list.filter(q => q.type === type));
+    return {
+      all: count(questions),
+      one: count(one),
+      oneTypes: E.TYPE_ORDER.map(t => [TYPE_SHORT[t], byType(one, t)]),
+      degree: { correct: one.filter(q => q.result.degreeCorrect).length, total: one.length },
+      two: count(two),
+      twoTypes: E.TYPE_ORDER.map(t => [TYPE_SHORT[t], byType(two, t)])
+    };
+  }
+
+  // 分项正确率的各行：[层级, 名称, 计数]
+  function summaryRows(s) {
+    return [['group', '第一部分 音程性质', s.one]]
+      .concat(s.oneTypes.map(([name, c]) => ['sub', name, c]))
+      .concat([['sub', '度数判断', s.degree], ['group', '第二部分 听音找音', s.two]])
+      .concat(s.twoTypes.map(([name, c]) => ['sub', name, c]));
+  }
+
+  // 错过的音程（两部分合计），按出错次数排序；三全音写作 A4/d5
+  function intervalShort(interval) {
+    return E.acceptedAnswers(interval).map(a => a.quality + a.degree).join('/');
+  }
+
+  function weakIntervals() {
+    const misses = {};
+    questions.filter(q => !q.result.correct).forEach(q => {
+      const name = intervalShort(q.interval);
+      misses[name] = (misses[name] || 0) + 1;
+    });
+    return Object.entries(misses).sort((a, b) => b[1] - a[1]);
+  }
+
+  // ---------- 回看与报告共用的文字 ----------
+  function questionHead(q, i) {
+    const number = String(i + 1).padStart(2, '0');
+    return q.part === 1 ? `${number} · ${E.TYPE_NAMES[q.type]}` : `${number} · 听音找音 · ${TYPE_SHORT[q.type]}`;
+  }
+
+  function notesText(q) {
+    return q.type === 'harm' ? `${q.low.name}+${q.high.name}` : `${q.played[0].name} → ${q.played[1].name}`;
+  }
+
+  function answerText(q) {
+    if (!q.answer) return '未作答';
+    return q.part === 1 ? E.answerLabel(q.answer.degree, q.answer.quality) : midiLabel(q.answer.midi);
+  }
+
+  // 正确答案，例如「m6 (Bb3+Gb4)」；第二部分「Eb4 (m3, C4 → Eb4)」
+  function correctText(q) {
+    return q.part === 1 ? `${q.label} (${notesText(q)})` : `${q.target.name} (${q.label}, ${notesText(q)})`;
+  }
+
+  // 答对：一行「✓ 正确答案」；答错：「✗ 你的答案」+「正确答案」
+  function resultLines(q) {
+    return q.result.correct
+      ? [`✓ ${correctText(q)}`]
+      : [q.answer ? `✗ 你的答案：${answerText(q)}` : '✗ 未作答', `正确答案：${correctText(q)}`];
+  }
+
+  // 总用时：从「开始测试」到交卷，只统计不限时
+  function durationText(seconds) {
+    const m = Math.floor(seconds / 60), sec = seconds % 60;
+    return m ? `${m}分${String(sec).padStart(2, '0')}秒` : `${sec}秒`;
+  }
+
+  function finishExam() {
+    stopSound();
+    examRunning = false;
+    keyboardRef = null;
+    const s = summary();
+    $('scoreText').textContent = `${percent(s.all)}%`;
+    $('scoreSub').textContent = `答对 ${s.all.correct} / ${s.all.total} 题 · 用时 ${durationText(examSeconds)}`;
+    const body = $('summaryBody');
+    body.replaceChildren();
+    summaryRows(s).forEach(([kind, label, c]) => {
+      const tr = document.createElement('tr');
+      tr.className = kind;
+      [label, `${c.correct} / ${c.total}`, `${percent(c)}%`].forEach(text => {
+        const td = document.createElement('td');
+        td.textContent = text;
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+    const weak = weakIntervals();
+    $('weakBox').innerHTML = weak.length
+      ? '<strong>出错的音程：</strong>' + weak.map(([name, n]) => n > 1 ? `${name} ×${n}` : name).join('、')
+      : '<strong>全部正确</strong>';
+    setReviewFilter(weak.length ? 'wrong' : 'all');
+    show('resultScreen');
+  }
+
+  function setReviewFilter(filter) {
+    reviewFilter = filter;
+    $('filterWrong').classList.toggle('selected', filter === 'wrong');
+    $('filterAll').classList.toggle('selected', filter === 'all');
+    renderReview();
+  }
+
+  function renderReview() {
+    stopSound();
+    const list = $('reviewList');
+    list.replaceChildren();
+    questions.forEach((q, i) => {
+      if (reviewFilter === 'wrong' && q.result.correct) return;
+      const item = document.createElement('div');
+      item.className = 'review-item';
+      const text = document.createElement('div');
+      const head = document.createElement('div');
+      head.className = 'review-head';
+      head.textContent = questionHead(q, i);
+      text.appendChild(head);
+      resultLines(q).forEach((line, n) => {
+        const row = document.createElement('div');
+        if (n === 0) {
+          const mark = document.createElement('span');
+          mark.className = 'review-mark ' + (q.result.correct ? 'ok' : 'bad');
+          mark.textContent = line.slice(0, 1);
+          row.append(mark, document.createTextNode(line.slice(2)));
+        } else {
+          row.className = 'review-correct';
+          row.textContent = line;
+        }
+        text.appendChild(row);
+      });
+      const play = document.createElement('button');
+      play.className = 'review-play';
+      play.textContent = '▶';
+      play.setAttribute('aria-label', '重听这一题');
+      play.onclick = () => playQuestion(q, play);
+      item.append(text, play);
+      list.appendChild(item);
+    });
+    if (!list.children.length) list.textContent = '没有错题。';
+  }
+
+  // 复制的报告：错题写法与回看页一致，分项正确率放最后
+  function reportText() {
+    const s = summary();
+    const wrong = questions.flatMap((q, i) => q.result.correct ? [] : [[questionHead(q, i)].concat(resultLines(q)).join('\n')]);
+    const rows = summaryRows(s).map(([kind, label, c]) => `${kind === 'sub' ? '  ' : ''}${label}：${c.correct}/${c.total}（${percent(c)}%）`);
+    return [
+      '【音程听力综合测试】',
+      `总分：${s.all.correct}/${s.all.total} · ${percent(s.all)}% · 用时：${durationText(examSeconds)}`,
+      wrong.length ? `错题：\n\n${wrong.join('\n\n')}` : '✓ 全部正确',
+      `分项正确率：\n${rows.join('\n')}`,
+      '© Sheen · Ear Training'
+    ].join('\n\n');
+  }
+
+  function copyReport() {
+    const text = reportText();
+    const done = () => alert('测试结果已复制，可以发给老师。');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else fallbackCopy(text, done);
+  }
+
+  function fallbackCopy(text, done) {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.style.position = 'fixed'; area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand('copy'); done(); } catch (e) { prompt('请手动复制：', text); }
+    area.remove();
+  }
+
+  window.addEventListener('beforeunload', event => {
+    if (examRunning) { event.preventDefault(); event.returnValue = ''; }
+  });
+</script>
+</body>
+</html>
