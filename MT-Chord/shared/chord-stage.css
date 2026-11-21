@@ -1,0 +1,479 @@
+/* 和弦记号课程 · 共享演示区与讲解样式。外壳、正文和导航来自 MT 共享 Learning 样式。
+   演示区在两种主题下都是浅色纸面（site-visual.css 已冻结其颜色）。 */
+html[data-theory-lesson] {
+  --chord-root: #4f46e5;
+  --chord-third: #0f766e;
+  --chord-fifth: #b45309;
+  --chord-bass: #dc2626;
+  --chord-seventh: #be185d;
+  --chord-ext: #0369a1;
+  --chord-warning: #c2410c;   /* 讲解区「注意」，随主题变化 */
+  --chord-correct: #047857;
+  --chord-wrong: #b91c1c;
+  --stage-playing: #1a73e8;   /* 播放高亮：黑色符头变成这个颜色（对比度优先） */
+  /* 动效：iOS 风格曲线，先快后慢、无回弹；谱面神奇移动（chord-stage.js 的 EASE）与讲解文字共用 */
+  --stage-ease: cubic-bezier(.32,.72,0,1);
+  --theory-reveal-duration: 620ms;   /* 讲解区：旧句上移、新句升起 */
+  --theory-reveal-easing: var(--stage-ease);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-theory-lesson] { --chord-warning: #fdba74; --chord-correct: #6ee7b7; --chord-wrong: #fca5a5; }
+}
+
+/* 演示区高度：竖屏手机固定约 262px（上下区各 44px + 谱表），平板随高度略增；双栏时占满左栏 */
+html[data-theory-lesson] .lesson-board[data-size="expanded"] { --theory-board-height: clamp(262px, 32dvh, 380px); }
+
+/* ---------- 讲解区：加粗 = 音乐术语；着色 = 重点词；「注意」用警示色，较慢渐入 ---------- */
+/* 讲解区（规范 15.2）：每页第一行是小节标题；正文居中，追加新句时旧句整体上移，新句从下方升起渐入 */
+html[data-theory-lesson] .lesson-content .section-heading { margin: 0 0 14px; font-size: var(--theory-text-label-size); line-height: var(--theory-text-label-leading); font-weight: 700; letter-spacing: .04em; color: var(--primary); }
+html[data-theory-lesson] .section-heading + .quiz-block { margin-top: 0; padding-top: 0; border-top: 0; }
+html[data-theory-lesson] .theory-new { animation: stage-reveal var(--theory-reveal-duration) var(--stage-ease); }
+@keyframes stage-reveal { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+/* 横屏、竖屏相同：标题固定在讲解区顶部，不随文字滚动；正文在标题下方的空间里垂直居中 */
+html[data-theory-lesson] .theory-explanation { position: relative; display: flex; flex-direction: column; flex: 1 0 auto; margin-block: 0; }
+/* .lesson-content 提高优先级：盖过基础样式的 h2 上边距（退回动画时标题前会暂时插入移出的句子） */
+html[data-theory-lesson] .lesson-content .section-heading { position: sticky; top: 0; z-index: 2; margin: 0; padding-bottom: 12px; background: var(--card); }
+/* 渐隐遮罩：文字栏往上滚过之后，标题下方 28px 由卡片底色渐变到透明，滚出去的句子不会被生硬切断 */
+html[data-theory-lesson] .lesson-content .section-heading::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 28px; background: linear-gradient(var(--card), transparent); opacity: 0; transition: opacity .2s; pointer-events: none; }
+html[data-theory-lesson] .lesson-content.is-scrolled .section-heading::after { opacity: 1; }
+html[data-theory-lesson] .section-heading + * { margin-top: auto; }
+html[data-theory-lesson] .theory-explanation > :last-child { margin-bottom: auto; }
+html[data-theory-lesson] .theory-warning { color: var(--chord-warning); }
+html[data-theory-lesson] .theory-warning strong { color: inherit; }
+html[data-theory-lesson] .theory-warning.theory-new { animation: chord-fade-in 700ms var(--stage-ease); }
+@keyframes chord-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+/* 往回走（规范 15.12）：这一页后面的句子留在原处变浅灰，当前这句移到讲解区中间；点任意一句跳到那一步 */
+html[data-theory-lesson] .theory-explanation > :not(.section-heading) { translate: 0 var(--line-shift, 0px); }
+/* 和弦课双栏：当前句对齐整个演示区的中心线，留出滚动空间供旧句回看。
+   data-line-focus 只在实际左右双栏的普通讲解步骤启用，竖屏与 Quiz 沿用原布局。 */
+html[data-theory-lesson] .theory-explanation[data-line-focus] { flex: none; min-height: 100%; box-sizing: border-box; padding-bottom: var(--line-tail, 0px); }
+html[data-theory-lesson] .theory-explanation[data-line-focus] > * { flex-shrink: 0; }
+html[data-theory-lesson] .theory-explanation[data-line-focus] .section-heading + * { margin-top: var(--line-lead, 0px); }
+html[data-theory-lesson] .theory-explanation[data-line-focus] > :last-child { margin-bottom: 0; }
+html[data-theory-lesson] .theory-explanation [data-line] { transition: color .3s var(--stage-ease); }
+html[data-theory-lesson] .theory-explanation .is-later,
+html[data-theory-lesson] .theory-explanation .is-later * { color: color-mix(in srgb, var(--muted) 60%, var(--card)); transition: color .3s var(--stage-ease); }
+html[data-theory-lesson] .theory-explanation [data-line]:not(.is-current) { cursor: pointer; }
+@media (hover: hover) {
+  html[data-theory-lesson] .theory-explanation [data-line]:not(.is-current):hover { border-radius: 6px; background: color-mix(in srgb, var(--primary) 6%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary) 6%, transparent); }
+}
+
+/* ---------- 演示区布局：上区 · 谱表 · 下区，上下等高 ---------- */
+html[data-theory-lesson] .lesson-board .theory-board-content:has(> .chord-board) { display: grid; min-height: 100%; margin-block: 0; }
+html[data-theory-lesson] .chord-board { --stage-zone: 44px; display: grid; grid-template-rows: 1fr auto 1fr; gap: 8px; width: 100%; }
+html[data-theory-lesson] .chord-board .zone { display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; min-height: var(--stage-zone); }
+html[data-theory-lesson] .chord-board .zone-top { justify-content: flex-end; }
+html[data-theory-lesson] .chord-board .zone-bottom { justify-content: flex-start; }
+html[data-theory-lesson] .stage-caption { font-size: 14px; line-height: 1.6; color: #475569; text-align: center; }
+html[data-theory-lesson] .stage-caption b { font-weight: 700; }
+html[data-theory-lesson] .c-root { color: var(--chord-root); font-weight: 700; }
+html[data-theory-lesson] .c-third { color: var(--chord-third); font-weight: 700; }
+html[data-theory-lesson] .c-fifth { color: var(--chord-fifth); font-weight: 700; }
+html[data-theory-lesson] .c-bass { color: var(--chord-bass); font-weight: 700; }
+html[data-theory-lesson] .c-seventh { color: var(--chord-seventh); font-weight: 700; }
+html[data-theory-lesson] .c-ext { color: var(--chord-ext); font-weight: 700; }
+
+/* 五线谱 */
+html[data-theory-lesson] .chord-staff { width: 100%; display: flex; justify-content: center; background: #fff; }
+html[data-theory-lesson] .chord-staff svg { max-width: 100%; height: auto; overflow: visible; }
+/* 谱面文字不描边（规范 N13）：出版物式的干净字形 */
+html[data-theory-lesson] .chord-staff svg text { stroke: none; }
+
+/* 控制按钮（与 MT06 相同的外观） */
+html[data-theory-lesson] .board-controls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+html[data-theory-lesson] .board-controls button { min-width: 44px; min-height: 44px; border: 1px solid #c7d2fe; background: #eef2ff; color: #4338ca; border-radius: var(--site-radius-control); padding: 8px 12px; font-size: 14px; cursor: pointer; touch-action: manipulation; }
+html[data-theory-lesson] .board-controls button[aria-pressed="true"] { background: #6366f1; color: #fff; border-color: #6366f1; }
+/* 按钮较多（8 个以上，如十四个自然音程）：排成两行紧凑小按钮。下区加高到两行按钮的高度、上区收窄，
+   两区合计仍是 2 × --stage-zone（谱表大小按它计算） */
+html[data-theory-lesson] .chord-board:has(.board-controls > :nth-child(8)) { --stage-zone: 46px; gap: 4px; grid-template-rows: auto auto auto; }
+html[data-theory-lesson] .chord-board:has(.board-controls > :nth-child(8)) .zone-top { min-height: 36px; }
+html[data-theory-lesson] .chord-board:has(.board-controls > :nth-child(8)) .zone-bottom { min-height: 56px; }
+html[data-theory-lesson] .board-controls:has(> :nth-child(8)) { display: grid; grid-template-columns: repeat(7, minmax(0, 52px)); gap: 4px; }
+html[data-theory-lesson] .board-controls:has(> :nth-child(8)) button { min-width: 0; min-height: 26px; padding: 0; font-size: 13px; line-height: 24px; }
+
+/* ---------- 和弦记号（印刷体）：字母后缀 .78 倍、与根音底部对齐；性质符号 △ ° + − 为上标 ---------- */
+html[data-theory-lesson] .cs { font-family: Edwin, 'Century Schoolbook', 'New Century Schoolbook', Georgia, 'Times New Roman', serif; font-weight: 400; white-space: nowrap; }
+html[data-theory-lesson] .cs-music { font-family: 'Bravura Text', Bravura; font-weight: 400; }
+html[data-theory-lesson] .cs-root { color: var(--chord-root); }
+html[data-theory-lesson] .cs-suffix { font-size: .78em; color: var(--chord-third); margin-left: .02em; }
+html[data-theory-lesson] .cs-suffix.cs-sign { font-size: 1em; }
+html[data-theory-lesson] .cs-mark { font-size: .9em; vertical-align: .4em; line-height: 1; }
+html[data-theory-lesson] .cs-mark.cs-music { font-size: .72em; vertical-align: .45em; }
+html[data-theory-lesson] .cs-small { font-size: .78em; }
+/* Quiz 选项里的和弦记号放大，上标符号（° + −）看得清 */
+html[data-theory-lesson] .quiz-option .cs { font-size: 1.35em; line-height: 1; }
+/* 黑色印刷体：练习、Quiz 答对后显示的记号，以及记号输入按钮 */
+html[data-theory-lesson] .cs-plain .cs, html[data-theory-lesson] .cs.cs-plain { color: inherit; }
+html[data-theory-lesson] :is(.cs-plain .cs, .cs.cs-plain) :is(.cs-root, .cs-suffix, .cs-slash, .cs-bass) { color: inherit; }
+html[data-theory-lesson] .symbol-row > span { white-space: nowrap; }
+html[data-theory-lesson] .cs-slash { color: #94a3b8; margin: 0 .06em; }
+html[data-theory-lesson] .cs-bass { color: var(--chord-bass); }
+
+/* ---------- 课内 Quiz ---------- */
+html[data-theory-lesson] .quiz-options.vertical { max-width: 320px; }
+html[data-theory-lesson] .quiz-option.correct { border-color: var(--chord-correct); color: var(--chord-correct); }
+html[data-theory-lesson] .quiz-option.wrong { border-color: var(--chord-wrong); color: var(--chord-wrong); }
+/* 多选题：选中的选项与「提交」按钮 */
+html[data-theory-lesson] .quiz-option.selected:not(.correct):not(.wrong) { border-color: var(--primary); }
+html[data-theory-lesson] .quiz-submit { margin-top: 14px; min-height: 44px; padding: 10px 24px; border: 0; border-radius: var(--site-radius-control); background: var(--primary); color: #fff; font: inherit; cursor: pointer; touch-action: manipulation; }
+html[data-theory-lesson] .quiz-submit:disabled { opacity: .45; cursor: default; }
+html[data-theory-lesson] .quiz-block .feedback { font-size: var(--theory-text-caption-size); line-height: var(--theory-text-caption-leading); margin-top: 14px; }
+html[data-theory-lesson] .quiz-block .feedback.is-correct { color: var(--chord-correct); }
+html[data-theory-lesson] .quiz-block .feedback.is-wrong { color: var(--chord-wrong); }
+
+html[data-theory-lesson] .no-script { padding: 20px; max-width: 520px; line-height: 1.8; }
+
+/* ---------- 播放高亮：正在响的音（规范 L12）。只作用于符头字形本身（第一个 path），不带变音记号：
+   放大约 15%、加一圈同色柔光；黑色 / 灰色符头变蓝，已上色的音提亮 ---------- */
+html[data-theory-lesson] .chord-staff [data-tone] .vf-notehead > path:first-child { transform-box: fill-box; transform-origin: center; transition: transform .2s var(--stage-ease), fill .15s ease, filter .15s ease; }
+html[data-theory-lesson] .chord-staff [data-tone].is-playing .vf-notehead > path:first-child { transform: scale(1.15); }
+html[data-theory-lesson] .chord-staff [data-tone].is-playing:not(.tone-colored) .vf-notehead > path:first-child { fill: var(--stage-playing); filter: drop-shadow(0 0 3px rgba(26, 115, 232, .55)); }
+html[data-theory-lesson] .chord-staff [data-tone].is-playing.tone-colored .vf-notehead > path:first-child { filter: brightness(1.3) saturate(1.15) drop-shadow(0 0 3px var(--tone-color)); }
+
+/* 双栏（横屏）：Quiz 和普通讲解一样在标题下方垂直居中；反馈行预留两行高度，答题时题目不跳动 */
+@media (orientation: landscape) and (min-width: 600px) {
+  html[data-theory-lesson] .lesson-content .section-heading + .quiz-block { margin-top: auto; }
+  html[data-theory-lesson] .quiz-block .feedback { min-height: calc(2em * var(--theory-text-caption-leading)); }
+}
+/* 电脑屏幕（宽而高的横屏）：讲解区文字整体放大一级；手机保持原来的字号 */
+@media (orientation: landscape) and (min-width: 1024px) and (min-height: 640px) {
+  html[data-theory-lesson] {
+    --theory-text-body-size: 1.1875rem;
+    --theory-text-quiz-size: 1.3125rem;
+    --theory-text-caption-size: 1rem;
+    --theory-text-label-size: .9375rem;
+    --theory-text-instruction-size: .9375rem;
+    --theory-text-secondary-size: .9375rem;
+    --theory-reading-width: 40rem;
+  }
+}
+
+/* 竖屏：有按钮时，按钮本身已说明当前状态，说明行让位，下区只需一行高度 */
+@media (orientation: portrait) {
+  html[data-theory-lesson] .zone-bottom:has(.board-controls:not([hidden])) .stage-caption { display: none; }
+}
+
+/* 矮横屏：收紧演示区 */
+@media (orientation: landscape) and (max-height: 500px) {
+  html[data-theory-lesson] .chord-board { --stage-zone: 42px; gap: 2px; }
+  html[data-theory-lesson] .chord-board .zone { gap: 2px; }
+  html[data-theory-lesson] .symbol-cloud { font-size: 22px; gap: 4px 16px; }
+  html[data-theory-lesson] .stage-caption { font-size: 12px; line-height: 1.5; }
+  html[data-theory-lesson] .board-controls button { min-height: 32px; padding: 2px 10px; font-size: 13px; }
+  /* 有按钮时，按钮本身已说明当前性质，说明行让位，谱表才能保持在正中 */
+  html[data-theory-lesson] .zone-bottom:has(.board-controls:not([hidden])) .stage-caption { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theory-lesson] :is(.theory-new, .theory-warning.theory-new) { animation: none; }
+  html[data-theory-lesson] .chord-staff [data-tone].is-playing .vf-notehead > path:first-child { transform: none; }
+}
+
+/* ---------- 面板：不需要谱表的步骤（纯记号、对照表），覆盖演示区中央 ---------- */
+html[data-theory-lesson] .chord-board { position: relative; }
+html[data-theory-lesson] .chord-board > :is(.chord-staff, .zone-bottom) { transition: opacity .45s ease; }
+html[data-theory-lesson] .chord-board.has-panel > :is(.chord-staff, .zone-bottom) { opacity: 0; visibility: hidden; transition: opacity .45s ease, visibility 0s .45s; }
+html[data-theory-lesson] .stage-panel { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 8px 4px; overflow: auto; }
+
+/* 第 1 页：打乱排列的和弦记号 */
+html[data-theory-lesson] .symbol-cloud { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 10px 22px; max-width: 340px; font-size: 30px; line-height: 1.3; }
+html[data-theory-lesson] .symbol-cloud .cs:nth-child(3n+1) { font-size: 1.15em; }
+html[data-theory-lesson] .symbol-cloud .cs:nth-child(4n+2) { font-size: .85em; }
+
+/* 记号拆解：根音 + 后缀；后缀方块较小，与根音底部齐平 */
+html[data-theory-lesson] .symbol-split { display: flex; align-items: flex-end; justify-content: center; gap: 12px; }
+html[data-theory-lesson] .symbol-part { display: grid; justify-items: center; gap: 8px; }
+html[data-theory-lesson] .symbol-glyph { display: grid; place-items: end center; padding: 0 14px 12px; border-radius: var(--site-radius-card); font-family: Edwin, 'Century Schoolbook', Georgia, serif; font-weight: 400; line-height: 1; border: 2px solid; transition: opacity .4s, box-shadow .4s; }
+html[data-theory-lesson] .part-root .symbol-glyph { height: 86px; min-width: 76px; font-size: 58px; color: var(--chord-root); border-color: #c7d2fe; background: #eef2ff; }
+html[data-theory-lesson] .part-suffix .symbol-glyph { height: 58px; min-width: 52px; font-size: 36px; color: var(--chord-third); border-color: #99f6e4; background: #f0fdfa; }
+html[data-theory-lesson] .symbol-role { font-size: var(--theory-text-label-size); font-weight: 600; color: #475569; }
+html[data-theory-lesson] .symbol-plus { font-size: 24px; line-height: 58px; color: #94a3b8; }
+html[data-theory-lesson] .stage-panel[data-state="suffix"] .part-root .symbol-glyph { opacity: .35; }
+html[data-theory-lesson] .stage-panel[data-state="suffix"] .part-suffix .symbol-glyph { box-shadow: 0 0 0 4px #ccfbf1; }
+
+/* 一行记号（音名、升降、缩写来源等） */
+html[data-theory-lesson] .symbol-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 8px 22px; font-size: 38px; color: var(--chord-root); font-family: Edwin, 'Century Schoolbook', Georgia, serif; }
+html[data-theory-lesson] .symbol-row .acc { color: inherit; }
+html[data-theory-lesson] .word-list { display: grid; gap: 6px; font-size: 22px; color: #475569; text-align: left; }
+html[data-theory-lesson] .word-list b { color: var(--chord-third); font-weight: 700; }
+html[data-theory-lesson] .word-list .arrow { color: #94a3b8; margin: 0 8px; }
+
+/* 对照表 */
+html[data-theory-lesson] .compare-table { display: grid; gap: 4px; width: 100%; max-width: 460px; font-size: 14px; color: #1e293b; }
+html[data-theory-lesson] .compare-row { display: grid; grid-template-columns: var(--cols, 1.2fr 1fr 1fr); align-items: center; min-height: 36px; border-radius: var(--site-radius-control); background: #f8fafc; transition: opacity .4s, background-color .4s; }
+html[data-theory-lesson] .compare-head { min-height: 0; background: none; font-size: var(--theory-text-label-size); font-weight: 600; color: #64748b; }
+html[data-theory-lesson] .compare-row .cs { font-size: 24px; }
+html[data-theory-lesson] .compare-row .cs + .cs { margin-left: .5em; } /* 同一格里的几种写法（C　CM　Cmaj）拉开间距 */
+html[data-theory-lesson] .compare-table[data-cols="4"] { --cols: 1.1fr 1.3fr 1fr .9fr; }
+html[data-theory-lesson] .compare-table[data-cols="4"] .cs { font-size: 20px; }
+html[data-theory-lesson] .compare-cell { transition: opacity .4s; }
+html[data-theory-lesson] .stage-panel[data-state="abbr"] .compare-cell[data-col="symbol"],
+html[data-theory-lesson] .stage-panel[data-state="symbol"] .compare-cell[data-col="abbr"] { opacity: .25; }
+html[data-theory-lesson] .symbol-row.big { font-size: 64px; }
+html[data-theory-lesson] .symbol-row.big.long { font-size: 44px; }
+html[data-theory-lesson] .symbol-row.big .cs-suffix:not(.cs-sign) { font-size: .78em; }
+
+/* ---------- 课程首页：小节目录（替代「开始学习」） ---------- */
+html[data-theory-lesson] .section-list { display: grid; gap: 8px; margin-top: 4px; }
+html[data-theory-lesson] .section-link { display: grid; grid-template-columns: 3.2em 1fr auto; align-items: center; gap: 10px; width: 100%; min-height: 48px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--site-radius-control); background: var(--card); color: var(--text); font: inherit; font-size: 15px; line-height: 1.5; text-align: left; cursor: pointer; touch-action: manipulation; }
+html[data-theory-lesson] .section-link:hover:not(:disabled) { border-color: var(--primary); }
+html[data-theory-lesson] .section-number { color: var(--primary); font-weight: 700; }
+html[data-theory-lesson] .section-state { color: var(--muted); font-size: 13px; }
+html[data-theory-lesson] .section-link:disabled { cursor: default; opacity: .55; }
+
+/* 斜线记号拆解：和弦 / 斜线 / 低音 */
+html[data-theory-lesson] .part-slash .symbol-glyph { height: 86px; min-width: 40px; font-size: 58px; color: #94a3b8; border-color: #e2e8f0; background: #f8fafc; }
+html[data-theory-lesson] .part-bass .symbol-glyph { height: 86px; min-width: 76px; font-size: 58px; color: var(--chord-bass); border-color: #fecaca; background: #fef2f2; }
+html[data-theory-lesson] .stage-panel[data-state="bass"] :is(.part-root, .part-slash) .symbol-glyph { opacity: .35; }
+html[data-theory-lesson] .stage-panel[data-state="bass"] .part-bass .symbol-glyph { box-shadow: 0 0 0 4px #fee2e2; }
+html[data-theory-lesson] .symbol-row .bar { color: #94a3b8; font-size: .8em; }
+/* 读和弦记号的顺序 */
+html[data-theory-lesson] .reading-flow { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; font-size: 15px; font-weight: 600; color: #1e293b; }
+html[data-theory-lesson] .reading-flow span { padding: 6px 8px; border-radius: var(--site-radius-control); background: #f1f5f9; }
+html[data-theory-lesson] .reading-flow span + span::before { content: "→"; margin: 0 6px 0 -2px; color: #94a3b8; font-weight: 400; }
+html[data-theory-lesson] .reading-flow span:nth-child(1) { color: var(--chord-root); }
+html[data-theory-lesson] .reading-flow span:nth-child(2) { color: var(--chord-third); }
+html[data-theory-lesson] .reading-flow span:nth-child(4) { color: var(--chord-bass); }
+
+/* 首页提示文字末尾的「从头开始」（有本机记录时才出现） */
+html[data-theory-lesson] .restart-link { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; white-space: nowrap; touch-action: manipulation; }
+
+/* 钢琴采样署名（CC BY 3.0 要求） */
+/* 只放在课程首页的卡片底部，不占课件内容的空间 */
+html[data-theory-lesson] .sample-credit { margin-top: 18px; font-size: 11px; line-height: 1.5; color: var(--muted); text-align: center; }
+
+/* 页眉小节目录（规范 L09） */
+html[data-theory-lesson] header { position: relative; }
+html[data-theory-lesson] .section-toggle { font: inherit; color: inherit; background: none; border: 0; padding: 4px 2px; cursor: pointer; touch-action: manipulation; }
+html[data-theory-lesson] .section-toggle:not(:disabled)::after { content: ' ▾'; font-size: .8em; }
+html[data-theory-lesson] .section-toggle:disabled { cursor: default; }
+html[data-theory-lesson] .section-menu { position: absolute; right: 0; top: 100%; z-index: 30; display: grid; gap: 6px; width: min(360px, 100%); max-height: 70vh; overflow-y: auto; padding: 10px; border: 1px solid var(--border); border-radius: var(--site-radius-control); background: var(--card); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+html[data-theory-lesson] .section-menu[hidden] { display: none; }
+html[data-theory-lesson] .section-link.is-current { border-color: var(--primary); }
+html[data-theory-lesson] .lesson-audio-btn[hidden] { display: none; }
+/* 点演示区任何地方都能重播：喇叭按钮不显示，只留给键盘与读屏（Tab 到它时才出现） */
+html[data-theory-lesson] .lesson-board.tap-to-play.has-sound { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+html[data-theory-lesson] .lesson-board.tap-to-play .lesson-audio-btn:not(:focus-visible) { opacity: 0; pointer-events: none; }
+html[data-theory-lesson] .stage-panel[data-state="minor"] .compare-row[data-row]:not([data-row="minor"]) { opacity: .25; }
+html[data-theory-lesson] .compare-row.is-dim { opacity: .25; }  /* 第二课起：对照表只突出几行 */
+
+/* 页眉进度条可拖动（只在学过的部分里）：透明边框把可点范围上下各扩大 10px，外观仍是 8px 的细条；
+   浅色一段 = 拖动能到达的范围 */
+html[data-theory-lesson] .progress-wrap.is-draggable { position: relative; box-sizing: content-box; border: 10px solid transparent; border-inline-width: 0; margin-block: -10px; background-clip: padding-box; cursor: pointer; touch-action: none; }
+html[data-theory-lesson] .progress-reach { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--primary) 22%, transparent); transition: width .2s ease; }
+html[data-theory-lesson] .progress-wrap.is-draggable .progress { position: relative; }
+html[data-theory-lesson] .progress-wrap.is-dragging .progress { transition: none; }
+
+/* 第三课起：方法步骤列表（如「和弦音标注分析法」），当前一步加粗 */
+html[data-theory-lesson] .method-list { margin: 0; padding: 0 0 0 1.6em; text-align: left; font-size: 15px; line-height: 1.7; color: #475569; }
+html[data-theory-lesson] .method-list li.is-current { color: #0f172a; font-weight: 700; }
+/* 第五课：完整和弦记号的六个部分（小一号，窄屏时换行） */
+html[data-theory-lesson] .symbol-split.compact { flex-wrap: wrap; gap: 8px 6px; }
+html[data-theory-lesson] .symbol-split.compact .symbol-glyph { height: 48px; min-width: 34px; padding: 0 8px 8px; font-size: 30px; border-color: #e2e8f0; background: #f8fafc; color: #0f172a; }
+html[data-theory-lesson] .symbol-split.compact .symbol-role { font-size: 11px; }
+/* 拖动进度条时的预览（规范 L20）：出现在进度条下方，显示那一步的小节标题与那一句讲解 */
+html[data-theory-lesson] header { position: relative; }
+html[data-theory-lesson] .progress-preview { position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 30; margin: 0; padding: 12px 14px; border: 1px solid var(--site-border); border-radius: var(--site-radius-card); background: var(--site-panel, #fff); box-shadow: 0 10px 28px rgba(15, 23, 42, .18); pointer-events: none; }
+html[data-theory-lesson] .progress-preview-meta { margin: 0 0 6px; font-size: 12px; color: var(--site-muted); }
+html[data-theory-lesson] .progress-preview-text { margin: 0; font-size: 16px; line-height: 1.6; color: var(--site-text); }
+/* 括号里的变化音：小一号、右上角（规范 N08） */
+.cs .cs-alt { font-size: .6em; vertical-align: .55em; }
+.cs .cs-suffix .cs-alt { font-size: .77em; }  /* 后缀本身已缩小到 .78，合起来约为字母的 .6 */
+/* 第二课起：演示区的说明文字面板（无衬线粗体，比衬线体更协调） */
+html[data-theory-lesson] .formula-row { margin: 0; font-family: var(--site-font, -apple-system, sans-serif); font-weight: 700; font-size: 20px; line-height: 1.5; color: #334155; text-align: center; }
+html[data-theory-lesson] .merge-list { display: grid; gap: 10px; font-family: var(--site-font, -apple-system, sans-serif); font-size: 17px; color: #334155; }
+html[data-theory-lesson] .merge-list p { margin: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+html[data-theory-lesson] .merge-list .arrow { color: #94a3b8; }
+html[data-theory-lesson] .merge-list .merge-from { color: #94a3b8; text-decoration: line-through; }
+html[data-theory-lesson] .merge-list b { color: var(--chord-seventh); }
+html[data-theory-lesson] .symbol-groups { display: grid; gap: 14px; }
+html[data-theory-lesson] .symbol-groups p { margin: 0; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 24px; }
+html[data-theory-lesson] .symbol-groups .group-name { font-family: var(--site-font, sans-serif); font-size: 13px; font-weight: 700; color: #64748b; min-width: 2.5em; }
+html[data-theory-lesson] .symbol-groups .is-rare { opacity: .65; }
+html[data-theory-lesson] .c-faint { color: #94a3b8; font-size: .92em; }
+/* 八个按钮（第二课八种七和弦）：两行，每行四个 */
+html[data-theory-lesson] .board-controls:has(> :nth-child(8)):not(:has(> :nth-child(9))) { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 340px; margin-inline: auto; }
+/* 课内键盘输入题（chord-lesson.js 的 quiz input；输入框样式见 chord-input.css） */
+html[data-theory-lesson] .quiz-input .chord-input { margin-top: 8px; }
+html[data-theory-lesson] .quiz-input .chord-input-guide table { font-size: 12px; }
+/* 完成页：课内 Quiz 小结 */
+html[data-theory-lesson] .quiz-report { margin: 0 0 18px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--site-radius-control); text-align: left; }
+html[data-theory-lesson] .quiz-report-score { margin: 0; font-weight: 600; }
+html[data-theory-lesson] .quiz-report-score b { font-size: 1.3em; color: var(--primary); }
+html[data-theory-lesson] .quiz-report-note { margin: 6px 0 0; color: var(--muted, #64748b); }
+html[data-theory-lesson] .quiz-report-list { margin-top: 10px; }
+html[data-theory-lesson] .quiz-report-list summary { cursor: pointer; color: var(--primary); }
+html[data-theory-lesson] .quiz-report-list ol { margin: 10px 0 0; padding-left: 1.4em; }
+html[data-theory-lesson] .quiz-report-list li { margin: 0 0 12px; }
+html[data-theory-lesson] .quiz-report-list p { margin: 0; line-height: 1.6; }
+html[data-theory-lesson] .quiz-report-q { font-weight: 600; }
+html[data-theory-lesson] .quiz-report-a .cs { font-size: 18px; }
+html[data-theory-lesson] .quiz-report-a .cs :is(.cs-root, .cs-suffix, .cs-slash, .cs-bass) { color: inherit; }  /* 答案的记号用黑色（N10） */
+html[data-theory-lesson] .quiz-report-why { font-size: 14px; color: var(--muted, #64748b); }
+html[data-theory-lesson] .quiz-report-tag { margin-left: 6px; padding: 0 6px; border-radius: 4px; background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 400; }
+/* 记号速查（小节目录末尾；网址 #reference） */
+html[data-theory-lesson] .reference-card { width: min(100%, 420px); max-height: 88vh; overflow-y: auto; }
+html[data-theory-lesson] .reference-block { margin: 0 0 18px; }
+html[data-theory-lesson] .reference-block h3 { margin: 0 0 8px; font-size: 14px; color: var(--muted, #64748b); }
+html[data-theory-lesson] .reference-card .compare-table { max-width: none; }
+html[data-theory-lesson] .reference-card .finish-actions { grid-template-columns: 1fr; }
+html[data-theory-lesson] .section-reference { border-top: 1px dashed var(--border); }
+html[data-theory-lesson] .reference-rules { margin: 8px 0 0; padding-left: 1.2em; font-size: 14px; line-height: 1.7; }
+html[data-theory-lesson] .reference-card .symbol-row { font-size: 26px; text-align: center; }
+/* 课内键盘输入题：触屏设备上用输入框右边的「提交」（chord-input.css），下面的提交按钮隐藏 */
+@media (hover: none) and (pointer: coarse) { html[data-theory-lesson] .quiz-input + .quiz-submit { display: none; } }
+/* 课件里的键盘输入题，手机打字模式（html.is-typing，见 chord-input.js）：
+   页面高度跟随键盘弹出后的可见区域（iOS 的 100dvh 不会因键盘变小），演示区压矮，收起底部翻页按钮，
+   讲解区留出位置给题目与输入框；固定在键盘上方的符号快捷键不挡住输入框。 */
+html.is-typing[data-theory-lesson]:not([data-chord-practice]) body.theory-active { height: var(--chord-vh, 100dvh); }
+html.is-typing[data-theory-lesson]:not([data-chord-practice]) .lesson-board { --theory-board-height: 132px; }
+html.is-typing[data-theory-lesson]:not([data-chord-practice]) :is(.theory-active .lesson-footer-zone, .footer) { display: none; }
+html.is-typing[data-theory-lesson]:not([data-chord-practice]) .lesson-content { padding-bottom: 56px; scroll-padding-bottom: 64px; }
+html.is-typing[data-theory-lesson]:not([data-chord-practice]) .quiz-block .quiz-question { font-size: 16px; line-height: 1.5; }
+
+/* 面板记号的后缀淡出、收起（例：C7/B♭ → C/B♭） */
+html[data-theory-lesson] .stage-panel .symbol-row .cs-suffix { display: inline-block; max-width: 9em; overflow: hidden; vertical-align: baseline; transition: opacity .35s ease, max-width .5s ease .3s; }
+html[data-theory-lesson] .stage-panel[data-state="drop-suffix"] .symbol-row .cs-suffix { opacity: 0; max-width: 0; }
+/* 第二课：同一张对照表只移动高亮（marks），不重新淡入 */
+html[data-theory-lesson] .compare-table.markable .compare-row[data-mark]:not(.active) { opacity: .25; }
+html[data-theory-lesson] .compare-table.wide-other { --cols: 5.4em 6.4em 1fr; }
+html[data-theory-lesson] .compare-table.wide-other .compare-row { column-gap: 10px; padding: 4px 8px; }
+html[data-theory-lesson] .compare-table.wide-other .cs { font-size: 19px; white-space: nowrap; }
+html[data-theory-lesson] .compare-table.wide-other [role="cell"]:last-child { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 12px; }
+html[data-theory-lesson] .compare-table.wide-other [role="cell"]:last-child .cs + .cs { margin-left: 0; }
+html[data-theory-lesson] .compare-table.wide-other [role="cell"]:first-child { white-space: nowrap; }
+html[data-theory-lesson] .compare-table.dense { gap: 2px; }
+html[data-theory-lesson] .compare-table.dense .compare-row:not(.compare-head) { min-height: 30px; }
+html[data-theory-lesson] .stage-panel:not([data-state="signs"]) .compare-cell[data-col="signs"] { opacity: 0; }
+@media (max-width: 520px) {
+  html[data-theory-lesson] .compare-table.wide-other { --cols: 4.8em 5.6em 1fr; font-size: 13px; }
+  html[data-theory-lesson] .compare-table.wide-other .cs { font-size: 16px; }
+  html[data-theory-lesson] .compare-table.wide-other .compare-row { column-gap: 6px; padding: 2px 6px; }
+  html[data-theory-lesson] .compare-table.wide-other [role="cell"]:last-child { gap: 0 8px; }
+}
+
+/* ---------- 学员反馈（阿润，第一课） ---------- */
+/* 小节标题：编号做成小标签，与标题文字分开，字号放大一级 */
+html[data-theory-lesson] .lesson-content .section-heading:has(.section-no) { display: flex; align-items: center; gap: 8px; font-size: 16px; letter-spacing: .02em; }
+html[data-theory-lesson] .section-heading .section-no { display: inline-grid; place-items: center; min-width: 26px; height: 22px; padding: 0 6px; border-radius: 6px; background: color-mix(in srgb, var(--primary) 18%, transparent); font-size: 13px; }
+html[data-theory-lesson] .section-heading .section-sep { display: none; }
+/* Quiz 选项里的和弦记号用选项文字的颜色（深色背景上不发暗，与演示区的黑色印刷体一致） */
+html[data-theory-lesson] .quiz-option .cs :is(.cs-root, .cs-suffix, .cs-slash, .cs-bass) { color: inherit; }
+/* Quiz 选项左边的圆圈（多选为方框）：答对时圆圈里打勾，答错时打叉，不再在文字后面另加符号 */
+html[data-theory-lesson] .quiz-option:has(.quiz-mark) { display: inline-flex; align-items: center; gap: 10px; }
+html[data-theory-lesson] .quiz-option:has(.quiz-mark):is(.correct, .wrong)::after { content: none; }
+html[data-theory-lesson] .quiz-mark { flex: none; display: inline-grid; place-items: center; width: 18px; height: 18px; box-sizing: border-box; border: 1.5px solid currentColor; border-radius: 50%; font-size: 12px; line-height: 1; opacity: .7; }
+html[data-theory-lesson] .is-multi .quiz-mark { border-radius: 4px; }
+html[data-theory-lesson] .quiz-option.selected .quiz-mark { opacity: 1; background: currentColor; box-shadow: inset 0 0 0 3px var(--card); }
+html[data-theory-lesson] :is(.quiz-option.correct, .quiz-option.wrong) .quiz-mark { opacity: 1; background: currentColor; box-shadow: none; }
+html[data-theory-lesson] .quiz-option.correct .quiz-mark::before { content: '✓'; color: var(--card); font-weight: 700; }
+html[data-theory-lesson] .quiz-option.wrong .quiz-mark::before { content: '✕'; color: var(--card); font-weight: 700; }
+/* 进度条：每一节开头一个节点（缺口），鼠标悬停预览那一步 */
+html[data-theory-lesson] .progress-ticks { position: absolute; inset: 0; pointer-events: none; }
+html[data-theory-lesson] .progress-tick { position: absolute; top: 0; bottom: 0; width: 3px; margin-left: -1.5px; background: var(--card); }  /* 进度条本身很细，节点画成一道缺口 */
+/* 深色主题：讲解区文字里的和弦音颜色（根音、三音……）换成浅色版，和其他重点词一样清楚（演示区是浅色纸面，不变） */
+@media (prefers-color-scheme: dark) {
+  html[data-theory-lesson] .theory-explanation .c-root { color: #a5b4fc; }
+  html[data-theory-lesson] .theory-explanation .c-third { color: #5eead4; }
+  html[data-theory-lesson] .theory-explanation .c-fifth { color: #fcd34d; }
+  html[data-theory-lesson] .theory-explanation .c-bass { color: #fca5a5; }
+  html[data-theory-lesson] .theory-explanation .c-seventh { color: #f9a8d4; }
+  html[data-theory-lesson] .theory-explanation .c-ext { color: #7dd3fc; }
+}
+
+/* 和弦课（tapParts）：点符头只播放这个音，点和弦竖列、记号或标注播放对应的和弦，点空白处播放整个谱面（规范 N23） */
+html[data-theory-lesson] .lesson-board.has-sound .chord-staff [data-tone] { cursor: pointer; }
+/* 面板里的播放按钮（对照表的一行，data-play） */
+html[data-theory-lesson] .play-rows { display: grid; gap: 8px; width: min(100%, 22rem); margin: 0 auto; }
+html[data-theory-lesson] .play-row { display: grid; grid-template-columns: 5.5em 1fr auto; align-items: center; gap: 10px; padding: 9px 12px; border: 1px solid #d5dbe3; border-radius: 10px; background: #fff; color: #1f2933; font: inherit; text-align: left; cursor: pointer; transition: border-color .2s, background .2s; }
+html[data-theory-lesson] .play-row .cs { font-size: 1.25rem; }
+html[data-theory-lesson] .play-row .play-degrees { font-variant-numeric: tabular-nums; letter-spacing: .04em; color: #334155; }
+html[data-theory-lesson] .play-row .play-degrees b { color: #0369a1; }
+html[data-theory-lesson] .play-row .play-icon { width: 1.1em; height: 1.1em; color: #64748b; }
+html[data-theory-lesson] .play-row.is-playing { border-color: #1a73e8; background: #eef4ff; }
+html[data-theory-lesson] .play-row:focus-visible { outline: 2px solid #1a73e8; outline-offset: 2px; }
+/* 总结卡片（第三课第五、六节） */
+html[data-theory-lesson] .summary-card { width: min(100%, 24rem); margin: 0 auto; display: grid; gap: 8px; color: #1f2933; font-size: .9rem; line-height: 1.5; }
+html[data-theory-lesson] .summary-card > div { padding: 8px 12px; border-radius: 10px; background: #f3f5f8; }
+html[data-theory-lesson] .summary-card h4 { margin: 0 0 2px; font-size: .82rem; color: #475569; }
+html[data-theory-lesson] .summary-card ol { margin: 0; padding-left: 1.3em; text-align: left; }  /* 步骤列表左对齐（2026-11-22） */
+/* 记号拆成三部分（第三课）：数字一块用延伸音的蓝色 */
+html[data-theory-lesson] .part-num .symbol-glyph { height: 58px; min-width: 52px; font-size: 36px; color: #0369a1; border-color: #bae6fd; background: #f0f9ff; }
+html[data-theory-lesson] .part-quality .symbol-glyph { height: 58px; min-width: 52px; font-size: 36px; color: var(--chord-third); border-color: #99f6e4; background: #f0fdfa; }
+/* 第四课：记号的对错对照、变化音上下叠写、从根音出发的十二个半音 */
+html[data-theory-lesson] .symbol-judge { display: grid; gap: 14px; justify-items: center; font-size: 34px; color: var(--chord-root); font-family: Edwin, 'Century Schoolbook', Georgia, serif; }
+html[data-theory-lesson] .symbol-judge p { margin: 0; display: flex; align-items: baseline; gap: 10px; }
+html[data-theory-lesson] .symbol-judge .judge-mark { font: 700 22px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+html[data-theory-lesson] .symbol-judge .is-right .judge-mark { color: #15803d; }
+html[data-theory-lesson] .symbol-judge .is-wrong { opacity: .55; }
+html[data-theory-lesson] .symbol-judge .is-wrong .judge-mark { color: #b91c1c; }
+html[data-theory-lesson] .symbol-judge .judge-note { font: 600 13px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #64748b; }
+html[data-theory-lesson] .alt-stack { display: inline-flex; flex-direction: column; justify-content: center; line-height: 1; font-size: .62em; margin-left: -2px; align-self: flex-start; }
+html[data-theory-lesson] .alt-stack .cs-alt { font-size: 1em; vertical-align: 0; }
+/* 上下叠写的变化音：一对长括号把它们一起括起来（第四课） */
+html[data-theory-lesson] .alt-stack-group { display: inline-flex; align-items: center; align-self: flex-start; margin-left: 1px; }
+html[data-theory-lesson] .alt-stack-group .alt-stack { margin-left: 0; align-self: auto; }
+html[data-theory-lesson] .alt-paren { font-size: 1.3em; line-height: 1; font-weight: 300; transform: scaleX(.7); color: var(--chord-third); }
+html[data-theory-lesson] .semitone-map { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; width: min(100%, 26rem); }
+html[data-theory-lesson] .semitone-cell { display: grid; justify-items: center; gap: 1px; padding: 6px 2px; border: 1px solid #d5dbe3; border-radius: 9px; background: #fff; color: #1f2933; font: inherit; cursor: pointer; transition: border-color .3s, background .3s, opacity .3s; }
+html[data-theory-lesson] .semitone-n { font-size: 11px; color: #94a3b8; }
+html[data-theory-lesson] .semitone-note { font-size: 15px; font-weight: 700; }
+html[data-theory-lesson] .semitone-name { font-size: 11.5px; line-height: 1.25; color: #475569; text-align: center; }
+html[data-theory-lesson] .semitone-cell.is-playing { border-color: #1a73e8; background: #eef4ff; }
+html[data-theory-lesson] .stage-panel:has(.semitone-cell.active) .semitone-cell:not(.active) { opacity: .4; }
+html[data-theory-lesson] .semitone-cell.active { border-color: #7c3aed; background: #f5f3ff; }
+
+/* ---------- 第五课（2026-11-20） ---------- */
+/* 一题多问 */
+html[data-theory-lesson] .quiz-part { margin: 10px 0 4px; }
+html[data-theory-lesson] .quiz-part-label { font-weight: 700; font-size: 14px; color: #334155; margin-bottom: 6px; }
+/* 「加、替换、删减」着色 */
+html[data-theory-lesson] .term-add { color: var(--chord-bass, #dc2626); font-weight: 700; }
+html[data-theory-lesson] .symbol-judge .judge-sep { display: inline-block; width: .6em; }
+/* 番外：自己画的示意图（尤克里里和弦图、仿老乐谱、时间轴） */
+html[data-theory-lesson] .uke-row { display: flex; gap: 18px; justify-content: center; }
+html[data-theory-lesson] .uke-box { margin: 0; text-align: center; }
+html[data-theory-lesson] .uke-box figcaption { font: 700 16px Georgia, serif; margin-bottom: 4px; }
+html[data-theory-lesson] .uke-box svg { width: 64px; height: auto; }
+html[data-theory-lesson] .old-chart { width: min(100%, 22rem); margin: 0 auto; padding: 10px 14px; background: #fbf7ec; border: 1px solid #e7dcc0; border-radius: 6px; }
+html[data-theory-lesson] .old-symbols { display: flex; justify-content: space-around; margin: 0 0 6px; font: 700 18px Georgia, serif; color: #1e293b; }
+html[data-theory-lesson] .old-chart.hand .old-symbols { font-family: 'Marker Felt', 'Comic Sans MS', 'Bradley Hand', cursive; font-weight: 400; font-size: 20px; }
+html[data-theory-lesson] .old-staff { height: 40px; margin: 0; background: repeating-linear-gradient(to bottom, #475569 0 1px, transparent 1px 10px); background-size: 100% 41px; background-repeat: no-repeat; }
+html[data-theory-lesson] .old-note { margin: 6px 0 0; font-size: 12px; color: #64748b; text-align: center; }
+html[data-theory-lesson] .timeline { list-style: none; margin: 0 auto; padding: 0; width: min(100%, 22rem); border-left: 2px solid #cbd5e1; }
+html[data-theory-lesson] .timeline li { display: flex; gap: 10px; padding: 5px 0 5px 12px; font-size: 14px; color: #334155; }
+html[data-theory-lesson] .timeline b { min-width: 3.5em; color: #4f46e5; }
+
+/* 第二课（2026-11-21 上线）：七和弦对照表、记号箭头、四个记号一行；上下标规则——字母、数字、性质符号与音名底线对齐，括号与 sus、add、omit、no 上标 */
+html[data-theory-lesson] .demo-table { --cols: 1.2fr 1fr 1.45fr; }
+html[data-theory-lesson] .demo-table .compare-row { padding: 5px 8px; gap: 6px; }
+html[data-theory-lesson] .demo-table .compare-row > span:last-child { display: flex; flex-wrap: wrap; gap: 3px 10px; }
+html[data-theory-lesson] .demo-table .cs { font-size: 20px; }
+/* 小屏中表格高于演示区时，从表头开始滚动，避免居中裁掉首尾。 */
+html[data-theory-lesson] .stage-panel:has(.demo-table) { align-items: safe center; }
+/* 第 9、10 页：按钮显示简称、别称时着色 */
+html[data-theory-lesson] .board-controls .name-short { color: #4f46e5; font-weight: 700; }
+/* 第 17 页：箭头从记号的每一部分指到下方的名称 */
+html[data-theory-lesson] .symbol-arrows { display: flex; align-items: flex-end; justify-content: center; gap: 4px; font-family: Edwin, 'Century Schoolbook', Georgia, serif; }
+html[data-theory-lesson] .symbol-arrows > div { display: grid; justify-items: center; }
+html[data-theory-lesson] .symbol-arrows .arrow-glyph { line-height: 1; }
+html[data-theory-lesson] .arrow-root .arrow-glyph { font-size: 64px; color: var(--chord-root); }
+html[data-theory-lesson] .arrow-suffix .arrow-glyph { font-size: 44px; color: var(--chord-third); }
+html[data-theory-lesson] .arrow-number .arrow-glyph { font-size: 34px; color: var(--chord-seventh, #dc2626); }
+html[data-theory-lesson] .symbol-arrows .arrow-mark { font-family: -apple-system, sans-serif; font-size: 18px; color: #94a3b8; margin-top: 4px; }
+
+html[data-theory-lesson] .symbol-arrows .arrow-role { font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 14px; font-weight: 600; color: #475569; }
+/* 第 18、24 页：四个记号一行，下方是名称 */
+html[data-theory-lesson] .named-symbols { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: min(100%, 26rem); margin: 0 auto; }
+html[data-theory-lesson] .named-symbols > div { display: grid; justify-items: center; align-content: end; gap: 8px; padding: 12px 4px; border-radius: 10px; background: #f8fafc; }
+html[data-theory-lesson] .named-symbols .named-glyph { font-size: 30px; line-height: 1.1; white-space: nowrap; }
+html[data-theory-lesson] .named-symbols .named-label { font-size: 13px; font-weight: 600; color: #475569; }
+/* 上下标规则（试行）：性质符号 △ ° ø + − 与音名底线对齐，字号放大 */
+html[data-theory-lesson] .cs-mark { font-size: 1em; vertical-align: baseline; }
+html[data-theory-lesson] .cs-mark.cs-music { font-size: .85em; vertical-align: baseline; }
+html[data-theory-lesson] .cs-degree { display: inline-block; transform: translateY(.38em); font-size: 1.1em; }
+/* 符号后缀（− + ° ø △）与字母后缀同样大小，不再显得比 m 更高、更大 */
+html[data-theory-lesson] .cs-suffix.cs-sign, html[data-theory-lesson] .symbol-row.big .cs-suffix.cs-sign { font-size: .78em; }
+html[data-theory-lesson] .cs-sign .cs-small { font-size: 1em; }
+/* 面板里的大记号：后缀是 inline-block + overflow: hidden，会让后缀的基线落到盒子底部，整段看起来像上标。
+   改用 overflow: clip（不改变基线），后缀回到和音名同一条底线 */
+html[data-theory-lesson] .stage-panel .symbol-row .cs-suffix { overflow: clip; }

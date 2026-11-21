@@ -1,0 +1,33 @@
+/* 音程 · 第四课。面板：度数线（单 / 复分界）、单复对照、化简。marks 由 ChordStage 加上 .active，CSS 过渡。 */
+
+/* 度数线：1–8 为单音程，9–15 为复音程，中间一条分界线 */
+html[data-theory-lesson] .degree-line { display: flex; align-items: stretch; gap: 4px; max-width: 100%; padding: 8px 0; }
+html[data-theory-lesson] .dl-side { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 6px 3px; border-radius: 10px; transition: background-color .4s var(--stage-ease); }
+html[data-theory-lesson] .dl-cells { display: flex; gap: 1px; }
+html[data-theory-lesson] .dl-cells span { display: flex; align-items: center; justify-content: center; width: 17px; height: 28px; border-radius: 5px; background: #f1f5f9; font: 800 12px var(--site-font); color: #1e293b; transition: background-color .4s var(--stage-ease), color .4s var(--stage-ease); }
+html[data-theory-lesson] .dl-name { font: 800 13px var(--site-font); color: #64748b; transition: color .4s var(--stage-ease); }
+html[data-theory-lesson] .dl-divider { width: 2px; border-radius: 1px; background: var(--accent); }
+html[data-theory-lesson] .dl-side.active { background: #eef2ff; }
+html[data-theory-lesson] .dl-side.active .dl-cells span { background: var(--primary); color: #fff; }
+html[data-theory-lesson] .dl-side.active .dl-name { color: var(--primary); }
+
+/* 单复对照：三行（单音程 / 复音程 / 性质）× 七列，同一列上下对应 */
+html[data-theory-lesson] .pairing { display: grid; grid-template-columns: 48px repeat(7, 34px); grid-template-rows: 36px 36px 28px; align-items: center; justify-items: center; gap: 4px 2px; }
+html[data-theory-lesson] .pr-tag { grid-column: 1; font: 700 11px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .pr-cell { display: flex; align-items: center; justify-content: center; width: 30px; height: 32px; border-radius: 8px; background: #f1f5f9; font: 800 14px var(--site-font); color: #1e293b; transition: background-color .4s var(--stage-ease), color .4s var(--stage-ease); }
+html[data-theory-lesson] .pr-cell.active { background: var(--primary); color: #fff; }
+html[data-theory-lesson] .pr-quality { font: 800 12px var(--site-font); color: var(--primary); opacity: 0; transition: opacity .4s var(--stage-ease); }
+html[data-theory-lesson] .pr-quality.active { opacity: 1; }
+
+/* 化简：十八度 → 十一度 → 四度；「减 14」一行随后出现 */
+html[data-theory-lesson] .simplify { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 8px; }
+html[data-theory-lesson] .sp-row { display: flex; align-items: center; gap: 6px; }
+html[data-theory-lesson] .sp-num { padding: 6px 8px; border-radius: 8px; background: #f1f5f9; font: 800 14px var(--site-font); color: #1e293b; white-space: nowrap; }
+html[data-theory-lesson] .sp-end { background: #eef2ff; color: var(--primary); }
+html[data-theory-lesson] .sp-step { font: 700 12px var(--site-font); color: #64748b; white-space: nowrap; }
+html[data-theory-lesson] .sp-direct { font: 800 14px var(--site-font); color: var(--accent); opacity: 0; transform: translateY(6px); transition: opacity .45s var(--stage-ease), transform .45s var(--stage-ease); }
+html[data-theory-lesson] .sp-direct.active { opacity: 1; transform: none; }
+html[data-theory-lesson] .sp-note { font: 700 12px var(--site-font); color: #64748b; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-theory-lesson] .sp-direct { transition: none; }
+}

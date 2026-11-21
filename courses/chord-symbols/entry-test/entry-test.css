@@ -1,0 +1,55 @@
+/* 和弦记号用法 · 入学自测（只用于本页） */
+.entry-test{max-width:700px}
+.entry-test .training-copy p{margin:0 0 16px}
+.et-card{border-top:1px solid var(--site-border);padding-top:28px;margin-top:28px}
+.et-progress{font-size:13px;color:var(--site-muted);margin:0 0 14px;font-variant-numeric:tabular-nums}
+.et-prompt{font-size:17px;line-height:1.8;margin:0 0 8px;font-weight:400}
+.et-hint{font-size:13px;color:var(--site-muted);margin:0 0 16px;line-height:1.8}
+.et-staff{background:#fff;border:1px solid var(--site-border);border-radius:var(--site-card-radius);padding:6px 10px;margin:14px 0 18px;max-width:420px}
+.et-staff svg{display:block;width:100%;height:auto}
+.et-options{display:grid;gap:10px;margin:16px 0}
+.et-option{display:flex;gap:12px;align-items:center;border:1px solid var(--site-border);border-radius:var(--site-card-radius);padding:12px 14px;cursor:pointer;line-height:1.6}
+.et-option input{margin:0;flex:none;width:18px;height:18px;accent-color:var(--site-text)}
+.et-option:has(input:checked){border-color:var(--site-text)}
+.et-group-label{font-size:13px;color:var(--site-muted);margin:16px 0 8px}
+.et-chips{display:flex;flex-wrap:wrap;gap:8px}
+.et-chip{min-width:46px;padding:9px 12px;border:1px solid var(--site-border);border-radius:var(--site-card-radius);background:transparent;cursor:pointer;line-height:1.3;font-variant-numeric:tabular-nums}
+.et-chip[aria-pressed="true"]{background:var(--site-text);color:var(--site-bg);border-color:var(--site-text)}
+.et-degrees .et-chip{min-width:52px}
+.et-current{margin:16px 0 0;font-size:15px;min-height:1.8em}
+.et-text{width:100%;max-width:360px;font:inherit;font-size:17px;padding:11px 14px;border:1px solid var(--site-border);border-radius:var(--site-card-radius);background:transparent;color:var(--site-text)}
+.et-preview{margin:10px 0 0;min-height:1.9em;font-size:18px}
+.et-preview.is-error,.et-error{color:var(--site-error, #b91c1c);font-size:14px}
+.et-preview .et-muted{color:var(--site-muted);font-size:14px}
+.et-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+/* 按钮与网站的 site-cta（紧凑款）一致 */
+.et-btn{display:inline-flex;align-items:center;min-height:46px;padding:10px 24px;font:inherit;font-size:13px;font-weight:500;line-height:1.5;border:1px solid var(--site-border);border-radius:var(--site-radius-pill);background:transparent;color:var(--site-text);cursor:pointer;transition:background .18s ease,color .18s ease}
+.et-btn:hover{background:var(--site-hover)}
+.et-btn.et-primary{background:var(--site-accent);border-color:var(--site-accent);color:var(--site-on-accent)}
+.et-btn.et-primary:hover{background:var(--site-text);border-color:var(--site-text);color:var(--site-bg)}
+.et-btn[disabled]{opacity:.4;cursor:default;pointer-events:none}
+.et-quit{margin-top:26px;font-size:13px}
+.et-link-button{background:none;border:0;padding:0;color:var(--site-muted);text-decoration:underline;text-underline-offset:.22em;cursor:pointer;font-size:13px}
+.et-feedback{margin-top:22px;padding:16px 18px;border:1px solid var(--site-border);border-left-width:3px;border-radius:var(--site-card-radius);line-height:1.85}
+.et-feedback p{margin:0 0 6px}
+.et-feedback p:last-child{margin-bottom:0}
+.et-feedback.is-correct{border-left-color:#15803d}
+.et-feedback.is-wrong{border-left-color:#b91c1c}
+.et-feedback.is-skipped{border-left-color:var(--site-muted)}
+.et-feedback strong{font-weight:600}
+.et-confirm{margin-top:22px;padding:18px;border:1px solid var(--site-text);border-radius:var(--site-card-radius);line-height:1.85}
+.et-confirm p{margin:0 0 14px}
+.et-result h2{margin:0 0 16px}
+.et-result p{line-height:1.9;margin:0 0 14px}
+.et-save{font-weight:500;padding:12px 14px;border:1px dashed var(--site-text);border-radius:var(--site-card-radius)}
+.et-report{white-space:pre-wrap;font-family:var(--site-font);font-size:14px;line-height:1.8;padding:16px 18px;border:1px solid var(--site-border);border-radius:var(--site-card-radius);margin:16px 0;overflow-wrap:anywhere}
+.et-copied{font-size:13px;color:var(--site-muted);align-self:center}
+/* 和弦记号印刷体（与课件一致的字体，颜色跟随正文） */
+.entry-test .cs{font-family:Edwin,'Century Schoolbook','New Century Schoolbook',Georgia,'Times New Roman',serif;font-weight:400;white-space:nowrap}
+.entry-test .cs-music{font-family:'Bravura Text',Bravura;font-weight:400}
+.entry-test .cs-suffix{font-size:.78em;margin-left:.02em}
+.entry-test .cs-suffix.cs-sign{font-size:1em}
+.entry-test .cs-mark{font-size:.8em;vertical-align:.4em;line-height:1}
+.entry-test .cs-mark.cs-music{font-size:.72em;vertical-align:.45em}
+.entry-test .cs-small{font-size:.78em}
+@media(max-width:599px){.et-prompt{font-size:16px}.et-chip{min-width:42px;padding:8px 10px}.et-degrees .et-chip{min-width:44px}}

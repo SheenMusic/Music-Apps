@@ -1,0 +1,7 @@
+/* 音程 · 第五课。面板：度数对照（原位 / 转位，同一列相加等于 9 或 16）。marks 由 ChordStage 加上 .active，CSS 过渡。 */
+
+html[data-theory-lesson] .sums { display: grid; grid-template-columns: 40px repeat(var(--columns), 30px); grid-template-rows: 36px 36px auto; align-items: center; justify-items: center; gap: 4px 3px; padding: 8px 0; }
+html[data-theory-lesson] .sm-tag { grid-column: 1; font: 700 11px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .sm-cell { display: flex; align-items: center; justify-content: center; width: 28px; height: 32px; border-radius: 8px; background: #f1f5f9; font: 800 14px var(--site-font); color: #1e293b; transition: background-color .4s var(--stage-ease), color .4s var(--stage-ease); }
+html[data-theory-lesson] .sm-cell.active { background: var(--primary); color: #fff; }
+html[data-theory-lesson] .sm-total { grid-column: 2 / -1; grid-row: 3; padding-top: 4px; font: 800 13px var(--site-font); color: var(--primary); }
