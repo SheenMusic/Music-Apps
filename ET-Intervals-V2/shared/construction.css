@@ -1,0 +1,271 @@
+/* 构唱课（音程听力训练 V2.1）。浅色 / 深色跟随系统。 */
+:root {
+  color-scheme: light dark;
+  --paper: #ffffff;
+  --panel: #ffffff;
+  --ink: #20252b;
+  --muted: #626c78;
+  --line: #dce1e7;
+  --stage: #26354b;
+  --stage-ink: #ffffff;
+  --stage-muted: #c9d4e3;
+  --play: #eaf1f8;
+  --play-ink: #26354b;
+  --play-active: #d9e6f2;
+  --feedback: #f1f5f9;
+  --meter: #d6dfe9;
+  --target: #b9cde0;
+  --accent: #365675;
+  --on-accent: #ffffff;
+  --good: #2f8a57;
+  --warn: #a8742a;
+  --bad: #b5524b;
+  /* 升降号：系统字体没有 ♯ ♭ 时，先用符号字体（Apple Symbols / Segoe UI Symbol / Noto Music），
+     不要落到中文字体里的全角版本 */
+  font-family: system-ui, -apple-system, "Apple Symbols", "Segoe UI Symbol", "Noto Music", "DejaVu Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #12161c;
+    --panel: #181e26;
+    --ink: #e8ecf1;
+    --muted: #9aa6b4;
+    --line: #2c3541;
+    --stage: #1f2c3f;
+    --stage-muted: #b3c1d3;
+    --play: #dce7f3;
+    --play-ink: #1f2c3f;
+    --play-active: #c3d5e8;
+    --feedback: #1c232d;
+    --meter: #2f3a48;
+    --target: #3e5670;
+    --accent: #8fb3d6;
+    --on-accent: #12161c;
+    --good: #5cc08a;
+    --warn: #d3a35c;
+    --bad: #e28a82;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100dvh; display: flex; flex-direction: column; background: var(--paper); color: var(--ink); }
+
+/* 顶部站点条与底部版权：给页面上下边界 */
+.site-bar { display: flex; align-items: center; gap: 10px; width: min(100% - 32px, 37rem); margin: 0 auto; padding-top: max(14px, env(safe-area-inset-top)); color: var(--muted); font-size: .8125rem; }
+.brand-mark, .brand-mark img { display: block; width: 22px; height: 22px; flex: none; }
+.site-foot { padding: 18px 16px max(18px, env(safe-area-inset-bottom)); color: var(--muted); font-size: .75rem; text-align: center; opacity: .8; }
+button, select, input { font: inherit; }
+button, summary { cursor: pointer; }
+button { min-height: 44px; }
+button:focus-visible, summary:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+[hidden], .hidden { display: none !important; }
+.lesson { flex: 1; display: flex; flex-direction: column; width: min(100% - 32px, 37rem); margin: 18px auto 0; }
+#practiceCard { flex: 1; display: flex; flex-direction: column; }
+/* 题目卡 + 进度作为一个整体，放在标题下方剩余空间的正中 */
+.stage-area { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 8px 4vh; }
+
+/* 标题行：课号 + 课名，菜单按钮与标题同一行居中，右边与下方题目卡右边缘对齐 */
+.lesson-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+h1 { margin: 0; font-size: clamp(1.45rem, 5vw, 1.9rem); line-height: 1.25; letter-spacing: -.02em; }
+.lesson-number { margin-inline-end: .5em; color: var(--muted); font-size: .72em; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0; }
+summary { list-style: none; }
+summary::-webkit-details-marker { display: none; }
+.settings-details { position: relative; flex: none; margin-inline-end: -13px; }
+.settings-summary { width: 44px; height: 44px; display: grid; place-items: center; color: var(--ink); }
+.menu-icon { display: grid; gap: 4px; width: 18px; }
+.menu-icon i { height: 2px; background: currentColor; border-radius: 2px; }
+.settings-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  inset-inline-end: 13px;
+  z-index: 5;
+  width: min(20rem, calc(100vw - 32px));
+  max-height: calc(100dvh - 100px);
+  overflow-y: auto;
+  padding: 15px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 12px 24px #0000002a;
+}
+.settings-panel h2 { margin: 0 0 4px; font-size: 1rem; }
+/* 设置：iPhone「设置」式分组列表。整行可点，系统选择器透明地盖在整行上 */
+.settings-group-title { margin: 14px 0 6px 2px; color: var(--muted); font-size: .75rem; }
+.settings-group { overflow: hidden; background: var(--feedback); border-radius: 12px; }
+.setting-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 12px;
+  font-size: .9375rem;
+  cursor: pointer;
+}
+.setting-row + .setting-row { border-top: 1px solid var(--line); }
+.setting-value { margin-inline-start: auto; color: var(--muted); font-size: .875rem; text-align: right; }
+.setting-row:not(.switch-row)::after {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-inline-start: -4px;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: translateY(-2px) rotate(45deg);
+}
+.setting-row select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; font-size: 1rem; opacity: 0; cursor: pointer; }
+.setting-row:has(select:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+@media (hover: hover) { .setting-row:hover { background: var(--play-active); } }
+/* 开关 */
+.switch-row input {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 26px;
+  margin: 0 0 0 auto;
+  border-radius: 13px;
+  background: var(--meter);
+  cursor: pointer;
+  transition: background .2s;
+}
+.switch-row input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #0003; transition: transform .2s; }
+.switch-row input:checked { background: var(--good); }
+.switch-row input:checked::after { transform: translateX(18px); }
+.switch-row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.settings-note { margin: 8px 2px 0; color: var(--muted); font-size: .8125rem; line-height: 1.5; }
+.settings-note + .settings-note { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
+
+/* 题目卡 */
+.exercise { background: var(--panel); border-radius: 20px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
+.question { background: var(--stage); color: var(--stage-ink); padding: clamp(24px, 6vw, 36px) clamp(20px, 5vw, 34px); text-align: center; }
+.question-lead { margin: 0; color: var(--stage-muted); font-size: .9375rem; }
+#prompt { margin: 6px 0 0; font-size: clamp(2.2rem, 9vw, 3.2rem); font-weight: 700; letter-spacing: .01em; line-height: 1.15; }
+.prompt-name { margin: 2px 0 0; color: var(--stage-muted); font-size: .9375rem; }
+.prompt-name:empty { display: none; }
+/* 第 4 课：标题下当前声部（点一下可更换），第一次打开时的声部选择 */
+.voice-line { display: block; margin: -8px 0 6px; }
+.voice-picker { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 16px; background: rgba(15, 23, 42, .45); }
+.voice-picker-card { width: min(100%, 380px); padding: 22px 20px 18px; border-radius: 18px; background: var(--panel); color: var(--ink); box-shadow: 0 12px 32px rgba(15, 23, 42, .25); }
+.voice-picker-card h2 { margin: 0 0 14px; font-size: 1.15rem; }
+/* 说明放在最下面：灰色、小号、细字，不和按钮抢注意力 */
+.voice-picker-card:focus { outline: none; }
+.voice-picker-note { margin: 14px 2px 0; color: var(--muted); font-size: .75rem; font-weight: 300; line-height: 1.6; }
+.voice-choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.voice-choice { display: grid; gap: 2px; min-height: 64px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: var(--feedback); color: var(--ink); font-size: 1rem; font-weight: 650; }
+.voice-choice small { color: var(--muted); font-size: .8125rem; font-weight: 400; }
+.voice-choice:hover, .voice-choice:focus-visible { border-color: var(--accent); }
+.octave-note { display: inline-block; margin: 10px 0 0; padding: 2px 9px; border: 1px solid #ffffff38; border-radius: 999px; color: var(--stage-muted); font-size: .75rem; }
+/* 和声模唱：低音 / 高音两个小卡片（当前要唱的高亮，唱准的打勾；练习模式下可点，单独听这个声部） */
+.voice-cards { display: flex; justify-content: center; gap: 8px; margin-top: 14px; }
+.voice-card { min-width: 4.6rem; min-height: 36px; padding: 4px 14px; border: 1px solid #ffffff38; border-radius: 999px; background: transparent; color: var(--stage-muted); font-size: .875rem; }
+.voice-card:disabled { cursor: default; }
+.voice-card.is-active { border-color: var(--stage-ink); color: var(--stage-ink); font-weight: 650; }
+.voice-card.is-done { border-color: transparent; background: #ffffff1f; color: var(--stage-ink); }
+.voice-card.is-done::before { content: "✓ "; }
+.practice-mode .voice-card:not(:disabled) { border-style: dashed; }
+.controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 22px; }
+.tone.next { background: var(--stage-ink); border-color: var(--stage-ink); color: var(--play-ink); }
+.tone.next .play-icon { display: none; }
+.tone, .mic, .advance-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 15px; border-radius: 11px; font-size: .9375rem; font-weight: 650; }
+.tone { background: var(--play); color: var(--play-ink); border: 1px solid var(--play); }
+.tone.playing { background: var(--play-active); border-color: var(--play-active); }
+.play-icon { display: grid; place-items: center; width: 14px; height: 14px; }
+.play-icon svg { display: block; width: 100%; }
+.mic { background: transparent; color: inherit; border: 1px solid currentColor; }
+.mic-dot { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid currentColor; }
+.mic.active { border-color: #ffffff70; background: #ffffff14; }
+.mic.active .mic-dot { border-color: #ff6b5f; background: #ff6b5f; animation: listening 1.6s ease-in-out infinite; }
+@keyframes listening { 50% { opacity: .35; } }
+.report .mic { color: var(--ink); }
+
+/* 提示：一行文字 + 音准条（中线是目标，浅色区是 ±20 音分） */
+.feedback { padding: 18px clamp(22px, 5vw, 34px) 22px; background: var(--feedback); text-align: center; }
+#coaching { margin: 0; min-height: 1.5em; font-size: 1rem; font-weight: 500; }
+.feedback[data-phase="wrong"] #coaching { color: var(--bad); }
+.feedback[data-phase="high"] #coaching, .feedback[data-phase="low"] #coaching { color: var(--warn); }
+.feedback:is([data-phase="holding"], [data-phase="passed"], [data-phase="done"]) #coaching { color: var(--good); }
+.meter { position: relative; height: 12px; margin-top: 14px; border-radius: 10px; background: var(--meter); }
+#targetZone { position: absolute; inset-block: 0; left: 50%; transform: translateX(-50%); border-radius: inherit; background: var(--target); }
+.meter-center { position: absolute; left: 50%; inset-block: -2px; width: 1px; background: var(--muted); opacity: .5; }
+#pointer {
+  position: absolute;
+  left: 50%;
+  inset-block: -4px;
+  width: 6px;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: var(--accent);
+  transition: left 80ms ease-out;
+}
+.feedback[data-signal="false"] #pointer { visibility: hidden; }
+.feedback[data-phase="wrong"] #pointer { background: var(--bad); }
+.feedback:is([data-phase="high"], [data-phase="low"]) #pointer { background: var(--warn); }
+.feedback:is([data-phase="holding"], [data-phase="passed"], [data-phase="done"]) #pointer { background: var(--good); }
+
+/* 听辨课（第 1、2 课）：题目问句、两个选项、下一题 */
+.prompt-question { font-size: clamp(1.5rem, 6vw, 2rem) !important; }
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.choice { min-height: 52px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); font-size: 1rem; font-weight: 600; }
+.choice:disabled { cursor: default; }
+.choice.is-correct { border-color: var(--good); color: var(--good); }
+.choice.is-wrong { border-color: var(--bad); color: var(--bad); }
+.choice.is-answer:not(.is-correct) { border-style: dashed; border-color: var(--good); }
+.feedback #nextBtn { margin-top: 10px; }
+.answer-text { margin: 0 0 14px; font-weight: 600; }
+
+/* 音高提示：整行可点，细箭头展开 */
+.pitch-details { padding: 0 clamp(22px, 5vw, 34px); border-top: 1px solid var(--line); }
+.pitch-details summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; color: var(--muted); font-size: .875rem; }
+.hint-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 10px; }
+.hint-title small { font-size: .75rem; opacity: .75; }
+.practice-mode .hint-title small { color: var(--warn); opacity: 1; }
+.chevron { width: 8px; height: 8px; margin-inline-end: 4px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .15s; }
+.pitch-details[open] .chevron { transform: translateY(2px) rotate(-135deg); }
+.target-pair { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center; padding-bottom: 6px; }
+.target-note { font-size: 1.4rem; font-weight: 650; }
+.target-label, .target-freq, .target-arrow, .diagnostic { color: var(--muted); font-size: .875rem; }
+.target-arrow { font-size: 1.1rem; }
+.diagnostic { margin: 4px 0 14px; }
+
+/* 题目卡下方：10 格进度、模式说明、报告按钮、重新开始，全部居中 */
+.lesson-footer { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 18px; }
+.progress-steps { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; width: min(15rem, 70%); }
+.progress-steps span { height: 6px; border-radius: 4px; background: var(--meter); transition: background .2s, opacity .2s; }
+.progress-steps .is-complete { background: var(--accent); }
+.practice-mode .progress-steps { opacity: .45; }
+.mode-note { margin: 0; min-height: 1.2em; color: var(--muted); font-size: .8125rem; text-align: center; }
+.practice-mode .mode-note { color: var(--warn); }
+.text-action { min-height: 36px; padding: 0 4px; border: 0; background: transparent; color: var(--muted); font-size: .875rem; text-decoration: underline dashed; text-underline-offset: 4px; }
+.text-action:hover { color: var(--ink); text-decoration-style: solid; }
+.advance-button { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); }
+.advance-button:disabled { display: none; }
+
+/* 报告：居中的成绩卡 + 一题一行的简洁列表 */
+.report { flex: 1; display: flex; flex-direction: column; }
+.result-hero { margin: 28px 0 22px; text-align: center; }
+.result-mark { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 50%; background: var(--stage); color: var(--stage-ink); font-size: 1.9rem; font-weight: 700; }
+.result-count { margin: 0; font-size: 1.35rem; font-weight: 700; }
+.result-time { margin: 4px 0 0; color: var(--muted); font-size: .9375rem; }
+.result-list-title { margin: 0 0 4px; color: var(--muted); font-size: .8125rem; }
+.result-list { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.result-list li { display: grid; grid-template-columns: 2.2em 3.4em 1fr auto; align-items: baseline; gap: 8px; padding: 11px 2px; border-bottom: 1px solid var(--line); font-size: .9375rem; }
+.result-list li.two-column { grid-template-columns: 2.2em 1fr; }
+.result-number { color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.result-interval { font-weight: 650; }
+.result-sung { color: var(--muted); font-size: .8125rem; }
+.report-actions { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 24px 0 8px; }
+.report-actions .advance-button { width: 100%; max-width: 22rem; min-height: 48px; }
+@media (prefers-reduced-motion: reduce) {
+  #pointer, .progress-steps span, .chevron { transition: none; }
+  .mic.active .mic-dot { animation: none; }
+}
+@media (forced-colors: active) {
+  .settings-group { border: 1px solid ButtonText; }
+}
+/* 关掉「双击放大」（点快了页面会突然放大）；双指缩放仍然可用，看不清时可以放大。 */
+html { touch-action: manipulation; }

@@ -1,0 +1,54 @@
+/* 音程 · 第三课。性质关系图与第二课相同；state "altered"：度数都显示，「减」「增」两侧高亮（变化音程）。 */
+html[data-theory-lesson] .quality-map { display: grid; grid-template-columns: 70px 1fr 70px; align-items: center; gap: 12px; width: 100%; max-width: 420px; padding: 8px 18px; }
+html[data-theory-lesson] .qm-side { font-size: 1.2rem; font-weight: 900; color: var(--primary); text-align: center; }
+html[data-theory-lesson] .qm-center { display: grid; grid-template-rows: 1fr 1fr; align-items: center; gap: 6px; }
+html[data-theory-lesson] :is(.qm-pure-wrap, .qm-mm-wrap) { display: grid; justify-items: center; align-items: center; min-height: 68px; transition: opacity .5s var(--stage-ease); }
+html[data-theory-lesson] .qm-pure-wrap { grid-template-rows: 22px 1px 32px; }
+html[data-theory-lesson] .qm-mm-wrap { grid-template-rows: 32px 1px 22px; }
+html[data-theory-lesson] :is(.qm-pure, .qm-mm) { font-size: 1.15rem; font-weight: 900; color: #1e293b; }
+html[data-theory-lesson] .qm-mm { display: flex; gap: 42px; }
+html[data-theory-lesson] .qm-line { width: min(180px, 80%); height: 1px; background: #94a3b8; }
+html[data-theory-lesson] :is(.qm-degree, .qm-line) { opacity: 0; transition: opacity .5s var(--stage-ease); }
+html[data-theory-lesson] .qm-degree { font: 800 12px var(--site-font); color: var(--primary); letter-spacing: .08em; }
+html[data-theory-lesson] .stage-panel:is([data-state="1"], [data-state="2"]) .qm-pure-wrap :is(.qm-degree, .qm-line),
+html[data-theory-lesson] .stage-panel[data-state="2"] .qm-mm-wrap :is(.qm-degree, .qm-line) { opacity: 1; }
+@media (max-width: 390px) {
+  html[data-theory-lesson] .quality-map { grid-template-columns: 48px 1fr 48px; padding: 8px 6px; }
+  html[data-theory-lesson] .qm-mm { gap: 28px; }
+}
+html[data-theory-lesson] .stage-panel[data-state="altered"] :is(.qm-degree, .qm-line) { opacity: 1; }
+html[data-theory-lesson] .stage-panel[data-state="altered"] .qm-center { opacity: .4; transition: opacity .5s var(--stage-ease); }
+html[data-theory-lesson] .stage-panel[data-state="altered"] .qm-side { padding: 8px 0; border-radius: 10px; background: #eef2ff; box-shadow: 0 0 0 2px var(--primary); }
+
+/* 讲解区的小字备注（如「倍增、倍减」） */
+html[data-theory-lesson] .lesson-aside { font-size: .82em; color: #64748b; }
+
+/* 音数尺（面板）：第 1 行增音程、第 2 行自然音程、第 3 行减音程、第 4 行音数。
+   增音程从左边一格滑入，减音程从右边一格滑入，按 --i 依次出现；窄屏横向滚动，行名固定在左侧。 */
+html[data-theory-lesson] .ruler-scroll { width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; }
+html[data-theory-lesson] .ruler-scroll::-webkit-scrollbar { display: none; }
+html[data-theory-lesson] .ruler { --cell: 40px; display: grid; grid-template-columns: 44px repeat(13, var(--cell)); grid-template-rows: 30px 40px 30px 24px; align-items: center; justify-items: center; width: max-content; margin: 0 auto; padding: 0 8px; }
+html[data-theory-lesson] .ruler-tag { grid-column: 1; position: sticky; left: 0; z-index: 2; align-self: stretch; display: flex; align-items: center; justify-content: center; width: 100%; background: var(--card, #fff); font: 700 11px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .ruler-natural { grid-row: 2; display: flex; align-items: center; justify-content: center; width: calc(var(--cell) - 4px); height: 36px; border-radius: 8px; background: #f1f5f9; font: 800 13px/1.1 var(--site-font); color: #1e293b; text-align: center; }
+html[data-theory-lesson] .ruler-count { grid-row: 4; font: 600 11px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .ruler-name { font: 800 13px var(--site-font); color: var(--primary); opacity: 0; transition: opacity .45s var(--stage-ease), transform .45s var(--stage-ease); }
+html[data-theory-lesson] .ruler-aug { grid-row: 1; transform: translateX(calc(-1 * var(--cell))); }
+html[data-theory-lesson] .ruler-dim { grid-row: 3; transform: translateX(var(--cell)); }
+html[data-theory-lesson] .ruler-name.active { opacity: 1; transform: none; transition-delay: calc(var(--i) * .7s); }
+@media (prefers-reduced-motion: reduce) {
+  html[data-theory-lesson] .ruler-name, html[data-theory-lesson] .ruler-name.active { transition: none; }
+}
+
+/* 结构概念图（第 1 页）：实线圈 = 自然音程；圈外虚线区域 = 变化音程，稍后渐入 */
+html[data-theory-lesson] .interval-map { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; width: min(340px, 100%); padding: 16px 14px 12px; }
+html[data-theory-lesson] .im-frame { position: absolute; inset: 0; border: 2px dashed var(--primary); border-radius: 18px; background: #eef2ff; }
+html[data-theory-lesson] .im-natural { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; width: min(230px, 80%); height: 116px; border: 2px solid #1e293b; border-radius: 50%; background: #fff; font: 800 15px var(--site-font); color: #1e293b; }
+html[data-theory-lesson] .im-exception { font-size: 13px; color: var(--accent); }
+html[data-theory-lesson] .im-outside { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; font: 800 15px var(--site-font); color: var(--primary); white-space: pre; }
+html[data-theory-lesson] .im-title { font-size: 12px; letter-spacing: .08em; color: #64748b; }
+html[data-theory-lesson] .im-outside .im-title { color: var(--primary); }
+html[data-theory-lesson] :is(.im-frame, .im-outside) { animation: im-in .6s var(--stage-ease) .9s both; }
+@keyframes im-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  html[data-theory-lesson] :is(.im-frame, .im-outside) { animation: none; }
+}

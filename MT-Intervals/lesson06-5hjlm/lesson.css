@@ -1,0 +1,24 @@
+/* 音程 · 第六课。面板：度数对照表、判断流程图；首页「辅助练习」里的外部强化练习。 */
+
+html[data-theory-lesson] .sums { display: grid; grid-template-columns: 40px repeat(var(--columns), 30px); grid-template-rows: 36px 36px auto; align-items: center; justify-items: center; gap: 4px 3px; padding: 8px 0; }
+html[data-theory-lesson] .sm-tag { grid-column: 1; font: 700 11px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .sm-cell { display: flex; align-items: center; justify-content: center; width: 28px; height: 32px; border-radius: 8px; background: #f1f5f9; font: 800 14px var(--site-font); color: #1e293b; transition: background-color .4s var(--stage-ease), color .4s var(--stage-ease); }
+html[data-theory-lesson] .sm-cell.active { background: var(--primary); color: #fff; }
+html[data-theory-lesson] .sm-total { grid-column: 2 / -1; grid-row: 3; padding-top: 4px; font: 800 13px var(--site-font); color: var(--primary); }
+
+html[data-theory-lesson] .flow { display: grid; gap: 8px; width: min(100%, 320px); padding: 8px 0; }
+html[data-theory-lesson] .flow-head { text-align: center; font: 700 13px var(--site-font); color: #64748b; }
+html[data-theory-lesson] .flow-row { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: #f1f5f9; color: #334155; font: 600 14px var(--site-font); transition: background-color .4s var(--stage-ease), color .4s var(--stage-ease); }
+html[data-theory-lesson] .flow-row b { font-weight: 800; }
+html[data-theory-lesson] .flow-row.active { background: var(--primary); color: #fff; }
+html[data-theory-lesson] .flow-foot { text-align: center; font: 800 13px var(--site-font); color: var(--primary); }
+
+html[data-theory-lesson] .aux-drills { text-align: left; }
+html[data-theory-lesson] .aux-drills summary { list-style: none; }
+html[data-theory-lesson] .aux-drills summary::-webkit-details-marker { display: none; }
+html[data-theory-lesson] .aux-drills summary::after { content: '▾'; margin-left: 8px; transition: transform .2s ease; }
+html[data-theory-lesson] .aux-drills[open] summary::after { transform: rotate(180deg); }
+html[data-theory-lesson] .aux-drills .theory-note { margin: 12px 0 0; }
+html[data-theory-lesson] .exercise-links { display: grid; gap: 10px; margin-top: 14px; }
+html[data-theory-lesson] .exercise-link { justify-content: space-between; text-align: left; gap: 16px; }
+html[data-theory-lesson] .exercise-links h3 { margin: 8px 0 0; font-size: 13px; color: #64748b; }

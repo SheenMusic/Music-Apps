@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <script src="/assets/site-analytics.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>04 指定八度模唱 · 音程听力训练</title>
+  <link rel="stylesheet" href="../shared/construction.css?v=20261125m">
+</head>
+<body>
+  <div class="site-bar">
+    <picture class="brand-mark"><source srcset="/assets/logo/sheen-logo-white.svg" media="(prefers-color-scheme: dark)"><img src="/assets/logo/sheen-logo.svg" alt="" width="22" height="22"></picture>
+    <span>音程听力训练</span>
+  </div>
+  <main class="lesson">
+    <div id="practiceCard">
+      <header class="lesson-header">
+        <h1><span class="lesson-number">04</span>指定八度模唱</h1>
+        <details class="settings-details" id="settingsMenu">
+          <summary class="settings-summary" aria-label="练习设置" title="练习设置">
+            <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </summary>
+          <div class="settings-panel">
+            <h2>练习设置</h2>
+            <p class="settings-group-title">音区</p>
+            <div class="settings-group">
+              <label class="setting-row">
+                <span>最低音</span>
+                <span class="setting-value" id="minNoteValue"></span>
+                <select id="minNoteSelect" onchange="onConfigChange()"></select>
+              </label>
+              <label class="setting-row">
+                <span>最高音</span>
+                <span class="setting-value" id="maxNoteValue"></span>
+                <select id="maxNoteSelect" onchange="onConfigChange()"></select>
+              </label>
+            </div>
+            <p class="settings-group-title">练习</p>
+            <div class="settings-group" id="lessonSettings"></div>
+            <p class="settings-group-title">声音</p>
+            <div class="settings-group">
+              <label class="setting-row">
+                <span>参考音音色</span>
+                <span class="setting-value" id="timbreValue"></span>
+                <select id="timbreSelect">
+                  <option value="piano" selected>钢琴</option>
+                  <option value="sine">正弦波</option>
+                </select>
+              </label>
+              <label class="setting-row switch-row">
+                <span>已佩戴耳机</span>
+                <input id="headphoneCheckbox" type="checkbox" role="switch" aria-describedby="headphoneHelp">
+              </label>
+            </div>
+            <p class="settings-note" id="headphoneHelp">打开后，播放参考音时麦克风也继续收音。</p>
+            <p class="settings-note">收起「音高提示」时，连续唱准 10 题即可完成；之后可以继续练，随时查看报告。展开「音高提示」是练习模式，不计数。</p>
+          </div>
+        </details>
+      </header>
+
+      <div class="stage-area">
+      <section class="exercise" aria-labelledby="prompt">
+        <div class="question">
+          <p class="question-lead">听参考音，然后唱出</p>
+          <h2 id="prompt" aria-live="polite"></h2>
+          <p class="prompt-name" id="promptName"></p>
+          <p class="octave-note">任意八度</p>
+          <div class="controls">
+            <button type="button" class="tone" id="toneBtn">
+              <span class="play-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.3 2.4 13.4 7a1.15 1.15 0 0 1 0 2l-8.1 4.6A1.2 1.2 0 0 1 3.5 12.6V3.4a1.2 1.2 0 0 1 1.8-1Z"/></svg></span>
+              <span id="toneLabel">播放参考音</span>
+            </button>
+            <button type="button" class="mic" id="micBtn" aria-pressed="false">
+              <span class="mic-dot" aria-hidden="true"></span>
+              <span id="micLabel">开启麦克风</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedbackPanel" data-phase="ready" data-signal="false">
+          <p id="coaching" aria-live="polite">先听参考音</p>
+          <div class="meter" aria-hidden="true">
+            <div id="targetZone"></div>
+            <div class="meter-center"></div>
+            <div id="pointer"></div>
+          </div>
+        </div>
+
+        <details id="pitchDetails" class="pitch-details">
+          <summary>
+            <span class="hint-title">音高提示<small id="hintNote">展开后进入练习模式，不计数</small></span>
+            <span class="chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="target-pair">
+            <div>
+              <div class="target-label">参考音</div>
+              <div class="target-note" id="refNoteName">--</div>
+              <div class="target-freq" id="refFreqText">-- Hz</div>
+            </div>
+            <div class="target-arrow" id="arrowIcon" aria-hidden="true">→</div>
+            <div>
+              <div class="target-label">目标音</div>
+              <div class="target-note" id="targetNoteName">--</div>
+              <div class="target-freq" id="targetFreqText">-- Hz</div>
+            </div>
+          </div>
+          <p class="diagnostic">实际音高：<span id="currentPitchText">--</span></p>
+        </details>
+      </section>
+
+      <footer class="lesson-footer">
+        <div class="progress-steps" id="progressSteps" role="img" aria-label="已连续唱准 0 / 10 题"></div>
+        <p class="mode-note" id="modeNote" aria-live="polite"></p>
+        <button type="button" id="finishBtn" class="advance-button" onclick="finishPractice()" disabled>查看练习报告</button>
+        <button type="button" class="text-action" id="resetPractice">重新开始</button>
+      </footer>
+      </div>
+      <!-- 连续数、按钮状态和保持进度仍由练习逻辑与「继续上次练习」读取，不显示 -->
+      <p hidden><span id="passCountText">0</span><span id="holdingProgress"></span><span id="centsDevText"></span></p>
+    </div>
+
+    <section id="reportCard" class="hidden report" aria-labelledby="reportTitle">
+      <header class="lesson-header">
+        <h1 id="reportTitle"><span class="lesson-number">04</span>指定八度模唱</h1>
+      </header>
+      <div class="result-hero">
+        <div class="result-mark" aria-hidden="true">✓</div>
+        <p class="result-count" id="resultCount">连续唱准 10 题</p>
+        <p class="result-time" id="resultTime"></p>
+        <!-- 秒数，「继续上次练习」恢复报告时读取 -->
+        <span id="totalTimeText" hidden>0</span>
+      </div>
+      <p class="result-list-title" id="resultListTitle">练习记录</p>
+      <ol class="result-list" id="reportList"></ol>
+      <div class="report-actions">
+        <button type="button" class="advance-button" onclick="copyReport()">复制并提交结果</button>
+        <button type="button" class="text-action" onclick="restartPractice()">再练一次</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-foot">© Sheen · Ear Training</footer>
+  <script src="../../assets/pitch-format.js"></script>
+  <script src="../../assets/practice-report.js?v=20261125g"></script>
+  <script src="/ET-Intervals/shared/interval-spelling.js"></script>
+  <script src="/ET-Intervals/shared/pitch-disclosure.js"></script>
+  <script src="../shared/reference-tone.js?v=20261125o"></script>
+  <script>
+  // 04 指定八度模唱：本课的设置（其余都由 ../shared/construction-lesson.js 完成）
+  window.CONSTRUCTION_LESSON = {
+    code: 'ET04-V2.1',
+    reportTitle: '指定八度模唱',
+    reportType: 'singing',
+    strictOctave: true,
+    octaveTag: '指定八度',
+    // 只有选「自定义音区」时才显示最低音 / 最高音（2026-11-25）
+    get hideRange() {
+      const part = document.getElementById('voicePartSelect');
+      return !part || part.value !== 'custom';
+    },
+    defaultRange: [48, 72],
+    settings: [
+      { id: 'voicePartSelect', label: '声部', options: [['soprano', '女高音 Soprano'], ['alto', '女低音 Alto'], ['tenor', '男高音 Tenor'], ['bass', '男低音 Bass'], ['custom', '自定义音区']] },
+      // 混合为默认：每题随机移低或移高
+      { id: 'exerciseSelect', label: '方向', options: [['mixed', '↕ 混合'], ['high_down', '↓ 把高音移低八度唱'], ['low_up', '↑ 把低音移高八度唱']] }
+    ],
+    // 各声部的自然音区：指定音（要唱的音）都在这里
+    voiceParts: {
+      soprano: [60, 71], // C4–B4
+      alto: [53, 64],    // F3–E4
+      tenor: [48, 59],   // C3–B3
+      bass: [41, 52]     // F2–E3
+    },
+    widenRange: (min, max) => max,
+    // 一个音的写法：白键一种，黑键在两种常用写法里随机（同构唱课的拼写规则）
+    note(midi) {
+      const spellings = IntervalSpelling.commonSpellings(((midi % 12) + 12) % 12);
+      const s = spellings[Math.floor(Math.random() * spellings.length)];
+      const display = IntervalSpelling.noteName(s.letter, s.acc, midi);
+      return { letter: s.letter, acc: s.acc, name: display.replace(/-?\d+$/, ''), display };
+    },
+    // 声部：与原版相同，参考音在音区之外（上方或下方，约两个八度），把它的音名移进音区就是要唱的音
+    // 自定义音区：要唱的音在学生设的音区里随机，参考音在它上方（移低）或下方（移高）一或两个八度，
+    // 参考音保持在 C2–C7 之间
+    customQuestion(read, previousClass, down) {
+      const a = Number(read('minNoteSelect')), b = Number(read('maxNoteSelect'));
+      const low = Math.min(a, b), high = Math.max(a, b);
+      let targetMidi;
+      do { targetMidi = low + Math.floor(Math.random() * (high - low + 1)); }
+      while (targetMidi % 12 === previousClass && high - low >= 12);
+      const choices = [1, 2].filter(n => down ? targetMidi + 12 * n <= 96 : targetMidi - 12 * n >= 36);
+      const octaves = choices.length ? choices[Math.floor(Math.random() * choices.length)] : 1;
+      const refMidi = targetMidi + (down ? 12 : -12) * octaves;
+      const target = this.note(targetMidi);
+      const ref = { ...target, display: IntervalSpelling.noteName(target.letter, target.acc, refMidi) };
+      return {
+        name: (down ? '下方' : '上方') + (octaves === 2 ? '纯十五度' : '纯八度'),
+        refMidi, targetMidi, ref, target,
+        promptName: `${down ? '移低' : '移高'} ${octaves} 个八度`
+      };
+    },
+    makeQuestion(read, previousClass) {
+      const dir = read('exerciseSelect');
+      const down = dir === 'high_down' || (dir === 'mixed' && Math.random() < 0.5);
+      if (read('voicePartSelect') === 'custom') return this.customQuestion(read, previousClass, down);
+      const [regMin, regMax] = this.voiceParts[read('voicePartSelect')];
+      let refMin = down ? regMin + 12 : Math.max(regMin - 24, 36);
+      let refMax = down ? Math.min(regMax + 24, 96) : regMax - 12;
+      if (refMin > refMax) [refMin, refMax] = [refMax, refMin];
+      let refMidi, targetMidi;
+      do {
+        refMidi = refMin + Math.floor(Math.random() * (refMax - refMin + 1));
+        targetMidi = regMin + (((refMidi - regMin) % 12) + 12) % 12;
+      } while (targetMidi % 12 === previousClass && refMax - refMin >= 11);
+      const octaves = Math.abs(refMidi - targetMidi) / 12;
+      const target = this.note(targetMidi);
+      const ref = { ...target, display: IntervalSpelling.noteName(target.letter, target.acc, refMidi) };
+      return {
+        name: (down ? '下方' : '上方') + (octaves === 2 ? '纯十五度' : '纯八度'),
+        refMidi, targetMidi, ref, target,
+        promptName: `${down ? '移低' : '移高'} ${octaves} 个八度`
+      };
+    }
+  };
+  </script>
+  <script src="../shared/construction-lesson.js?v=20261125o"></script>
+  <script>
+  // 第 4 课要求唱在指定八度，所以先确定声部（2026-11-25）：第一次打开时请学生选，记在这台设备上；
+  // 标题下一行显示当前声部，点一下或在菜单里都可以更换。
+  (function voicePart() {
+    const KEY = 'sheen.et04.voicePart';
+    const select = document.getElementById('voicePartSelect');
+    const parts = {
+      soprano: ['女高音', 'C₄–B₄'],
+      alto: ['女低音', 'F₃–E₄'],
+      tenor: ['男高音', 'C₃–B₃'],
+      bass: ['男低音', 'F₂–E₃']
+    };
+    const line = document.createElement('button');
+    line.type = 'button';
+    line.className = 'text-action voice-line';
+    document.querySelector('#practiceCard .lesson-header').after(line);
+    const rangeGroup = document.getElementById('minNoteSelect').closest('.settings-group');
+    // 本课的音区只在选「自定义音区」时出现，放在「练习」（声部、方向）之后
+    const lessonGroup = document.getElementById('lessonSettings');
+    lessonGroup.after(rangeGroup.previousElementSibling, rangeGroup);
+    // 音区选项在页面载入后才建好；建好前先不写音区
+    const noteLabel = id => document.getElementById(id).selectedOptions[0]?.textContent ?? '';
+    function show(value) {
+      // 自定义音区：显示最低音 / 最高音两行；标题下写出当前音区
+      const custom = value === 'custom';
+      rangeGroup.hidden = !custom;
+      rangeGroup.previousElementSibling.hidden = !custom;
+      line.textContent = custom
+        ? `自定义音区 · ${noteLabel('minNoteSelect')}–${noteLabel('maxNoteSelect')} · 更换声部`
+        : `${parts[value][0]} · ${parts[value][1]} · 更换声部`;
+    }
+    // 自定义音区也记在这台设备上
+    const RANGE_KEY = 'sheen.et04.customRange';
+    for (const id of ['minNoteSelect', 'maxNoteSelect']) {
+      document.getElementById(id).addEventListener('change', () => {
+        try { localStorage.setItem(RANGE_KEY, JSON.stringify([minNoteSelect.value, maxNoteSelect.value])); } catch (e) {}
+        show(select.value);
+      });
+    }
+    window.addEventListener('load', () => {
+      let range = null;
+      try { range = JSON.parse(localStorage.getItem(RANGE_KEY)); } catch (e) {}
+      if (Array.isArray(range) && select.value === 'custom') {
+        minNoteSelect.value = range[0];
+        maxNoteSelect.value = range[1];
+        restartPractice();
+      }
+      show(select.value);
+    });
+    function remember(value) {
+      try { localStorage.setItem(KEY, value); } catch (e) {}
+      show(value);
+    }
+    select.addEventListener('change', () => remember(select.value));
+    function ask() {
+      const overlay = document.createElement('div');
+      overlay.className = 'voice-picker';
+      overlay.setAttribute('role', 'dialog');
+      overlay.setAttribute('aria-modal', 'true');
+      overlay.innerHTML = '<div class="voice-picker-card"><h2>选择你的声部</h2><div class="voice-choices"></div><p class="voice-picker-note">本课要唱在指定八度，请选最接近自己音区的声部，之后可随时更换。</p></div>';
+      const choices = overlay.querySelector('.voice-choices');
+      for (const [value, [name, range]] of Object.entries(parts)) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'voice-choice';
+        button.innerHTML = `<span>${name}</span><small>${range}</small>`;
+        button.addEventListener('click', () => {
+          overlay.remove();
+          select.value = value;
+          remember(value);
+          restartPractice();
+        });
+        choices.append(button);
+      }
+      document.body.append(overlay);
+      // 焦点放在弹窗本身，不放在第一个按钮上（否则看起来像默认选了女高音）
+      const card = overlay.querySelector('.voice-picker-card');
+      card.tabIndex = -1;
+      card.focus({ preventScroll: true });
+    }
+    line.addEventListener('click', ask);
+    let saved = null;
+    try { saved = localStorage.getItem(KEY); } catch (e) {}
+    if (saved && (parts[saved] || saved === 'custom')) {
+      select.value = saved;
+      show(saved);
+    } else {
+      show(select.value);
+      window.addEventListener('load', ask);
+    }
+  })();
+  </script>
+  <script src="../shared/construction-ui.js?v=20261125e"></script>
+  <script src="/shared/practice/practice-session.js?v=20261115a"></script>
+  <script src="/ET-Intervals/shared/et-session.js?v=20261115a"></script>
+</body>
+</html>

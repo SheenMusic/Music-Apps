@@ -1,0 +1,133 @@
+<!doctype html>
+<html data-visual="site" data-public-visual lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/assets/logo/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:image" content="https://sheenyang.com/assets/logo/share-card.png">
+  <meta name="description" content="Piano Intros｜按编号浏览、搜索与选择钢琴前奏乐谱。">
+  <title>钢琴前奏 · 乐铺屋 · Sheen Yang</title>
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
+  <meta name="theme-color" content="#121518" media="(prefers-color-scheme:dark)">
+  <link rel="stylesheet" href="../../assets/site-visual.css">
+  <link rel="stylesheet" href="../scores.css">
+  <link rel="stylesheet" href="./intro.css">
+  <script src="../../assets/site-analytics.js" defer></script>
+  <script src="../checkout-analytics.js" defer></script>
+  <script src="../order-sheet.js" defer></script>
+  <script src="../checkout-dialog.js" defer></script>
+  <script src="./pricing.js" defer></script>
+  <script src="./checkout.js" defer></script>
+  <script src="./catalog.js" defer></script>
+  <link rel="stylesheet" href="../../assets/site-navigation.css">
+  <script src="/assets/site-language.js" defer></script>
+  <script src="../../assets/site-navigation.js" defer></script>
+  <link rel="stylesheet" href="../consent.css">
+  <script src="../consent.js" defer></script>
+  <script src="../stripe-checkout.js" defer></script>
+  <script src="./catalog-intl.js" defer></script>
+</head>
+<body>
+<header class="topbar" data-site-navigation>
+  <div class="shell topbar-inner">
+    <a class="brand" href="/"><picture class="brand-mark"><source srcset="/assets/logo/sheen-logo-white.svg" media="(prefers-color-scheme: dark)"><img src="/assets/logo/sheen-logo.svg" alt="" width="30" height="30"></picture>Sheen Yang</a>
+    <button class="menu-button" id="menuButton" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="menuPanel">
+      <span class="menu-icon" aria-hidden="true"><span></span></span>
+    </button>
+  </div>
+</header>
+<div class="menu-panel" id="menuPanel" data-site-navigation aria-hidden="true" inert>
+  <div class="menu-inner">
+    <nav class="menu-links" aria-label="网站导航">
+      <a href="/" data-nav-section="home">首页</a>
+      <a href="/scores/" data-nav-section="scores">乐谱</a>
+      <a href="/courses/" data-nav-section="courses">课程</a>
+      <a href="/articles/" data-nav-section="articles">文章</a>
+      <a href="/works/" data-nav-section="works">作品</a>
+      <a href="/#contact" data-nav-section="contact">联系</a>
+    </nav>
+  </div>
+</div>
+
+<main class="shell intros-main">
+<div data-content-lang="zh">
+  <section class="page-heading"><span class="eyebrow">乐铺屋</span><h1 class="public-title">钢琴前奏</h1>
+    <p class="lead">歌曲前奏篇幅短小，却浓缩了动机、和声、织体与节奏，很适合拿来弹，也适合拿来学。</p>
+  </section>
+  <section id="volumes" class="volumes" aria-label="前奏合辑"></section>
+  <section class="song-catalog" aria-labelledby="libraryHeading">
+    <div class="section-heading"><h2 id="libraryHeading" class="public-section">曲库</h2><span id="resultCount" class="muted"></span></div>
+    <label class="search-label" for="songSearch">搜索歌名或歌手</label><input class="search-input" id="songSearch" type="search" placeholder="歌名或歌手" autocomplete="off" disabled>
+    <p id="catalogStatus" class="muted" role="status" aria-live="polite">正在加载曲库…</p>
+    <ol class="song-list" id="songList"></ol>
+    <noscript><p>请启用 JavaScript 以搜索和选择曲目。<a href="../jiangnan/">免费《江南》乐谱仍可直接下载。</a></p></noscript>
+  </section>
+  <section class="intros-more" aria-label="更多说明">
+    <p class="detail-note student-perk"><strong>课程学员福利</strong><br>正在学习我的短期训练课或一对一课（课程有效期内）的学员，可以免费获取钢琴前奏合集中的任意乐谱。需要时直接联系我即可。</p>
+    <p class="detail-note">本系列部分曲谱不提供站内预览，也不提供专门的示范。如需查看乐谱预览，请前往我的<a href="https://v.douyin.com/IhDRXEM0f-I/" target="_blank" rel="noopener noreferrer" aria-label="打开 SheenYang 的抖音合集，查看乐谱预览（新窗口）">抖音合集</a>。</p>
+    <details class="intro-story"><summary>关于这个合集</summary>
+      <div class="intro-editorial">
+      <p>歌曲的前奏通常在很短的篇幅里，浓缩了高辨识度的动机、和声、织体与节奏。这里集合了非常有意思的流行音乐前奏，还配上了和弦标记和简单分析，在拿来弹的同时，也可以从中感受伴奏与编配的魅力。</p>
+      <p>这里的乐谱，都是我自己听写、编配和制作的，除了付费合辑，也会不定期整理上传一些免费的片段与大家分享。</p>
+      <p>不过，乐谱只是学习音乐的一种方式。比照着谱弹下来更重要的，是逐渐理解它为什么这样写，并最终有能力听出、分析和写下自己的谱子。</p>
+      <a class="button intro-course-link site-cta site-cta-compact" href="/courses/">学习扒谱与编配 <span aria-hidden="true">→</span></a>
+    </div>
+    </details>
+  </section>
+  <aside class="selection-bar" aria-label="已选曲目与套餐">
+    <div class="selection-summary" role="status" aria-live="polite" aria-atomic="true"><span id="selectedCount" hidden>已选 0 首</span><strong id="selectionPrice">单首 ¥2 · 多选自动优惠</strong></div>
+    <div class="selection-actions"><button class="text-button" id="clearSelection" type="button" disabled>清空</button><button class="button primary" id="confirmSelection" type="button" disabled>确认选择</button></div>
+  </aside>
+</div>
+<div data-content-lang="en">
+  <section class="page-heading"><span class="eyebrow">SCORES / PIANO INTROS</span><h1 class="public-title">Piano Intros</h1>
+    <div class="intro-editorial">
+      <p>You don’t have to start with a long, difficult piece to learn music. A short, beautifully crafted intro from a song you already love can teach you just as much — and it’s far more fun to play.</p>
+      <p>Each score comes with chord symbols and a short analysis, so you can see how the intro is put together while you play it.</p>
+    </div>
+  </section>
+  <section class="volumes" aria-label="Pricing"><section class="volume"><div><h2>$1 per intro · $6 maximum</h2><p>Pick as many as you like. The price stops at $6, so the whole collection is $6 too. Scores marked FREE can be downloaded right away. Pay by card, Apple Pay or Google Pay; buyers in Japan are charged in yen.</p></div><button class="button primary" type="button" data-intl-all>Get all intros · $6</button></section></section>
+  <p class="detail-note student-perk"><strong>For my students</strong><br>If you’re currently enrolled in one of my short training courses or private lessons, any score in the Piano Intros collection is free for you. Just ask.</p>
+  <section class="song-catalog" aria-labelledby="libraryHeading-en">
+    <div class="section-heading"><h2 id="libraryHeading-en" class="public-section">The collection</h2></div>
+    <ol class="song-list" data-intl-list="en"></ol>
+  </section>
+  <aside class="selection-bar" data-intl-bar="en" aria-label="Your selection">
+    <div class="selection-summary" role="status" aria-live="polite"><strong data-intl-summary></strong></div>
+    <div class="selection-actions"><button class="text-button" type="button" data-intl-clear disabled>Clear</button><button class="button primary" type="button" data-intl-checkout disabled>Checkout</button></div>
+  </aside>
+  <section class="catalog-section" aria-labelledby="learnHeading-en">
+    <div class="section-heading"><h2 id="learnHeading-en" class="public-section">Want to go further?</h2></div>
+    <p>If you’d like to understand the logic behind the music, or make scores of the songs you love, take a look at my courses. Curious how I make my scores, or looking for something more personal? Private lessons are tailored to you.</p>
+    <div class="custom-score-actions"><a class="button primary site-cta site-cta-compact" href="/courses/">View courses <span aria-hidden="true">→</span></a><a class="button site-cta site-cta-compact" href="/courses/private-lessons/">Take lessons <span aria-hidden="true">→</span></a></div>
+  </section>
+</div>
+<div data-content-lang="ja">
+  <section class="page-heading"><span class="eyebrow">楽譜 / PIANO INTROS</span><h1 class="public-title">Piano Intros</h1>
+    <div class="intro-editorial">
+      <p>音楽を学ぶのに、長くて難しい曲から始める必要はありません。好きな曲の、短くて美しいイントロも、十分によい教材になります。何より、弾いていて楽しいはずです。</p>
+      <p>どの楽譜にもコード表記と簡単な分析がついているので、弾きながら、イントロがどう組み立てられているかも見えてきます。</p>
+    </div>
+  </section>
+  <section class="volumes" aria-label="価格"><section class="volume"><div><h2>1曲 ¥150 · 最大 ¥900</h2><p>何曲でもお選びいただけます。¥900 以上にはならないので、全曲セットも ¥900 です。FREE の楽譜はすぐにダウンロードできます。カード決済・Apple Pay・Google Pay がご利用いただけます。お支払い通貨は地域により自動で選ばれます。</p></div><button class="button primary" type="button" data-intl-all>全曲まとめて購入 · ¥900</button></section></section>
+  <p class="detail-note student-perk"><strong>受講生の方へ</strong><br>短期トレーニングコースまたは個人レッスンを受講中（有効期間内）の方は、ピアノイントロ集の楽譜をどれでも無料でお渡しします。必要なときは、お気軽にご連絡ください。</p>
+  <section class="song-catalog" aria-labelledby="libraryHeading-ja">
+    <div class="section-heading"><h2 id="libraryHeading-ja" class="public-section">収録曲</h2></div>
+    <ol class="song-list" data-intl-list="ja"></ol>
+  </section>
+  <aside class="selection-bar" data-intl-bar="ja" aria-label="選択中の曲">
+    <div class="selection-summary" role="status" aria-live="polite"><strong data-intl-summary></strong></div>
+    <div class="selection-actions"><button class="text-button" type="button" data-intl-clear disabled>クリア</button><button class="button primary" type="button" data-intl-checkout disabled>購入手続きへ</button></div>
+  </aside>
+  <section class="catalog-section" aria-labelledby="learnHeading-ja">
+    <div class="section-heading"><h2 id="learnHeading-ja" class="public-section">もっと深く学びたい方へ</h2></div>
+    <p>音楽の仕組みを理解したい方、好きな曲を自分で楽譜にしてみたい方は、コースをご覧ください。楽譜づくりの方法に興味がある方や、自分に合った内容を学びたい方には、個人レッスンもあります。</p>
+    <div class="custom-score-actions"><a class="button primary site-cta site-cta-compact" href="/courses/">コースを見る <span aria-hidden="true">→</span></a><a class="button site-cta site-cta-compact" href="/courses/private-lessons/">個人レッスン <span aria-hidden="true">→</span></a></div>
+  </section>
+</div>
+</main>
+<footer class="site-footer shell visual-footer">© 2026 Sheen Yang, All rights reserved. · <a href="/scores/legal/">特定商取引法に基づく表記</a></footer>
+</body>
+</html>

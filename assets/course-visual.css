@@ -1,0 +1,22 @@
+/* Course-only aliases and existing family dimensions. No theme overrides,
+   global resets, focus rules or changes to teaching state colors.
+   site-visual.css remains the authority for --site-* and Dark Mode. */
+:where(html[data-visual="ear"], html[data-visual="practice"]) {
+  --course-font: var(--site-font);
+  --course-focus: var(--site-focus);
+  --course-success-text: var(--site-success);
+  --course-error-text: var(--site-error);
+  --course-border: var(--site-border);
+}
+:where(html[data-visual="ear"]) {
+  --course-content-width: 480px;
+  --course-card-radius:var(--site-radius-card);
+  --course-button-radius:var(--site-radius-control);
+  --course-button-min-height: 46px;
+}
+:where(html[data-visual="practice"]) {
+  --course-content-width: 520px;
+  --course-card-radius:var(--site-radius-card);
+  --course-button-radius:var(--site-radius-control);
+  --course-option-radius:var(--site-radius-control);
+}

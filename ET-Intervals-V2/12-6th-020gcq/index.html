@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <script src="/assets/site-analytics.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>12 六度和声模唱 · 音程听力训练</title>
+  <link rel="stylesheet" href="../shared/construction.css?v=20261125m">
+</head>
+<body>
+  <div class="site-bar">
+    <picture class="brand-mark"><source srcset="/assets/logo/sheen-logo-white.svg" media="(prefers-color-scheme: dark)"><img src="/assets/logo/sheen-logo.svg" alt="" width="22" height="22"></picture>
+    <span>音程听力训练</span>
+  </div>
+  <main class="lesson">
+    <div id="practiceCard">
+      <header class="lesson-header">
+        <h1><span class="lesson-number">12</span>六度和声模唱</h1>
+        <details class="settings-details" id="settingsMenu">
+          <summary class="settings-summary" aria-label="练习设置" title="练习设置">
+            <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </summary>
+          <div class="settings-panel">
+            <h2>练习设置</h2>
+            <p class="settings-group-title">音区</p>
+            <div class="settings-group">
+              <label class="setting-row">
+                <span>最低音</span>
+                <span class="setting-value" id="minNoteValue"></span>
+                <select id="minNoteSelect" onchange="onConfigChange()"></select>
+              </label>
+              <label class="setting-row">
+                <span>最高音</span>
+                <span class="setting-value" id="maxNoteValue"></span>
+                <select id="maxNoteSelect" onchange="onConfigChange()"></select>
+              </label>
+            </div>
+            <p class="settings-group-title">练习</p>
+            <div class="settings-group" id="lessonSettings"></div>
+            <p class="settings-group-title">声音</p>
+            <div class="settings-group">
+              <label class="setting-row">
+                <span>参考音音色</span>
+                <span class="setting-value" id="timbreValue"></span>
+                <select id="timbreSelect">
+                  <option value="piano" selected>钢琴</option>
+                  <option value="sine">正弦波</option>
+                </select>
+              </label>
+              <label class="setting-row switch-row">
+                <span>已佩戴耳机</span>
+                <input id="headphoneCheckbox" type="checkbox" role="switch" aria-describedby="headphoneHelp">
+              </label>
+            </div>
+            <p class="settings-note" id="headphoneHelp">打开后，播放参考音时麦克风也继续收音。</p>
+            <p class="settings-note">收起「音高提示」时，连续唱准 10 题即可完成；之后可以继续练，随时查看报告。展开「音高提示」是练习模式，不计数。</p>
+          </div>
+        </details>
+      </header>
+
+      <div class="stage-area">
+      <section class="exercise" aria-labelledby="prompt">
+        <div class="question">
+          <p class="question-lead">听两个音，然后分别唱出</p>
+          <h2 id="prompt" aria-live="polite"></h2>
+          <p class="prompt-name" id="promptName"></p>
+          <p class="octave-note">任意八度</p>
+          <div class="controls">
+            <button type="button" class="tone" id="toneBtn">
+              <span class="play-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.3 2.4 13.4 7a1.15 1.15 0 0 1 0 2l-8.1 4.6A1.2 1.2 0 0 1 3.5 12.6V3.4a1.2 1.2 0 0 1 1.8-1Z"/></svg></span>
+              <span id="toneLabel">播放参考音</span>
+            </button>
+            <button type="button" class="mic" id="micBtn" aria-pressed="false">
+              <span class="mic-dot" aria-hidden="true"></span>
+              <span id="micLabel">开启麦克风</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedbackPanel" data-phase="ready" data-signal="false">
+          <p id="coaching" aria-live="polite">先听参考音</p>
+          <div class="meter" aria-hidden="true">
+            <div id="targetZone"></div>
+            <div class="meter-center"></div>
+            <div id="pointer"></div>
+          </div>
+        </div>
+
+        <details id="pitchDetails" class="pitch-details">
+          <summary>
+            <span class="hint-title">音高提示<small id="hintNote">展开后进入练习模式，不计数</small></span>
+            <span class="chevron" aria-hidden="true"></span>
+          </summary>
+          <div class="target-pair">
+            <div>
+              <div class="target-label">参考音</div>
+              <div class="target-note" id="refNoteName">--</div>
+              <div class="target-freq" id="refFreqText">-- Hz</div>
+            </div>
+            <div class="target-arrow" id="arrowIcon" aria-hidden="true">→</div>
+            <div>
+              <div class="target-label">目标音</div>
+              <div class="target-note" id="targetNoteName">--</div>
+              <div class="target-freq" id="targetFreqText">-- Hz</div>
+            </div>
+          </div>
+          <p class="diagnostic">实际音高：<span id="currentPitchText">--</span></p>
+        </details>
+      </section>
+
+      <footer class="lesson-footer">
+        <div class="progress-steps" id="progressSteps" role="img" aria-label="已连续唱准 0 / 10 题"></div>
+        <p class="mode-note" id="modeNote" aria-live="polite"></p>
+        <button type="button" id="finishBtn" class="advance-button" onclick="finishPractice()" disabled>查看练习报告</button>
+        <button type="button" class="text-action" id="resetPractice">重新开始</button>
+      </footer>
+      </div>
+      <!-- 连续数、按钮状态和保持进度仍由练习逻辑与「继续上次练习」读取，不显示 -->
+      <p hidden><span id="passCountText">0</span><span id="holdingProgress"></span><span id="centsDevText"></span></p>
+    </div>
+
+    <section id="reportCard" class="hidden report" aria-labelledby="reportTitle">
+      <header class="lesson-header">
+        <h1 id="reportTitle"><span class="lesson-number">12</span>六度和声模唱</h1>
+      </header>
+      <div class="result-hero">
+        <div class="result-mark" aria-hidden="true">✓</div>
+        <p class="result-count" id="resultCount">连续唱准 10 题</p>
+        <p class="result-time" id="resultTime"></p>
+        <!-- 秒数，「继续上次练习」恢复报告时读取 -->
+        <span id="totalTimeText" hidden>0</span>
+      </div>
+      <p class="result-list-title" id="resultListTitle">练习记录</p>
+      <ol class="result-list" id="reportList"></ol>
+      <div class="report-actions">
+        <button type="button" class="advance-button" onclick="copyReport()">复制并提交结果</button>
+        <button type="button" class="text-action" onclick="restartPractice()">再练一次</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-foot">© Sheen · Ear Training</footer>
+  <script src="../../assets/pitch-format.js"></script>
+  <script src="../../assets/practice-report.js?v=20261125g"></script>
+  <script src="/ET-Intervals/shared/interval-spelling.js"></script>
+  <script src="/ET-Intervals/shared/pitch-disclosure.js"></script>
+  <script src="../shared/reference-tone.js?v=20261125o"></script>
+  <script>
+  // 12 六度和声模唱：本课的设置（其余都由 ../shared/construction-lesson.js 完成）
+  window.CONSTRUCTION_LESSON = {
+    code: 'ET12-V2.1',
+    reportTitle: '六度和声模唱',
+    harmonic: true,
+    defaultRange: [48, 72],
+    minGap: 8,
+    widenTo: 12,
+    modes: {
+      maj6: { name: '大六度', delta: 9 },
+      min6: { name: '小六度', delta: 8 }
+    }
+  };
+  </script>
+  <script src="../shared/construction-lesson.js?v=20261125o"></script>
+  <script src="../shared/construction-ui.js?v=20261125e"></script>
+  <script src="/shared/practice/practice-session.js?v=20261115a"></script>
+  <script src="/ET-Intervals/shared/et-session.js?v=20261115a"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+/* V2.1 presentation for the original single- and two-voice singing flows. */
+html[data-visual="ear"] {
+  color-scheme: light;
+  --site-bg: #fff;
+  --site-panel: #fff;
+  --site-soft: #f1f5f9;
+  --site-hover: #eaf1f8;
+  --site-text: #20252b;
+  --site-muted: #626c78;
+  --site-border: #dce1e7;
+  --site-accent: #365675;
+  --site-on-accent: #fff;
+  --site-focus: #386fa8;
+  --site-warning-bg: #fff5df;
+  --site-warning: #8a5a00;
+  --v2-stage: #26354b;
+  --v2-stage-text: #fff;
+  --v2-stage-muted: #c9d4e3;
+}
+html[data-visual="ear"] body { padding-inline: 16px; }
+html[data-visual="ear"] .main-wrapper { max-width: 37rem; margin-top: clamp(28px, 7vh, 76px); }
+html[data-visual="ear"] .top-header { display: none; }
+html[data-visual="ear"] .card { position: relative; padding: 0; border: 0; box-shadow: none; }
+html[data-visual="ear"] .header-section { padding-inline-end: 52px; }
+html[data-visual="ear"] .main-title { font-size: clamp(1.6rem, 5vw, 2.2rem); }
+html[data-visual="ear"] .main-desc { font-size: .875rem; }
+html[data-visual="ear"] .sub-title-top { color: var(--site-muted); }
+
+html[data-visual="ear"] .v2-settings { margin-bottom: 0; padding: 0; border: 0; background: transparent; }
+html[data-visual="ear"] .v2-settings > summary {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  width: 44px;
+  height: 44px;
+  justify-content: center;
+  padding: 0;
+}
+html[data-visual="ear"] .v2-settings > summary::after { display: none; }
+.v2-menu-icon { display: grid; gap: 4px; width: 18px; }
+.v2-menu-icon span { height: 2px; background: currentColor; border-radius: 2px; }
+html[data-visual="ear"] .v2-settings > .collapsed-content {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--site-border);
+  border-radius: 11px;
+  background: var(--site-soft);
+}
+
+html[data-visual="ear"] .target-card {
+  background: var(--v2-stage);
+  color: var(--v2-stage-text);
+  border: 0;
+  border-radius: 20px;
+}
+html[data-visual="ear"] .target-card :is(.target-label, .target-freq, .target-arrow, .displacement-text, .interval-text) { color: var(--v2-stage-muted); }
+html[data-visual="ear"] .target-card :is(.target-note, .pitch-details > summary) { color: var(--v2-stage-text); }
+html[data-visual="ear"] .target-card :is(.target-half.highlight, .target-half-box) {
+  background: #394f6b;
+  border-color: #71859f;
+}
+html[data-visual="ear"] .target-card .target-half-box:hover { background: #44607f; }
+html[data-visual="ear"] .target-card .assist-listen-label { color: var(--v2-stage-muted); }
+html[data-visual="ear"] .target-card #toneBtn {
+  background: var(--site-hover);
+  color: var(--v2-stage);
+  border: 1px solid var(--v2-stage-muted);
+  border-radius: 11px;
+}
+html[data-visual="ear"] .target-card #toneBtn.playing { background: #d9e6f2; }
+html[data-visual="ear"] .status-box,
+html[data-visual="ear"] .status-box-global,
+html[data-visual="ear"] .status-box-dual { background: var(--site-soft); border-radius: 14px; }
+html[data-visual="ear"] #practiceCard :is(#nextBtn, #finishBtn):disabled { display: none; }
+html[data-visual="ear"] #practiceCard :is(#nextBtn, #finishBtn).unlocked {
+  background: var(--site-accent);
+  color: var(--site-on-accent);
+  box-shadow: none;
+}
+html[data-visual="ear"] #practiceCard .btn-restart {
+  background: transparent;
+  color: var(--site-muted);
+  justify-content: flex-start;
+  width: fit-content;
+  padding-inline: 0 12px;
+}
+html[data-visual="ear"] .progress-text { text-align: start; }
+.v2-progress { display: grid; grid-template-columns: repeat(10, 1fr); gap: 3px; max-width: 9rem; margin-top: 6px; }
+.v2-progress span { height: 5px; border-radius: 4px; background: #d6dfe9; }
+.v2-progress .complete { background: var(--site-accent); }
+.v2-report-scroll { overflow-x: auto; }

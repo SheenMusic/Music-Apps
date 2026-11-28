@@ -1,0 +1,28 @@
+/* 调式与音阶课程 · 演示区面板（卡片、表格、五度循环），配合 MT-Scales/shared/scale-kit.js */
+html[data-theory-lesson] .sk-cards { display: grid; grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr)); gap: 8px; width: min(100%, 24rem); margin: 0 auto; }
+html[data-theory-lesson] .sk-title { grid-column: 1 / -1; margin: 0 0 2px; font-size: 13px; font-weight: 700; color: #475569; text-align: center; }
+html[data-theory-lesson] .sk-card { display: grid; gap: 2px; padding: 8px 12px; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 14px; line-height: 1.45; color: #334155; text-align: center; }
+html[data-theory-lesson] .sk-card b { font-size: 15px; color: #4338ca; }
+html[data-theory-lesson] .sk-table-wrap { width: min(100%, 26rem); margin: 0 auto; }
+html[data-theory-lesson] .stage-panel:has(.sk-table-wrap) { align-items: safe center; }
+html[data-theory-lesson] .sk-table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.35; color: #334155; }
+html[data-theory-lesson] .sk-table th { font-weight: 700; color: #475569; background: #f1f5f9; }
+html[data-theory-lesson] .sk-table :is(th, td) { padding: 5px 6px; border: 1px solid #e2e8f0; text-align: center; }
+html[data-theory-lesson] .sk-table tr.hi td { background: #eef2ff; color: #3730a3; font-weight: 600; }
+html[data-theory-lesson] .sk-circle { width: min(100%, 250px); height: auto; }
+html[data-theory-lesson] .sk-circle .sk-ring { fill: none; stroke: #e2e8f0; stroke-width: 1; }
+html[data-theory-lesson] .sk-circle .sk-dot { fill: #cbd5e1; }
+html[data-theory-lesson] .sk-circle text { text-anchor: middle; fill: #334155; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+html[data-theory-lesson] .sk-circle .sk-major { font-size: 13px; font-weight: 700; }
+html[data-theory-lesson] .sk-circle .sk-count { font-size: 9px; fill: #64748b; }
+html[data-theory-lesson] .sk-circle .sk-minor { font-size: 11px; fill: #64748b; }
+html[data-theory-lesson] .sk-circle .on text { fill: #4f46e5; }
+html[data-theory-lesson] .sk-draft { width: min(100%, 24rem); margin: 0 auto; padding: 12px 14px; border: 1px dashed #94a3b8; border-radius: 10px; font-size: 13px; line-height: 1.5; color: #475569; text-align: left; }
+html[data-theory-lesson] .sk-draft b { display: block; margin-bottom: 4px; color: #b45309; }
+/* 演示区在深色主题下仍是白底（与和弦课相同），面板不另设深色配色 */
+/* 演示区按钮：本课程常有 5–7 个调式名称按钮，手机上压缩成两行以内，不把谱表挤出演示区 */
+html[data-theory-lesson] .board-controls button { white-space: nowrap; }
+@media (max-width: 600px) {
+  html[data-theory-lesson] .board-controls { gap: 4px; }
+  html[data-theory-lesson] .board-controls button { min-width: 0; min-height: 28px; padding: 2px 8px; font-size: 12px; }
+}

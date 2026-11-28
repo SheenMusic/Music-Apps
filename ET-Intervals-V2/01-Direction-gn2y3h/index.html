@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <script src="/assets/site-analytics.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>01 音的方向 · 音程听力训练</title>
+  <link rel="stylesheet" href="../shared/construction.css?v=20261125m">
+</head>
+<body>
+  <div class="site-bar">
+    <picture class="brand-mark"><source srcset="/assets/logo/sheen-logo-white.svg" media="(prefers-color-scheme: dark)"><img src="/assets/logo/sheen-logo.svg" alt="" width="22" height="22"></picture>
+    <span>音程听力训练</span>
+  </div>
+  <main class="lesson">
+    <div id="practiceCard">
+      <header class="lesson-header">
+        <h1><span class="lesson-number">01</span>音的方向</h1>
+        <details class="settings-details" id="settingsMenu">
+          <summary class="settings-summary" aria-label="练习设置" title="练习设置">
+            <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+          </summary>
+          <div class="settings-panel">
+            <h2>练习设置</h2>
+            <p class="settings-group-title">声音</p>
+            <div class="settings-group">
+              <label class="setting-row">
+                <span>音色</span>
+                <span class="setting-value" id="timbreValue"></span>
+                <select id="timbreSelect">
+                  <option value="piano" selected>钢琴</option>
+                  <option value="sine">正弦波</option>
+                </select>
+              </label>
+            </div>
+            <p class="settings-note">建议在安静处戴耳机练习。</p>
+            <p class="settings-note">收起「音高提示」时，连续答对 10 题即可完成；答错从头计数。之后可以继续练，随时查看报告。展开「音高提示」是练习模式，不计数。</p>
+          </div>
+        </details>
+      </header>
+
+      <div class="stage-area">
+      <section class="exercise" aria-labelledby="prompt">
+        <div class="question">
+          <p class="question-lead">听两个音</p>
+          <h2 id="prompt" class="prompt-question">判断两个音的方向</h2>
+          <div class="controls" id="players"></div>
+        </div>
+
+        <div class="feedback" id="feedbackPanel" data-phase="ready">
+          <div class="choices" id="options" role="group" aria-label="选择答案"></div>
+          <p id="coaching" aria-live="polite"></p>
+          <button type="button" id="nextBtn" class="advance-button" hidden>下一题 →</button>
+        </div>
+
+        <details id="pitchDetails" class="pitch-details">
+          <summary>
+            <span class="hint-title">音高提示<small id="hintNote">展开后进入练习模式，不计数</small></span>
+            <span class="chevron" aria-hidden="true"></span>
+          </summary>
+          <p class="answer-text" id="answerText"></p>
+        </details>
+      </section>
+
+      <footer class="lesson-footer">
+        <div class="progress-steps" id="progressSteps" role="img" aria-label="已连续答对 0 / 10 题"></div>
+        <p class="mode-note" id="modeNote" aria-live="polite"></p>
+        <button type="button" id="finishBtn" class="advance-button" onclick="finishPractice()" disabled>查看练习报告</button>
+        <button type="button" class="text-action" id="resetPractice">重新开始</button>
+      </footer>
+      </div>
+      <!-- 连续数：练习程序与「继续上次练习」读取，不显示 -->
+      <p hidden><span id="passCountText">0</span></p>
+    </div>
+
+    <section id="reportCard" class="hidden report" aria-labelledby="reportTitle">
+      <header class="lesson-header">
+        <h1 id="reportTitle"><span class="lesson-number">01</span>音的方向</h1>
+      </header>
+      <div class="result-hero">
+        <div class="result-mark" aria-hidden="true">✓</div>
+        <p class="result-count" id="resultCount">连续答对 10 题</p>
+        <p class="result-time" id="resultTime"></p>
+        <!-- 秒数，「继续上次练习」恢复报告时读取 -->
+        <span id="totalTimeText" hidden>0</span>
+      </div>
+      <p class="result-list-title" id="resultListTitle">练习记录</p>
+      <ol class="result-list" id="reportList"></ol>
+      <div class="report-actions">
+        <button type="button" class="advance-button" onclick="copyReport()">复制并提交结果</button>
+        <button type="button" class="text-action" onclick="restartPractice()">再练一次</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-foot">© Sheen · Ear Training</footer>
+  <script src="../../assets/pitch-format.js"></script>
+  <script src="../../assets/practice-report.js?v=20261125h"></script>
+  <script src="../shared/reference-tone.js?v=20261125o"></script>
+  <script>
+  // 01 音的方向：本课的题库与设置（其余都由 ../shared/listening-lesson.js 完成）
+  window.LISTENING_LESSON = {
+    code: 'ET01-V2.1',
+    reportTitle: '音高方向听辨',
+    readyText: '先听题目',
+    questions: [
+  {notes:[48, 60], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'八度'},
+  {notes:[62, 73], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'大七度'},
+  {notes:[55, 45], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'小七度'},
+  {notes:[69, 60], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'大六度'},
+  {notes:[52, 60], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'小六度'},
+  {notes:[64, 57], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'纯五度'},
+  {notes:[57, 51], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'三全音'},
+  {notes:[45, 50], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'纯四度'},
+  {notes:[67, 63], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'大三度'},
+  {notes:[50, 53], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'小三度'},
+  {notes:[60, 62], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'大二度'},
+  {notes:[54, 52], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'大二度'},
+  {notes:[71, 69], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'全音'},
+  {notes:[61, 62], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'半音'},
+  {notes:[58, 57], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'半音'},
+  {notes:[66, 67], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'半音'},
+  {notes:[53, 52], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'半音'},
+  {notes:[63, 62], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'半音'},
+  {notes:[49, 50], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:0, distance:'半音'},
+  {notes:[70, 69], question:'第二个音相对于第一个音，向哪个方向移动？', options:['上行','下行'], answer:1, distance:'半音'}
+],
+    players: [{ part: 'all', label: '播放题目' }],
+    // 题库里的音高（MIDI 编号）由原版录音读出：q01 为 C3 → C4
+    parts: q => [[q.notes, 'all']],
+    options: [{ value: '0', label: '↑ 上行' }, { value: '1', label: '↓ 下行' }],
+    answerText: q => `${q.options[q.answer]}（相距${q.distance}）`,
+    pitchText: (q, name) => q.notes.map(name).join(' → '),
+    recordText: q => `${q.answer === 0 ? '↑' : '↓'} ${q.options[q.answer]}（${q.distance}）`
+  };
+  </script>
+  <script src="../shared/listening-lesson.js?v=20261125j"></script>
+  <script src="../shared/construction-ui.js?v=20261125h"></script>
+  <script src="/shared/practice/practice-session.js?v=20261115a"></script>
+  <script src="/ET-Intervals/shared/et-session.js?v=20261115a"></script>
+</body>
+</html>

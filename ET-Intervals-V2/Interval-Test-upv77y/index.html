@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="icon" href="/favicon.ico" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:image" content="https://sheenyang.com/assets/logo/share-card.png">
+  <title>综合测试 · 音程听力训练</title>
+  <link rel="stylesheet" href="../shared/construction.css?v=20261125m">
+  <style>
+    /* 综合测试专用：在构唱课的样式（../shared/construction.css）上加题目导航、选项和键盘 */
+    .intro { margin: 0 0 12px; color: var(--muted); font-size: .9375rem; line-height: 1.7; }
+    .rule-list { margin: 0 0 24px; padding-left: 1.2em; color: var(--muted); font-size: .9375rem; line-height: 1.8; }
+    .start-actions { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .start-actions .advance-button { width: 100%; max-width: 22rem; min-height: 48px; }
+    .sample-credit { margin: 0; color: var(--muted); font-size: .75rem; opacity: .8; text-align: center; }
+
+    /* 进度：细进度条 + 「12 / 48 ▾」，点题号展开分组导航 */
+    .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .progress-track { flex: 1; height: 4px; border-radius: 4px; background: var(--meter); overflow: hidden; }
+    .progress-fill { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+    .count-button { min-height: 36px; padding: 0 2px; border: 0; background: none; color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+    .nav-panel { margin-bottom: 14px; padding: 12px; border-radius: 14px; background: var(--feedback); }
+    .nav-part { margin: 0 0 6px 2px; color: var(--ink); font-size: .8125rem; font-weight: 650; }
+    .nav-part + .nav-group, .nav-group + .nav-group { margin-top: 8px; }
+    .nav-group + .nav-part { margin-top: 14px; }
+    .nav-group-title { margin: 0 0 4px 2px; color: var(--muted); font-size: .75rem; }
+    .nav-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 5px; }
+    .nav-cell { min-height: 34px; padding: 0; border: 1px dashed var(--line); border-radius: 8px; background: transparent; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }
+    .nav-cell.answered { border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); }
+    .result-groups .nav-cell.current { outline: none; }
+    :is(#quizScreen.is-review, .result-groups) .nav-cell { border-style: solid; color: var(--ink); }
+    :is(#quizScreen.is-review, .result-groups) .nav-cell.incorrect { border-color: var(--bad); background: var(--bad); color: #fff; font-weight: 650; }
+    .nav-cell.current { outline: 2px solid var(--warn); outline-offset: 1px; }
+    .nav-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; color: var(--muted); font-size: .8125rem; }
+
+    /* 题目卡：类型一行 + 大字要求 + 已知音 + 播放 */
+    .question-type { margin: 0; color: var(--stage-muted); font-size: .875rem; }
+    .question-type:focus { outline: none; }
+    #prompt.prompt-question { margin-top: 8px; }
+    .ref-note { margin: 10px 0 0; color: var(--stage-muted); font-size: .9375rem; }
+    .ref-note strong { margin-inline-start: .35em; color: var(--stage-ink); font-size: 1.35rem; font-weight: 700; }
+
+    /* 第一部分：度数一行、性质一行 */
+    .answer-area { margin-top: 16px; }
+    .answer-label { margin: 0 0 6px 2px; color: var(--muted); font-size: .75rem; }
+    .degree-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-bottom: 14px; }
+    .quality-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+    .answer-area .choice { min-height: 46px; padding: 0; font-size: 1rem; }
+    .quality-grid .choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-height: 52px; }
+    .quality-grid .choice small { color: var(--muted); font-size: .75rem; font-weight: 400; }
+    .answer-area .choice.selected { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+    .answer-area .choice.selected small { color: inherit; opacity: .8; }
+
+    /* 第二部分：键盘，已知音上下各两个八度。宽屏铺满；太窄时白键保持最小宽度，可左右拖动 */
+    .keyboard-scroll {
+      width: 100vw; position: relative; left: 50%; transform: translateX(-50%);
+      overflow-x: auto; overflow-y: hidden; padding: 0 16px; margin: 0 0 6px;
+      -webkit-overflow-scrolling: touch; scrollbar-width: thin;
+    }
+    .keyboard { position: relative; height: 130px; margin: 0 auto; user-select: none; -webkit-user-select: none; }
+    .key { position: absolute; top: 0; min-height: 0; padding: 0; border: 1px solid #c7cdd4; cursor: pointer; }
+    .key.white { height: 100%; background: #fff; border-radius: 0 0 6px 6px; z-index: 1; }
+    .key.black { height: 62%; background: #2c2f33; border-color: #2c2f33; border-radius: 0 0 4px 4px; z-index: 2; }
+    .key.ref { box-shadow: inset 0 -6px 0 #e0a040; }
+    .key.selected { background: #0a84ff; border-color: #0a84ff; }
+    /* 和声题：答案不可能在的那一侧变灰，不能点 */
+    .key.off { cursor: default; }
+    .key.white.off { background: #e4e7eb; border-color: #d3d8de; }
+    .key.black.off { background: #9aa1a9; border-color: #9aa1a9; }
+    .key-label { position: absolute; bottom: 4px; left: 0; right: 0; font-size: 9px; color: #8a929b; text-align: center; pointer-events: none; }
+    .key.selected .key-label { color: #fff; }
+    .key-legend { margin: 0; min-height: 1.4em; color: var(--muted); font-size: .8125rem; text-align: center; }
+
+    /* 回看：你的答案 / 正确答案 */
+    .question-review { margin-top: 14px; padding: 12px 14px; border-radius: 12px; background: var(--feedback); font-size: .9375rem; }
+    .review-status { margin: 0 0 6px; font-weight: 650; color: var(--good); }
+    .review-status.incorrect { color: var(--bad); }
+    .question-review dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+    .question-review dt { color: var(--muted); }
+    .question-review dd { margin: 0; overflow-wrap: anywhere; }
+
+    /* 上一题 / 下一题 */
+    .quiz-footer { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 20px; }
+    .step-row { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; width: 100%; max-width: 22rem; }
+    .step-row button { min-height: 48px; border-radius: 11px; font-size: .9375rem; font-weight: 650; }
+    .prev-button { border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+    .prev-button:disabled { opacity: .4; cursor: default; }
+    .advance-button:disabled { display: inline-flex; opacity: .4; cursor: default; }
+    #quizScreen.is-review .test-only { display: none; }
+    #quizScreen.is-review :is(.choice:disabled, .key:disabled) { cursor: default; }
+    #quizScreen.is-review .key-legend { display: none; }
+
+    /* 成绩：分组题号格，错题标红 */
+    .result-hero .result-count { font-size: 2.4rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .result-sub { margin: 6px 0 0; font-size: 1rem; font-weight: 600; }
+    @media (prefers-color-scheme: dark) {
+      .key.white.off { background: #6b737c; border-color: #5d646c; }
+      .key.black.off { background: #3d434a; border-color: #3d434a; }
+    }
+  </style>
+  <script src="../../assets/pitch-format.js"></script>
+  <script src="../../assets/site-analytics.js" defer></script>
+  <script src="../../assets/practice-report.js?v=20261125g"></script>
+</head>
+<body>
+  <div class="site-bar">
+    <picture class="brand-mark"><source srcset="/assets/logo/sheen-logo-white.svg" media="(prefers-color-scheme: dark)"><img src="/assets/logo/sheen-logo.svg" alt="" width="22" height="22"></picture>
+    <span>音程听力训练</span>
+  </div>
+  <main class="lesson">
+    <header class="lesson-header">
+      <h1>综合测试</h1>
+      <details class="settings-details" id="settingsMenu">
+        <summary class="settings-summary" aria-label="设置" title="设置">
+          <span class="menu-icon" aria-hidden="true"><i></i><i></i><i></i></span>
+        </summary>
+        <div class="settings-panel">
+          <h2>设置</h2>
+          <p class="settings-group-title">声音</p>
+          <div class="settings-group">
+            <label class="setting-row">
+              <span>音色</span>
+              <span class="setting-value" id="timbreValue">钢琴</span>
+              <select id="timbreSelect" onchange="setTimbre(this.value)">
+                <option value="piano" selected>钢琴</option>
+                <option value="sine">正弦波</option>
+              </select>
+            </label>
+          </div>
+          <p class="settings-note">正弦波没有泛音，纯八度、纯十二度听起来不会和泛音混在一起。换音色不影响成绩。</p>
+        </div>
+      </details>
+    </header>
+
+    <!-- 开始页 -->
+    <section id="startScreen">
+      <p class="intro">这个练习会包含二度到十五度的音程听辨，共 48 题，完成时间预计 10 分钟左右。低音在手机等移动设备的扬声器上播放不容易听清，因此建议在开始前准备好耳机。</p>
+      <ul class="rule-list">
+        <li>支持用等音程作答</li>
+        <li>提交前可以反复修改答案</li>
+        <li>提交后可以查看全部答题记录和正确答案</li>
+        <li>中途退出需重新开始</li>
+      </ul>
+      <div class="start-actions">
+        <button type="button" class="advance-button" onclick="startExam()">开始测试</button>
+        <p class="sample-credit">钢琴采样：Salamander Grand Piano · Alexander Holm · CC BY 3.0</p>
+      </div>
+    </section>
+
+    <!-- 答题页（交卷后同一页面用来回看单题） -->
+    <section class="hidden" id="quizScreen">
+      <div class="progress-row">
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+        <button type="button" class="count-button" id="countText" onclick="toggleNavPanel()" aria-label="题目导航" aria-controls="navPanel" aria-expanded="false">-- / 48 ▾</button>
+      </div>
+
+      <!-- 题目导航：分成两部分、六组；已答的题填色，未答的是空心格 -->
+      <div class="nav-panel hidden" id="navPanel">
+        <div id="navGroups"></div>
+        <div class="nav-foot">
+          <span id="answeredText">--</span>
+          <button type="button" class="text-action test-only" onclick="submitExam()">交卷</button>
+        </div>
+      </div>
+
+      <section class="exercise">
+        <div class="question">
+          <p class="question-type" id="typeText" tabindex="-1">--</p>
+          <h2 id="prompt" class="prompt-question" aria-live="polite"></h2>
+          <p class="ref-note hidden" id="refNoteBox"><span id="refNoteLabel">已知音</span><strong id="refNoteText">--</strong></p>
+          <div class="controls">
+            <button type="button" class="tone" id="playBtn" onclick="playCurrent()">
+              <span class="play-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M5.3 2.4 13.4 7a1.15 1.15 0 0 1 0 2l-8.1 4.6A1.2 1.2 0 0 1 3.5 12.6V3.4a1.2 1.2 0 0 1 1.8-1Z"/></svg></span>
+              <span>播放</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第一部分：度数一行、性质一行，互不影响 -->
+      <div id="partOneAnswer" class="answer-area">
+        <p class="answer-label">度数</p>
+        <div class="degree-grid" id="degreeGrid"></div>
+        <p class="answer-label">性质</p>
+        <div class="quality-grid" id="qualityGrid"></div>
+      </div>
+
+      <!-- 第二部分：键盘 -->
+      <div id="partTwoAnswer" class="answer-area hidden">
+        <div class="keyboard-scroll" id="keyboardScroll"><div class="keyboard" id="keyboard"></div></div>
+        <p class="key-legend" id="keyLegend"></p>
+      </div>
+
+      <div class="question-review hidden" id="questionReview">
+        <p class="review-status" id="reviewStatus"></p>
+        <dl>
+          <dt>你的答案</dt><dd id="reviewAnswer"></dd>
+          <dt>正确答案</dt><dd id="reviewCorrect"></dd>
+        </dl>
+      </div>
+
+      <footer class="quiz-footer">
+        <div class="step-row">
+          <button type="button" class="prev-button" id="prevBtn" onclick="goTo(current - 1)">上一题</button>
+          <button type="button" class="advance-button" id="nextBtn" onclick="nextOrSubmit()">下一题 →</button>
+        </div>
+        <button type="button" class="text-action test-only" onclick="quitExam()">退出测试</button>
+        <button type="button" class="text-action review-only hidden" id="backToResult" onclick="showResult()">返回成绩</button>
+      </footer>
+    </section>
+
+    <!-- 成绩 -->
+    <section class="hidden report" id="resultScreen" aria-label="测试成绩">
+      <div class="result-hero">
+        <div class="result-mark" aria-hidden="true">✓</div>
+        <p class="result-count" id="scoreText"></p>
+        <p class="result-sub" id="scoreSub"></p>
+        <p class="result-time" id="scoreTime"></p>
+      </div>
+      <p class="result-list-title">错题和未答题标红，点题号查看这一题</p>
+      <div class="nav-panel result-groups" id="resultGroups"></div>
+      <div class="report-actions">
+        <button type="button" class="advance-button" onclick="copyReport()">复制并提交结果</button>
+        <button type="button" class="text-action" onclick="backToStart()">重新测试</button>
+      </div>
+    </section>
+  </main>
+  <footer class="site-foot">© Sheen · Ear Training</footer>
+
+<script src="/ET-Intervals/shared/interval-spelling.js"></script>
+<script src="exam-questions.js"></script>
+<script>
+  const E = window.IntervalExam;
+  const TYPE_SHORT = { asc: '上行', desc: '下行', harm: '和声' };
+  const PART_NAMES = { 1: '第一部分', 2: '第二部分' };
+  const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+  let questions = [];
+  let current = 0;
+  let examRunning = false;
+  let examStart = 0;
+  let examSeconds = 0;
+
+  function $(id) { return document.getElementById(id); }
+
+  // 三个画面：开始页、答题页（交卷后用来回看单题）、成绩
+  function show(screenId) {
+    ['startScreen', 'quizScreen', 'resultScreen'].forEach(id => $(id).classList.toggle('hidden', id !== screenId));
+    $('quizScreen').classList.toggle('is-review', !examRunning);
+    $('questionReview').classList.toggle('hidden', examRunning);
+    $('backToResult').classList.toggle('hidden', examRunning);
+    window.scrollTo(0, 0);
+  }
+
+  // 音名：键盘上的音只看音高，黑键同时写出升、降两种
+  function midiLabel(midi) {
+    const pc = midi % 12, octave = Math.floor(midi / 12) - 1;
+    const sharp = formatPitchLabel(`${SHARP_NAMES[pc]}${octave}`);
+    return SHARP_NAMES[pc] === FLAT_NAMES[pc] ? sharp : `${sharp}/${formatPitchLabel(`${FLAT_NAMES[pc]}${octave}`)}`;
+  }
+
+  // ---------- 声音 ----------
+  // 默认钢琴采样（网站共享 audio_pn：Salamander Grand Piano，C2–C6，每隔小三度一个，每个音用最近的采样、变调不超过 1 个半音）。
+  // 学生可以随时换成正弦波（没有泛音，纯八度、纯十二度不会被泛音干扰），选择一直保留到再切回来；不影响成绩。
+  const SAMPLE_BASE = '../../audio_pn/';
+  const SAMPLE_NAMES = { 0: 'C', 3: 'Ds', 6: 'Fs', 9: 'A' };
+  const MELODIC_NOTE = 1.2, MELODIC_GAP = 1.25, HARMONIC_NOTE = 2.4;
+  let timbre = 'piano';
+  let audioCtx = null;
+  let stale = false;
+  let playingNodes = [];
+  let playingButton = null;
+  let playingTimer = null;
+  let generation = 0;
+  const buffers = new Map();
+
+  // iPhone：静音键开着也出声；页面回到前台后旧的音频可能没有输出，下一次点按时新建（已解码的采样沿用）
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && audioCtx) stale = true; });
+  function context() {
+    if (navigator.audioSession && navigator.audioSession.type !== 'playback') {
+      try { navigator.audioSession.type = 'playback'; } catch (e) {}
+    }
+    if (audioCtx && (stale || audioCtx.state === 'closed')) {
+      audioCtx.close().catch(() => {});
+      audioCtx = null;
+      stale = false;
+    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state !== 'running') audioCtx.resume().catch(() => {});
+    return audioCtx;
+  }
+
+  function sampleOf(midi) {
+    const sample = Math.max(36, Math.min(84, Math.round(midi / 3) * 3));
+    return { file: `${SAMPLE_NAMES[sample % 12]}${Math.floor(sample / 12) - 1}.mp3`, rate: Math.pow(2, (midi - sample) / 12) };
+  }
+
+  function loadSample(midi) {
+    const { file } = sampleOf(midi);
+    if (!buffers.has(file)) {
+      const request = fetch(SAMPLE_BASE + file)
+        .then(response => { if (!response.ok) throw new Error(file); return response.arrayBuffer(); })
+        .then(data => new Promise((resolve, reject) => context().decodeAudioData(data, resolve, reject)))
+        .catch(error => { console.warn('钢琴采样载入失败', error); buffers.delete(file); return null; });
+      buffers.set(file, request);
+    }
+    return buffers.get(file);
+  }
+
+  // 开始测试时先载入全部 17 个采样（约 2.4 MB）
+  function preloadPiano() {
+    for (let midi = 36; midi <= 84; midi += 3) loadSample(midi);
+  }
+
+  function stopSound() {
+    generation++;
+    playingNodes.forEach(node => { try { node.stop(); } catch (e) {} });
+    playingNodes = [];
+    clearTimeout(playingTimer);
+    if (playingButton) playingButton.classList.remove('playing');
+    playingButton = null;
+  }
+
+  // 结尾 0.12 秒淡出到静音，避免爆音
+  function fadeOut(ctx, start, seconds) {
+    const fade = ctx.createGain();
+    fade.gain.setValueAtTime(1, start);
+    fade.gain.setValueAtTime(1, start + seconds - 0.12);
+    fade.gain.linearRampToValueAtTime(0, start + seconds);
+    fade.connect(ctx.destination);
+    return fade;
+  }
+
+  // 正弦波：只有基音，起音 10 毫秒、自然衰减
+  function sineTone(ctx, midi, start, seconds, volume) {
+    const env = ctx.createGain(), osc = ctx.createOscillator();
+    env.gain.setValueAtTime(0, start);
+    env.gain.linearRampToValueAtTime(volume, start + 0.01);
+    env.gain.setTargetAtTime(0, start + 0.01, 0.9);
+    env.connect(fadeOut(ctx, start, seconds));
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(440 * Math.pow(2, (midi - 69) / 12), start);
+    osc.connect(env);
+    osc.start(start); osc.stop(start + seconds);
+    playingNodes.push(osc);
+  }
+
+  function pianoTone(ctx, buffer, midi, start, seconds, volume) {
+    if (!buffer) return;
+    const source = ctx.createBufferSource(), gain = ctx.createGain(), clean = ctx.createBiquadFilter();
+    source.buffer = buffer;
+    source.playbackRate.value = sampleOf(midi).rate;
+    gain.gain.value = volume;
+    // 滤掉比这个音低一个八度以下的声音：C6 采样（B5、C6 用它）的余音里有将近一半是 200 Hz 以下的低频杂音，
+    // 听起来像混响很大；其他采样这部分很少，滤掉也不影响音色
+    clean.type = 'highpass';
+    clean.frequency.value = 440 * Math.pow(2, (midi - 69) / 12) * 0.5;
+    clean.Q.value = 0.7;
+    source.connect(clean); clean.connect(gain); gain.connect(fadeOut(ctx, start, seconds));
+    source.start(start); source.stop(start + seconds);
+    playingNodes.push(source);
+  }
+
+  // 旋律题：两个音先后各 1.2 秒；和声题：两个音同时 2.4 秒
+  async function playQuestion(question, button) {
+    stopSound();
+    const mine = generation;
+    const ctx = context();
+    const notes = question.played.map(n => n.midi);
+    const loaded = timbre === 'piano' ? await Promise.all(notes.map(loadSample)) : null;
+    if (mine !== generation) return;   // 载入期间又按了别的
+    const start = ctx.currentTime + 0.05;
+    const harmonic = question.type === 'harm';
+    notes.forEach((midi, i) => {
+      const at = harmonic ? start : start + i * MELODIC_GAP;
+      const seconds = harmonic ? HARMONIC_NOTE : MELODIC_NOTE;
+      if (timbre === 'piano') pianoTone(ctx, loaded[i], midi, at, seconds, harmonic ? 0.6 : 0.8);
+      else sineTone(ctx, midi, at, seconds, harmonic ? 0.3 : 0.42);
+    });
+    const total = harmonic ? HARMONIC_NOTE : MELODIC_GAP + MELODIC_NOTE;
+    playingButton = button;
+    button.classList.add('playing');
+    playingTimer = setTimeout(() => {
+      button.classList.remove('playing');
+      if (playingButton === button) playingButton = null;
+    }, total * 1000 + 150);
+  }
+
+  function playCurrent() {
+    playQuestion(questions[current], $('playBtn'));
+  }
+
+  // 换音色：答题页换完立刻用新音色重播这一题；回看页只切换，学生自己点 ▶
+  function setTimbre(value) {
+    timbre = value;
+    $('timbreSelect').value = value;
+    $('timbreValue').textContent = value === 'piano' ? '钢琴' : '正弦波';
+    $('settingsMenu').open = false;
+    if (examRunning && !$('quizScreen').classList.contains('hidden')) playCurrent();
+    else stopSound();
+  }
+
+  // ---------- 答题 ----------
+  function startExam() {
+    preloadPiano();
+    examStart = Date.now();
+    questions = E.buildExam();
+    questions.forEach(q => { q.draft = { degree: null, quality: null, midi: null }; });
+    $('navGroups').replaceChildren();
+    setNavPanel(false);
+    current = 0;
+    examRunning = true;
+    buildDegreeGrid();
+    buildQualityGrid();
+    show('quizScreen');
+    loadQuestion();
+  }
+
+  function quitExam() {
+    if (!confirm('退出后本次作答不保存，需要重新开始。确定退出吗？')) return;
+    stopSound();
+    examRunning = false;
+    show('startScreen');
+  }
+
+  function backToStart() {
+    stopSound();
+    show('startScreen');
+  }
+
+  function buildDegreeGrid() {
+    const grid = $('degreeGrid');
+    grid.replaceChildren();
+    for (let d = 2; d <= 15; d++) {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      btn.textContent = String(d);
+      btn.dataset.degree = d;
+      btn.onclick = () => chooseDegree(d);
+      grid.appendChild(btn);
+    }
+  }
+
+  // 性质按钮固定为 d m P M A（缩写下面写中文），与度数互不影响
+  const QUALITY_NAMES = { d: '减', m: '小', P: '纯', M: '大', A: '增' };
+  function buildQualityGrid() {
+    const grid = $('qualityGrid');
+    grid.replaceChildren();
+    E.QUALITIES.forEach(quality => {
+      const btn = document.createElement('button');
+      btn.className = 'choice';
+      const abbr = document.createElement('b'), name = document.createElement('small');
+      abbr.textContent = quality;
+      name.textContent = QUALITY_NAMES[quality];
+      btn.append(abbr, name);
+      btn.setAttribute('aria-label', `${quality} ${QUALITY_NAMES[quality]}`);
+      btn.dataset.quality = quality;
+      btn.onclick = () => chooseQuality(quality);
+      grid.appendChild(btn);
+    });
+  }
+
+  function chooseDegree(degree) {
+    if (!examRunning) return;
+    questions[current].draft.degree = degree;
+    document.querySelectorAll('#degreeGrid .choice').forEach(btn => {
+      const selected = Number(btn.dataset.degree) === degree;
+      btn.classList.toggle('selected', selected);
+      btn.setAttribute('aria-pressed', String(selected));
+    });
+    updateSubmit();
+  }
+
+  function chooseQuality(quality) {
+    if (!examRunning) return;
+    questions[current].draft.quality = quality;
+    document.querySelectorAll('#qualityGrid .choice').forEach(btn => {
+      const selected = btn.dataset.quality === quality;
+      btn.classList.toggle('selected', selected);
+      btn.setAttribute('aria-pressed', String(selected));
+    });
+    updateSubmit();
+  }
+
+  // 键盘：已知音上下各两个八度（两端是黑键时各多放一个白键）；按键不发声
+  const MIN_WHITE_KEY = 26; // 白键最小宽度（px），窗口放不下时改为左右拖动
+  const isBlack = midi => [1, 3, 6, 8, 10].includes(((midi % 12) + 12) % 12);
+  let keyboardRef = null;
+
+  // side：和声题答案所在的一侧（'up' 或 'down'），另一侧连同已知音变灰、不能点；旋律题不限制
+  function buildKeyboard(refMidi, side) {
+    keyboardRef = refMidi;
+    const board = $('keyboard');
+    board.replaceChildren();
+    const low = refMidi - 24 - (isBlack(refMidi - 24) ? 1 : 0);
+    const high = refMidi + 24 + (isBlack(refMidi + 24) ? 1 : 0);
+    for (let m = low; m <= high; m++) {
+      const key = document.createElement('button');
+      key.type = 'button';
+      key.className = 'key ' + (isBlack(m) ? 'black' : 'white');
+      key.dataset.midi = m;
+      key.setAttribute('aria-label', midiLabel(m));
+      if (!isBlack(m) && m % 12 === 0) {
+        const label = document.createElement('span');
+        label.className = 'key-label';
+        label.textContent = midiLabel(m);
+        key.appendChild(label);
+      }
+      if (m === refMidi) key.classList.add('ref');
+      if ((side === 'up' && m <= refMidi) || (side === 'down' && m >= refMidi)) key.classList.add('off');
+      key.onclick = () => chooseKey(m);
+      board.appendChild(key);
+    }
+    layoutKeyboard();
+  }
+
+  // 按窗口宽度排键：放得下就铺满，放不下就用最小宽度并把已知音滚到正中间
+  function layoutKeyboard() {
+    if (keyboardRef === null) return;
+    const scroller = $('keyboardScroll'), board = $('keyboard');
+    const keys = [...board.children];
+    const whites = keys.filter(k => k.classList.contains('white'));
+    const available = scroller.clientWidth - 32;
+    const keyWidth = Math.max(MIN_WHITE_KEY, available / whites.length);
+    board.style.width = `${keyWidth * whites.length}px`;
+    let whiteIndex = 0;
+    keys.forEach(key => {
+      if (key.classList.contains('white')) {
+        key.style.left = `${whiteIndex * keyWidth}px`;
+        key.style.width = `${keyWidth}px`;
+        whiteIndex++;
+      } else {
+        key.style.left = `${whiteIndex * keyWidth - keyWidth * 0.3}px`;
+        key.style.width = `${keyWidth * 0.6}px`;
+      }
+    });
+    const ref = board.querySelector('.key.ref');
+    scroller.scrollLeft = ref.offsetLeft + ref.offsetWidth / 2 + 16 - scroller.clientWidth / 2;
+  }
+
+  window.addEventListener('resize', () => {
+    if (!$('partTwoAnswer').classList.contains('hidden')) layoutKeyboard();
+  });
+
+  function chooseKey(midi) {
+    if (!examRunning) return;
+    questions[current].draft.midi = midi;
+    showKeySelection(midi);
+    updateSubmit();
+  }
+
+  function showKeySelection(midi) {
+    document.querySelectorAll('#keyboard .key').forEach(key => {
+      const selected = Number(key.dataset.midi) === midi;
+      key.classList.toggle('selected', selected);
+      key.setAttribute('aria-pressed', String(selected));
+    });
+    $('keyLegend').textContent = midi === null ? '' : `你选的音：${midiLabel(midi)}`;
+  }
+
+  // 草稿是否已经是完整答案（第一部分要度数和性质都选了）
+  function isAnswered(q) {
+    return q.part === 1 ? q.draft.degree !== null && q.draft.quality !== null : q.draft.midi !== null;
+  }
+
+  // 选答案时只刷新导航格子，不改按钮：「下一题」随时可以点，没答的题交卷时按错算
+  function updateSubmit() {
+    renderNav();
+  }
+
+  // 导航分组：第一部分 上行 / 下行 / 和声，第二部分 上行 / 下行 / 和声
+  // 同一套分组题号格用在两处：答题页的导航（navGroups）和成绩页（resultGroups）
+  function navCells(box) {
+    return [...box.querySelectorAll('.nav-cell')];
+  }
+
+  function renderNav() {
+    ['navGroups', 'resultGroups'].forEach(id => fillGroups($(id)));
+    $('answeredText').textContent = examRunning
+      ? `已答 ${questions.filter(isAnswered).length} / ${questions.length}`
+      : '';
+  }
+
+  function fillGroups(box) {
+    if (navCells(box).length !== questions.length) {
+      box.replaceChildren();
+      let grid = null, group = '';
+      questions.forEach((q, i) => {
+        if (group !== `${q.part}${q.type}`) {
+          if (!grid || q.part !== questions[i - 1].part) {
+            const part = document.createElement('p');
+            part.className = 'nav-part';
+            part.textContent = PART_NAMES[q.part];
+            box.appendChild(part);
+          }
+          group = `${q.part}${q.type}`;
+          const block = document.createElement('div'), title = document.createElement('p');
+          block.className = 'nav-group';
+          title.className = 'nav-group-title';
+          title.textContent = TYPE_SHORT[q.type];
+          grid = document.createElement('div');
+          grid.className = 'nav-grid';
+          block.append(title, grid);
+          box.appendChild(block);
+        }
+        const cell = document.createElement('button');
+        cell.type = 'button';
+        cell.className = 'nav-cell';
+        cell.textContent = i + 1;
+        cell.onclick = () => {
+          setNavPanel(false);
+          if ($('quizScreen').classList.contains('hidden')) show('quizScreen');
+          goTo(i);
+          $('typeText').focus({preventScroll: examRunning});
+        };
+        grid.appendChild(cell);
+      });
+    }
+    navCells(box).forEach((cell, i) => {
+      const q = questions[i];
+      const incorrect = !examRunning && !q.result.correct;
+      cell.classList.toggle('answered', examRunning && isAnswered(q));
+      cell.classList.toggle('incorrect', incorrect);
+      cell.classList.toggle('current', i === current);
+      if (i === current) cell.setAttribute('aria-current', 'true');
+      else cell.removeAttribute('aria-current');
+      const status = examRunning ? '' : incorrect ? '，错误' : '，正确';
+      cell.setAttribute('aria-label', `第 ${i + 1} 题${status}`);
+    });
+  }
+
+  function setNavPanel(open) {
+    $('navPanel').classList.toggle('hidden', !open);
+    $('countText').setAttribute('aria-expanded', String(open));
+  }
+
+  function toggleNavPanel() {
+    setNavPanel($('navPanel').classList.contains('hidden'));
+    renderNav();
+  }
+
+  // 拖动进度条时只预览题号，松手才跳题
+  function previewSlider() {
+    $('countText').textContent = `${current + 1} / ${questions.length} ▾`;
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= questions.length) return;
+    current = index;
+    loadQuestion();
+  }
+
+  function nextOrSubmit() {
+    if (current < questions.length - 1) goTo(current + 1);
+    else if (examRunning) submitExam();
+  }
+
+  function loadQuestion() {
+    stopSound();
+    const q = questions[current];
+    const isOne = q.part === 1;
+    previewSlider();
+    $('progressFill').style.width = `${(current + 1) / questions.length * 100}%`;
+    $('prevBtn').disabled = current === 0;
+    const lastQuestion = current === questions.length - 1;
+    $('nextBtn').disabled = !examRunning && lastQuestion;
+    $('nextBtn').textContent = examRunning && lastQuestion ? '交卷' : '下一题 →';
+    // 题目上方显示部分和题型；第二部分旋律题已知的是第一个音，和声题只写「已知音」，答案方向用变灰的键盘表示
+    $('typeText').textContent = `${PART_NAMES[q.part]} · ${TYPE_SHORT[q.type]}`;
+    $('prompt').textContent = isOne ? '判断音程的度数和性质' : q.type === 'harm' ? '找出另一个音' : '找出第二个音';
+    $('refNoteLabel').textContent = q.type === 'harm' ? '已知音' : '第一个音';
+    $('refNoteBox').classList.toggle('hidden', isOne);
+    $('partOneAnswer').classList.toggle('hidden', !isOne);
+    $('partTwoAnswer').classList.toggle('hidden', isOne);
+    if (isOne) {
+      keyboardRef = null;
+      document.querySelectorAll('#degreeGrid .choice, #qualityGrid .choice').forEach(btn => {
+        const selected = btn.dataset.degree
+          ? Number(btn.dataset.degree) === q.draft.degree
+          : btn.dataset.quality === q.draft.quality;
+        btn.classList.toggle('selected', selected);
+        btn.setAttribute('aria-pressed', String(selected));
+        btn.disabled = !examRunning;
+      });
+    } else {
+      $('refNoteText').textContent = formatPitchLabel(q.ref.name);
+      buildKeyboard(q.ref.midi, q.type === 'harm' ? (q.target.midi > q.ref.midi ? 'up' : 'down') : null);
+      showKeySelection(q.draft.midi);
+      $('keyboard').querySelectorAll('.key').forEach(key => { key.disabled = !examRunning || key.classList.contains('off'); });
+    }
+    updateSubmit();
+    if (examRunning) playCurrent();
+    else showReviewAnswer(q);
+  }
+
+  // 交卷：还有没答的题时先提示；未答的题按错算
+  function submitExam() {
+    if (!examRunning) return;
+    const left = questions.flatMap((q, i) => isAnswered(q) ? [] : [i + 1]);
+    if (left.length && !confirm(`还有第 ${left.join('、')} 题未答，未答的题按错算。\n\n确定交卷吗？（点「取消」跳到第 ${left[0]} 题）`)) {
+      setNavPanel(false);
+      goTo(left[0] - 1);
+      return;
+    }
+    questions.forEach(q => {
+      if (!isAnswered(q)) q.answer = null;
+      else q.answer = q.part === 1 ? { degree: q.draft.degree, quality: q.draft.quality } : { midi: q.draft.midi };
+      q.result = E.grade(q);
+    });
+    const firstIncorrect = questions.findIndex(q => !q.result.correct);
+    current = Math.max(0, firstIncorrect);
+    examSeconds = Math.round((Date.now() - examStart) / 1000);
+    finishExam();
+  }
+
+  // ---------- 结果 ----------
+  function count(list) {
+    return { correct: list.filter(q => q.result.correct).length, total: list.length };
+  }
+
+  function percent(c) { return Math.round(c.correct / c.total * 100); }
+
+  function summary() {
+    const one = questions.filter(q => q.part === 1), two = questions.filter(q => q.part === 2);
+    const byType = (list, type) => count(list.filter(q => q.type === type));
+    return {
+      all: count(questions),
+      one: count(one),
+      oneTypes: E.TYPE_ORDER.map(t => [TYPE_SHORT[t], byType(one, t)]),
+      degree: { correct: one.filter(q => q.result.degreeCorrect).length, total: one.length },
+      two: count(two),
+      twoTypes: E.TYPE_ORDER.map(t => [TYPE_SHORT[t], byType(two, t)])
+    };
+  }
+
+  // ---------- 回看与报告共用的文字 ----------
+
+  function notesText(q) {
+    const [first, second] = q.type === 'harm' ? [q.low, q.high] : q.played;
+    return [first, second].map(note => formatPitchLabel(note.name)).join(q.type === 'harm' ? '+' : ' → ');
+  }
+
+  function answerText(q) {
+    if (!q.answer) return '未作答';
+    return q.part === 1 ? E.answerLabel(q.answer.degree, q.answer.quality) : midiLabel(q.answer.midi);
+  }
+
+  // 正确答案，例如「m6 (B♭₃+G♭₄)」；第二部分「E♭₄ (m3, C₄ → E♭₄)」
+  function correctText(q) {
+    return q.part === 1 ? `${q.label} (${notesText(q)})` : `${formatPitchLabel(q.target.name)} (${q.label}, ${notesText(q)})`;
+  }
+
+  // 总用时：从「开始测试」到交卷，只统计不限时
+  function durationText(seconds) {
+    const m = Math.floor(seconds / 60), sec = seconds % 60;
+    return m ? `${m}分${String(sec).padStart(2, '0')}秒` : `${sec}秒`;
+  }
+
+  function showReviewAnswer(q) {
+    const status = $('reviewStatus');
+    const result = q.result.correct ? '正确' : q.answer ? '错误' : '未作答';
+    status.textContent = `${E.TYPE_NAMES[q.type]} · ${result}`;
+    status.classList.toggle('incorrect', !q.result.correct);
+    $('reviewAnswer').textContent = answerText(q);
+    $('reviewCorrect').textContent = correctText(q);
+  }
+
+  function finishExam() {
+    examRunning = false;
+    keyboardRef = null;
+    const score = count(questions);
+    $('scoreText').textContent = `${percent(score)}%`;
+    $('scoreSub').textContent = `答对 ${score.correct} / ${score.total} 题`;
+    $('scoreTime').textContent = `用时 ${durationText(examSeconds)}`;
+    $('resultGroups').replaceChildren();
+    renderNav();
+    setNavPanel(false);
+    showResult();
+  }
+
+  function showResult() {
+    stopSound();
+    show('resultScreen');
+  }
+
+  // 复制、同步给老师的报告（压缩版）：总分一行、两部分各一行分项、每道错题一行
+  function reportText() {
+    const s = summary();
+    const types = list => list.map(([name, c]) => `${name} ${c.correct}/${c.total}`).join(' · ');
+    const wrong = questions.flatMap((q, i) => q.result.correct ? [] :
+      [`${i + 1} ${TYPE_SHORT[q.type]} ${q.part === 1 ? q.label : formatPitchLabel(q.target.name) + ' ' + q.label}（${notesText(q).replace(/ → /g, '→')}）· ${q.answer ? '答 ' + answerText(q) : '未答'}`]);
+    return [
+      '【音程听力综合测试 V2.1】',
+      `${percent(s.all)}% · ${s.all.correct}/${s.all.total} · 用时 ${durationText(examSeconds)}`,
+      `第一部分 ${s.one.correct}/${s.one.total}（${types(s.oneTypes)} · 度数 ${s.degree.correct}/${s.degree.total}）`,
+      `第二部分 ${s.two.correct}/${s.two.total}（${types(s.twoTypes)}）`,
+      wrong.length ? `错题：\n${wrong.join('\n')}` : '✓ 全部正确'
+    ].join('\n');
+  }
+
+  function copyReport() {
+    const text = reportText();
+    // 同时提交到老师的「练习记录」表（assets/practice-sync.js；同一份结果只提交一次，失败不影响复制）
+    try { window.PracticeSync?.send({code: 'ET-EXAM-V2.1', title: '音程听力综合测试 V2.1', seconds: examSeconds}, text); } catch (e) {}
+    const done = () => alert('测试结果已复制，也已同步给老师。');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done));
+    } else fallbackCopy(text, done);
+  }
+
+  function fallbackCopy(text, done) {
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.style.position = 'fixed'; area.style.opacity = '0';
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand('copy'); done(); } catch (e) { prompt('请手动复制：', text); }
+    area.remove();
+  }
+
+  window.addEventListener('beforeunload', event => {
+    if (examRunning) { event.preventDefault(); event.returnValue = ''; }
+  });
+</script>
+<script src="../../shared/practice/practice-session.js?v=20261115a"></script><script src="/ET-Intervals/shared/et-session.js?v=20261115a"></script>
+</body>
+</html>
